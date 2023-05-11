@@ -71,6 +71,23 @@ sap.ui.define(
       },
       onAfterRendering: function () {},
       onNavigation: function (oEvent) {},
+      onSelectItem:function(oEvent){
+        debugger;
+        var nav = oEvent.getSource().getSelectedKey();
+        if(nav === "PrintingDetails"){
+          this.getRouter().navTo("printingDetails");
+        }
+        if(nav === "WelcomePrinters"){
+          this.getRouter().navTo("welcomePrinter");
+        }
+        if(nav === "UploadXml"){
+          this.getRouter().navTo("Carborator");
+        }
+        if(nav === "Home"){
+          this.getRouter().navTo("login");
+        }
+        
+      },
     });
   }
 );

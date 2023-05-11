@@ -1,0 +1,22 @@
+<mvc:View controllerName="ent.ui.ecommerce.controller.Carborator"
+    xmlns:mvc="sap.ui.core.mvc" xmlns:u="sap.ui.unified" displayBlock="true"
+    xmlns="sap.m">
+    <Page showHeader="{appView>/visibleHeader}" id="page">
+        <content>
+        <VBox class="sapUiLargeMargin" id="_IDGenVBox1" alignItems="Center">
+            <u:FileUploader
+                id="fileUploader"
+                name="myFileUpload"
+                width="100%"
+                uploadUrl="uploadLicense/"
+                fileType="xls,xlsx"
+                change="onFileUploadChange"
+                tooltip="Upload your file to the local server"
+                uploadComplete="handleUploadComplete"/>
+            <TextArea id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
+            <Button text="Next" press="onPressNavigate"></Button>
+            <Button text="Save" press="onSavePayload"></Button>
+        </VBox>
+        </content>
+    </Page>
+</mvc:View>

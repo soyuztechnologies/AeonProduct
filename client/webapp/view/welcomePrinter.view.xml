@@ -1,0 +1,11 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="ent.ui.ecommerce.controller.welcomePrinter" >
+  <Page title="Welcome Printer" >
+    <List>
+      <ObjectListItem
+			title="Something"
+			type="Active"
+			press="onListItemPress">
+		</ObjectListItem>
+	</List>
+  </Page>
+</mvc:View>

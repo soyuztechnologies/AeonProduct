@@ -1,0 +1,82 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" controllerName="ent.ui.ecommerce.controller.printingDetails">
+	<Page title="O79 JNM RPRNT DCLRS 2D 04"> 
+          <!-- <headerContent></headerContent> -->
+		<!-- <VBox class="sapUiSmallMargin"> -->
+			<f:SimpleForm id="SimpleForm-1" editable="true" layout="ResponsiveGridLayout"  >
+				<f:content>
+					<!-- <VBox> -->
+						<core:Title></core:Title>
+
+						<Label text="PO NO"></Label>
+						<Text text="011"></Text>
+
+						<Label text="Quantity"></Label>
+						<Text text="6,200 pcs"></Text>
+
+						<Label text="Size in mm"></Label>
+						<Text text="12 ups 64 x 17 x 96 mm "></Text>
+					<!-- </VBox> -->
+					<!-- <VBox> -->
+						<core:Title></core:Title>
+
+						<Label text="Artwork"></Label>
+						<Text text="Approval Pending CMYK + Silver"></Text>
+
+						<Label text="Paper Board"></Label>
+						<Text text="White Back 320 GSM"></Text>
+
+						<Label text="Coating"></Label>
+						<Text text="BOPP Lamination"></Text>
+					<!-- </VBox> -->
+				</f:content>
+			</f:SimpleForm>
+			<f:SimpleForm id="SimpleForm2" editable="true" layout="ResponsiveGridLayout" title=" ">
+				<f:content>
+					<!-- <VBox> -->
+					<core:Title></core:Title>
+
+						<Label text="Raw Material"></Label>
+						<Text text="In Stock"></Text>
+
+						<Label text="Coating"></Label>
+						<Text text="585 Sheets"></Text>
+
+						<Label text="Spot UV"></Label>
+						<Text text="None"></Text>
+
+						<Label text="Punching"></Label>
+						<Text text=" "></Text>
+
+						<Label text="Packing"></Label>
+						<Text text=""></Text>
+					<!-- </VBox> -->
+					<core:Title></core:Title> 
+					<!-- <VBox> -->
+						<Label text="Printing"></Label>
+						<Text text="600 Sheets"></Text>
+
+						<Label text="Foiling"></Label>
+						<Text text="None"></Text>
+
+						<Label text="Embossing"></Label>
+						<Text text=" "></Text>
+
+						<Label text="Pasting"></Label>
+						<Text text=" "></Text>
+
+						<Label text="Inc. No."></Label>
+						<Text text=""></Text>
+
+						<Label text="Delivery No."></Label>
+						<Text text=""></Text>
+					<!-- </VBox> -->
+				</f:content>
+			</f:SimpleForm>
+			<Toolbar>
+				<Button text="Update"></Button>
+				<ToolbarSpacer />
+				<Button text="Modify"></Button>
+			</Toolbar>
+		<!-- </VBox> -->
+	</Page>
+</mvc:View>

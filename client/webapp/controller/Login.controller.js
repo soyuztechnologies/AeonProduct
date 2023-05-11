@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController", "sap/ui/core/Fragment", "sap/m/MessageBox", 'sap/m/MessageToast'
+	"./BaseController", "sap/ui/core/Fragment", "sap/m/MessageBox", 'sap/m/MessageToast',
 ], function (
 	BaseController,
 	Fragment,
@@ -16,6 +16,7 @@ sap.ui.define([
 		},
 		_matchedHandler: function (oEvent) {
 			this.getModel("appView").setProperty("/visibleHeader", false);
+			this.getModel("appView").setProperty("/visibility", false);
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 		},
 		Login: function () {
@@ -37,6 +38,8 @@ sap.ui.define([
 					that.getView().byId("userid").setValueState('None');
 					that.getView().byId("pwd").setValueState('None');
 					that.getModel("appView").updateBindings();
+					that.getRouter().navTo("Carborator");
+
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.getView().byId("userid").setValueState('Error');

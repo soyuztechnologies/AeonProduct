@@ -119,6 +119,21 @@
 					"pattern": "notFound",
 					"name": "notFound",
 					"target": "notFound"
+				},
+				{
+					"pattern":"welcomePrinter",
+					"name":"welcomePrinter",
+					"target":"welcomePrinter"
+				},
+				{
+					"pattern": "Carborator",
+					"name":"Carborator",
+					"target":"Carborator"
+				},
+				{
+					"pattern":"printingDetails",
+					"name":"printingDetails",
+					"target":"printingDetails"
 				}
 			],
 			"targets": {
@@ -132,6 +147,21 @@
 					"viewName": "notFound",
 					"viewLevel": 1,
 					"viewId": "notFound"
+				},
+				"welcomePrinter":{
+					"viewName":"welcomePrinter",
+					"viewLevel":1,
+					"viewId":"welcomePrinter"
+				},
+				"Carborator":{
+					"viewName": "Carborator",
+					"viewLevel": 1,
+					"viewId": "Carborator"
+				},
+				"printingDetails":{
+					"viewName": "printingDetails",
+					"viewLevel": 1,
+					"viewId": "printingDetails"
 				}
 			}
 		}
