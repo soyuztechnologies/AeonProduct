@@ -1,0 +1,206 @@
+<mvc:View
+	controllerName="oft.fiori.controller.leaveRequest"
+	xmlns:l="sap.ui.layout"
+	xmlns:semantic="sap.m.semantic"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:u="sap.ui.unified"
+	xmlns="sap.m">
+<semantic:FullscreenPage id="page"
+	title="Leave Request"
+	floatingFooter="true"
+	showNavButton="false"
+	navButtonPress="onNavButtonPress"
+	>
+	<semantic:customHeaderContent>
+		<Text id="idUser"> </Text>
+		<Button icon="sap-icon://log" text="Logout" type="Emphasized" tooltip="Logout" press="logOutApp"/>
+	</semantic:customHeaderContent>
+	<l:ResponsiveFlowLayout>
+		<VBox renderType="Bare">
+		<layoutData>
+			<l:ResponsiveFlowLayoutData minWidth="320"/>
+		</layoutData>
+		<f:SimpleForm id="SimpleFormDisplay354wide"
+	editable="false"
+	layout="ResponsiveGridLayout"
+	title="Summary"
+	labelSpanXL="4"
+	labelSpanL="3"
+	labelSpanM="12"
+	labelSpanS="12"
+	adjustLabelSpan="false"
+	emptySpanXL="0"
+	emptySpanL="4"
+	emptySpanM="0"
+	emptySpanS="0"
+	columnsXL="2"
+	columnsL="1"
+	columnsM="1"
+	singleContainerFullSize="false">
+	<f:content>
+		<Label text="Validity" />
+		<Text id="idtextval" text="{parts:[{
+			path:'local>/LeaveStatic/DateFrom',
+			type:'sap.ui.model.type.Date',
+			formatOptions: {
+				style:'medium'
+			},
+			constraints: {
+			displayFormat:'Date'}},
+			{path:'local>/LeaveStatic/DateTo',
+			type:'sap.ui.model.type.Date',
+			formatOptions: {
+				style:'medium'
+			},
+			constraints:{
+			displayFormat:'Date'
+			}}],formatter:'.formatter.formatLRdate'}"></Text>
+
+		<Label text="Total Leaves Available" />
+		<Text text="{local>/LeaveStatic/TotalQuota}"></Text>
+		<Label text="Full Day leaves Consumed" />
+		<Text id="idFday" text="{local>/LeaveStatic/FullConsumed}" />
+		<Label text="Half day leaves Consumed" />
+		<Text id="idHFday" text="{local>/LeaveStatic/HalfConsumed}" />
+		<Label text="Available" />
+		<Text id="isAvailable" text="{local>/LeaveStatic/Available}" />
+	</f:content>
+</f:SimpleForm>
+<!--		<Panel id="leavedetails" expandable="true" expanded="true" width="auto"
+			headerText="Leave Entitlement" expand="onlDexpand">
+			<Table id="lDetailTable" inset="true" mode="none">
+				<headerToolbar>
+					<OverflowToolbar>
+						<Title id="idTitleLD" text="Items"/>
+						<ToolbarSpacer/>
+						<Label text="From" labelFor="idLDDate"/>
+						<DatePicker id="idLDDate" value="{local>/newLeaveRequest/Datefilter}" change="onDateChange" width="10rem" valueFormat="dd.MM.yyyy" />
+					</OverflowToolbar>
+				</headerToolbar>
+				<columns>
+					<Column id="idLt">
+						<Text text="Leave Type"/>
+					</Column>
+					<Column id="idValid">
+						<Text text="Validity"/>
+					</Column>
+					<Column id="idAvailable">
+						<Text text="Available"/>
+					</Column>
+					<Column id="idPlan">
+						<Text text="Planned"/>
+					</Column>
+					<Column id="idUsed">
+						<Text text="Used"/>
+					</Column>
+					<Column id="idEntlm">
+						<Text text="Entitlement"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<Text text="{local>/LeaveStatic/LeaveType}"></Text>
+							<Text text="{parts:[{
+								path:'local>/LeaveStatic/DateFrom',
+								type:'sap.ui.model.type.Date',
+								formatOptions: {
+									style:'medium'
+								},
+								constraints: {
+								displayFormat:'Date'}},
+								{path:'local>/LeaveStatic/DateTo',
+								type:'sap.ui.model.type.Date',
+								formatOptions: {
+									style:'medium'
+								},
+								constraints:{
+								displayFormat:'Date'
+								}}],formatter:'.formatter.formatLRdate'}"></Text>
+								<ObjectStatus id="idaval" text="{local>/LeaveStatic/Available}"
+										state="{path:'local>/LeaveStatic/Available', formatter:'.formatter.formatAvailable'}"
+									/>
+							<Text text="{local>/LeaveStatic/Planned}"></Text>
+							<Text text="{local>/LeaveStatic/Used}"></Text>
+							<Text text="{local>/LeaveStatic/TotalQuota}"></Text>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</Panel>-->
+<Panel id="Panel2" expandable="true" expanded="true" headerText="Request Overview"
+	width="auto">
+<OverflowToolbar>
+	<ToolbarSpacer/>
+<!--	<Label text="Show From" labelFor="idOvrDate"/>
+	<DatePicker id="idOvrDate" width="10rem" value="{local>/newLeaveRequest/Datefilter}"/>-->
+</OverflowToolbar>
+	<Table id="idTable2"	 items="{local>/LeaveRequests}" busyIndicatorDelay="0" class="sapUiContentPadding" mode="SingleSelectMaster">
+		<columns>
+			<Column halign="Left">
+				<Label text="Requested Date" class="columnLabelStyle"/>
+			</Column>
+			<Column halign="Left">
+				<Label text="Days" class="columnLabelStyle"/>
+			</Column>
+			<Column halign="Left">
+				<Label text="Status" class="columnLabelStyle"/>
+			</Column>
+			<Column halign="Left">
+				<Label text="Approver" class="columnLabelStyle"/>
+			</Column>
+			<Column halign="Left">
+				<Label text="Requested On" class="columnLabelStyle"/>
+			</Column>
+			<Column halign="Left">
+				<Label text="Delete" class="columnLabelStyle"/>
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem id="idColumnlist2">
+				<cells>
+					<ObjectAttribute id="idObj"
+						text="{parts:[{
+							path:'local>DateFrom',
+							type:'sap.ui.model.type.Date',
+							formatOptions: {
+								style:'medium'
+							},
+							constraints: {
+							displayFormat:'Date'}},
+							{path:'local>DateTo',
+							type:'sap.ui.model.type.Date',
+							formatOptions: {
+								style:'medium'
+							},
+							constraints:{
+							displayFormat:'Date'
+							}}],formatter:'.formatter.formatLRdate'}"/>
+					<Text text="{local>Days}"></Text>
+					<ObjectStatus id="idobjSt" text="{local>Status}"
+							state="{path:'local>Status', formatter:'.formatter.formatLRStatus'}"
+						/>
+
+					<Text text="{local>ApproverId}"></Text>
+					<Text text="{ path: 'local>RequestedOn',
+						type:'sap.ui.model.type.Date',
+						formatOptions:{ pattern:'dd.MM.YYYY' } }"></Text>
+					<Button id="iddelete" icon="sap-icon://sys-cancel"
+						press="onDelete" type="Transparent"
+						enabled="{path:'local>Status', formatter:'.formatter.formatButtonStatus'}"
+						/>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</Panel>
+</VBox>
+</l:ResponsiveFlowLayout>
+<semantic:mainAction>
+	<semantic:MainAction id="idcreateleave" text="Create Request" press="onCreateLeave"/>
+</semantic:mainAction>
+
+</semantic:FullscreenPage>
+</mvc:View>

@@ -1,0 +1,21 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Popover showHeader="false" placement="Top">
+        <f:SimpleForm id="SimpleFormStudent" editable="false" layout="ResponsiveGridLayout" title="Student Details">
+            <f:content>
+                <Label text="Father Name" />
+                <Text id="fatherName" text="{local>/parentDetails/FatherName}" />
+                <Label text="Mother Name" />
+                <Text id="motherName" text="{local>/parentDetails/MotherName}" />
+                <Label text="Contact No" />
+                <Text id="contactNo" text="{local>/parentDetails/Phone}" />
+                <Label text="Email" />
+                <Text id="Email" text="{local>/parentDetails/EmailId}" />
+                
+            </f:content>
+        </f:SimpleForm>
+    </Popover>
+</core:FragmentDefinition>

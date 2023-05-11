@@ -1,0 +1,57 @@
+{
+  "initial:before": {
+    "loopback#favicon": {}
+  },
+  "initial": {
+    "compression": {},
+    "cors": {
+      "params": {
+        "origin": true,
+        "credentials": true,
+        "maxAge": 86400
+      }
+    },
+    "loopback-context#per-request": {}
+  },
+  "session": {},
+  "auth": {
+    "loopback#token": {}
+  },
+  "parse": { 
+    "body-parser#json": { 
+      "params": { 
+        "strict": false, 
+        "limit": "50mb" 
+      } 
+    }, 
+    "body-parser#urlencoded":{
+      "params": { 
+      "extended": true, 
+      "limit": "50mb"
+      } 
+    } 
+  },
+  "routes": {
+    "n-odata-server#odata": {
+      "paths": [
+        "/odata/*"
+      ]
+    },
+    "loopback#rest": {
+      "paths": [
+        "${restApiRoot}"
+      ]
+    }
+  },
+  "files": {
+    "loopback#static": {
+      "params": "$!../client/webapp"
+    }
+  },
+  "final": {
+    "loopback#urlNotFound": {}
+  },
+  "final:after": {
+    "loopback#errorHandler": {}
+  }
+}

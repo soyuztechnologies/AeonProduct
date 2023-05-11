@@ -1,0 +1,65 @@
+<mvc:View controllerName="oft.fiori.controller.holidayCalendar"
+  xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.m"
+  xmlns:semantic="sap.m.semantic" xmlns:t="sap.ui.table" xmlns:l="sap.m.ListBase"
+  xmlns:f="sap.ui.layout.form">
+  <semantic:FullscreenPage
+    title="Daily Task">
+    <semantic:customHeaderContent>
+  		<Text id="idUser"> </Text>
+  		<Button icon="sap-icon://log" text="Logout" type="Emphasized" tooltip="Logout" press="logOutApp"/>
+  	</semantic:customHeaderContent>
+    <semantic:content id="idContent">
+      <f:SimpleForm editable="true" id="idform">
+      	<f:content>
+      		<Label text="Date" />
+
+            <DatePicker id="idHoliday" displayFormat="dd.MM.yyyy"
+            change="onDateChange" dateValue="{'local>/holidayCalendar/Date'}"/>
+            <Label text="Day" />
+            <Input id="idDay" width="30%" enabled="" ></Input>
+            <Label text="Occasion" />
+            <Input width="100%" id="idOccasion"></Input>
+            <Label/>
+      		<Button id="idHolidayBtn" width="20%" text="Save" press="onSave"  enabled="true"></Button>
+      	</f:content>
+      </f:SimpleForm>
+    </semantic:content>
+        <semantic:content>
+            <!-- <Label id="idTxt" design="Bold" /> -->
+          <Table
+            id="idHolidayTable"
+            selectionMode="None"
+            items="{/HolidayCalendars}"
+            updateFinished="onUpdateFinished">
+
+              <columns>
+                <Column>
+                 <Label text="Day"></Label>
+                </Column>
+                <Column>
+                 <Label text="Date"></Label>
+                </Column>
+                <Column>
+                  <Label text="Occasion" />
+                </Column>
+                <Column>
+                   <Label text="Delete"/>
+                 </Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{Day}" />
+                    <Text text="{Date}" />
+                    <Text text="{Occasion}" />
+                    <Button icon="sap-icon://delete" />
+                  </cells>
+                </ColumnListItem>
+              </items>
+
+            </Table>
+</semantic:content>
+    <semantic:customFooterContent>
+    </semantic:customFooterContent>
+</semantic:FullscreenPage>
+</mvc:View>

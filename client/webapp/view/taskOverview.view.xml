@@ -1,0 +1,59 @@
+<mvc:View controllerName="oft.fiori.controller.taskOverview"
+  xmlns:l="sap.ui.layout"
+	xmlns:semantic="sap.m.semantic"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:u="sap.ui.unified"
+	xmlns="sap.m"
+  xmlns:t="sap.ui.table"
+	>
+  <semantic:FullscreenPage
+    title="Task Overview">
+    <semantic:customHeaderContent>
+  		<Text id="idUserl"> </Text>
+  		<Button icon="sap-icon://log" text="Logout" type="Emphasized" tooltip="Logout" press="logOutApp"/>
+  	</semantic:customHeaderContent>
+    <semantic:content id="idContent">
+    	<VBox>
+      <f:SimpleForm editable="true" id="idform">
+      	<f:content>
+      		<Label text="Date" />
+          <DatePicker id="idCoDate1" displayFormat="dd.MM.yyyy"
+            change="onDateChange" value="{'local>/tasks/CrDate'}"> </DatePicker>
+
+          <Label text="Users" />
+          <ComboBox id="idUser" items="{/AppUsers}" selectionChange="onSelect">
+    				<items>
+    					<core:Item key="{TechnicalId}" text="{UserName}"/>
+    				</items>
+    				</ComboBox>
+      	</f:content>
+      </f:SimpleForm>
+      <Label id="idTxt" design="Bold" />
+             <Table
+               id="idCoTable"
+               selectionMode="None"
+               updateFinished="onUpdateFinished">
+                 <columns>
+                   <Column>
+                    <Label text="Create Date"></Label>
+                   </Column>
+                   <Column>
+                    <Label text="User Name"></Label>
+                   </Column>
+                   <Column>
+                     <Label text="Task Type" />
+                   </Column>
+                  <Column>
+                     <Label text="{i18n>taskWorkedOn}"/>
+                   </Column>
+                   <Column>
+                     <Label text="Number Of Hours" />
+                   </Column>
+                 </columns>
+               </Table>
+             </VBox>
+             </semantic:content>
+             </semantic:FullscreenPage>
+             </mvc:View>

@@ -1,0 +1,32 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:u="sap.ui.unified"
+	xmlns:core="sap.ui.core"  xmlns:mvc="sap.ui.core.mvc">
+	<Table headerText="Pending Leaves" items="{local>/appUsers}">
+			<columns>
+				<Column>
+					<Text text="User Name"></Text>
+				</Column>
+				<Column>
+					<Text text="Date FROM and TO"></Text>
+				</Column>
+				<Column>
+					<Text text="Days"></Text>
+				</Column>
+				<Column>
+					<Text text="Available Leaves"></Text>
+				</Column>
+				<Column>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<cells>
+						<Text  text="{local>User}"></Text>
+						<Text  text="{}"></Text>
+						<Text  text="{}"></Text>
+						<Text  text="{}"></Text>
+						<Button text="Approve" press="onApprove"/>
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+</core:FragmentDefinition>

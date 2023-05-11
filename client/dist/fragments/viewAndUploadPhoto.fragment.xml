@@ -1,0 +1,20 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:u="sap.ui.unified" xmlns:core="sap.ui.core">
+  <Dialog >
+  <VBox>
+    <HBox>
+      <Image id="image" src="" width="200px" height="200px" />
+    </HBox>
+    <HBox>
+      <u:FileUploader name="photoUploader"
+                    sendXHR="false"
+                    change=".onFileUploaderChange"
+                    fileType="jpg,png"
+                    maximumFileSize="4194304"
+                    buttonText="Upload" />
+    </HBox>
+  </VBox>
+  <endButton>
+    <Button id="closeItem" text="Close" press="onUploadPhotoClose"></Button>
+  </endButton>
+</Dialog >
+</core:FragmentDefinition>

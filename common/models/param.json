@@ -1,0 +1,47 @@
+{
+	"name": "Param",
+	"plural": "Params",
+	"base": "PersistedModel",
+	"idInjection": false,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"Code": {
+			"type": "string",
+			"default": "null",
+			"required": true,
+			"id":true
+		},
+		"Description": {
+			"type": "string",
+			"required": true,
+			"default": "null"
+		},
+		"CreatedOn": {
+			"type": "date",
+			"default": "null"
+		},
+		"UpdatedOn": {
+			"type": "date",
+			"default": "null"
+		},
+		"Value":{
+			"type": "String",
+			"default": "null",
+			"required": false
+		}
+	},
+	"scope": {
+		"order": "CreatedOn DESC"
+	},
+	"validations": [],
+  	"relations": {},
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}

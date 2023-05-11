@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<script
+			src="https://ui5.sap.com/resources/sap-ui-core.js"
+			id="sap-ui-bootstrap"
+			data-sap-ui-libs="sap.m, sap.ui.layout, sap.viz, sap.ui.commons"
+			data-sap-ui-theme="sap_belize"
+			data-sap-ui-resourceroots='{ "oft.fiori" : "./" }'
+			data-sap-ui-xx-bindingSyntax="complex"
+		>
+
+		</script>
+			<script link rel="stylesheet" type="text/css" href="css/style.css" ></script>
+			
+		<script>
+
+			//Mimcking Fiori Lunnchpad
+			var oCompContainer = new sap.ui.core.ComponentContainer({
+				name: "oft.fiori"
+			});
+
+			oCompContainer.placeAt("content");
+
+
+		</script>
+
+
+	</head>
+	<body style="overflow: hidden;">
+		<div id="content"></div>
+	</body>
+</html>

@@ -1,0 +1,167 @@
+<mvc:View controllerName="oft.fiori.controller.dailyTasks"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:core="sap.ui.core"
+  xmlns="sap.m"
+  xmlns:semantic="sap.m.semantic"
+  xmlns:t="sap.ui.table"
+  xmlns:l="sap.m.ListBase"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:lt="sap.ui.layout"
+  xmlns:viz="sap.viz.ui5.controls"
+  xmlns:viz.data="sap.viz.ui5.data"
+  xmlns:chart="sap.suite.ui.commons"
+  xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds">
+
+  <semantic:FullscreenPage  title="Daily Task">
+    <semantic:customHeaderContent>
+      <Text id="idUser"> </Text>
+      <Button icon="sap-icon://log" text="Logout" type="Emphasized" tooltip="Logout" press="logOutApp"/>
+    </semantic:customHeaderContent>
+
+    <lt:VerticalLayout id="containerLayout" width="100%">
+      <lt:BlockLayout id="BlockLayout">
+        <lt:BlockLayoutRow accentCells="Accent1">
+          <lt:BlockLayoutCell>
+
+            <viz:VizFrame id="idVizFrame"
+              uiConfig="{applicationSet:'fiori'}"
+              vizType='pie'
+              width="auto"
+              vizProperties="{
+              plotArea:{ dataLabel:{visible: true} },
+              legendGroup:{layout:{position: 'left'}},
+              title : {text:'Task Hours Performed for this Month'}
+              }"
+              >
+              <viz:dataset>
+                <viz.data:FlattenedDataset data="{PieChartModel>/PieData}" >
+                  <viz.data:dimensions>
+                    <viz.data:DimensionDefinition name="TaskType" value="{taskType}" />
+                  </viz.data:dimensions>
+                  <viz.data:measures>
+                    <viz.data:MeasureDefinition name="NoOfHours"   value="{hourWorked}" />
+                  </viz.data:measures>
+                </viz.data:FlattenedDataset>
+              </viz:dataset>
+              <viz:feeds>
+                <viz.feeds:FeedItem uid="size" type="Measure" values="NoOfHours" />
+                <viz.feeds:FeedItem uid="color" type="Dimension" values="TaskType" />
+              </viz:feeds>
+            </viz:VizFrame>
+          </lt:BlockLayoutCell>
+
+          <lt:BlockLayoutCell>
+            <Text text="Tasks Details" />
+
+            <f:SimpleForm id="idform" editable="true" backgroundDesign="Transparent">
+
+              <Label text="Date" />
+              <DatePicker id="idCoDate1" displayFormat="dd.MM.yyyy"
+                change="onDateChange" dateValue="{'local>/tasks/CrDate'}"/>
+                <Label text="Task Type">
+                </Label>
+                <Select id="idTaskType" select="onTypeSel">
+                  <items>
+                    <core:Item text="Google Business Post" key="GB" />
+                    <core:Item text="Linkedin Post" key="LP" />
+                    <core:Item text="Facebook Post" key="FP" />
+                    <core:Item text="Tweets" key="TW" />
+                    <core:Item text="SEO Tools MR,GSA" key="ST" />
+                    <core:Item text="Anu Bot" key="AB" />
+                    <core:Item text="Competitor Kill" key="CK" />
+                    <core:Item text="Customer Interaction Calls/Mails" key="CI" />
+                    <core:Item text="Pinetrust Post" key="PT" />
+                    <core:Item text="SAP Server Work" key="SW" />
+                    <core:Item text="Website Development" key="WD" />
+                    <core:Item text="Website Review posts" key="WR" />
+                    <core:Item text="Trainings" key="TR" />
+                    <core:Item text="Team Meeting" key="TM" />
+                    <core:Item text="Team Event" key="TE" />
+                    <core:Item text="Self Learning" key="SE" />
+                    <core:Item text="Others" key="OT" />
+                  </items>
+                </Select>
+                <Label text="Task Worked On" />
+                <Input id="idWOn"></Input>
+                <Label text="No. of hours Worked" />
+                <Input width="100px" id="idWH"></Input>
+                <Label text="Link of work" />
+                <Input id="idLink" value="http://" placeholder="put link of work...."></Input>
+                <Button id="idBtn" text="Save" press="onSave"  enabled="true"></Button>
+              </f:SimpleForm>
+            </lt:BlockLayoutCell>
+          </lt:BlockLayoutRow>
+        </lt:BlockLayout>
+      </lt:VerticalLayout>
+      <!-- ================================================== -->
+      <!-- <semantic:content id="idContent">
+      <f:SimpleForm editable="true" id="idform">
+      <f:content> -->
+      <!-- <Label text="Date" />
+      <DatePicker id="idCoDate1" displayFormat="dd.MM.yyyy"
+      change="onDateChange" dateValue="{'local>/tasks/CrDate'}"/>
+      <Label text="Task Type">
+    </Label>
+    <Select id="idTaskType" select="onTypeSel">
+    <items>
+    <core:Item text="Google Business Post" key="GB" />
+    <core:Item text="Linkedin Post" key="LP" />
+    <core:Item text="Facebook Post" key="FP" />
+    <core:Item text="Tweets" key="TW" />
+    <core:Item text="SEO Tools MR,GSA" key="ST" />
+    <core:Item text="Anu Bot" key="AB" />
+    <core:Item text="Competitor Kill" key="CK" />
+    <core:Item text="Customer Interaction Calls/Mails" key="CI" />
+    <core:Item text="Pinetrust Post" key="PT" />
+    <core:Item text="SAP Server Work" key="SW" />
+    <core:Item text="Website Development" key="WD" />
+    <core:Item text="Website Review posts" key="WR" />
+    <core:Item text="Trainings" key="TR" />
+    <core:Item text="Team Meeting" key="TM" />
+    <core:Item text="Team Event" key="TE" />
+    <core:Item text="Self Learning" key="SE" />
+    <core:Item text="Others" key="OT" />
+  </items>
+</Select>
+<Label text="Task Worked On" />
+<Input id="idWOn"></Input>
+<Label text="No. of hours Worked" />
+<Input width="100px" id="idWH"></Input>
+<Label text="Link of work" />
+<Input id="idLink" value="http://" placeholder="put link of work...."></Input>
+<Button id="idBtn" text="Save" press="onSave"  enabled="true"></Button> -->
+<!-- </f:content>
+</f:SimpleForm>
+</semantic:content> -->
+<semantic:content>
+  <Label id="idTxt" design="Bold" />
+  <Table
+    id="idCoTable"
+    selectionMode="None"
+    updateFinished="onUpdateFinished">
+    <columns>
+      <Column>
+        <Label text="Task Worked On"></Label>
+      </Column>
+      <Column>
+        <Label text="Date"></Label>
+      </Column>
+      <Column>
+        <Label text="Task Type" />
+      </Column>
+      <Column>
+        <Label text="Hours"/>
+      </Column>
+      <Column>
+        <Label text="Link" />
+      </Column>
+      <Column>
+        <Label text="Delete"/>
+      </Column>
+    </columns>
+  </Table>
+</semantic:content>
+<!-- <semantic:customFooterContent>
+</semantic:customFooterContent> -->
+</semantic:FullscreenPage>
+</mvc:View>

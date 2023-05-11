@@ -1,0 +1,38 @@
+{
+  "restApiRoot": "/api",
+  "host": "0.0.0.0",
+  "port": 3000,
+  "remoting": {
+    "context": {
+      "enableHttpContext": true
+    },
+    "logoutSessionsOnSensitiveChanges": true,
+    "session": {
+      "name": "session",
+      "secret": "someSecret",
+      "cookie": {
+        "maxAge": 86400000
+      },
+      "resave": true,
+      "saveUninitialized": true,
+      "rolling": true
+    },
+    "rest": {
+      "normalizeHttpPath": false,
+      "xml": false
+    },
+    "json": {
+      "strict": false,
+      "limit": "52428800"
+    },
+    "urlencoded": {
+      "extended": true,
+      "limit": "52428800"
+    },
+    "cors": false,
+    "errorHandler": {
+      "disableStackTrace": false
+    }
+  },
+  "legacyExplorer": false
+}

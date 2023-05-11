@@ -1,0 +1,83 @@
+{
+  "name": "AppUser",
+  "plural": "AppUsers",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "TechnicalId": {
+      "type": "string",
+      "required": true
+    },
+    "EmailId": {
+      "type": "string",
+      "required": true
+    },
+    "UserName": {
+      "type": "string",
+      "required": true
+    },
+    "Role": {
+      "type": "string",
+      "required": true
+    },
+    "JoiningDate": {
+      "type": "date"
+    },
+    "BDay": {
+      "type": "date"
+    },
+    "Salary":{
+      "type": "number"
+    },
+    "LeaveQuota":{
+      "type": "number",
+      "default": 8
+    },
+    "Holiday":{
+      "type": "string",
+      "default": "Monday"
+    },
+    "MobileNo":{
+      "type": "string"
+    },
+    "CreatedOn": {
+      "type": "date"
+    },
+    "CreatedBy": {
+      "type": "string",
+      "default": "null"
+    },
+    "ChangedOn": {
+      "type": "date"
+    },
+    "ChangedBy": {
+      "type": "string",
+      "default": "null"
+    }
+  },
+  "validations": [],
+  "relations":{
+    "leaveRequests":{
+      "type":"hasMany",
+      "model":"LeaveRequest",
+      "foreignKey":"AppUserId"
+    },
+    "ToTasks":{
+      "type":"hasMany",
+      "model":"task",
+      "foreignKey":"CreatedBy"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
+}
