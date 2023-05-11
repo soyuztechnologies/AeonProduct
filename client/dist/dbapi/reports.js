@@ -1,2 +1,0 @@
-sap.ui.define([],function(){return{getPendingStudentsReport:function(e){return new Promise(function(n,t){switch(e){case"PDF":break;case"Excel":break;default:}})},getServerUsageReport:function(e){return new Promise(function(n,t){switch(e){case"PDF":break;case"Excel":break;default:}})},getOngoingBatches:function(e){return new Promise(function(n,t){switch(e){case"PDF":break;case"Excel":break;default:}})}}});
-//# sourceMappingURL=reports.js.map

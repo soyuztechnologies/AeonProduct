@@ -1,34 +1,53 @@
 <!DOCTYPE html>
 <html>
-	<head>
 
-		<script
-			src="https://ui5.sap.com/resources/sap-ui-core.js"
-			id="sap-ui-bootstrap"
-			data-sap-ui-libs="sap.m, sap.ui.layout, sap.viz, sap.ui.commons"
-			data-sap-ui-theme="sap_belize"
-			data-sap-ui-resourceroots='{ "oft.fiori" : "./" }'
-			data-sap-ui-xx-bindingSyntax="complex"
-		>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Aromata - MES 4 BeAS</title>
+	<!-- <link rel="shortcut icon" type="image/x-icon" href="https://icon-library.com/images/2018/8494995_grease-logo-customer-transparent-png.png"> -->
 
+	<script id="sap-ui-bootstrap" src="https://ui5.sap.com/1.111.1/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+		data-sap-ui-bindingSyntax="complex" data-sap-ui-resourceroots='{
+				"ent.ui.ecommerce": "./"
+			}' data-sap-ui-oninit="module:sap/ui/core/ComponentSupport" data-sap-ui-compatVersion="edge"
+		data-sap-ui-async="true" data-sap-ui-preload="async" data-sap-ui-frameOptions="trusted">
 		</script>
-			<script link rel="stylesheet" type="text/css" href="css/style.css" ></script>
-			
-		<script>
+	<script>
+		function fetchSimilarHeaders(callback) {
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function () {
+				if (request.readyState === XMLHttpRequest.DONE) {
+					//
+					// The following headers may often be similar
+					// to those of the original page request...
+					//
+					if (callback && typeof callback === 'function') {
+						callback(request.getAllResponseHeaders());
+					}
+				}
+			};
 
-			//Mimcking Fiori Lunnchpad
-			var oCompContainer = new sap.ui.core.ComponentContainer({
-				name: "oft.fiori"
-			});
+			//
+			// Re-request the same page (document.location)
+			// We hope to get the same or similar response headers to those which 
+			// came with the current page, but we have no guarantee.
+			// Since we are only after the headers, a HEAD request may be sufficient.
+			//
+			request.open('HEAD', document.location, true);
+			request.send(null);
+		}
+		function CallHeader(headerData) {
+			// console.log(headerData);
+			sessionStorage.Header=headerData;
+		}
+		fetchSimilarHeaders(CallHeader);
+	</script>
+</head>
 
-			oCompContainer.placeAt("content");
+<body class="sapUiBody">
+	<div data-sap-ui-component data-name="ent.ui.ecommerce" data-id="container"
+		data-settings='{"id" : "ent_eCom_ui"}'></div>
+</body>
 
-
-		</script>
-
-
-	</head>
-	<body style="overflow: hidden;">
-		<div id="content"></div>
-	</body>
 </html>

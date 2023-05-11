@@ -26,55 +26,7 @@ app.use(session({
 
 
 app.use(fileUpload());
-// function myMiddleware(options) {
-// 	return function(req, res, next) {
-// 	  // Your middleware code here
-// 	  console.log('Incoming request:', req.url);
-// 	  if(req.url.includes("/odata/")){
-// 		debugger;
-// 	  }
-// 	  if(req.url.includes("/api/Users/login")){
-// 		debugger;
-// 		// var originalEnd = res.end;
 
-// 		// // Replace the end function with our own
-// 		// res.end = function(chunk, encoding) {
-// 		//   // Your middleware after code here
-// 		//   debugger;
-// 		//   console.log('Outgoing response:', res.statusCode);
-	
-// 		//   // Call the original end function
-// 		//   originalEnd.call(res, chunk, encoding);
-// 		// };
-// 		res.on('data', function(data) {
-// 			debugger;
-// 			console.log(data);
-// 		   });
-// 	  }
-  
-// 	  // Call the next middleware function in the chain
-// 	  next();
-// 	}
-// };
-
-// var AccessToken = app.models.AccessToken;
-// var User = app.models.User;
-
-// AccessToken.findById(accessTokenId, function(err, accessToken) {
-//   if (err) return next(err);
-  
-//   User.findById(accessToken.userId, function(err, user) {
-//     if (err) return next(err);
-    
-//     // Clear the user's access token
-//     user.accessTokens.destroyAll(function(err) {
-//       if (err) return next(err);
-      
-//       // Access token cleared successfully
-//       res.sendStatus(200);
-//     });
-//   });
-// });
 
 function myMiddleware(options) {
 	return function(req, res, next) {
@@ -84,9 +36,7 @@ function myMiddleware(options) {
 	  if(req.url.includes("/api/Users/login")){
 		var originalSend = res.send;
 		res.send = function(body) {
-			// Check if the response body has a "cookie" property
 			if (body && JSON.parse(body).id) {
-			  // Set the cookie in the response headers
 			  res.cookie('soyuz_session', JSON.parse(body).id);
 			}
 			// Call the original send function with the unmodified body

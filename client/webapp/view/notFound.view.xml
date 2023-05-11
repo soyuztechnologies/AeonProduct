@@ -1,0 +1,21 @@
+<mvc:View
+	controllerName="ent.ui.ecommerce.controller.notFound"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+
+	<MessagePage
+		id="page"
+		title="{i18n>notFoundTitle}"
+		text="{i18n>notFoundText}"
+		icon="sap-icon://document"
+		showNavButton="false"
+        description=""
+		navButtonPress=".onNavBack">
+
+		<buttons>
+			
+			<Button text="{i18n>LogOut}" press="onLogOut"/>
+		</buttons>
+	</MessagePage>
+
+</mvc:View>

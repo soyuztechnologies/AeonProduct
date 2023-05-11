@@ -1,6 +1,0 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="oft.fiori.controller.leadDetails"
-    xmlns:f = "sap.ui.layout.form" xmlns:l="sap.ui.layout"
-	xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page >
-	</Page>
-</mvc:View>

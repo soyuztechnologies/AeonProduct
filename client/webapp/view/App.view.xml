@@ -1,7 +1,20 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:c="sap.ui.commons" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="oft.fiori.controller.App"
-	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:semantic="sap.m.semantic" xmlns:pageLayout="sap.uxap" displayBlock="true">
-	<!-- <Page enableScrolling="true" showFooter="true"> -->
-		<SplitApp id="idSplitApp" ></SplitApp>	
-	<!-- </Page> -->
-	     
+<mvc:View controllerName="ent.ui.ecommerce.controller.App" displayBlock="false" height="100%"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:tnt="sap.tnt">
+    <App id="app" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" navigate="onNavigation">
+      
+        <tnt:ToolPage sideExpanded="{appView>/sideNav/expanded}">
+            <tnt:header>
+                <tnt:ToolHeader visible="true">
+                    <!-- <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Toolbar" type="XML" /> -->
+                </tnt:ToolHeader>
+            </tnt:header>
+            <tnt:mainContents>
+                <f:FlexibleColumnLayout id="layout" layout="{appView>/layout}" backgroundDesign="Translucent" beginColumnNavigate="onNavigation" />
+            </tnt:mainContents>
+        </tnt:ToolPage>
+    </App>
 </mvc:View>

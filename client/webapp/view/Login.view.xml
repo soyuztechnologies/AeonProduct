@@ -1,0 +1,56 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:form="sap.ui.layout.form" xmlns="sap.m" controllerName="ent.ui.ecommerce.controller.Login" xmlns:html="http://www.w3.org/1999/xhtml">
+	<!-- <App id="idAppCon"> -->
+		<Page enableScrolling="false" showHeader="false" class="sapUiTinyMargin" >
+			
+			<content>
+				
+
+				<VBox alignItems="Center" direction="Column" fitContainer="true" width="100%" height="100%" justifyContent="Center" renderType="Div" visible="true" displayInline="false">
+					<items>
+						<form:Form width="100%" editable="false" visible="true">
+							<form:title>
+								<core:Title id="idTitleLogin" text="{i18n>Login}" level="H1" icon="sap-icon://visits" />
+							</form:title>
+							<form:formContainers>
+								<form:FormContainer visible="true">
+									<form:formElements>
+										<form:FormElement visible="true">
+											<form:label>
+												<Label text="" design="Bold" width="100%" required="false" textAlign="Center" textDirection="Inherit" visible="true" />
+											</form:label>
+											<form:fields>
+												<Input id="userid" placeholder="{i18n>userName}" type="Text" width="auto" />
+											</form:fields>
+										</form:FormElement>
+										<form:FormElement visible="true">
+											<form:label>
+												<Label text="" design="Bold" width="100%" required="false" textAlign="Center" textDirection="Inherit" visible="true" />
+											</form:label>
+											<form:fields>
+												<Input placeholder="{i18n>password}" type="Password" id="pwd" submit="Login" enabled="true" visible="true" width="auto" maxLength="0" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" />
+											</form:fields>
+										</form:FormElement>
+										<form:FormElement visible="true">
+											<form:label>
+												<Label text="" design="Standard" width="100%" required="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+											</form:label>
+											<form:fields>
+												<Button id="idLoginButton" text="{i18n>login}" press="Login" type="Emphasized" icon="sap-icon://feeder-arrow" iconFirst="false" width="auto" iconDensityAware="false" />
+											</form:fields>
+										</form:FormElement>
+									</form:formElements>
+									<form:title />
+								</form:FormContainer>
+							</form:formContainers>
+							<form:layout>
+								<form:ResponsiveGridLayout adjustLabelSpan="false" columnsL="2" labelSpanL="3" columnsM="1" labelSpanM="2" labelSpanS="12" />
+							</form:layout>
+						</form:Form>
+					</items>
+					<layoutData />
+				</VBox>
+			</content>
+			<footer></footer>
+		</Page>
+	<!-- </App> -->
+</mvc:View>

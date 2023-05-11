@@ -28,7 +28,7 @@
     "options": {
       "strictObjectIDCoercion": true
     },
-    "acls":[
+    "acls": [
       {
         "accessType": "READ",
         "principalType": "ROLE",
@@ -53,13 +53,12 @@
     "dataSource": "mongoatlas",
     "public": true
   },
- "Param":{
-  "dataSource": "mongoatlas",
-  "public": true
- },
- "Job":{
-  "dataSource": "mongoatlas",
-  "public": true
- }
+  "Param": {
+    "dataSource": "mongoatlas",
+    "public": true
+  },
+  "Job": {
+    "dataSource": "mongoatlas",
+    "public": true
+  }
 }
-``

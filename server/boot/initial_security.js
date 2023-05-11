@@ -23,6 +23,7 @@ var InitSecurity = (function () {
     				});
     			} else {
             //user.user.updateAttribute('password', 'Welcome1');
+                    console.log("User Found Creating role");
     				this.initRoleForUser(user);
     			}
     		}).catch((err) => {
@@ -31,6 +32,7 @@ var InitSecurity = (function () {
     };
     InitSecurity.prototype.initRoleForUser = function (user) {
         var _this = this;
+        debugger;
         this.Role.findOne({ where: { name: 'r_admin' }, include: 'principals' }).then(function (role) {
             if (!role) {
                 _this.Role.create({ name: 'r_admin', description: 'grants general access to businesstrips' }).then(function (role) {
@@ -44,7 +46,8 @@ var InitSecurity = (function () {
                 });
             }
             else {
-            //  _this.assignUserToRole(user, role);
+             _this.assignUserToRole(user, role);
+            console.log("role found");
             }
         });
 

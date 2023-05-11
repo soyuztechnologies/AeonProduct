@@ -1,0 +1,62 @@
+[
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V10000",
+    "CardName": "ASL Monza (Iva Sosp)"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V10100",
+    "CardName": "Cartoleria Pianeta"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V20000",
+    "CardName": "Dott. Alberto Previtali"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V21000",
+    "CardName": "Sea Corp"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V22000",
+    "CardName": "Ocean Computers"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V23000",
+    "CardName": "RT Trancerie"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V23020",
+    "CardName": "RT Trancerie R&D"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V30000",
+    "CardName": "Assemblaggio servers srl"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V50000",
+    "CardName": "CTI Computers"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V60000",
+    "CardName": "PC Store Italia Spa"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V70000",
+    "CardName": "SMD Technologies"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "CardCode": "V70010",
+    "CardName": "Pulizie Splendid"
+  }
+]

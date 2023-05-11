@@ -1,0 +1,367 @@
+[
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "R00001",
+    "ItemName": "Carta Bianca A4 per stampanti"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "R00002",
+    "ItemName": "Carta Riciclata A4 per stampanti"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "A00001",
+    "ItemName": "J.B. Stampante Office 1420"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "A00002",
+    "ItemName": "J.B. Stampante Office 1111"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "A00003",
+    "ItemName": "J.B. Stampante Office 1186"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "A00004",
+    "ItemName": "Rainbow Stampante Colori 5.0"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "A00005",
+    "ItemName": "Rainbow Stampante Colori 7.5"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "A00006",
+    "ItemName": "Rainbow Stampante 1200 Laser"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "AU00001",
+    "ItemName": "Fiat iveco piccolo"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "AU00002",
+    "ItemName": "Mercedes 500 CN"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "B10000",
+    "ItemName": "Etichette Adesive per stampante"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00001",
+    "ItemName": "Scheda Madre BTX"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00002",
+    "ItemName": "Scheda Madre Micro ATX"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00003",
+    "ItemName": "Processore P4 3.4 GhZ"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00004",
+    "ItemName": "Tower Case con Alimentatore"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00005",
+    "ItemName": "Scheda Rete WLAN"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00006",
+    "ItemName": "Scheda Rete 10/100"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00007",
+    "ItemName": "Disco Fisso 3 TB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00008",
+    "ItemName": "Monitor 24\" HDMI"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00009",
+    "ItemName": "Tastiera Comfort USB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00010",
+    "ItemName": "Mouse USB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00011",
+    "ItemName": "Memoria DDR RAM 8GB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00012",
+    "ItemName": "Cabinet for external HD"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00013",
+    "ItemName": "1 TB disk for external HD"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "C00014",
+    "ItemName": "Laptop case"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "D00001",
+    "ItemName": "Portable Hard Disk 1TB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "D00002",
+    "ItemName": "Portable Hard Disk 2TB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "E00001",
+    "ItemName": "Secondhand Tablets"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00001",
+    "ItemName": "Blu-Ray Disc 10-Pack"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00002",
+    "ItemName": "Blu-Ray DL Disc 50-Pack"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00003",
+    "ItemName": "USB Flashdrive 128GB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00004",
+    "ItemName": "USB Flashdrive 256GB"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00005",
+    "ItemName": "Batteria J.B. Laptop serie X1"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00006",
+    "ItemName": "Batteria J.B. Laptop serie X2"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00007",
+    "ItemName": "Cartuccia Rainbow Stampante 95 Inkjet"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00008",
+    "ItemName": "Cartuccia Rainbow Ink 6-Pack & Photo Paper Kit"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00009",
+    "ItemName": "SLR PreciseShot PX1500"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00010",
+    "ItemName": "SRL M-CAM 40C"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00011",
+    "ItemName": "KG USB 2.0 Travel Hub"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00012",
+    "ItemName": "KG PC-to-Mac Transfer Kit"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "I00013",
+    "ItemName": "SDHC 64 GB CLASS 10"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "L10001",
+    "ItemName": "Ore di Lavoro"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LB0001",
+    "ItemName": "Tariffa Giornaliera Servizi di Supporto"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LB0002",
+    "ItemName": "Tariffa Oraria Servizi di Supporto"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LB0010",
+    "ItemName": "Servizi"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029",
+    "ItemName": "Stampante LM4029"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029ACA",
+    "ItemName": "Adattatore AC Stampante LM4029"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029APCD",
+    "ItemName": "Cavo Alimentazione AC Stampante LM4029"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029D",
+    "ItemName": "Cassetto Stampante LM4029 500"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029MC",
+    "ItemName": "Scheda di Memoria"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029PH",
+    "ItemName": "Testina Stampante LM4029"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029PS",
+    "ItemName": "Alimentatore Stampante LM4029"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "LM4029SB",
+    "ItemName": "Scheda Madre Stampante LM4029"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Art1",
+    "ItemName": "MRP_Art1"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Art2",
+    "ItemName": "MRP_Art2"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Art3",
+    "ItemName": "MRP_Art3"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Art4",
+    "ItemName": "MRP_Art4"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Art5",
+    "ItemName": "MRP_Art5"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Base",
+    "ItemName": "MRP_Base"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Distinta",
+    "ItemName": "MRP_Distinta"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Prod1",
+    "ItemName": "MRP_Prod1"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "MRP_Prod2",
+    "ItemName": "MRP_Prod2"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "P10001",
+    "ItemName": "PC - 8x core, DDR 32GB, 2TB HDD"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "P10002",
+    "ItemName": "PC - 12x core, 64GB 5 x 150GB SDD"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "P10003",
+    "ItemName": "PC Set 1"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "P10004",
+    "ItemName": "PC Set 2"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "P20001",
+    "ItemName": "4GB Memory Server"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "P20002",
+    "ItemName": "32GB Memory Server"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "P20003",
+    "ItemName": "External HD"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "S10000",
+    "ItemName": "Server Point 10000"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "TR0001",
+    "ItemName": "Spese Viaggio per 100 Km"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "Z00001",
+    "ItemName": "Tablet PC 64GB Nero"
+  },
+  {
+    "@odata.etag": "W/\"356A192B7913B04C54574D18C28D46E6395428AB\"",
+    "ItemCode": "Z00002",
+    "ItemName": "Tablet PC 64GB Bianco"
+  }
+]

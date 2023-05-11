@@ -1,7 +1,0 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
-	<Dialog title="Id Cards" id="idGenerateIdFrag" contentHeight="auto" contentWidth="auto" busyIndicatorDelay="0">
-		<FormattedText
-				htmlText="{local>/htmlcontent}"
-			/>
-	</Dialog>
-</core:FragmentDefinition>
