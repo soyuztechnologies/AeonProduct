@@ -25,6 +25,386 @@
 		"UpdatedOn": {
 			"type": "date",
 			"default": "null"
+		},
+		"jobCardNo":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"poNo":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"jobCode":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"date":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"artworkCode":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"clientPONo":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"nameOFTheProduct":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"industry":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"cartonType":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"qtyPcs":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"PaperGSM":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"paperQuality":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"printing":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"color":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"sizeL":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"sizeW":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"sizeH":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"varLmt":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"effects":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"lock":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"tF":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"pF":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"doubleCut":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"trimTF":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"trimPF":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"noOfUps-1":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"noOfUps-2":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"noOfUps-3":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"noOfSheets-1":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"noOfSheets-2":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"wastage":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"wtKgs":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"printingSheetSizeL1":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"printingSheetSizeW1":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"printingSheetSizeL2":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"printingMachine":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"punchingMachine":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"pastingMachine":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"ref":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"old":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"none":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"b-2-A":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"127Level3":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"none1":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"none2":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"13Level2":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"batchNo":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"mfgDate":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"expDate":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"correctionsInArtwork":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"remarks":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"totalA+B":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"profit":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"totalCostOfJob":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"costPerPc":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"plate":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"pantoneInks":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"foilBlocks":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"positive":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"embossBlock":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"punch":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"reference":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"cartonLength":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"cartonWidth":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"paperCost":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"printingCharges":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"varnish/Lamination":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"embossing":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"punching":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"bSOPasting":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"lBTOPasting":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"packing":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"transportation":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"total":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"plateCharges":{
+			"type": "string",
+			"default": "null",
+			"required": true
+		},
+		"blanketCharges":{
+			"type": "string",
+			"default": "null",
+			"required": true
 		}
 	},
 	"scope": {
