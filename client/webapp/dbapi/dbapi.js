@@ -40,9 +40,16 @@ sap.ui.define([
 				$.ajaxSetup({
 					global: asyncBol,
 				  });
-				if(sUrl.includes("?")){
-					sUrl+=`&access_token=${accessToken}`
+
+				if(accessToken){
+					if(sUrl.includes("?")){
+						sUrl+=`&access_token=${accessToken}`;
+					}
+					else{
+						sUrl+=`?access_token=${accessToken}`;
+					}
 				}
+			
 				
 				
 				// sap.ui.core.BusyIndicator.show();
