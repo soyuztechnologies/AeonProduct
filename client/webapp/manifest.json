@@ -98,7 +98,7 @@
 				"viewType": "XML",
 				"viewPath": "ent.ui.ecommerce.view",
 				"controlId": "layout",
-				"controlAggregation": "pages",
+				"controlAggregation": "beginColumnPages",
 				"bypassed": {
 					"target": "notFound"
 				},
