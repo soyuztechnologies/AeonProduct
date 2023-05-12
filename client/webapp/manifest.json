@@ -98,7 +98,7 @@
 				"viewType": "XML",
 				"viewPath": "ent.ui.ecommerce.view",
 				"controlId": "layout",
-				"controlAggregation": "beginColumnPages",
+				
 				"bypassed": {
 					"target": "notFound"
 				},
@@ -141,26 +141,31 @@
 				"login": {
 					"viewName": "Login",
 					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
 					"viewId": "login"
 				},
 				"notFound": {
 					"viewName": "notFound",
 					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
 					"viewId": "notFound"
 				},
 				"welcomePrinter":{
 					"viewName":"welcomePrinter",
 					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
 					"viewId":"welcomePrinter"
 				},
 				"Carborator":{
 					"viewName": "Carborator",
 					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
 					"viewId": "Carborator"
 				},
 				"printingDetails":{
 					"viewName": "printingDetails",
 					"viewLevel": 1,
+					"controlAggregation": "midColumnPages",
 					"viewId": "printingDetails"
 				}
 			}

@@ -1,12 +1,20 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="ent.ui.ecommerce.controller.welcomePrinter" >
   <Page title="Welcome Printer" >
-    <List items="{appView>/jobsData}">
+    <List id="idMyList" >
+		<ObjectListItem
+		  title="Product"
+		  type="Active"
+		  intro="1"
+		  press="onListItemPress"
+		/>
+	  </List>
+    <!-- <List items="{appView>/jobsData}">
 		<ObjectListItem
 		  title="{appView>nameOFTheProduct}"
 		  type="Active"
 		  intro="{appView>JobId}"
 		  press="onListItemPress"
 		/>
-	  </List>
+	  </List> -->
   </Page>
 </mvc:View>
