@@ -14,6 +14,7 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader",true);
 			this.getModel("appView").setProperty("/visibility", true);
+			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
 		},
 		onListItemPress:function(){

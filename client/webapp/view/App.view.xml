@@ -5,48 +5,36 @@
     xmlns:core="sap.ui.core"
     xmlns:fiori="sap.ui.webc.fiori"
     xmlns:tnt="sap.tnt">
-    <tnt:ToolPage sideExpanded="{appView>/sideNav/expanded}">
+    <tnt:ToolPage sideExpanded="{appView>/sideNavExpended}">
         <tnt:header >
-            <tnt:ToolHeader visible="true">
+            <tnt:ToolHeader  visible="true">
                 <!-- <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Toolbar" type="XML" /> -->
-                <Text text="{appView>/headerText}">
-                        
-                    </Text>
+               
+               
+                   <Button visible="{appView>/hamburgerVisibility}"
+                    press="onClickMenuButton"
+                   icon="sap-icon://menu2">
+
+                   </Button>
+                   <Title text="Aeon Products"></Title>
+                   <ToolbarSpacer/>
+                   <Button press="onPressLogout" visible="{appView>/logoutVisibility}" text="Logout"></Button>
             </tnt:ToolHeader>
         </tnt:header>
         <tnt:mainContents>
             <!-- <App  id="app" busy="{appView>/busy}"  busyIndicatorDelay="{appView>/delay}" navigate="onNavigation"> -->
-                <f:FlexibleColumnLayout id="layout" layout="{appView>/layout}" backgroundDesign="Translucent" beginColumnNavigate="onNavigation" />
+                
             <!-- </App> -->
+            <!-- <NavContainer > -->
+                <f:FlexibleColumnLayout id="layout" layout="{appView>/layout}" backgroundDesign="Translucent" beginColumnNavigate="onNavigation" />
+            <!-- </NavContainer> -->
         </tnt:mainContents>
         <tnt:sideContent>
-            <!-- <fiori:SideNavigation id="sideNavigation">
-                    <fiori:header text="Work" />
-                    <fiori:SideNavigationItem icon="home" text="Home" />
-                    <fiori:SideNavigationItem icon="employee" text="People">
-                        <fiori:items>
-                            <fiori:SideNavigationSubItem text="From My Team" />
-                            <fiori:SideNavigationSubItem text="From Other Teams" />
-                        </fiori:items>
-                    </fiori:SideNavigationItem>
-                    <fiori:SideNavigationItem icon="locate-me" text="Locations" />
-                    <fiori:SideNavigationItem icon="calendar" text="Events">
-                        <fiori:items>
-                            <fiori:SideNavigationSubItem text="Local" />
-                            <fiori:SideNavigationSubItem text="Other" />
-                        </fiori:items>
-                    </fiori:SideNavigationItem>
-                    <fiori:fixedItems>
-                        <fiori:SideNavigationItem icon="chain-link" text="Useful Links" />
-                        <fiori:SideNavigationItem icon="history" text="History" />
-                    </fiori:fixedItems>
-                </fiori:SideNavigation> -->
-            <tnt:SideNavigation id="sideNavigation" visible="{appView>/visibility}"  itemSelect="onSelectItem">
+            <tnt:SideNavigation bindingContexts="true"  expanded="{appView>/sideNavExpended}" id="sideNavigation" visible="{appView>/visibility}"  itemSelect="onSelectItem">
                 <tnt:NavigationList>
-                    <tnt:NavigationListItem text="Home" icon="sap-icon://home" key="Home"/>
-                    <tnt:NavigationListItem text="Upload XML" icon="sap-icon://map"  key="UploadXml"/>
-                    <tnt:NavigationListItem text="All Printers" icon="sap-icon://edit" key="WelcomePrinters"/>
-                    <tnt:NavigationListItem text="Printing Details" icon="sap-icon://add-employee" key="PrintingDetails"/>
+                    <tnt:NavigationListItem text="Upload XML" icon="sap-icon://upload"  key="UploadXml"/>
+                    <tnt:NavigationListItem text="All Printers" icon="sap-icon://business-card" key="WelcomePrinters"/>
+                    <tnt:NavigationListItem text="Printing Details" icon="sap-icon://print" key="PrintingDetails"/>
                 </tnt:NavigationList>
             </tnt:SideNavigation>
         </tnt:sideContent>

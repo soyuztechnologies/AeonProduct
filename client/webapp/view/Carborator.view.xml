@@ -1,5 +1,7 @@
 <mvc:View controllerName="ent.ui.ecommerce.controller.Carborator"
     xmlns:mvc="sap.ui.core.mvc" xmlns:u="sap.ui.unified" displayBlock="true"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"    
     xmlns="sap.m">
     <Page showHeader="{appView>/visibleHeader}" id="page">
         <content>
