@@ -51,7 +51,7 @@ function myMiddleware(options) {
 	  
 	}
 }
-// app.use(myMiddleware());
+app.use(myMiddleware());
 app.use(loopback.token({
 	model: app.models.accessToken,
 	currentUserLiteral: 'me',
