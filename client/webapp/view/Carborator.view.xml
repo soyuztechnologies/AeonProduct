@@ -15,10 +15,177 @@
                 change="onFileUploadChange"
                 tooltip="Upload your file to the local server"
                 uploadComplete="handleUploadComplete"/>
-            <TextArea id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
-            <Button text="Next" press="onPressNavigate"></Button>
-            <Button text="Save" press="onSavePayload"></Button>
+            <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
+
+
+            <f:SimpleForm editable="true" id="SimpleForm-1" columnsM="2"
+			columnsL="3"
+			columnsXL="4"  layout="ColumnLayout"  >
+				<f:content>
+					<!-- <VBox> -->
+						<core:Title></core:Title>
+                        
+						<Label design="Bold" text="Job CardNo."></Label>
+						<Text  text="{appView>jobCardNo}"/>
+						<Label design="Bold" text="Po No."></Label>
+						<Text text="{appView>poNo}"/>
+						<Label design="Bold" text="Job Code"></Label>
+						<Text text="{appView>jobCode}"/>
+                        <Label text="Job Code" />
+                        <Text text="{appView>jobCode}" />
+                        <Label text="Date" />
+                        <Text text="{path:'appView>date', formatter: '.dateFormatter'}" />
+                        <Label text="Artwork Code" />
+                        <Text text="{appView>artworkCode}" />
+                        <Label text="Client PO No." />
+                        <Text text="{appView>clientPONo}" />
+                        <Label text="Name of the Product" />
+                        <Text text="{appView>nameOFTheProduct}" />
+                        <Label text="Industry" />
+                        <Text text="{appView>industry}" />
+                        <Label text="Carton Type" />
+                        <Text text="{appView>cartonType}" />
+                        <Label text="Quantity (pcs)" />
+                        <Text text="{appView>qtyPcs}" />
+                        <Label text="Paper GSM" />
+                        <Text text="{appView>PaperGSM}" />
+                        <Label text="Paper Quality" />
+                        <Text text="{appView>paperQuality}" />
+                        <Label text="Printing" />
+                        <Text text="{appView>printing}" />
+                        <Label text="Color" />
+                        <Text text="{appView>color}" />
+                        <Label text="Size (L x W x H)" />
+                        <Text text="{path: 'appView>sizeL', formatter: '.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.sizeFormatter'}" />
+                        <Label text="Varnish/Lamination" />
+                        <Text text="{appView>varLmt}" />
+                        <Label text="Effects" />
+                        <Text text="{appView>effects}" />
+                        <Label text="Lock" />
+                        <Text text="{appView>lock}" />
+                        <Label text="Top Flap (TF)" />
+                        <Text text="{appView>tF}" />
+                        <Label text="Panel Flap (PF)" />
+                        <Text text="{appView>pF}" />
+                        <Label text="Double Cut" />
+                        <Text text="{appView>doubleCut}" />
+                        <Label text="Trim TF" />
+                        <Text text="{appView>trimTF}" />
+                        <Label text="Trim PF" />
+                        <Text text="{appView>trimPF}" />
+                        <Label text="No. of Ups-1" />
+                        <Text text="{appView>noOfUps-1}" />
+                        <Label text="No. of Ups-2" />
+                        <Text text="{appView>noOfUps-2}" />
+                        <Label text="No. of Ups-3" />
+                        <Text text="{appView>noOfUps-3}" />
+                        <Label text="No. of Sheets-1" />
+                        <Text text="{appView>noOfSheets-1}" />
+                        <Label text="No. of Sheets-2" />
+                        <Text text="{appView>noOfSheets-2}" />
+                        <Label text="Wastage" />
+                        <Text text="{appView>wastage}" />
+                            <Label text="Weight (in Kgs)" />
+                            <Text text="{appView>wtKgs}" />
+                            <Label text="Printing Sheet Size (L x W) 1" />
+                            <Text text="{appView>printingSheetSizeL1} x {appView>printingSheetSizeW1}" />
+                            <Label text="Printing Sheet Size (L x W) 2" />
+                            <Text text="{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" />
+                            <Label text="Printing Machine" />
+                            <Text text="{appView>printingMachine}" />
+                            <Label text="Punching Machine" />
+                            <Text text="{appView>punchingMachine}" />
+                            <Label text="Pasting Machine" />
+                            <Text text="{appView>pastingMachine}" />
+                            <Label text="Reference" />
+                            <Text text="{appView>ref}" />
+                            <Label text="Old" />
+                            <Text text="{appView>old}" />
+                            <Label text="None" />
+                            <Text text="{appView>none}" />
+                            <Label text="B-2-A" />
+                            <Text text="{appView>b-2-A}" />
+                            <Label text="None" />
+                            <Text text="{appView>none }" />
+                            <Label text="127 Level 3" />
+                            <Text text="{appView>127Level3}" />
+                            <Label text="None 1" />
+                            <Text text="{appView>none1 }" />
+                            <Label text="None 2" />
+                            <Text text="{appView>none2 }" />
+                            <Label text="13 Level 2" />
+                            <Text text="{appView>13Level2}" />
+                            <Label text="Batch No." />
+                            <Text text="{appView>batchNo}" />
+                            <Label text="Mfg. Date" />
+                            <Text text="{appView>mfgDate}" />
+                            <Label text="Exp. Date" />
+                            <Text text="{appView>expDate}" />
+                            <Label text="Corrections in Artwork" />
+                            <Text text="{appView>correctionsInArtwork}" />
+                            <Label text="Remarks" />
+                            <Text text="{appView>remarks}" />
+                            <Label text="Total A + B" />
+                            <Text text="{appView>totalA+B}" />
+                            <Label text="Profit" />
+                            <Text text="{appView>profit}" />
+                            <Label text="Total Cost of Job" />
+                            <Text text="{appView>totalCostOfJob}" />
+                            <Label text="Cost Per Piece" />
+                            <Text text="{appView>costPerPc}" />
+                            <Label text="Plate" />
+                            <Text text="{appView>plate}" />
+                            <Label text="Pantone Inks" />
+                            <Text text="{appView>pantoneInks}" />
+                            <Label text="Foil Blocks" />
+                            <Text text="{appView>foilBlocks}" />
+                            <Label text="Positive" />
+                            <Text text="{appView>positive}" />
+                            <Label text="Emboss Block" />
+                            <Text text="{appView>embossBlock}" />
+                            <Label text="Punch" />
+                            <Text text="{appView>punch}" />
+                            <Label text="Reference" />
+                            <Text text="{appView>reference}" />
+                            <Label text="Carton Length" />
+                            <Text text="{appView>cartonLength}" />
+                            <Label text="Carton Width" />
+                            <Text text="{appView>cartonWidth}" />
+                            <Label text="Paper Cost" />
+                            <Text text="{appView>paperCost}" />
+                            <Label text="Printing Charges" />
+                            <Text text="{appView>printingCharges}" />
+                            <Label text="Varnish/Lamination" />
+                            <Text text="{appView>varnish/Lamination}" />
+                            <Label text="Embossing" />
+                            <Text text="{appView>embossing}" />
+                            <Label text="Punching" />
+                            <Text text="{appView>punching}" />
+                            <Label text="B/SO Pasting" />
+                            <Text text="{appView>bSOPasting}" />
+                            <Label text="LBTO Pasting" />
+                            <Text text="{appView>lBTOPasting}" />
+                            <Label text="Packing" />
+                            <Text text="{appView>packing}" />
+                            <Label text="Transportation" />
+                            <Text text="{appView>transportation}" />
+                            <Label text="Total" />
+                            <Text text="{appView>total}" />
+                            <Label text="Plate Charges" />
+                            <Text text="{appView>plateCharges}" />
+                            <Label text="Blanket Charges" />
+                            <Text text="{appView>blanketCharges}" />
+					<!-- </VBox> -->
+				</f:content>
+			</f:SimpleForm>
+            
         </VBox>
+        <HBox
+        justifyContent="End"
+        >
+        <!-- <Button type="Emphasized" text="Next" press="onPressNavigate"></Button> -->
+        <Button type="Emphasized" text="Save" press="onSavePayload"></Button>
+        </HBox>
         </content>
     </Page>
 </mvc:View>

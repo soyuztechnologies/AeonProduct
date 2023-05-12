@@ -186,6 +186,12 @@ sap.ui.define([
         })
         
         this.getView().byId("_IDGenTextArea1").setValue(JSON.stringify(dbFields, null, 4));
+
+        //for simple form data binding
+        this.getView().getModel('appView').setProperty("/jsonData",dbFields);
+        this.getView().byId('SimpleForm-1').bindElement('appView>/jsonData');
+        this.getView().getModel('appView').updateBindings();
+
       },
       fieldsJSON: {
         "A2": {
