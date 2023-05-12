@@ -32,9 +32,7 @@ sap.ui.define([
 						accessToken=getCookie("soyuz_session")
 						  
 					  }
-					  else{
-						  
-					  }
+			
 
 				if (!(sUrl && sMethod)) {
 					reject("Invalid parameters passed");
@@ -45,9 +43,7 @@ sap.ui.define([
 				if(sUrl.includes("?")){
 					sUrl+=`&access_token=${accessToken}`
 				}
-				else{
-					sUrl+=`?access_token=${accessToken}`
-				}
+				
 				
 				// sap.ui.core.BusyIndicator.show();
 				switch (sMethod.toUpperCase()) {

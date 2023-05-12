@@ -9,402 +9,401 @@
 	"properties": {
 		"JobId": {
 			"type": "string",
-			"default": "null",
+			"default": null,
 			"required": true,
 			"id":true
 		},
 		"JobName": {
 			"type": "string",
-			"required": true,
-			"default": "null"
+			"default": null
 		},
 		"CreatedOn": {
 			"type": "date",
-			"default": "null"
+			"default": null
 		},
 		"UpdatedOn": {
 			"type": "date",
-			"default": "null"
+			"default": null
 		},
 		"jobCardNo":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"poNo":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"jobCode":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"date":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"artworkCode":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"clientPONo":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"nameOFTheProduct":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"industry":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"cartonType":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"qtyPcs":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"PaperGSM":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"paperQuality":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"printing":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"color":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"sizeL":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"sizeW":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"sizeH":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"varLmt":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"effects":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"lock":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"tF":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"pF":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"doubleCut":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"trimTF":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"trimPF":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"noOfUps-1":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"noOfUps-2":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"noOfUps-3":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"noOfSheets-1":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"noOfSheets-2":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"wastage":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"wtKgs":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"printingSheetSizeL1":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"printingSheetSizeW1":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"printingSheetSizeL2":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"printingMachine":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"punchingMachine":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"pastingMachine":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"ref":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"old":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"none":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"b-2-A":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"127Level3":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"none1":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"none2":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"13Level2":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"batchNo":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"mfgDate":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"expDate":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"correctionsInArtwork":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"remarks":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"totalA+B":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"profit":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"totalCostOfJob":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"costPerPc":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"plate":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"pantoneInks":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"foilBlocks":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"positive":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"embossBlock":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"punch":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"reference":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"cartonLength":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"cartonWidth":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"paperCost":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"printingCharges":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"varnish/Lamination":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"embossing":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"punching":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"bSOPasting":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"lBTOPasting":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"packing":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"transportation":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"total":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		},
 		"plateCharges":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+		
 		},
 		"blanketCharges":{
 			"type": "string",
-			"default": "null",
-			"required": true
+			"default": null
+			
 		}
 	},
 	"scope": {

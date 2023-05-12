@@ -18,6 +18,8 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/visibleHeader", false);
 			this.getModel("appView").setProperty("/visibility", false);
 			this.getModel("appView").setProperty("/layout", "OneColumn");
+			this.getModel("appView").setProperty("/hamburgerVisibility", false);
+			this.getModel("appView").setProperty("/logoutVisibility", false);
 		},
 		Login: function () {
 			var that = this;
