@@ -14,6 +14,9 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader",false);
       this.getModel("appView").setProperty("/visibility", true);
+      this.getModel("appView").setProperty("/hamburgerVisibility", true);
+      this.getModel("appView").setProperty("/logoutVisibility", true);
+      this.getModel("appView").setProperty("/sideExpanded",true);
 			this.getModel("appView").updateBindings();
 		},
     onPressNavigate:function(){
