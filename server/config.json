@@ -6,17 +6,6 @@
     "context": {
       "enableHttpContext": true
     },
-    "logoutSessionsOnSensitiveChanges": true,
-    "session": {
-      "name": "session",
-      "secret": "someSecret",
-      "cookie": {
-        "maxAge": 86400000
-      },
-      "resave": true,
-      "saveUninitialized": true,
-      "rolling": true
-    },
     "rest": {
       "normalizeHttpPath": false,
       "xml": false

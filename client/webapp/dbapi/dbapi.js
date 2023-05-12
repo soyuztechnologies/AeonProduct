@@ -19,7 +19,22 @@ sap.ui.define([
 
 
 					// });
-			
+					var accessToken=``;
+					const getCookie = function (name) {
+						var value = "; " + document.cookie;
+						var parts = value.split("; " + name + "=");
+						if (parts.length == 2) {
+						  return decodeURIComponent(parts.pop().split(";").shift());
+						}
+					  };
+					  if(getCookie("soyuz_session")){
+						  
+						accessToken=getCookie("soyuz_session")
+						  
+					  }
+					  else{
+						  
+					  }
 
 				if (!(sUrl && sMethod)) {
 					reject("Invalid parameters passed");
@@ -27,6 +42,13 @@ sap.ui.define([
 				$.ajaxSetup({
 					global: asyncBol,
 				  });
+				if(sUrl.includes("?")){
+					sUrl+=`&access_token=${accessToken}`
+				}
+				else{
+					sUrl+=`?access_token=${accessToken}`
+				}
+				
 				// sap.ui.core.BusyIndicator.show();
 				switch (sMethod.toUpperCase()) {
 					case "GET":

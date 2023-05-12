@@ -63,7 +63,8 @@ sap.ui.define([
         //   // property2: oJsonInpValue.property2,     // set the payload according to the need
         // };
         var payload = {
-          "jobCardNo": "016",
+          "JobId": '017',
+          "jobCardNo": "017",
           "poNo": "007",
           "jobCode": "UNMX 22.12 SFTRN 10PC 04",
           "date": 45020,
@@ -142,25 +143,25 @@ sap.ui.define([
           "plateCharges": 0,
           "blanketCharges": 0
         }
-        // oModel.create("/Jobs", payload, {          // sending the call on the endpoint
-        //   success: function(data) {
-        //     MessageToast.show("Job created successfully");
-        //   },
-        //   error: function(error) {
-        //     // that.middleWare.errorHandler(error, that);
-        //     MessageToast.show("Error: " + error.message);
-        //   }
-        // });
-        this.middleWare.callMiddleWare("api/Jobs", "POST", payload)
-          .then( function (data, status, xhr) {
-            debugger;
+        oModel.create("/Jobs", payload, {          // sending the call on the endpoint
+          success: function(data) {
             MessageToast.show("Job created successfully");
+          },
+          error: function(error) {
+            that.middleWare.errorHandler(error, that);
+            // MessageToast.show("Error: " + error.message);
+          }
+        });
+        // this.middleWare.callMiddleWare("api/Jobs", "POST", payload)
+        //   .then( function (data, status, xhr) {
+        //     debugger;
+        //     MessageToast.show("Job created successfully");
 
-          })
-          .catch(function (jqXhr, textStatus, errorMessage) {
-            debugger;
-            MessageToast.show("Error: " + jqXhr);
-          });
+        //   })
+        //   .catch(function (jqXhr, textStatus, errorMessage) {
+        //     debugger;
+        //     MessageToast.show("Error: " + jqXhr);
+        //   });
       },
       
       

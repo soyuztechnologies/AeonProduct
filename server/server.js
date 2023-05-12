@@ -13,7 +13,7 @@ const { log } = require('console');
 var app = express();
 app = module.exports = loopback();
 // parse application/json
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -43,21 +43,21 @@ function myMiddleware(options) {
 			originalSend.call(this, body);
 		  };
 	  }
-	  if(req.url.includes("/api") || req.url.includes("/odata") ){
-		req.headers.Authorization=req.cookies.soyuz_session;
-		req.headers.authorization=req.cookies.soyuz_session;
-	  }
+	//   if(req.url.includes("/api") || req.url.includes("/odata") ){
+	// 	req.headers.Authorization=req.cookies.soyuz_session;
+	// 	req.headers.authorization=req.cookies.soyuz_session;
+	//   }
 	  next();
 	  
 	}
 }
-app.use(myMiddleware());
+// app.use(myMiddleware());
 app.use(loopback.token({
 	model: app.models.accessToken,
 	currentUserLiteral: 'me',
-	cookies: ['soyuz_session'],
-	headers: ['soyuz_session', 'X-Access-Token'],
-	params: ['soyuz_session']
+	// cookies: ['soyuz_session'],
+	// headers: ['soyuz_session', 'X-Access-Token'],
+	// params: ['soyuz_session']
   }));
 // app.use(cookieParser());
 app.start = function () {
