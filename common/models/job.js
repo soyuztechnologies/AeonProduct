@@ -1,4 +1,4 @@
 'use strict';
-module.exports = function(job) {
+module.exports = function(Job) {
 
 };
