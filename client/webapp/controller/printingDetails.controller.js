@@ -9,12 +9,17 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("printingDetails").attachPatternMatched(this._matchedHandler, this);
+			
 		},
 		_matchedHandler:function(){
-			this.getModel("appView").setProperty("/layout", "OneColumn");
+			debugger;
+			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getModel("appView").setProperty("/visibleHeader",true);
 			this.getModel("appView").setProperty("/visibility", true);
 			this.getModel("appView").updateBindings();
-		}
+
+		},
+
+		
 	});
 });
