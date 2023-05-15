@@ -31,7 +31,7 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/visibility", true);
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
-			// this.getJobsData();
+			this.getJobsData();
 		},
 		onListItemPress:function(){
 			// debugger;
@@ -47,13 +47,14 @@ sap.ui.define([
 				success: function(data) {
 				// Success callback
 				MessageToast.show("Data read successfully");
+				that.getModel("appView").setProperty("/jobsData",data.results);
 				// Handle the retrieved data
 				// var aEntities = data.results; // Access the array of retrieved entities
 				// ...
 				},
 				error: function(error) {
 				// Error callback
-				that.middleWare.errorHandler(error, that);
+				// that.middleWare.errorHandler(error, that);
 				MessageToast.show("Error reading data");
 				}
 			});

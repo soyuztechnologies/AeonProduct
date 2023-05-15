@@ -14,6 +14,7 @@ sap.ui.define([
 				.getRoute("login")
 				.attachPatternMatched(this._matchedHandler, this);
 		},
+
 		_matchedHandler: function (oEvent) {
 			this.getModel("appView").setProperty("/visibleHeader", false);
 			this.getModel("appView").setProperty("/visibility", false);
@@ -21,6 +22,7 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/hamburgerVisibility", false);
 			this.getModel("appView").setProperty("/logoutVisibility", false);
 		},
+
 		Login: function () {
 			var that = this;
 			var userName = this.getView().byId("userid").getValue();
@@ -48,7 +50,68 @@ sap.ui.define([
 					that.getView().byId("pwd").setValueState('Error');
 					that.middleWare.errorHandler(jqXhr, that);
 				});
-		}
+		},
+
+		SignUp : function (){
+			var oView = this.getView();
+            var that = this;
+			
+            if (!this.oDialog) {
+                this.oDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "ent.ui.ecommerce.fragments.Signup",
+                    controller: this
+                }).then(function (oDialog) {    
+                    // Add dialog to view hierarchy
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+               
+            }
+            this.oDialog.then(function (oDialog) {
+                oDialog.open();
+                // that.onRefresh(/);
+                
+                // that.getView().getModel('local').refresh();
+            });
+        },
+
+		onSubmit : function () {
+			// debugger;
+			// var oModel = this.getView().getModel();  //default model get at here
+			var that = this; 
+			var oEmail = this.getView().getModel('appView').getProperty("/Email");
+			var payload = {
+				"email" : oEmail
+			}; 	
+			debugger;
+			// $.ajax({
+			// 	type: 'POST',
+			// 	url: 'signup',
+			// 	data: {
+			// 		email: oEmail,
+			// 	},
+			// 	success: function (data) {
+			// 		MessageToast.show(' Successfully ');
+			// 	},
+			// 	error: function (xhr, status, error) {
+			// 		console.error(error);
+			// 		MessageToast.show('Error s');
+			// 	}
+			// });
+
+			this.middleWare.callMiddleWare("signup", "POST", payload)
+				.then( function (data, status, xhr) {
+					debugger;
+					MessageToast.show("signup  Success");
+
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					debugger;
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+		},
+
 	});
 
 });

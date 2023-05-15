@@ -19,6 +19,7 @@
 		"express-fileupload": "^1.0.0",
 		"express-session": "^1.15.6",
 		"googleapis": "^110.0.0",
+		"jsonwebtoken": "^9.0.0",
 		"log4js": "^0.6.38",
 		"loopback": "^2.22.0",
 		"loopback-boot": "^2.6.5",

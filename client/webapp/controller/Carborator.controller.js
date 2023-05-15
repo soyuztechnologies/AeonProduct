@@ -58,14 +58,14 @@ sap.ui.define([
       },
 
       onSavePayload: function() {
-        debugger;
+        // debugger;
         var oModel = this.getView().getModel();  //default model get at here
         var that = this; 
         var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue"); 
         // Convert string to JSON object
         // var payload = JSON.parse(oJsonInpValue);
         var payload = {
-          "JobId": "026",
+          "JobId": "102",
           "jobCardNo": "026",
           "poNo": "007",
           "jobCode": "UNMX 22.12 SFTRN 10PC 04",
@@ -149,7 +149,7 @@ sap.ui.define([
         // post call for uploading the json into loopback 
         this.middleWare.callMiddleWare("api/Jobs", "POST", payload)
         .then( function (data, status, xhr) {
-          debugger;
+          // debugger;
           MessageToast.show("Job created successfully");
           
         })
