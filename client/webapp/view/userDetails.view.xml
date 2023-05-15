@@ -1,0 +1,64 @@
+<mvc:View
+	controllerName="ent.ui.ecommerce.controller.userDetails"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m">
+	<App title="User Details">
+	<Table  id="idProductsTable">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<Title text="User Details" level="H2"/>
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column
+				width="12em">
+				<Text text="Name" />
+			</Column>
+			<Column
+				minScreenWidth="Tablet"
+				demandPopin="true">
+				<Text text="Email" />
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="End">
+				<Text text="CreatedOn" />
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Center">
+				<Text text="Blocked" />
+			</Column>
+			<Column
+				hAlign="End">
+				<Text text="Access" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem vAlign="Middle">
+				<cells>
+					<Text
+						text="Name" />
+					<Text
+						text="Email" />
+					<Text
+						text="Created on" />
+					<Switch state="true" customTextOn="Yes" customTextOff="No">
+							<layoutData>
+								<FlexItemData growFactor="1" />
+							</layoutData>
+					</Switch>
+					<Button type="Accept" text="Access">
+
+					</Button>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</App>
+</mvc:View>

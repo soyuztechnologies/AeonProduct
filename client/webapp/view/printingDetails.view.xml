@@ -1,81 +1,76 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" controllerName="ent.ui.ecommerce.controller.printingDetails">
-	<Page title="O79 JNM RPRNT DCLRS 2D 04"> 
+	<Page title="Job Details"> 
           <!-- <headerContent></headerContent> -->
 		<!-- <VBox class="sapUiSmallMargin"> -->
-			<f:SimpleForm id="SimpleForm-1" editable="true" layout="ResponsiveGridLayout"  >
+			<f:SimpleForm title="O79 JNM RPRNT DCLRS 2D 04" id="SimpleForm-1" editable="true" layout="ResponsiveGridLayout"  >
 				<f:content>
 					<!-- <VBox> -->
 						<core:Title></core:Title>
 
 						<Label text="PO NO"></Label>
-						<Text text="011"></Text>
+						<Input editable="false" value="{appView>poNo}"></Input>
 
 						<Label text="Quantity"></Label>
-						<Text text="6,200 pcs"></Text>
+						<Input editable="false" value="{appView>qtyPcs}"></Input>
 
 						<Label text="Size in mm"></Label>
-						<Text text="12 ups 64 x 17 x 96 mm "></Text>
+						<Input editable="false" value="{path: 'appView>sizeL', formatter: '.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.sizeFormatter'}"></Input>
 					<!-- </VBox> -->
 					<!-- <VBox> -->
 						<core:Title></core:Title>
 
 						<Label text="Artwork"></Label>
-						<Text text="Approval Pending CMYK + Silver"></Text>
+						<Input editable="false" value="{appView>artwork}"></Input>
 
 						<Label text="Paper Board"></Label>
-						<Text text="White Back 320 GSM"></Text>
+						<Input editable="false" value="{appView>paperboard}"></Input>
 
 						<Label text="Coating"></Label>
-						<Text text="BOPP Lamination"></Text>
+						<Input editable="false" value="{appView>coating}"></Input>
 					<!-- </VBox> -->
 				</f:content>
 			</f:SimpleForm>
-			<f:SimpleForm id="SimpleForm2" editable="true" layout="ResponsiveGridLayout" title=" ">
+			<f:SimpleForm title="Job Status" id="SimpleForm2" editable="true" layout="ResponsiveGridLayout" >
 				<f:content>
-					<!-- <VBox> -->
-					<core:Title></core:Title>
-
 						<Label text="Raw Material"></Label>
-						<Text text="In Stock"></Text>
+						<Input editable="{appView>/inputEditable}" value="{appView>rawmaterial}"></Input>
 
 						<Label text="Coating"></Label>
-						<Text text="585 Sheets"></Text>
+						<Input editable="{appView>/inputEditable}" value="{appView>coating}"></Input>
 
 						<Label text="Spot UV"></Label>
-						<Text text="None"></Text>
+						<Input editable="{appView>/inputEditable}"  value="{appView>spotuv}"></Input>
 
 						<Label text="Punching"></Label>
-						<Text text=" "></Text>
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
 
 						<Label text="Packing"></Label>
-						<Text text=""></Text>
-					<!-- </VBox> -->
-					<core:Title></core:Title> 
-					<!-- <VBox> -->
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+
 						<Label text="Printing"></Label>
-						<Text text="600 Sheets"></Text>
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
 
 						<Label text="Foiling"></Label>
-						<Text text="None"></Text>
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
 
 						<Label text="Embossing"></Label>
-						<Text text=" "></Text>
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
 
 						<Label text="Pasting"></Label>
-						<Text text=" "></Text>
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
 
 						<Label text="Inc. No."></Label>
-						<Text text=""></Text>
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
 
 						<Label text="Delivery No."></Label>
-						<Text text=""></Text>
+						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
 					<!-- </VBox> -->
 				</f:content>
 			</f:SimpleForm>
 			<Toolbar>
-				<Button text="Update"></Button>
+				<Button text="Update" press="onClickUpdate"></Button>
 				<ToolbarSpacer />
-				<Button text="Modify"></Button>
+				<Button text="Modify" press="onClickModify"></Button>
 			</Toolbar>
 		<!-- </VBox> -->
 	</Page>

@@ -134,6 +134,11 @@
 					"pattern":"printingDetails",
 					"name":"printingDetails",
 					"target":"printingDetails"
+				},
+				{
+					"pattern":"userDetails",
+					"name":"userDetails",
+					"target":"userDetails"
 				}
 			],
 			"targets": {
@@ -167,6 +172,12 @@
 					"viewLevel": 1,
 					"controlAggregation": "midColumnPages",
 					"viewId": "printingDetails"
+				},
+				"userDetails":{
+					"viewName":"userDetails",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"userDetails"
 				}
 			}
 		}

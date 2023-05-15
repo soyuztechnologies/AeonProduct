@@ -25,6 +25,8 @@
 					<!-- <VBox> -->
 						<core:Title></core:Title>
                         
+						<Label design="Bold" text="Job Id"></Label>
+						<Input  value="{appView>jobId}"/>
 						<Label design="Bold" text="Job CardNo."></Label>
 						<Text  text="{appView>jobCardNo}"/>
 						<Label design="Bold" text="Po No."></Label>

@@ -24,6 +24,7 @@ sap.ui.define([
       this.getRouter().navTo("welcomePrinter");
     },
     onFileUploadChange: function (oEvent) {
+        debugger;
         var oParams = oEvent.getParameters();
         var oFile = oParams.files[0];
         var sFilename = oFile.name;
@@ -65,7 +66,7 @@ sap.ui.define([
         // Convert string to JSON object
         // var payload = JSON.parse(oJsonInpValue);
         var payload = {
-          "JobId": "026",
+          "JobId": "0004",
           "jobCardNo": "026",
           "poNo": "007",
           "jobCode": "UNMX 22.12 SFTRN 10PC 04",
@@ -176,14 +177,19 @@ sap.ui.define([
       
       
       extracDbFields: function(data){
+
         const arrayToJSON = this.arrayToJSON(data);
-        debugger;
+        // debugger;
         const dbFieldsJSON = Object.values(this.fieldsJSON);
         const dbFields = {};
         dbFieldsJSON.forEach(item=>{
-          debugger;
+          // debugger;
           dbFields[item.dbField]= arrayToJSON[item.data];
+          if(!dbFields[item.dbField]){
+            debugger;
+          }
         })
+
         
         this.getView().byId("_IDGenTextArea1").setValue(JSON.stringify(dbFields, null, 4));
 
@@ -592,7 +598,7 @@ sap.ui.define([
           "data": "H42",
           "value": "Foil Blocks",
           "label": "None :",
-          "dbField": "none ",
+          "dbField": "none",
           "group": "",
           "groupCell": ""
         },
@@ -1009,7 +1015,7 @@ sap.ui.define([
           "data": "Q42",
           "value": "",
           "label": "Miscellaneous :",
-          "dbField": "miscellaneous",
+          "dbField": "miscellaneous1",
           "group": "B) Development Cost :",
           "groupCell": "P34"
         },
