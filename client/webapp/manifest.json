@@ -121,6 +121,11 @@
 					"target": "notFound"
 				},
 				{
+					"pattern": "userVerify/{token}",
+					"name": "userVerify",
+					"target": "userVerify"
+				},
+				{
 					"pattern":"welcomePrinter",
 					"name":"welcomePrinter",
 					"target":"welcomePrinter"
@@ -166,6 +171,12 @@
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
 					"viewId": "Carborator"
+				},
+				"userVerify":{
+					"viewName": "userVerify",
+					"viewLevel": 1,
+					"controlAggregation": "pages",
+					"viewId": "userVerify"
 				},
 				"printingDetails":{
 					"viewName": "printingDetails",

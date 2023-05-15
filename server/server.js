@@ -30,7 +30,7 @@ app.use(fileUpload());
 
 function myMiddleware(options) {
 	return function(req, res, next) {
-		debugger;
+		// debugger;
 
 	  // Save the original send function
 	  if(req.url.includes("/api/Users/login")){
@@ -107,6 +107,190 @@ app.start = function () {
 
 				);
 		});
+
+		// Signup route
+		app.post('/signup', async (req, res) => {
+			try {
+				const { email } = req.body;
+		
+				// Check if the user already exists
+				const existingUser = await app.models.User.findOne({ where: { email } });
+				if (existingUser) {
+					return res.status(400).json({ error: 'User with this email already exists' });
+				}
+		
+				// Generate JWT token
+				const token = generateToken(email);
+		
+				// Send verification email
+				await sendEmail(email, token);
+		
+				// Create the user
+				const newUser = await createUser(email, password);
+		
+				if (newUser) {
+					console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
+					// Set the role for the user
+					const role = await app.models.Role.findOne({ where: { name: 'customer' }, include: 'principals' });
+					if (!role) {
+						return res.status(500).json({ error: 'Role not found' });
+					}
+					await role.principals.create({
+						principalType: RoleMapping.USER,
+						principalId: newUser.id
+					});
+				} else {
+					console.error(`User could not be created. Program may not work as expected`);
+				}
+		
+				res.status(200).json({ message: 'User created successfully' });
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
+		
+		function generateToken(email) {
+			const secretKey = 'your_secret_key'; // Replace with your actual secret key
+			return jwt.sign({ email }, secretKey);
+		}
+		
+		
+		async function createUser(email, password) {
+			try {
+				const newUser = await app.models.User.create({ email, password });
+				return newUser;
+			} catch (error) {
+				console.error(error);
+				throw new Error('Failed to create user');
+			}
+		}
+		
+	async function sendEmail(emailAddress,token) {
+	//   debugger;
+	
+	  var nodemailer = require('nodemailer');
+	  var smtpTransport = require('nodemailer-smtp-transport');
+	  this.Param = app.models.Param;
+	  const xoauth2 = require('xoauth2');
+	  try {
+		  const array = ["user", "clientId", "clientSecret", "refreshToken"];
+		  const Param = app.models.Param;
+		  const key = {};
+		  const sParam = await Param.find({
+			  where: {
+				and: [{
+					Code: {
+						inq: array
+					}
+
+				}]
+			  }
+		  });
+  
+		  for (const element of sParam) {
+			  switch (element.Code) {
+				  case "user":
+					  key.user = element.Value;
+					  break;
+				  case "clientId":
+					  key.clientId = element.Value;
+					  break;
+				  case "clientSecret":
+					  key.clientSecret = element.Value;
+					  break;
+				  case "refreshToken":
+					  key.refreshToken = element.Value;
+					  break;
+			  }
+		  }
+		  const verificationLink = `${req.headers.referer}#/verify/${token}`;	
+		  const email = "contact@evotrainingsolutions.com";
+  
+		//   const OTP = generateOTP();
+		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'verifyEmail.html', 'utf8');
+		  var mailBody = mailContent.replace("$$verify$$", verificationLink)
+		  mailBody+=mailBody.replace("$$email$$", email)
+		  mailBody+=mailBody.replace("$$email$$", email);
+
+		  
+  
+		  const transporter = nodemailer.createTransport(smtpTransport({
+			service: 'gmail',
+			host: 'smtp.gmail.com',
+			auth: {
+			  xoauth2: xoauth2.createXOAuth2Generator({
+				user: key.user,
+				clientId: key.clientId,
+				clientSecret: key.clientSecret,
+				refreshToken: key.refreshToken
+			  })
+			}
+		  }));
+  
+		  const emailContent = {
+			//   from: 'dheeraj@soyuztechnologies.com',
+			  to: emailAddress,
+			  subject: "Verify Your OTP For Dheeraj Enterprisees",
+			  html: mailBody
+		  };
+
+		  transporter.sendMail(emailContent, function (error, info) {
+					
+			if (error) {
+				console.log(error);
+				if (error.code === "EAUTH") {
+					res.status(500).send('Username and Password not accepted, Please try again.');
+				} else {
+					res.status(500).send('Internal Error while Sending the email, Please try again.');
+				}
+			} else {
+				console.log('Email sent: ' + info.response);
+				res.send("email sent");
+				var Otp = app.models.Otp;
+				var newRec = {
+					CreatedOn: new Date(),
+					Attempts: 1,
+					OTP: OTP,
+					Number: Email
+				};
+				Otp.upsert(newRec)
+					.then(function (inq) {
+						res.send("OTP Send Successfully");
+						// console.log("created successfully");
+					})
+					.catch(function (err) {
+						console.log(err);
+					});
+			}
+		});
+  
+	
+	  } catch (error) {
+		  console.error(error);
+		  res.status(500).send('Internal server error');
+	  }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 		app.post('/getWorkAggregate', function (req, res) {
@@ -3629,6 +3813,10 @@ app.start = function () {
 
 	});
 };
+
+
+
+
 
 
 // Bootstrap the application, configure models, datasources and middleware.

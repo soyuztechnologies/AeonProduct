@@ -38,11 +38,8 @@
 												<Button id="idLoginButton" text="{i18n>login}" press="Login" type="Emphasized" icon="sap-icon://feeder-arrow" iconFirst="false" width="auto" iconDensityAware="false" />
 											</form:fields>
 											<form:fields>
-											<Button id="idLoginButtn" text="signUp" press="SignUp" 
-				
-												icon="sap-icon://citizen-connect" iconFirst="false" width="100%" iconDensityAware="false"
-													
-												class="newButtonStyle"/>
+
+											<Button id="idSignupButtn" text="signUp" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="100%" iconDensityAware="false" class="newButtonStyle"/>
 										</form:fields>
 											<HBox
 											alignContent="Center"

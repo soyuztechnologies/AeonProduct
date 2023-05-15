@@ -20,11 +20,13 @@
 		},
 		"CreatedOn": {
 			"type": "date",
-			"default": "null"
+			"default": "null",
+			"required": false
 		},
 		"UpdatedOn": {
 			"type": "date",
-			"default": "null"
+			"default": "null",
+			"required": false
 		},
 		"Value":{
 			"type": "String",

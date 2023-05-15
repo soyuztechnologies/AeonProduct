@@ -69,7 +69,7 @@ sap.ui.define([
 				},
 				error: function(error) {
 				// Error callback
-				that.middleWare.errorHandler(error, that);
+				// that.middleWare.errorHandler(error, that);
 				MessageToast.show("Error reading data");
 				}
 			});
