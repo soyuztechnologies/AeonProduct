@@ -86,7 +86,7 @@ sap.ui.define([
 			this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
 				.then( function (data, status, xhr) {
 					debugger;
-					MessageToast.show("signup  Success");
+					MessageToast.show("verifiction Email sent successfully");
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {

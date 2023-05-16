@@ -187,7 +187,7 @@ async function sendEmail(emailAddress,token) {
 		//   const OTP = generateOTP();
 		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'verifyEmail.html', 'utf8');
 		  var mailBody = mailContent.replace("$$verify$$", verificationLink)
-		  mailBody+=mailBody.replace(/\$\$email\$\$/gi, email);
+		  mailContent.replace(/\$\$email\$\$/gi, email);
 	
 		  
 	
@@ -289,7 +289,7 @@ app.post('/signup/verifyToken', async (req, res) => {
 		Role: role
 	  });
   
-	  console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
+	  console.log(`App User created: ${JSON.stringify(newUser.toJSON())}`);
   
 	  res.status(200).json({ message: 'User created successfully' });
 	} catch (error) {
