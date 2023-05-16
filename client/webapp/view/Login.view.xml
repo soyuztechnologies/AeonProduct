@@ -47,7 +47,7 @@
 											>
 										
 												<ObjectStatus
-												press="onResetPassword"
+												press="resetFrag"
 												state="Information"
 													active="true"
 													icon=""

@@ -9,17 +9,19 @@
         <f:content>
             <!-- <HBox></HBox> -->
             <Label text="Email" />
-            <Text text="Text"></Text>
+            <Input  value="{appView>/userEmail}" editable="false"></Input>
+
             <Label text="Password" />
-            <Input placeholder="Password" value="Password"></Input>
+            <Input value="{appView>/Pass}" editable="{appView>/PassEdit}" placeholder="Password" ></Input>
+
             <Label text="Confirm Password" />
-            <Input placeholder="Confirm Password" value="Confirm Password"></Input>
+            <Input value="{appView>/ConPass}"  placeholder="Confirm Password" editable="{appView>/PassEdit}" ></Input>
             
         </f:content>
     </f:SimpleForm>
     </content>
     <beginButton>
-        <Button text="OK" type="Accept" press="onSubmit" enabled="{appView>/submitEnable}"/>
+        <Button text="OK" type="Accept" press="onCreateUser" enabled="{appView>/submitEnable}"/>
     </beginButton>
     <endButton>
         <Button text="Cancel" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
