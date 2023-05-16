@@ -4,11 +4,12 @@
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m">
 	<App title="User Details">
-	<Table  id="idProductsTable">
+	<Table items="{appView>/userDetails}"  id="idProductsTable">
 		<headerToolbar>
 			<OverflowToolbar>
 				<content>
 					<Title text="User Details" level="H2"/>
+					<Button text="refresh" press="getUserData"></Button>
 				</content>
 			</OverflowToolbar>
 		</headerToolbar>
@@ -36,16 +37,16 @@
 			</Column>
 			<Column
 				hAlign="End">
-				<Text text="Access" />
+				<Text text="Approved" />
 			</Column>
 		</columns>
 		<items>
 			<ColumnListItem vAlign="Middle">
 				<cells>
 					<Text
-						text="Name" />
+						text="{appView>UserName}" />
 					<Text
-						text="Email" />
+						text="{appView>EmailId}" />
 					<Text
 						text="Created on" />
 					<Switch state="true" customTextOn="Yes" customTextOff="No">

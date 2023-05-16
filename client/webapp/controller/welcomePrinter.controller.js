@@ -85,6 +85,9 @@ sap.ui.define([
 			//   that.middleWare.errorHandler(error, that);
 			//   MessageToast.show("Error:");
 			// });
+		},
+		onAfterRendering:function(){
+			this.getJobsData();
 		}
 	});
 });

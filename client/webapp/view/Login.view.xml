@@ -47,6 +47,7 @@
 											>
 										
 												<ObjectStatus
+												press="onResetPassword"
 												state="Information"
 													active="true"
 													icon=""
