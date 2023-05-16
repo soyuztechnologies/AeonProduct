@@ -77,30 +77,13 @@ sap.ui.define([
         },
 
 		onSubmit : function () {
-			// debugger;
-			// var oModel = this.getView().getModel();  //default model get at here
 			var that = this; 
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
 			var payload = {
 				"email" : oEmail
 			}; 	
-			debugger;
-			// $.ajax({
-			// 	type: 'POST',
-			// 	url: 'signup',
-			// 	data: {
-			// 		email: oEmail,
-			// 	},
-			// 	success: function (data) {
-			// 		MessageToast.show(' Successfully ');
-			// 	},
-			// 	error: function (xhr, status, error) {
-			// 		console.error(error);
-			// 		MessageToast.show('Error s');
-			// 	}
-			// });
-
-			this.middleWare.callMiddleWare("signup", "POST", payload)
+			// debugger;
+			this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
 				.then( function (data, status, xhr) {
 					debugger;
 					MessageToast.show("signup  Success");

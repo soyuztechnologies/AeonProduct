@@ -11,8 +11,8 @@ sap.ui.define([
 			this.getRouter().getRoute("notFound").attachPatternMatched(this._matchedHandler, this);
 		},
 		_matchedHandler:function(){
-			this.getModel("appView").setProperty("/layout", "OneColumn");
-			this.getModel("appView").setProperty("/visibleHeader",true);
+			// this.getModel("appView").setProperty("/layout", "OneColumn");
+			// this.getModel("appView").setProperty("/visibleHeader",true);
 			this.getModel("appView").updateBindings();
 		}
 	});

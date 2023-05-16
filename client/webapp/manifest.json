@@ -175,7 +175,7 @@
 				"userVerify":{
 					"viewName": "userVerify",
 					"viewLevel": 1,
-					"controlAggregation": "pages",
+					"controlAggregation": "beginColumnPages",
 					"viewId": "userVerify"
 				},
 				"printingDetails":{

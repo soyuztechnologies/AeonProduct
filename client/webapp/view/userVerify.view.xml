@@ -3,7 +3,7 @@
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
 
-	<MessagePage
+	<!-- <MessagePage
 		id="page"
 		title="{i18n>notFoundTitle}"
 		text="{i18n>notFoundText}"
@@ -16,6 +16,6 @@
 			
 			<Button text="{i18n>LogOut}" press="onLogOut"/>
 		</buttons>
-	</MessagePage>
+	</MessagePage> -->
 
 </mvc:View>

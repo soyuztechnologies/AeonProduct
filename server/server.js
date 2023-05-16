@@ -8,8 +8,12 @@ var fs = require('fs');
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 var express = require('express');
+const jwt = require('jsonwebtoken');
+const { RoleMapping } = require('loopback');
+
+
 var fs = require('fs');
-const { log } = require('console');
+const { log, debug } = require('console');
 var app = express();
 app = module.exports = loopback();
 // parse application/json
@@ -108,74 +112,47 @@ app.start = function () {
 				);
 		});
 
-		// Signup route
-		app.post('/signup', async (req, res) => {
-			try {
-				const { email } = req.body;
-		
-				// Check if the user already exists
-				const existingUser = await app.models.User.findOne({ where: { email } });
-				if (existingUser) {
-					return res.status(400).json({ error: 'User with this email already exists' });
-				}
-		
-				// Generate JWT token
-				const token = generateToken(email);
-		
-				// Send verification email
-				await sendEmail(email, token);
-		
-				// Create the user
-				const newUser = await createUser(email, password);
-		
-				if (newUser) {
-					console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
-					// Set the role for the user
-					const role = await app.models.Role.findOne({ where: { name: 'customer' }, include: 'principals' });
-					if (!role) {
-						return res.status(500).json({ error: 'Role not found' });
-					}
-					await role.principals.create({
-						principalType: RoleMapping.USER,
-						principalId: newUser.id
-					});
-				} else {
-					console.error(`User could not be created. Program may not work as expected`);
-				}
-		
-				res.status(200).json({ message: 'User created successfully' });
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
-		});
-		
-		function generateToken(email) {
-			const secretKey = 'your_secret_key'; // Replace with your actual secret key
-			return jwt.sign({ email }, secretKey);
-		}
-		
-		
-		async function createUser(email, password) {
-			try {
-				const newUser = await app.models.User.create({ email, password });
-				return newUser;
-			} catch (error) {
-				console.error(error);
-				throw new Error('Failed to create user');
-			}
-		}
-		
-	async function sendEmail(emailAddress,token) {
-	//   debugger;
+		// Generate JWT token
+function generateToken(email) {
+    const secretKey = 'your_secret_key'; // Replace with your actual secret key
+    return jwt.sign({ email }, secretKey);
+}
+
+		// Verify user and send email route
+app.post('/signup/verifyEmail', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+
+    try {
+        const { email } = req.body;
+
+        // Check if the user already exists
+        const existingUser = await this.User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ error: 'User with this email already exists' });
+        }
+
+        // Generate JWT token
+        const token = generateToken(email);
+
+        // Send verification email
+        await sendEmail(email, token);
+
+        res.status(200).json({ message: 'Verification email sent successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 	
+async function sendEmail(emailAddress,token) {
+	  debugger;
 	  var nodemailer = require('nodemailer');
 	  var smtpTransport = require('nodemailer-smtp-transport');
 	  this.Param = app.models.Param;
 	  const xoauth2 = require('xoauth2');
 	  try {
 		  const array = ["user", "clientId", "clientSecret", "refreshToken"];
-		  const Param = app.models.Param;
+		  const Param = this.Param;
 		  const key = {};
 		  const sParam = await Param.find({
 			  where: {
@@ -183,11 +160,11 @@ app.start = function () {
 					Code: {
 						inq: array
 					}
-
+	
 				}]
 			  }
 		  });
-  
+	
 		  for (const element of sParam) {
 			  switch (element.Code) {
 				  case "user":
@@ -204,17 +181,16 @@ app.start = function () {
 					  break;
 			  }
 		  }
-		  const verificationLink = `${req.headers.referer}#/verify/${token}`;	
+		  const verificationLink = `${req.headers.referer}#/userVerify/${token}`;	
 		  const email = "contact@evotrainingsolutions.com";
-  
+	
 		//   const OTP = generateOTP();
 		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'verifyEmail.html', 'utf8');
 		  var mailBody = mailContent.replace("$$verify$$", verificationLink)
-		  mailBody+=mailBody.replace("$$email$$", email)
-		  mailBody+=mailBody.replace("$$email$$", email);
-
+		  mailBody+=mailBody.replace(/\$\$email\$\$/gi, email);
+	
 		  
-  
+	
 		  const transporter = nodemailer.createTransport(smtpTransport({
 			service: 'gmail',
 			host: 'smtp.gmail.com',
@@ -227,14 +203,14 @@ app.start = function () {
 			  })
 			}
 		  }));
-  
+	
 		  const emailContent = {
 			//   from: 'dheeraj@soyuztechnologies.com',
 			  to: emailAddress,
 			  subject: "Verify Your OTP For Dheeraj Enterprisees",
 			  html: mailBody
 		  };
-
+	
 		  transporter.sendMail(emailContent, function (error, info) {
 					
 			if (error) {
@@ -246,32 +222,222 @@ app.start = function () {
 				}
 			} else {
 				console.log('Email sent: ' + info.response);
-				res.send("email sent");
-				var Otp = app.models.Otp;
-				var newRec = {
-					CreatedOn: new Date(),
-					Attempts: 1,
-					OTP: OTP,
-					Number: Email
-				};
-				Otp.upsert(newRec)
-					.then(function (inq) {
-						res.send("OTP Send Successfully");
-						// console.log("created successfully");
-					})
-					.catch(function (err) {
-						console.log(err);
-					});
+				// res.send("email sent");
+				// var Otp = app.models.Otp;
+				// var newRec = {
+				// 	CreatedOn: new Date(),
+				// 	Attempts: 1,
+				// 	// OTP: OTP,
+				// 	Number: email
+				// };
+				// Otp.upsert(newRec)
+				// 	.then(function (inq) {
+				// 		res.send("Email Send Successfully");
+				// 		// console.log("created successfully");
+				// 	})
+				// 	.catch(function (err) {
+				// 		console.log(err);
+				// 	});
 			}
 		});
-  
+	
 	
 	  } catch (error) {
 		  console.error(error);
 		  res.status(500).send('Internal server error');
 	  }
-  }
+	}
+});
 
+// Verify JWT token route
+app.post('/signup/verifyToken', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	try {
+	  const { token } = req.body;
+  
+	  // Verify the token and extract the email
+	  const decodedToken = jwt.verify(token, 'your_secret_key');
+	  const email = decodedToken.email;
+  
+	  // Check if the user already exists
+	  const existingUser = await this.User.findOne({ where: { email } });
+	  if (existingUser) {
+		return res.status(400).json({ error: 'User with this email already exists' });
+	  }
+  
+	  res.status(200).json({ message: 'Token verified successfully' },decodedToken);
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).json({ error: 'Internal server error' });
+	}
+  });
+
+  app.post('/signup/createUser', async (req, res) => {
+	try {
+	  const { email, password } = req.body;
+	  const role = 'Customer'; // Hardcoded role as 'Customer'
+  
+	  // Create the user in User table
+	  const newUser = await app.models.User.create({ email, password, Role: role });
+  
+	  // Create the user in AppUser table
+	  await app.models.AppUser.create({
+		TechnicalId: newUser.id,
+		EmailId: email,
+		UserName: "usermame",
+		Role: role
+	  });
+  
+	  console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
+  
+	  res.status(200).json({ message: 'User created successfully' });
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).json({ error: 'Internal server error' });
+	}
+  });
+  
+  
+
+//   app.post('/signup/createUser', async (req, res) => {
+// 	try {
+// 	  const { email, password } = req.body;
+// 	  const role = 'Customer'; // Hardcoded role as 'Customer'
+  
+// 	  // Create the user
+// 	//   const newUser = await app.models.User.create({ email, password, Role: role });
+  
+// 	  if ("") {
+// 		// console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
+  
+// 		// Create the AppUser
+// 		await app.models.AppUser.create({
+// 		  TechnicalId: '7410011020000',
+// 		  EmailId: req.body.email,
+// 		  UserName: 'username',
+// 		  Role: role
+// 		});
+  
+// 		res.status(200).json({ message: 'User created successfully' });
+// 	  } else {
+// 		console.error(`User could not be created. Program may not work as expected`);
+// 		res.status(500).json({ error: 'User creation failed' });
+// 	  }
+// 	} catch (error) {
+// 	  console.error(error);
+// 	  res.status(500).json({ error: 'Internal server error' });
+// 	}
+//   });
+  
+
+  // Get all users route
+app.get('/users', async (req, res) => {
+	try {
+	  const users = await app.models.AppUser.find(); // Retrieve all users
+  
+	  res.status(200).json(users);
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).json({ error: 'Internal server error' });
+	}
+  });
+  
+
+// // Create user route
+// app.post('/signup/create', async (req, res) => {
+//     try {
+//         const { token, password } = req.body;
+
+//         // Verify the token and extract the email
+//         const decodedToken = jwt.verify(token, 'your_secret_key');
+//         const email = decodedToken.email;
+
+//         // Check if the user already exists
+//         const existingUser = await app.models.User.findOne({ where: { email } });
+//         if (existingUser) {
+//             return res.status(400).json({ error: 'User with this email already exists' });
+//         }
+
+//         // Create the user
+//         const newUser = await app.models.User.create({ email, password });
+//         if (newUser) {
+//             console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
+//             // Set the role for the user
+//             const role = await app.models.Role.findOne({ where: { name: 'customer' }, include: 'principals' });
+//             if (!role) {
+//                 return res.status(500).json({ error: 'Role not found' });
+//             }
+//             await role.principals.create({
+//                 principalType: RoleMapping.USER,
+//                 principalId: newUser.id
+//             });
+//         } else {
+//             console.error(`User could not be created. Program may not work as expected`);
+//         }
+
+//         res.status(200).json({ message: 'User created successfully' });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// });
+
+
+
+		// // Signup route
+		// app.post('/signup',  (req, res) => {
+		// 	debugger;
+			// this.User = app.models.User;
+			
+			// this.Param = app.models.Param;
+		// 	
+			
+		// 	try {
+		// 		const {email} = req.body;
+		
+		// 		// Check if the user already exists
+		// 		this.User.findOne({ where: { email } }).then((existingUser) => {
+		// 		  if (existingUser) {
+		// 			return res.status(400).json({ error: 'User with this email already exists' });
+		// 		  }
+				
+		// 		  // Create the user
+		// 		  this.User.create({email, password }).then((newUser) => {
+		// 			if (newUser) {
+		// 			  console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
+		// 			  // Set the role for the user
+		// 			  this.Role.findOne({ where: { name: 'customer' }, include: 'principals' }).then((role) => {
+		// 				if (!role) {
+		// 				  return res.status(500).json({ error: 'Role not found' });
+		// 				}
+		// 				role.principals.create({
+		// 				  principalType: RoleMapping.USER,
+		// 				  principalId: newUser.id
+		// 				});
+		// 			  });
+		// 			} else {
+		// 			  console.error(`User could not be created. Program may not work as expected`);
+		// 			}
+		// 		  });
+		// 		}).catch((err) => {
+		// 		  console.error(`Error: ${err}`);
+		// 		  res.status(500).json({ error: 'Internal server error' });
+		// 		});
+		
+		// 		let secretKey = "soyuz"
+		// 		// Generate JWT token
+		// 		const token = jwt.sign({ email }, secretKey);
+		
+		// 		sendEmail(req.body.email, token);
+		// 		res.status(200).json({ message: 'User created successfully' });
+		
+				
+		// 	} catch (error) {
+		// 	  console.error(error);
+		// 	  res.status(500).json({ error: 'Internal server error' });
+		// 	}
+		//   });
 
 
 
