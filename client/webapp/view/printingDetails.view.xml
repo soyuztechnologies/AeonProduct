@@ -32,8 +32,8 @@
 			</f:SimpleForm>
 			<f:SimpleForm title="Job Status" id="SimpleForm2" editable="true" layout="ResponsiveGridLayout" >
 				<f:content>
-						<Label text="Raw Material"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>rawmaterial}"></Input>
+						<Label text="Raw Material"></Label>	
+						<Input editable="false" value="{appView>poNo}"></Input>
 
 						<Label text="Coating"></Label>
 						<Input editable="{appView>/inputEditable}" value="{appView>coating}"></Input>
@@ -42,28 +42,28 @@
 						<Input editable="{appView>/inputEditable}"  value="{appView>spotuv}"></Input>
 
 						<Label text="Punching"></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>punching}"></Input>
 
 						<Label text="Packing"></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>packing}"></Input>
 
 						<Label text="Printing"></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>printing}"></Input>
 
 						<Label text="Foiling"></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>foiling}"></Input>
 
 						<Label text="Embossing"></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>embossing}"></Input>
 
 						<Label text="Pasting"></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>pasting}"></Input>
 
 						<Label text="Inc. No."></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>incno}"></Input>
 
 						<Label text="Delivery No."></Label>
-						<Input editable="{appView>/inputEditable}" value="Pending"></Input>
+						<Input editable="{appView>/inputEditable}" value="{appView>deliveryno}"></Input>
 					<!-- </VBox> -->
 				</f:content>
 			</f:SimpleForm>

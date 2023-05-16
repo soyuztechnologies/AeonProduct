@@ -1,9 +1,9 @@
 sap.ui.define([
-	"./BaseController", "sap/ui/core/Fragment", "sap/m/MessageBox", 'sap/m/MessageToast',
+	"./BaseController", "sap/m/MessageBox","sap/ui/core/Fragment", 'sap/m/MessageToast',
 ], function (
 	BaseController,
-	Fragment,
 	MessageBox,
+	Fragment,
 	MessageToast
 ) {
 	"use strict";
@@ -94,7 +94,32 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
-
+		resetFrag:function(){
+			var oView = this.getView();
+            var that = this;
+			
+            if (!this.oDialog) {
+                this.oDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "ent.ui.ecommerce.fragments.Reset",
+                    controller: this
+                }).then(function (oDialog) {    
+                    // Add dialog to view hierarchy
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+               
+            }
+            this.oDialog.then(function (oDialog) {
+                oDialog.open();
+                // that.onRefresh(/);
+                
+                // that.getView().getModel('local').refresh();
+            });
+		},
+		onResetPassword:function(){
+			this.resetFrag();
+		},
 	});
 
 });

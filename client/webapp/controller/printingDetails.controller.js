@@ -21,6 +21,7 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/inputEditable",false);
 			this.getModel("appView").updateBindings();
 			this.loadForm();
+			this.loadForm2();
 
 			// this.getJobsData();
 		},
@@ -33,9 +34,16 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/inputEditable",false);
 		},
 		loadForm:function(){
+			debugger;
 			var oSimpleForm = this.getView().byId('SimpleForm-1')
 			// oSimpleForm.setModel('appView');
 			oSimpleForm.bindElement('appView>/datas');
+
+			
+		},
+		loadForm2:function(){
+			var oSimpleForm2 = this.getView().byId('SimpleForm2');
+			oSimpleForm2.bindElement('appView>/datas')
 		}
 		
 		// getJobsData: function() {
