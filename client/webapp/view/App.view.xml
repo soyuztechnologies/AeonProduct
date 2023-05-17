@@ -36,6 +36,7 @@
                     <tnt:NavigationListItem text="All Printers" icon="sap-icon://business-card" key="WelcomePrinters"/>
                     <tnt:NavigationListItem text="Printing Details" icon="sap-icon://print" key="PrintingDetails"/>
                     <tnt:NavigationListItem text="User Details" icon="sap-icon://family-care" key="userDetails"/>
+                    <tnt:NavigationListItem text="Profile" icon="sap-icon://customer" key="Profile"/>
                 </tnt:NavigationList>
             </tnt:SideNavigation>
         </tnt:sideContent>

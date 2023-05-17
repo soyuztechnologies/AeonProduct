@@ -10,7 +10,7 @@ sap.ui.define([
 
         onInit: function () {
             this._oRouter = this.getRouter();
-            this.getRouter().getRoute("userVerify").attachPatternMatched(this._matchedHandler, this);
+            this.getRouter().getRoute("updatePassword").attachPatternMatched(this._matchedHandler, this);
         },
         _matchedHandler: function () {
             // debugger;
@@ -22,17 +22,18 @@ sap.ui.define([
 			this.getModel("appView").updateBindings();
             // this.timerText();
             this.verifytokens();
+            // this.loadFragment();
 		},
 
         verifytokens: function () {
             // Get the URL parameters
             var that = this;
-            var oParams = this.getRouter().getHashChanger().getHash().split("userVerify/")[1];
+            var oParams = this.getRouter().getHashChanger().getHash().split("updatePassword/")[1];
             var payload = {
                 "token": oParams
             };
-            // debugger;
-            this.middleWare.callMiddleWare("signup/verifyToken", "POST", payload)
+            debugger;
+            this.middleWare.callMiddleWare("Forgot/verifyToken", "POST", payload)
                 .then(function (data, status, xhr) {
                     // debugger;
                     that.email = data.email;
@@ -72,7 +73,7 @@ sap.ui.define([
             var that = this;
             var pass = this.getModel("appView").getProperty('/Pass');
             var Conpass = this.getModel("appView").getProperty('/ConPass');
-            var oRouteName = oEvent.getParameter("name") === "userVerify";
+            // var oRouteName = oEvent.getParameter("name") === "userVerify";
             if (pass !== Conpass) {
                 MessageToast.show("Password Does not match")
             }
@@ -82,12 +83,10 @@ sap.ui.define([
                     "email": this.email,
                     "password": Conpass,
                 };
-                this.middleWare.callMiddleWare("signup/createUser", "POST", payload)
+                this.middleWare.callMiddleWare("reset/password", "POST", payload)
                     .then(function (data, status, xhr) {
                         debugger;
-                        MessageToast.show("User Register Successful");
-                        this.onReject();
-                        this.timerText();
+                        MessageToast.show("Password Reset Successful")
 
                     })
                     .catch(function (jqXhr, textStatus, errorMessage) {

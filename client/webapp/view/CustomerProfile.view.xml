@@ -1,0 +1,88 @@
+<mvc:View
+	controllerName="ent.ui.ecommerce.controller.CustomerProfile"
+	xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:ux="sap.uxap"
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+<ux:ObjectPageLayout id="ObjectPageLayout"
+    showTitleInHeaderContent="true"
+   alwaysShowContentHeader="false"
+   preserveHeaderStateOnScroll="false"
+   headerContentPinnable="true"
+   isChildPage="true"
+   upperCaseAnchorBar="false">
+
+   <ux:headerTitle>
+    <ux:ObjectPageDynamicHeaderTitle>
+        <ux:expandedHeading>
+            <Title text="Tarun Makara" wrapping="true" class="sapUiSmallMarginEnd"/>
+        </ux:expandedHeading>
+
+        <ux:snappedHeading>
+            <FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
+                <FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+                    <f:Avatar src="../../../../../../../{products>ProductPicUrl}" displaySize="S" displayShape="Square"/>
+                    <Title text="Tarun" wrapping="true" class="sapUiTinyMarginEnd"/>
+                </FlexBox>
+            </FlexBox>
+        </ux:snappedHeading>
+        
+
+        <ux:actions>
+            <Button text="Edit" press="toggleAreaPriority" icon="sap-icon://edit"/>
+        </ux:actions>
+
+
+    </ux:ObjectPageDynamicHeaderTitle>
+</ux:headerTitle>
+<ux:headerContent>
+    <FlexBox wrap="Wrap" fitContainer="true" alignItems="Stretch">
+        <f:Avatar src="../../../../../../../{products>ProductPicUrl}"
+                  displaySize="L"
+                  displayShape="Square"
+                  class="sapUiTinyMarginEnd">
+        </f:Avatar>
+        <VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+            <!-- <m:Label text="Main Category"/> -->
+            <Text text="DEMO Customer D'ALESSANDRO"/>
+            <Text text="Mail Addresscustomer@gmail.com"/>
+
+        </VBox>
+        <!-- <m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+            <m:Label text="Subcategory"/>
+            <m:Text text="Mail Addresscustomer@gmail.com"/>
+        </m:VBox> -->
+        <VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+            <Label text="Status"/>
+            <ObjectNumber number="Approved" emphasized="false"/>
+        </VBox>
+    </FlexBox>
+</ux:headerContent>
+<ux:ObjectPageSection title="Company Details">
+    <ux:subSections>
+        <ux:ObjectPageSubSection>
+            <ux:blocks>
+                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CompanyDetails " type="XML"></core:Fragment>
+            </ux:blocks>
+        </ux:ObjectPageSubSection>
+    </ux:subSections>
+</ux:ObjectPageSection>
+
+<ux:ObjectPageSection title="Person Details">
+    <ux:subSections>
+        <ux:ObjectPageSubSection>
+            <ux:blocks>
+                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PersonDetails" type="XML"></core:Fragment>
+            </ux:blocks>
+        </ux:ObjectPageSubSection>
+    </ux:subSections>
+</ux:ObjectPageSection>
+
+</ux:ObjectPageLayout>
+	
+
+</mvc:View>
+

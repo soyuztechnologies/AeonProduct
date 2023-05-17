@@ -1,0 +1,27 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
+<form:SimpleForm
+maxContainerCols="2"
+editable="false"
+layout="ColumnLayout"
+labelSpanL="12"
+labelSpanM="12"
+emptySpanL="0"
+emptySpanM="0"
+columnsL="2"
+columnsM="2">
+<form:content>
+    <Label text="Title"/>
+    <Input value = "" placeholder="Title"/>
+    <Label text="First Name"/>
+    <Input value = "" placeholder="First Name"/>
+    <Label text="Last Name"/>
+    <Input value = "" placeholder="Last Name"/>
+    <Label text="Office Phone Number"/>
+    <Input value = "" placeholder="Phone Number"/>
+    <Label text="Company Logo"/>
+    <Input value = "" placeholder="company logo"/>
+    <Label text="Gmail"/>
+    <Input value = "" placeholder="Gmail"/>
+</form:content>
+</form:SimpleForm>
+</core:FragmentDefinition>

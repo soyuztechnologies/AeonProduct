@@ -1,0 +1,69 @@
+{
+	"name": "Customer",
+	"plural": "Customer",
+	"base": "PersistedModel",
+	"idInjection": false,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+        "email": {
+            "type": "string",
+            "default": null,
+            "required": true,
+            "id": true
+        },
+        "CompanyEmail": {
+            "type":"string",
+            "default":null
+        },
+        "CompanyName": {
+            "type":"string",
+            "default":null
+        },
+        "GSTNO": {
+            "type":"string",
+            "default":null
+        },
+        "CompanyAddress": {
+            "type":"string",
+            "default":null
+        },
+        "Title": {
+            "type":"string",
+            "default":null
+        },
+        "FirstName": {
+            "type":"string",
+            "default":null
+        },
+        "LastName": {
+            "type":"string",
+            "default":null
+        },
+        "phoneNumber": {
+            "type":"number",
+            "default":null
+        },
+        "CompnayLogo": {
+            "type":"image",
+            "default":null
+        },
+        "Website": {
+            "type":"url",
+            "default":null
+        }
+	},
+	"scope": {
+		"order": "CreatedOn DESC"
+	},
+	"validations": [],
+  	"relations": {},
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}

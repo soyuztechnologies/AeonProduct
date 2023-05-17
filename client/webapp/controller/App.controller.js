@@ -74,6 +74,9 @@ sap.ui.define(
       onSelectItem: function (oEvent) {
         debugger;
         var nav = oEvent.getSource().getSelectedKey();
+        if (nav=== "Profile"){
+          this.getRouter().navTo("Profile")
+        }
         if (nav === "PrintingDetails") {
           this.getRouter().navTo("printingDetails");
         }

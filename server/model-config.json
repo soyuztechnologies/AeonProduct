@@ -57,6 +57,10 @@
     "dataSource": "mongoatlas",
     "public": true
   },
+  "JobStatus": {
+    "dataSource": "mongoatlas",
+    "public": true
+  },
   "Job": {
     "dataSource": "mongoatlas",
     "public": true

@@ -118,10 +118,18 @@ function generateToken(email) {
     return jwt.sign({ email }, secretKey);
 }
 
-		// Verify user and send email route
-app.post('/forgotPassword', async (req, res) => {
+
+
+
+//  ######################################################################
+// 								forgot password  calls 
+//  ########################################################################
+
+
+app.post('/forgotPasswordEmailVerify', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
 
     try {
         const { email } = req.body;
@@ -182,13 +190,15 @@ async function sendForgotEmail(emailAddress,token) {
 					  break;
 			  }
 		  }
-		  const verificationLink = `${req.headers.referer}#/userVerify/${token}`;	
+		  const verificationLink = `${req.headers.referer}#/updatePassword/${token}`;	
 		  const email = "contact@evotrainingsolutions.com";
+		  const userEmail = emailAddress;
 	
 		//   const OTP = generateOTP();
 		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'Forgot.html', 'utf8');
 		  var mailBody = mailContent.replace("$$verify$$", verificationLink) 
-		                  .replace(/\$\$email\$\$/gi, email);
+		                  .replace(/\$\$email\$\$/gi, email)
+		                  .replace(/\$\$user\$\$/gi, userEmail);
 	
 		  
 	
@@ -249,24 +259,58 @@ async function sendForgotEmail(emailAddress,token) {
 	  }
 	}
 });
+// Verify JWT token route
+app.post('/Forgot/verifyToken', async (req, res) => {
+	debugger
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+	try {
+	  const { token } = req.body;
+  
+	  // Verify the token and extract the email
+	  const decodedToken = jwt.verify(token, 'your_secret_key');
+	  const email = decodedToken.email;
+  
+	  // Check if the user already exists
+	  const existingUser = await this.User.findOne({ where: { email } });
+	  if (!existingUser) {
+		return res.status(400).json({ error: 'User with this email already exists' });
+	  }
+	  let msg = "token verfied"
+	  res.status(200).json({msg,email});
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).json({ error: 'Internal server error' });
+	}
+  });
 app.post('/reset/password', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
     try {
-        const { token, password } = req.body;
+        const {email,password } = req.body;
 
-        // Verify the token
-        const decodedToken = jwt.verify(token, 'your_secret_key');
-        const email = decodedToken.email;
+        // // Verify the token
+        // const decodedToken = jwt.verify(token, 'your_secret_key');
+        // const email = decodedToken.email;
 
         // Find the user
-        const user = await app.models.User.findOne({ where: { email } });
-        if (!user) {
+        const Appuser = await this.AppUser.findOne({ where: { EmailId:email } });
+		const  user = await this.User.findOne({ where: {email}});	
+        if (!Appuser) {
             return res.status(404).json({ error: 'User not found' });
-        }
-
-        // Update the user's password
-        user.password = password;
-        await user.save();
-
+        };
+		
+		if(!user) {
+			return res.status(404).json({ error: 'User not found' });
+		};
+		// Update the user's password
+		user.password = password;
+		await user.save();
+		// Update the user's password
+		Appuser.password = password;
+		await Appuser.save();
         res.status(200).json({ message: 'Password reset successful' });
     } catch (error) {
         console.error(error);
@@ -274,11 +318,15 @@ app.post('/reset/password', async (req, res) => {
     }
 });
 
-
+ 
+//  ######################################################################
+// 								Signup call 
+//  ########################################################################
 
 app.post('/signup/verifyEmail', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
 
     try {
         const { email } = req.body;
@@ -302,10 +350,12 @@ app.post('/signup/verifyEmail', async (req, res) => {
     }
 	
 async function sendEmail(emailAddress,token) {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
 	  debugger;
 	  var nodemailer = require('nodemailer');
 	  var smtpTransport = require('nodemailer-smtp-transport');
-	  this.Param = app.models.Param;
 	  const xoauth2 = require('xoauth2');
 	  try {
 		  const array = ["user", "clientId", "clientSecret", "refreshToken"];
@@ -410,6 +460,7 @@ async function sendEmail(emailAddress,token) {
 app.post('/signup/verifyToken', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
 	try {
 	  const { token } = req.body;
   
@@ -431,18 +482,23 @@ app.post('/signup/verifyToken', async (req, res) => {
   });
 
   app.post('/signup/createUser', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
 	try {
 	  const { email, password } = req.body;
 	  const role = 'Customer'; // Hardcoded role as 'Customer'
   
 	  // Create the user in User table
-	  const newUser = await app.models.User.create({ email, password, Role: role });
+	  const newUser = await this.User.create({ email, password, Role: role, CreatedOn: new Date() });
   
 	  // Create the user in AppUser table
-	  await app.models.AppUser.create({
+	  await this.AppUser.create({
 		TechnicalId: newUser.id,
 		EmailId: email,
 		UserName: "usermame",
+		CreatedOn: new Date(),
+		// Approved : "null",
 		Role: role
 	  });
   
@@ -455,146 +511,30 @@ app.post('/signup/verifyToken', async (req, res) => {
 	}
   });
   
-  
 
-//   app.post('/signup/createUser', async (req, res) => {
-// 	try {
-// 	  const { email, password } = req.body;
-// 	  const role = 'Customer'; // Hardcoded role as 'Customer'
-  
-// 	  // Create the user
-// 	//   const newUser = await app.models.User.create({ email, password, Role: role });
-  
-// 	  if ("") {
-// 		// console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
-  
-// 		// Create the AppUser
-// 		await app.models.AppUser.create({
-// 		  TechnicalId: '7410011020000',
-// 		  EmailId: req.body.email,
-// 		  UserName: 'username',
-// 		  Role: role
-// 		});
-  
-// 		res.status(200).json({ message: 'User created successfully' });
-// 	  } else {
-// 		console.error(`User could not be created. Program may not work as expected`);
-// 		res.status(500).json({ error: 'User creation failed' });
-// 	  }
-// 	} catch (error) {
-// 	  console.error(error);
-// 	  res.status(500).json({ error: 'Internal server error' });
-// 	}
-//   });
-  
+//  ######################################################################
+// 							Get call to get all the app users
+//  ########################################################################
 
-  // Get all users route
 app.get('/users', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
 	try {
-	  const users = await app.models.AppUser.find(); // Retrieve all users
+	  const users = await this.AppUser.find(); // Retrieve all users
   
 	  res.status(200).json(users);
 	} catch (error) {
 	  console.error(error);
 	  res.status(500).json({ error: 'Internal server error' });
 	}
-  });
+});
+
+
+
+
+
   
-
-// // Create user route
-// app.post('/signup/create', async (req, res) => {
-//     try {
-//         const { token, password } = req.body;
-
-//         // Verify the token and extract the email
-//         const decodedToken = jwt.verify(token, 'your_secret_key');
-//         const email = decodedToken.email;
-
-//         // Check if the user already exists
-//         const existingUser = await app.models.User.findOne({ where: { email } });
-//         if (existingUser) {
-//             return res.status(400).json({ error: 'User with this email already exists' });
-//         }
-
-//         // Create the user
-//         const newUser = await app.models.User.create({ email, password });
-//         if (newUser) {
-//             console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
-//             // Set the role for the user
-//             const role = await app.models.Role.findOne({ where: { name: 'customer' }, include: 'principals' });
-//             if (!role) {
-//                 return res.status(500).json({ error: 'Role not found' });
-//             }
-//             await role.principals.create({
-//                 principalType: RoleMapping.USER,
-//                 principalId: newUser.id
-//             });
-//         } else {
-//             console.error(`User could not be created. Program may not work as expected`);
-//         }
-
-//         res.status(200).json({ message: 'User created successfully' });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-
-
-		// // Signup route
-		// app.post('/signup',  (req, res) => {
-		// 	debugger;
-			// this.User = app.models.User;
-			
-			// this.Param = app.models.Param;
-		// 	
-			
-		// 	try {
-		// 		const {email} = req.body;
-		
-		// 		// Check if the user already exists
-		// 		this.User.findOne({ where: { email } }).then((existingUser) => {
-		// 		  if (existingUser) {
-		// 			return res.status(400).json({ error: 'User with this email already exists' });
-		// 		  }
-				
-		// 		  // Create the user
-		// 		  this.User.create({email, password }).then((newUser) => {
-		// 			if (newUser) {
-		// 			  console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
-		// 			  // Set the role for the user
-		// 			  this.Role.findOne({ where: { name: 'customer' }, include: 'principals' }).then((role) => {
-		// 				if (!role) {
-		// 				  return res.status(500).json({ error: 'Role not found' });
-		// 				}
-		// 				role.principals.create({
-		// 				  principalType: RoleMapping.USER,
-		// 				  principalId: newUser.id
-		// 				});
-		// 			  });
-		// 			} else {
-		// 			  console.error(`User could not be created. Program may not work as expected`);
-		// 			}
-		// 		  });
-		// 		}).catch((err) => {
-		// 		  console.error(`Error: ${err}`);
-		// 		  res.status(500).json({ error: 'Internal server error' });
-		// 		});
-		
-		// 		let secretKey = "soyuz"
-		// 		// Generate JWT token
-		// 		const token = jwt.sign({ email }, secretKey);
-		
-		// 		sendEmail(req.body.email, token);
-		// 		res.status(200).json({ message: 'User created successfully' });
-		
-				
-		// 	} catch (error) {
-		// 	  console.error(error);
-		// 	  res.status(500).json({ error: 'Internal server error' });
-		// 	}
-		//   });
 
 
 

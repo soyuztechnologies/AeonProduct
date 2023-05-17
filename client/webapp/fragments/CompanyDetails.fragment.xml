@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
+<form:SimpleForm
+maxContainerCols="2"
+editable="false"
+layout="ColumnLayout"
+labelSpanL="12"
+labelSpanM="12"
+emptySpanL="0"
+emptySpanM="0"
+columnsL="2"
+columnsM="2">
+<form:content>
+    <Label text="Mail Address"/>
+    <Input value = "" placeholder="Company Email"/>
+    <Label text="Company Name"/>
+    <Input value = "" placeholder="Company Name"/>
+    <Label text="Gst Number"/>
+    <Input value = "" placeholder="GSt number"/>
+    <Label text="Company Address"/>
+    <Input value = "" placeholder="Compnay Address"/>
+    <Label text="Website"/>
+    <Input value = "" placeholder="Website Url"/>
+   
+</form:content>
+</form:SimpleForm>
+</core:FragmentDefinition>

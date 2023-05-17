@@ -126,6 +126,11 @@
 					"target": "userVerify"
 				},
 				{
+					"pattern": "updatePassword/{token}",
+					"name": "updatePassword",
+					"target": "updatePassword"
+				},
+				{
 					"pattern":"welcomePrinter",
 					"name":"welcomePrinter",
 					"target":"welcomePrinter"
@@ -134,6 +139,11 @@
 					"pattern": "Carborator",
 					"name":"Carborator",
 					"target":"Carborator"
+				},
+				{
+					"pattern": "Profile",
+					"name":"Profile",
+					"target":"Profile"
 				},
 				{
 					"pattern":"printingDetails",
@@ -178,6 +188,12 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId": "userVerify"
 				},
+				"updatePassword":{
+					"viewName": "updatePassword",
+					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
+					"viewId": "updatePassword"
+				},
 				"printingDetails":{
 					"viewName": "printingDetails",
 					"viewLevel": 1,
@@ -189,6 +205,12 @@
 					"viewLevel":1,
 					"controlAggregation": "beginColumnPages",
 					"viewId":"userDetails"
+				},
+				"Profile":{
+					"viewName":"CustomerProfile",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"Profile"
 				}
 			}
 		}

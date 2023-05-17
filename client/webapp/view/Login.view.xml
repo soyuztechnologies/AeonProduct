@@ -47,7 +47,7 @@
 											>
 										
 												<ObjectStatus
-												press="resetFrag"
+												press="ForgotPasswprd"
 												state="Information"
 													active="true"
 													icon=""

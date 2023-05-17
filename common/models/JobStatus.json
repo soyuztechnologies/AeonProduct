@@ -1,0 +1,67 @@
+{
+	"name": "JobStatus",
+	"plural": "JobStatus",
+	"base": "PersistedModel",
+	"idInjection": false,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"JobId": {
+			"type": "string",
+			"default": null,
+			"required": true
+		},
+		"JobStatusId": {
+			"type": "string",
+			"default": null,
+			"required": true,
+			"id":true
+		},
+		"rawMaterial": {
+            "type": "string",
+            "enum": ["Pending", "In Stock"],
+            "default": "Pending"
+        },
+		"Printing": {
+            "type": "Number",
+            "default": null
+        },
+		"Foiling": {
+            "type": "Number",
+            "default": null
+        },
+		"Coating": {
+            "type": "Number",
+            "default": null
+        },
+		"InvNo": {
+            "type": "Number",
+            "default": null
+        },
+		"DeliveryNo": {
+            "type": "Number",
+            "default": null
+        },
+		"Embossing": {
+            "type": "Number",
+            "default": null
+        },
+		"Pasting": {
+            "type": "Number",
+            "default": null
+        }
+	},
+	"scope": {
+		"order": "CreatedOn DESC"
+	},
+	"validations": [],
+  	"relations": {},
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}

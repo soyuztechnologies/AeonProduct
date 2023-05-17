@@ -1,10 +1,10 @@
 sap.ui.define([
 	"./BaseController",
 	"sap/m/MessageToast",
-	"sap/ui/model/json/JSONModel"
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/core/Fragment"
 	
-	
-], function (BaseController,MessageToast, JSONModel) {
+], function (BaseController,MessageToast, JSONModel,Fragment) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.userDetails", {
@@ -17,6 +17,27 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader",true);
 			this.getModel("appView").updateBindings();
+		},
+		AddUserDialog : function(){
+			MessageToast.show("this add user function is in under Progress.....🙂")
+			// var oView = this.getView();
+            // var that = this;
+
+            // if (!this.ouserDialog) {
+            //     this.ouserDialog = Fragment.load({
+            //         id: oView.getId(),
+            //         name: "ent.ui.ecommerce.fragments.CompanyDetails",
+            //         controller: this
+            //     }).then(function (ouserDialog) {
+            //         // Add dialog to view hierarchy
+            //         oView.addDependent(ouserDialog);
+            //         return ouserDialog;
+            //     }.bind(this));
+
+            // }
+            // this.ouserDialog.then(function (ouserDialog) {
+            //     ouserDialog.open();
+            // });
 		},
 		getUserData:function(){
 			debugger;

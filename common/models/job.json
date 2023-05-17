@@ -7,11 +7,15 @@
 		"validateUpsert": true
 	},
 	"properties": {
-		"JobId": {
+		"jobCardNo":{
 			"type": "string",
 			"default": null,
 			"required": true,
 			"id":true
+		},
+		"CustomerId": {
+			"type": "string",
+			"default": null
 		},
 		"JobName": {
 			"type": "string",
@@ -24,11 +28,6 @@
 		"UpdatedOn": {
 			"type": "date",
 			"default": null
-		},
-		"jobCardNo":{
-			"type": "string",
-			"default": null
-			
 		},
 		"poNo":{
 			"type": "string",

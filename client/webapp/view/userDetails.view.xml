@@ -3,14 +3,15 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m">
-	<App title="User Details">
+	<App >
 	<Table items="{appView>/userDetails}"  id="idProductsTable">
 		<headerToolbar>
 			<OverflowToolbar >
 				<content>
 					<Title text="User Details" level="H2"/>
 					<Button textDirection="Inherit" icon="sap-icon://refresh" press="getUserData"></Button>
-					
+					<ToolbarSpacer />
+					<Button text="Add" icon="sap-icon://add" press="AddUserDialog"/>
 				</content>
 			</OverflowToolbar>
 		</headerToolbar>

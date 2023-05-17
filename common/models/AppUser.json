@@ -15,6 +15,11 @@
       "type": "string",
       "required": true
     },
+    "Status": {
+      "type": "string",
+      "enum": ["Approved", "Reject","Pending"],
+      "default": "Pending"
+    },
     "UserName": {
       "type": "string",
       "required": true

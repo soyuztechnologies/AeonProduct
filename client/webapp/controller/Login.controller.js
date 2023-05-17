@@ -8,6 +8,7 @@ sap.ui.define([
 ) {
 	"use strict";
 	// try {
+		var isSignupButton = false; // Global flag variable
 	return BaseController.extend("ent.ui.ecommerce.controller.Login", {
 		onInit: function onInit(oEvent) {
 			this.getRouter()
@@ -52,7 +53,10 @@ sap.ui.define([
 				});
 		},
 
-		SignUp : function (){
+		
+
+		openDialog : function(){
+			debugger
 			var oView = this.getView();
             var that = this;
 			
@@ -69,11 +73,33 @@ sap.ui.define([
                
             }
             this.oDialog.then(function (oDialog) {
-                oDialog.open();
+				if(isSignupButton==true){
+					oDialog.open();
+					that.getView().getModel('appView').setProperty("/Title","Signup");
+				}
+				else{
+					oDialog.open();
+					var oModel = that.getView().getModel('appView')
+					oModel.setProperty("/Title","Forgot Password");
+					oModel.setProperty("/Email","");
+					oModel.updateBindings();
+				}
                 // that.onRefresh(/);
                 
                 // that.getView().getModel('local').refresh();
             });
+		},
+
+		SignUp : function (){
+			debugger
+			isSignupButton = true;
+			this.openDialog();
+        },
+
+		ForgotPasswprd : function(){
+			debugger
+			isSignupButton = false;
+			this.openDialog();
         },
 
 		onSubmit : function () {
@@ -82,11 +108,26 @@ sap.ui.define([
 			var payload = {
 				"email" : oEmail
 			}; 	
-			// debugger;
-			this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
+			if(isSignupButton == true){
+				// debugger;
+				this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
+					.then( function (data, status, xhr) {
+						debugger;
+						MessageToast.show("Verfication Email Sent to Your Mail");
+						that.getView().getModel('appView').setProperty("/EmailEditable", false);
+						that.OtpSend();
+	
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						debugger;
+						that.middleWare.errorHandler(jqXhr, that);
+					});
+			}
+			else{
+				this.middleWare.callMiddleWare("forgotPasswordEmailVerify", "POST", payload)
 				.then( function (data, status, xhr) {
 					debugger;
-					MessageToast.show("signup  Success");
+					MessageToast.show("forgot Password Email Sent to Your Mail");
 					that.getView().getModel('appView').setProperty("/EmailEditable", false);
 					that.OtpSend();
 
@@ -95,12 +136,18 @@ sap.ui.define([
 					debugger;
 					that.middleWare.errorHandler(jqXhr, that);
 				});
+			}
+
+
+
 		},
+
 		onReject: function () {
             this.oDialog.then(function (oDialog) {
                 oDialog.close();
             });
         },
+
 		resetFrag:function(){
 			var oView = this.getView();
             var that = this;
