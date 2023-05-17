@@ -119,6 +119,163 @@ function generateToken(email) {
 }
 
 		// Verify user and send email route
+app.post('/forgotPassword', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+
+    try {
+        const { email } = req.body;
+
+        // Check if the user already exists
+		const existingUser = await this.User.findOne({ where: { email } });
+        if (!existingUser) {
+            return res.status(400).json({ error: 'User with this email does not exist' });
+        }
+
+
+        // Generate JWT token
+        const token = generateToken(email);
+
+        // Send verification email
+        await sendForgotEmail(email, token);
+
+        res.status(200).json({ message: 'Verification email sent successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+	
+async function sendForgotEmail(emailAddress,token) {
+	  debugger;
+	  var nodemailer = require('nodemailer');
+	  var smtpTransport = require('nodemailer-smtp-transport');
+	  this.Param = app.models.Param;
+	  const xoauth2 = require('xoauth2');
+	  try {
+		  const array = ["user", "clientId", "clientSecret", "refreshToken"];
+		  const Param = this.Param;
+		  const key = {};
+		  const sParam = await Param.find({
+			  where: {
+				and: [{
+					Code: {
+						inq: array
+					}
+	
+				}]
+			  }
+		  });
+	
+		  for (const element of sParam) {
+			  switch (element.Code) {
+				  case "user":
+					  key.user = element.Value;
+					  break;
+				  case "clientId":
+					  key.clientId = element.Value;
+					  break;
+				  case "clientSecret":
+					  key.clientSecret = element.Value;
+					  break;
+				  case "refreshToken":
+					  key.refreshToken = element.Value;
+					  break;
+			  }
+		  }
+		  const verificationLink = `${req.headers.referer}#/userVerify/${token}`;	
+		  const email = "contact@evotrainingsolutions.com";
+	
+		//   const OTP = generateOTP();
+		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'Forgot.html', 'utf8');
+		  var mailBody = mailContent.replace("$$verify$$", verificationLink) 
+		                  .replace(/\$\$email\$\$/gi, email);
+	
+		  
+	
+		  const transporter = nodemailer.createTransport(smtpTransport({
+			service: 'gmail',
+			host: 'smtp.gmail.com',
+			auth: {
+			  xoauth2: xoauth2.createXOAuth2Generator({
+				user: key.user,
+				clientId: key.clientId,
+				clientSecret: key.clientSecret,
+				refreshToken: key.refreshToken
+			  })
+			}
+		  }));
+	
+		  const emailContent = {
+			//   from: 'dheeraj@soyuztechnologies.com',
+			  to: emailAddress,
+			  subject: "Verify Your OTP For Dheeraj Enterprisees",
+			  html: mailBody
+		  };
+	
+		  transporter.sendMail(emailContent, function (error, info) {
+					
+			if (error) {
+				console.log(error);
+				if (error.code === "EAUTH") {
+					res.status(500).send('Username and Password not accepted, Please try again.');
+				} else {
+					res.status(500).send('Internal Error while Sending the email, Please try again.');
+				}
+			} else {
+				console.log('Email sent: ' + info.response);
+				// res.send("email sent");
+				// var Otp = app.models.Otp;
+				// var newRec = {
+				// 	CreatedOn: new Date(),
+				// 	Attempts: 1,
+				// 	// OTP: OTP,
+				// 	Number: email
+				// };
+				// Otp.upsert(newRec)
+				// 	.then(function (inq) {
+				// 		res.send("Email Send Successfully");
+				// 		// console.log("created successfully");
+				// 	})
+				// 	.catch(function (err) {
+				// 		console.log(err);
+				// 	});
+			}
+		});
+	
+	
+	  } catch (error) {
+		  console.error(error);
+		  res.status(500).send('Internal server error');
+	  }
+	}
+});
+app.post('/reset/password', async (req, res) => {
+    try {
+        const { token, password } = req.body;
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, 'your_secret_key');
+        const email = decodedToken.email;
+
+        // Find the user
+        const user = await app.models.User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Update the user's password
+        user.password = password;
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successful' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
 app.post('/signup/verifyEmail', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
@@ -187,7 +344,7 @@ async function sendEmail(emailAddress,token) {
 		//   const OTP = generateOTP();
 		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'verifyEmail.html', 'utf8');
 		  var mailBody = mailContent.replace("$$verify$$", verificationLink)
-		  mailBody+=mailBody.replace(/\$\$email\$\$/gi, email);
+		      .replace(/\$\$email\$\$/gi, email);
 	
 		  
 	
@@ -265,8 +422,8 @@ app.post('/signup/verifyToken', async (req, res) => {
 	  if (existingUser) {
 		return res.status(400).json({ error: 'User with this email already exists' });
 	  }
-  
-	  res.status(200).json({ message: 'Token verified successfully' },decodedToken);
+	  let msg = "token verfied"
+	  res.status(200).json({msg,email});
 	} catch (error) {
 	  console.error(error);
 	  res.status(500).json({ error: 'Internal server error' });
@@ -289,7 +446,7 @@ app.post('/signup/verifyToken', async (req, res) => {
 		Role: role
 	  });
   
-	  console.log(`User created: ${JSON.stringify(newUser.toJSON())}`);
+	  console.log(`App User created: ${JSON.stringify(newUser.toJSON())}`);
   
 	  res.status(200).json({ message: 'User created successfully' });
 	} catch (error) {

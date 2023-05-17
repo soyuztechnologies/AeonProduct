@@ -96,6 +96,11 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
+		onReject: function () {
+            this.oDialog.then(function (oDialog) {
+                oDialog.close();
+            });
+        },
 		resetFrag:function(){
 			var oView = this.getView();
             var that = this;
@@ -114,9 +119,6 @@ sap.ui.define([
             }
             this.oDialog.then(function (oDialog) {
                 oDialog.open();
-                // that.onRefresh(/);
-                
-                // that.getView().getModel('local').refresh();
             });
 		},
 		onResetPassword:function(){
