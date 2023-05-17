@@ -14,9 +14,11 @@ sap.ui.define([
 		_matchedHandler:function(){
 			this.getModel("appView").setProperty("/layout", "OneColumn");
             this.getModel("appView").setProperty("/visibility", false);
+            this.getModel("appView").setProperty("/logoutVisibility", false);
+            this.getModel("appView").setProperty("/hamburgerVisibility", false);
 			this.getModel("appView").setProperty("/visibleHeader",true);
 			this.getModel("appView").updateBindings();
-            this.loadFragment();
+            this.timerText();
 		},
 
         loadFragment:function(){
@@ -41,6 +43,30 @@ sap.ui.define([
                 
                 // that.getView().getModel('local').refresh();
             });
-        }
+        },
+        timerText: function () {
+            
+            this.emailCount += 1;
+            var that = this;
+            var countDownDate = new Date().getTime() + 10000; // 60 seconds from now
+            var x = setInterval(function () {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                var timerText = "Redirecting to login page in " + seconds + "s";
+
+                // Display the timer
+                that.getView().getModel('appView').setProperty("/timerText", timerText);
+                if (distance < 0) {
+                    clearInterval(x);
+                    // that.getView().getModel('appView').setProperty("/timerText", "Resend");
+                    // that.getView().getModel('appView').setProperty("/onResendOTP", true);
+                    that.getRouter().navTo("login",{});
+                    // that.getView().getModel('local').setProperty("/ResendMsg", "If OTP not Received ");
+                }
+            }, 1000);
+
+        },
 	});
 });

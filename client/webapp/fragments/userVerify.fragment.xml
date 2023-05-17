@@ -11,9 +11,9 @@
             <Label text="Email" />
             <Text text="Text"></Text>
             <Label text="Password" />
-            <Input placeholder="Password" value="Password"></Input>
+            <Input placeholder="Password" value=""></Input>
             <Label text="Confirm Password" />
-            <Input placeholder="Confirm Password" value="Confirm Password"></Input>
+            <Input placeholder="Confirm Password" value=""></Input>
             
         </f:content>
     </f:SimpleForm>

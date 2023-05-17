@@ -35,6 +35,7 @@
                     <tnt:NavigationListItem text="Upload XML" icon="sap-icon://upload"  key="UploadXml"/>
                     <tnt:NavigationListItem text="All Printers" icon="sap-icon://business-card" key="WelcomePrinters"/>
                     <tnt:NavigationListItem text="Printing Details" icon="sap-icon://print" key="PrintingDetails"/>
+                    <tnt:NavigationListItem text="User Details" icon="sap-icon://family-care" key="userDetails"/>
                 </tnt:NavigationList>
             </tnt:SideNavigation>
         </tnt:sideContent>

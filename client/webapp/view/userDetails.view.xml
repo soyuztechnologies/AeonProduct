@@ -6,10 +6,11 @@
 	<App title="User Details">
 	<Table items="{appView>/userDetails}"  id="idProductsTable">
 		<headerToolbar>
-			<OverflowToolbar>
+			<OverflowToolbar >
 				<content>
 					<Title text="User Details" level="H2"/>
-					<Button text="refresh" press="getUserData"></Button>
+					<Button textDirection="Inherit" icon="sap-icon://refresh" press="getUserData"></Button>
+					
 				</content>
 			</OverflowToolbar>
 		</headerToolbar>
@@ -23,12 +24,12 @@
 				demandPopin="true">
 				<Text text="Email" />
 			</Column>
-			<Column
+			<!-- <Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="End">
 				<Text text="CreatedOn" />
-			</Column>
+			</Column> -->
 			<Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
@@ -47,8 +48,8 @@
 						text="{appView>UserName}" />
 					<Text
 						text="{appView>EmailId}" />
-					<Text
-						text="Created on" />
+					<!-- <Text
+						text="Created on" /> -->
 					<Switch state="true" customTextOn="Yes" customTextOff="No">
 							<layoutData>
 								<FlexItemData growFactor="1" />

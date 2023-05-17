@@ -83,6 +83,9 @@ sap.ui.define(
         if (nav === "UploadXml") {
           this.getRouter().navTo("Carborator");
         }
+        if (nav=== "userDetails"){
+          this.getRouter().navTo("userDetails")
+        }
       },
       onClickMenuButton: function (oEvent) {
         debugger;

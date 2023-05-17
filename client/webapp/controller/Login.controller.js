@@ -87,6 +87,8 @@ sap.ui.define([
 				.then( function (data, status, xhr) {
 					debugger;
 					MessageToast.show("signup  Success");
+					that.getView().getModel('appView').setProperty("/EmailEditable", false);
+					that.OtpSend();
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
@@ -120,6 +122,32 @@ sap.ui.define([
 		onResetPassword:function(){
 			this.resetFrag();
 		},
+		resendOTP:function(){
+			this.onSubmit();
+		},
+		OtpSend: function () {
+            
+            this.emailCount += 1;
+            var that = this;
+            var countDownDate = new Date().getTime() + 10000; 
+            var x = setInterval(function () {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                var timerText = "Resend OTP in " + seconds + "s";
+
+                // Display the timer
+                that.getView().getModel('appView').setProperty("/timerText", timerText);
+                if (distance < 0) {
+                    clearInterval(x);
+                    that.getView().getModel('appView').setProperty("/timerText", "Resend");
+                    that.getView().getModel('appView').setProperty("/onResendOTP", true);
+                    // that.getView().getModel('local').setProperty("/ResendMsg", "If OTP not Received ");
+                }
+            }, 1000);
+
+        },
 	});
 
 });

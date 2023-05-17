@@ -3,7 +3,11 @@
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
 
-	<App>
-		
-	</App>
+<MessagePage
+	title="Verifying..."
+	text="{appView>/messagePageText}"
+	description="{appView>/timerText}"
+	icon="sap-icon://past">
+</MessagePage>
+<Text text=";adskhfdsa;fdsa;fkh"></Text>
 </mvc:View>
