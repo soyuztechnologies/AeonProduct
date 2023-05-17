@@ -77,9 +77,9 @@ sap.ui.define(
         if (nav=== "Profile"){
           this.getRouter().navTo("Profile")
         }
-        if (nav === "PrintingDetails") {
-          this.getRouter().navTo("printingDetails");
-        }
+        // if (nav === "PrintingDetails") {
+        //   this.getRouter().navTo("printingDetails");
+        // }
         if (nav === "WelcomePrinters") {
           this.getRouter().navTo("welcomePrinter");
         }

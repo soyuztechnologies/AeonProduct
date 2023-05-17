@@ -1,11 +1,93 @@
 <mvc:View controllerName="ent.ui.ecommerce.controller.Carborator"
     xmlns:mvc="sap.ui.core.mvc" xmlns:u="sap.ui.unified" displayBlock="true"
     xmlns:f="sap.ui.layout.form"
-    xmlns:core="sap.ui.core"    
+    xmlns:core="sap.ui.core"  
+    xmlns:core.h="sap.ui.core.HTML"  
     xmlns="sap.m">
     <Page showHeader="{appView>/visibleHeader}" id="page">
         <content>
+           
+            <!-- <Table  id="idProductsTable">
+                <headerToolbar>
+                    <OverflowToolbar >
+                        <content>
+                            <Title text="Upload Document" level="H2"/>
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column>
+                        <Text text="{i18n>Delivery Document}" />
+                    </Column>
+                    <Column
+                        hAlign="Center">
+                        <Text text="{i18n>PO Upload}" />
+                    </Column>
+                    <Column
+                        hAlign="Right">
+                        <Text text="{i18n>Design}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem vAlign="Middle">
+                        <cells>
+                            <VBox>
+                                <u:FileUploader
+                            id="fileUploader"
+                            change="onFileUploaddChange"
+                            buttonText="Upload"
+                            fileType="pdf"
+                            multiple="false" />
+    
+                            <core:HTML
+                                content="&lt;iframe id='pdfFrame' width='500' height='300'&gt;&lt;/iframe&gt;"
+                                preferDOM="true"
+                                sanitizeContent="false"
+                                visible="true">
+                                
+                            </core:HTML>
+                            </VBox>
+                            
+
+                            
+
+                            <u:FileUploader
+                            id="UploadPo"
+                            name="myFileUpload"
+                            uploadUrl="upload/"
+                            tooltip="Upload your file to the local server"
+                            uploadComplete="onFileUploadChange"/>
+
+
+
+                            <u:FileUploader
+                            id="UploadDesign"
+                            name="myFileUpload"
+                            uploadUrl="upload/"
+                            tooltip="Upload your file to the local server"
+                            uploadComplete="handleUploadComplete"/>
+                    
+                            
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table> -->
+            
+
+
+
+
+
+
         <VBox class="sapUiLargeMargin" id="_IDGenVBox1" alignItems="Center">
+            <ComboBox  items="{appView>/userDetails}" id="idPopinLayout"
+            placeholder="Select User"
+            change="onPopinLayoutChanged">
+            <items>
+                <core:Item enabled="true"  text="{appView>UserName}"
+                    key="Block"/>
+            </items>
+        </ComboBox>
             <u:FileUploader
                 id="fileUploader"
                 name="myFileUpload"
@@ -18,7 +100,10 @@
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
 
 
-            <f:SimpleForm editable="true" id="SimpleForm-1" columnsM="2"
+
+
+
+            <f:SimpleForm width="100%" editable="true" id="SimpleForm-1" columnsM="2"
 			columnsL="3"
 			columnsXL="4"  layout="ColumnLayout"  >
 				<f:content>
@@ -182,12 +267,17 @@
 			</f:SimpleForm>
             
         </VBox>
-        <HBox
-        justifyContent="End"
-        >
-        <!-- <Button type="Emphasized" text="Next" press="onPressNavigate"></Button> -->
-        <Button type="Emphasized" text="Save" press="onSavePayload"></Button>
-        </HBox>
         </content>
+        <footer>
+            <Toolbar >
+               
+                    
+                    <ToolbarSpacer/>
+                    <Button type="Emphasized" text="Save" press="onSavePayload"></Button>
+                    <Button type="Reject" text="Clear" press="onPressClear"></Button>
+
+               
+            </Toolbar>
+        </footer>
     </Page>
 </mvc:View>

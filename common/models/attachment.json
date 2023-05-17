@@ -1,0 +1,54 @@
+{
+	"name": "Attachment",
+	"plural": "Attachment",
+	"base": "PersistedModel",
+	"idInjection": false,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"id": {
+			"type": "string",
+			"default": "null",
+			"required": true,
+			"id":true
+		},
+		"customerId": {
+			"type": "string",
+			"required": true,
+			"default": "null"
+		},
+		"attachemntName": {
+			"type": "string",
+			"default": "null",
+			"required": false
+		},
+		"attachmentType": {
+			"type": "date",
+			"default": "null",
+			"required": false
+		},
+		"mimeType":{
+			"type": "String",
+			"default": "null",
+			"required": false
+		},
+		"attachment":{
+			"type": "String",
+			"default": "null",
+			"required": false
+		}
+	},
+	"scope": {
+		"order": "CreatedOn DESC"
+	},
+	"validations": [],
+  	"relations": {},
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}
