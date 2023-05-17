@@ -57,6 +57,10 @@
     "dataSource": "mongoatlas",
     "public": true
   },
+  "Attachment": {
+    "dataSource": "mongoatlas",
+    "public": true
+  },
   "Job": {
     "dataSource": "mongoatlas",
     "public": true

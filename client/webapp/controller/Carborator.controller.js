@@ -1,8 +1,9 @@
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
-  "sap/m/MessageToast"
-], function (BaseController, JSONModel,MessageToast) {
+  "sap/m/MessageToast",
+  "sap/ui/core/Fragment"
+], function (BaseController, JSONModel,MessageToast,Fragment) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.Carborator", {
@@ -19,6 +20,7 @@ sap.ui.define([
       this.getModel("appView").setProperty("/logoutVisibility", true);
       this.getModel("appView").setProperty("/sideExpanded",true);
 			this.getModel("appView").updateBindings();
+      this.onPopinLayoutChanged();
 		},
     onPressNavigate:function(){
       this.getRouter().navTo("welcomePrinter");
@@ -45,6 +47,68 @@ sap.ui.define([
 
         oReader.readAsBinaryString(oFile);
       },
+      onFileUploaddChange: function(oEvent) {
+        var that=this;
+        var oFileUploader = oEvent.getSource();
+        var oFile = oEvent.getParameter("files")[0];
+        
+        var oReader = new FileReader();
+        oReader.onload = function(e) {
+          var sUploadedFileContent = e.target.result;
+          var sEncodedContent = btoa(sUploadedFileContent);
+          var sPdfContent = "data:application/pdf;base64," + sEncodedContent;
+          that.getView().getModel('appView').setProperty('/pdf',sPdfContent);
+          
+          var oPdfFrame = document.getElementById("pdfFrame");
+          oPdfFrame.src = sPdfContent;
+        };
+        
+        oReader.readAsBinaryString(oFile);
+
+        
+      },
+      // onViewPhoto:function(){
+      //   var oView = this.getView();
+      //   var that = this;
+  
+      //   if (!this.oDialog) {
+      //       this.oDialog = Fragment.load({
+      //           id: oView.getId(),
+      //           name: "ent.ui.ecommerce.fragments.pdfView",
+      //           controller: this
+      //       }).then(function (oDialog) {    
+      //           // Add dialog to view hierarchy
+      //           oView.addDependent(oDialog);
+      //           return oDialog;
+      //       }.bind(this));
+           
+      //   }
+      //   this.oDialog.then(function (oDialog) {
+      //       oDialog.open();
+            
+      //   }); 
+      // },
+      onPopinLayoutChanged:function(){
+        debugger;
+        var oModel = this.getView().getModel();  //default model get at here
+        var that = this; 
+        // Perform the read operation
+        oModel.read('/AppUsers', {
+          success: function(data) {
+          // Success callback
+          // MessageToast.show("Data read successfully");
+          that.getView().getModel("appView").setProperty("/userDetails",data.results);
+          // Handle the retrieved data
+          // var aEntities = data.results; // Access the array of retrieved entities
+          // ...
+          },
+          error: function(error) {
+          // Error callback
+          that.middleWare.errorHandler(error, that);
+          MessageToast.show("Error reading data");
+          }
+        });
+      },
       arrayToJSON: function (array) {
         let json = {};
       
@@ -64,88 +128,88 @@ sap.ui.define([
         var that = this; 
         var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue"); 
         // Convert string to JSON object
-        // var payload = JSON.parse(oJsonInpValue);
-        var payload = {
-          "JobId": "0004",
-          "jobCardNo": "026",
-          "poNo": "007",
-          "jobCode": "UNMX 22.12 SFTRN 10PC 04",
-          "date": 45020,
-          "artworkCode": "UNMX 22.12 SFTRN 10PC 04",
-          "clientPONo": "PO#001",
-          "nameOFTheProduct": "SOFTRON BALLPEN 10PCS WINDOW DP BOX WITH EURO SLOT HEADER",
-          "industry": "Other",
-          "cartonType": "BSO",
-          "qtyPcs": 40000,
-          "PaperGSM": 320,
-          "paperQuality": "White Back",
-          "printing": "Offset CMYK + 1Pantone",
-          "color": 5,
-          "sizeL": 107,
-          "sizeW": 10,
-          "sizeH": 147,
-          "varLmt": "Window BOPP Lamination",
-          "effects": "None",
-          "lock": 0,
-          "tF": 51,
-          "pF": 8,
-          "doubleCut": 0,
-          "trimTF": 22,
-          "trimPF": 21,
-          "noOfUps-1": 4,
-          "noOfUps-2": 2,
-          "noOfUps-3": 8,
-          "noOfSheets-1": 5200,
-          "noOfSheets-2": 2600,
-          "wastage": 0.04,
-          "wtKgs": 768.8928,
-          "printingSheetSizeL1": 915,
-          "printingSheetSizeW1": 505,
-          "printingSheetSizeL2": 915,
-          "printingSheetSizeW2": 1010,
-          "printingMachine ": "SORSZ 2 Color - Heidelberg",
-          "punchingMachine": "Bobst Novacut",
-          "pastingMachine": "Acme Folder Gluer",
-          "ref": "Print Out",
-          "old": "Punch",
-          "none": "Pantone",
-          "b-2-A": "479_CTP_22.12_Softron 10PC Window Box",
-          "none ": "Foil Blocks :",
-          "127Level3": "FROSTRON GEL 10PC DISPENSER",
-          "none1 ": "Emboss",
-          "none2 ": "Positive :",
-          "13Level2": "FROSTRON GEL 10PC DISPENSER WINDOW",
-          "batchNo": "None",
-          "mfgDate": null,
-          "expDate": null,
-          "correctionsInArtwork": "PKD to be changed as per PO.",
-          "remarks": "Silver Special",
-          "totalA+B": 77618.26140492281,
-          "profit": 0,
-          "totalCostOfJob": 77618.26140492281,
-          "costPerPc": 1.9404565351230703,
-          "plate": "Old :",
-          "pantoneInks": 0,
-          "foilBlocks": 0,
-          "positive": 0,
-          "embossBlock": 0,
-          "punch": 0,
-          "reference": "Print Out",
-          "cartonLength": 208,
-          "cartonWidth": 242,
-          "paperCost": 45364.6752,
-          "printingCharges": 5850,
-          "varnish/Lamination": 14152.46140492281,
-          "embossing": 0,
-          "punching": 1560,
-          "bSOPasting": 8000,
-          "lBTOPasting": 0,
-          "packing": 2691.1248,
-          "transportation": 0,
-          "total": 0,
-          "plateCharges": 0,
-          "blanketCharges": 0
-      };
+        var payload = JSON.parse(oJsonInpValue);
+      //   var payload = {
+      //     "JobId": "0004",
+      //     "jobCardNo": "026",
+      //     "poNo": "007",
+      //     "jobCode": "UNMX 22.12 SFTRN 10PC 04",
+      //     "date": 45020,
+      //     "artworkCode": "UNMX 22.12 SFTRN 10PC 04",
+      //     "clientPONo": "PO#001",
+      //     "nameOFTheProduct": "SOFTRON BALLPEN 10PCS WINDOW DP BOX WITH EURO SLOT HEADER",
+      //     "industry": "Other",
+      //     "cartonType": "BSO",
+      //     "qtyPcs": 40000,
+      //     "PaperGSM": 320,
+      //     "paperQuality": "White Back",
+      //     "printing": "Offset CMYK + 1Pantone",
+      //     "color": 5,
+      //     "sizeL": 107,
+      //     "sizeW": 10,
+      //     "sizeH": 147,
+      //     "varLmt": "Window BOPP Lamination",
+      //     "effects": "None",
+      //     "lock": 0,
+      //     "tF": 51,
+      //     "pF": 8,
+      //     "doubleCut": 0,
+      //     "trimTF": 22,
+      //     "trimPF": 21,
+      //     "noOfUps-1": 4,
+      //     "noOfUps-2": 2,
+      //     "noOfUps-3": 8,
+      //     "noOfSheets-1": 5200,
+      //     "noOfSheets-2": 2600,
+      //     "wastage": 0.04,
+      //     "wtKgs": 768.8928,
+      //     "printingSheetSizeL1": 915,
+      //     "printingSheetSizeW1": 505,
+      //     "printingSheetSizeL2": 915,
+      //     "printingSheetSizeW2": 1010,
+      //     "printingMachine ": "SORSZ 2 Color - Heidelberg",
+      //     "punchingMachine": "Bobst Novacut",
+      //     "pastingMachine": "Acme Folder Gluer",
+      //     "ref": "Print Out",
+      //     "old": "Punch",
+      //     "none": "Pantone",
+      //     "b-2-A": "479_CTP_22.12_Softron 10PC Window Box",
+      //     "none ": "Foil Blocks :",
+      //     "127Level3": "FROSTRON GEL 10PC DISPENSER",
+      //     "none1 ": "Emboss",
+      //     "none2 ": "Positive :",
+      //     "13Level2": "FROSTRON GEL 10PC DISPENSER WINDOW",
+      //     "batchNo": "None",
+      //     "mfgDate": null,
+      //     "expDate": null,
+      //     "correctionsInArtwork": "PKD to be changed as per PO.",
+      //     "remarks": "Silver Special",
+      //     "totalA+B": 77618.26140492281,
+      //     "profit": 0,
+      //     "totalCostOfJob": 77618.26140492281,
+      //     "costPerPc": 1.9404565351230703,
+      //     "plate": "Old :",
+      //     "pantoneInks": 0,
+      //     "foilBlocks": 0,
+      //     "positive": 0,
+      //     "embossBlock": 0,
+      //     "punch": 0,
+      //     "reference": "Print Out",
+      //     "cartonLength": 208,
+      //     "cartonWidth": 242,
+      //     "paperCost": 45364.6752,
+      //     "printingCharges": 5850,
+      //     "varnish/Lamination": 14152.46140492281,
+      //     "embossing": 0,
+      //     "punching": 1560,
+      //     "bSOPasting": 8000,
+      //     "lBTOPasting": 0,
+      //     "packing": 2691.1248,
+      //     "transportation": 0,
+      //     "total": 0,
+      //     "plateCharges": 0,
+      //     "blanketCharges": 0
+      // };
         
         // post call for uploading the json into loopback 
         this.middleWare.callMiddleWare("api/Jobs", "POST", payload)
