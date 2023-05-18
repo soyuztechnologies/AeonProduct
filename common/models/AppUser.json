@@ -17,12 +17,17 @@
     },
     "Status": {
       "type": "string",
-      "enum": ["Approved", "Reject","Pending"],
+      "enum": ["Pending", "Reject","Approved"],
       "default": "Pending"
+    },
+    "Blocked": {
+      "type": "string",
+      "enum": ["No", "Yes"],
+      "default": "No"
     },
     "UserName": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "Role": {
       "type": "string",

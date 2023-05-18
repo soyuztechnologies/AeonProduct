@@ -37,7 +37,7 @@ function myMiddleware(options) {
 		// debugger;
 
 	  // Save the original send function
-	  if(req.url.includes("/api/Users/login")){
+	  if(req.url.includes("/api/Users/login") || req.url.includes("/login")){
 		var originalSend = res.send;
 		res.send = function(body) {
 			if (body && JSON.parse(body).id) {
@@ -482,23 +482,30 @@ app.post('/signup/verifyToken', async (req, res) => {
   });
 
   app.post('/signup/createUser', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	try {
+	  try {
+		this.User = app.models.User;
+		this.Param = app.models.Param;
+		this.AppUser = app.models.AppUser;
 	  const { email, password } = req.body;
 	  const role = 'Customer'; // Hardcoded role as 'Customer'
+	  const name = email.substring(0, email.indexOf("@"));
   
 	  // Create the user in User table
-	  const newUser = await this.User.create({ email, password, Role: role, CreatedOn: new Date() });
+	  const existingUser = await this.User.findOne({ where: { email } });
+	  if (existingUser) {
+		  return res.status(400).json({ error: 'User with this email already exists' });
+	  }
+
+	  const newUser = await this.User.create({ email, password, Role: role, CreatedOn: new Date(),status:"Pending" });
   
 	  // Create the user in AppUser table
 	  await this.AppUser.create({
 		TechnicalId: newUser.id,
 		EmailId: email,
-		UserName: "usermame",
+		UserName: name,
 		CreatedOn: new Date(),
-		// Approved : "null",
+		// Status : "Pending",
+		// Blocked : "No",
 		Role: role
 	  });
   
@@ -516,6 +523,19 @@ app.post('/signup/verifyToken', async (req, res) => {
 // 							Get call to get all the app users
 //  ########################################################################
 
+app.get('/usersu', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+	try {
+	  const users = await this.User.find(); // Retrieve all users
+  
+	  res.status(200).json(users);
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).json({ error: 'Internal server error' });
+	}
+});
 app.get('/users', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
@@ -530,6 +550,90 @@ app.get('/users', async (req, res) => {
 	}
 });
 
+//  ######################################################################
+// 							Login call 
+//  ########################################################################
+
+app.post('/login', async (req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+	
+	const { email, password } = req.body;
+	// const username = email.substring(0, email.indexOf("@"));
+	
+	if (!email || !password) {
+	  return res.status(400).json({ error: 'Email and password are required' });
+	}
+	
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	
+	if (!emailRegex.test(email)) {
+	  return res.status(400).json({ error: 'Invalid email format' });
+	}
+
+	data ={
+		email,
+		password
+	  }
+	  
+	try {
+	  const user = await this.User.login(data);
+	  
+	  // Extract the required data from the user object
+	  const {id,status,Role,ttl,created,userId } = user;
+	
+	  // Send the extracted data and access token as a response
+	  return res.status(200).json({ id,status,Role,ttl,created,userId});
+	} catch (error) {
+	  // Handle login error
+	  return res.status(400).json({ error: 'Invalid email or password' });
+	}
+  });
+  
+
+//  ######################################################################
+// 							add user from Admin side call
+//  ########################################################################
+
+app.post('/addUserAdmin', async(req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+	this.Customer = app.models.Customer;
+
+	const newCustomer = {};
+
+	for (const field in req.body) {
+		newCustomer[field] = req.body[field];
+	}
+	await this.Customer.create(newCustomer);
+
+	// const { Title, Name, Email, Phone,CompanyName,Role, CompanyAddress} = req.body;
+	// // Validate the input fields if needed
+  
+	// // Assuming you have a Customers model or database collection
+	// const newCustomer = {
+	// 	Title, 
+	// 	Name, 
+	// 	Email, 
+	// 	Phone,
+	// 	CompanyName,
+	// 	Role, 
+	// 	CompanyAddress
+	// };
+  
+	//  // Create the user in AppUser table
+	//  await this.Customer.create({newCustomer});
+  
+	// Return a response indicating successful creation
+	res.status(201).json({ message: 'Customer created successfully', customer: newCustomer });
+  });
+  
+
+  
+  
+  
 
 
 

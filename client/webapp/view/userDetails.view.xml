@@ -1,67 +1,63 @@
-<mvc:View
-	controllerName="ent.ui.ecommerce.controller.userDetails"
+<mvc:View controllerName="ent.ui.ecommerce.controller.userDetails"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m">
-	<App >
-	<Table items="{appView>/userDetails}"  id="idProductsTable">
-		<headerToolbar>
-			<OverflowToolbar >
-				<content>
-					<Title text="User Details" level="H2"/>
-					<Button textDirection="Inherit" icon="sap-icon://refresh" press="getUserData"></Button>
-					<ToolbarSpacer />
-					<Button text="Add" icon="sap-icon://add" press="AddUserDialog"/>
-				</content>
-			</OverflowToolbar>
-		</headerToolbar>
-		<columns>
-			<Column
-				width="12em">
-				<Text text="Name" />
-			</Column>
-			<Column
-				minScreenWidth="Tablet"
-				demandPopin="true">
-				<Text text="Email" />
-			</Column>
-			<!-- <Column
-				minScreenWidth="Desktop"
-				demandPopin="true"
-				hAlign="End">
+	<Page showHeader="false">
+		<Table items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders">
+			<headerToolbar>
+				<OverflowToolbar >
+					<content>
+						<Title text="User Details" level="H2"/>
+						<ToolbarSpacer />
+						<Button textDirection="Inherit" icon="sap-icon://refresh" press="getUserData"></Button>
+						<Button text="Add" icon="sap-icon://add" press="AddUserDialog"/>
+					</content>
+				</OverflowToolbar>
+			</headerToolbar>
+			<columns>
+				<Column width="12em">
+					<Text text="Name" />
+				</Column>
+				<Column minScreenWidth="Tablet" demandPopin="true">
+					<Text text="Email" />
+				</Column>
+				<!-- <Column minScreenWidth="Desktop" demandPopin="true" hAlign="End">
 				<Text text="CreatedOn" />
 			</Column> -->
-			<Column
-				minScreenWidth="Desktop"
-				demandPopin="true"
-				hAlign="Center">
-				<Text text="Blocked" />
-			</Column>
-			<Column
-				hAlign="End">
-				<Text text="Approved" />
-			</Column>
-		</columns>
-		<items>
-			<ColumnListItem vAlign="Middle">
-				<cells>
-					<Text
-						text="{appView>UserName}" />
-					<Text
-						text="{appView>EmailId}" />
-					<!-- <Text
-						text="Created on" /> -->
-					<Switch state="true" customTextOn="Yes" customTextOff="No">
+				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
+					<Text text="Blocked" />
+				</Column>
+				<Column hAlign="End">
+					<Text text="Approval" />
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem vAlign="Middle">
+					<cells>
+						<Text text="{appView>UserName}" />
+						<Text text="{appView>EmailId}" />
+						<!-- <Text text="Created on" /> -->
+						<Switch state="{=${appView>Blocked} === 'Yes' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">
 							<layoutData>
 								<FlexItemData growFactor="1" />
 							</layoutData>
-					</Switch>
-					<Button type="Accept" text="Access">
-
-					</Button>
-				</cells>
-			</ColumnListItem>
-		</items>
-	</Table>
-</App>
+						</Switch>
+						<Select selectedKey="{appView>Status}"  forceSelection="false">
+							<core:Item text="Pending" key="Pending" />
+							<core:Item text="Reject" key="Reject" />
+							<core:Item text="Approved" key="Approved" />
+						</Select>
+						<!-- <Button type="Accept" text="Access"></Button> -->
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+		<!-- <footer>
+			<Toolbar >   
+					<ToolbarSpacer/>
+					<Button type="Emphasized" text="Save" press="onSavePayload"></Button>
+					<Button type="Reject" text="Clear" press="onPressClear"></Button>
+			</Toolbar>
+		</footer> -->
+	</Page>
 </mvc:View>

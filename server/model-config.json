@@ -68,5 +68,9 @@
   "Job": {
     "dataSource": "mongoatlas",
     "public": true
+  },
+  "Customer": {
+    "dataSource": "mongoatlas",
+    "public": true
   }
 }

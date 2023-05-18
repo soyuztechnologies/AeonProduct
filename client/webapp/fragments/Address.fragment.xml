@@ -1,0 +1,29 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	
+    xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+    <f:SimpleForm id="SimpleFormDisplay480_12120Dual" editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false">
+        <f:content>
+            <core:Title text="Bill to" />
+            <Label required="true" text="Country"/>
+            <Input value = "" />
+            <Label text="Billing City"/>
+            <Input value = "" />
+            <Label text="Zip code"/>
+            <Input value = "" />
+            <Label text="Billing Address"/>
+            <Input value = "" />
+            <core:Title text="Ship to" />
+            <Label required="true" text="Shipping Country"/>
+            <Input value = "" />
+            <Label text="Shipping City"/>
+            <Input value = "" />
+            <Label text="Shipping City Code"/>
+            <Input value = "" />
+            <Label text="Shipping Address"/>
+            <Input value = "" />
+        </f:content>
+    </f:SimpleForm>
+</core:FragmentDefinition>
