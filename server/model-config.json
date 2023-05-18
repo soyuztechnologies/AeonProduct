@@ -57,7 +57,7 @@
     "dataSource": "mongoatlas",
     "public": true
   },
-  "Attachment": {
+  "Attachments": {
     "dataSource": "mongoatlas",
     "public": true
   },

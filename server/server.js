@@ -33,26 +33,26 @@ app.use(fileUpload());
 
 
 function myMiddleware(options) {
-	return function(req, res, next) {
+	return function (req, res, next) {
 		// debugger;
 
-	  // Save the original send function
-	  if(req.url.includes("/api/Users/login")){
-		var originalSend = res.send;
-		res.send = function(body) {
-			if (body && JSON.parse(body).id) {
-			  res.cookie('soyuz_session', JSON.parse(body).id);
-			}
-			// Call the original send function with the unmodified body
-			originalSend.call(this, body);
-		  };
-	  }
-	//   if(req.url.includes("/api") || req.url.includes("/odata") ){
-	// 	req.headers.Authorization=req.cookies.soyuz_session;
-	// 	req.headers.authorization=req.cookies.soyuz_session;
-	//   }
-	  next();
-	  
+		// Save the original send function
+		if (req.url.includes("/api/Users/login")) {
+			var originalSend = res.send;
+			res.send = function (body) {
+				if (body && JSON.parse(body).id) {
+					res.cookie('soyuz_session', JSON.parse(body).id);
+				}
+				// Call the original send function with the unmodified body
+				originalSend.call(this, body);
+			};
+		}
+		//   if(req.url.includes("/api") || req.url.includes("/odata") ){
+		// 	req.headers.Authorization=req.cookies.soyuz_session;
+		// 	req.headers.authorization=req.cookies.soyuz_session;
+		//   }
+		next();
+
 	}
 }
 app.use(myMiddleware());
@@ -62,7 +62,7 @@ app.use(loopback.token({
 	// cookies: ['soyuz_session'],
 	// headers: ['soyuz_session', 'X-Access-Token'],
 	// params: ['soyuz_session']
-  }));
+}));
 // app.use(cookieParser());
 app.start = function () {
 	// start the web server
@@ -113,430 +113,466 @@ app.start = function () {
 		});
 
 		// Generate JWT token
-function generateToken(email) {
-    const secretKey = 'your_secret_key'; // Replace with your actual secret key
-    return jwt.sign({ email }, secretKey);
-}
+		function generateToken(email) {
+			const secretKey = 'your_secret_key'; // Replace with your actual secret key
+			return jwt.sign({ email }, secretKey);
+		}
 
 
 
 
-//  ######################################################################
-// 								forgot password  calls 
-//  ########################################################################
+		//  ######################################################################
+		// 								forgot password  calls 
+		//  ########################################################################
 
 
-app.post('/forgotPasswordEmailVerify', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
+		app.post('/forgotPasswordEmailVerify', async (req, res) => {
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
 
-    try {
-        const { email } = req.body;
+			try {
+				const { email } = req.body;
 
-        // Check if the user already exists
-		const existingUser = await this.User.findOne({ where: { email } });
-        if (!existingUser) {
-            return res.status(400).json({ error: 'User with this email does not exist' });
-        }
-
-
-        // Generate JWT token
-        const token = generateToken(email);
-
-        // Send verification email
-        await sendForgotEmail(email, token);
-
-        res.status(200).json({ message: 'Verification email sent successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-	
-async function sendForgotEmail(emailAddress,token) {
-	  debugger;
-	  var nodemailer = require('nodemailer');
-	  var smtpTransport = require('nodemailer-smtp-transport');
-	  this.Param = app.models.Param;
-	  const xoauth2 = require('xoauth2');
-	  try {
-		  const array = ["user", "clientId", "clientSecret", "refreshToken"];
-		  const Param = this.Param;
-		  const key = {};
-		  const sParam = await Param.find({
-			  where: {
-				and: [{
-					Code: {
-						inq: array
-					}
-	
-				}]
-			  }
-		  });
-	
-		  for (const element of sParam) {
-			  switch (element.Code) {
-				  case "user":
-					  key.user = element.Value;
-					  break;
-				  case "clientId":
-					  key.clientId = element.Value;
-					  break;
-				  case "clientSecret":
-					  key.clientSecret = element.Value;
-					  break;
-				  case "refreshToken":
-					  key.refreshToken = element.Value;
-					  break;
-			  }
-		  }
-		  const verificationLink = `${req.headers.referer}#/updatePassword/${token}`;	
-		  const email = "contact@evotrainingsolutions.com";
-		  const userEmail = emailAddress;
-	
-		//   const OTP = generateOTP();
-		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'Forgot.html', 'utf8');
-		  var mailBody = mailContent.replace("$$verify$$", verificationLink) 
-		                  .replace(/\$\$email\$\$/gi, email)
-		                  .replace(/\$\$user\$\$/gi, userEmail);
-	
-		  
-	
-		  const transporter = nodemailer.createTransport(smtpTransport({
-			service: 'gmail',
-			host: 'smtp.gmail.com',
-			auth: {
-			  xoauth2: xoauth2.createXOAuth2Generator({
-				user: key.user,
-				clientId: key.clientId,
-				clientSecret: key.clientSecret,
-				refreshToken: key.refreshToken
-			  })
-			}
-		  }));
-	
-		  const emailContent = {
-			//   from: 'dheeraj@soyuztechnologies.com',
-			  to: emailAddress,
-			  subject: "Verify Your OTP For Dheeraj Enterprisees",
-			  html: mailBody
-		  };
-	
-		  transporter.sendMail(emailContent, function (error, info) {
-					
-			if (error) {
-				console.log(error);
-				if (error.code === "EAUTH") {
-					res.status(500).send('Username and Password not accepted, Please try again.');
-				} else {
-					res.status(500).send('Internal Error while Sending the email, Please try again.');
+				// Check if the user already exists
+				const existingUser = await this.User.findOne({ where: { email } });
+				if (!existingUser) {
+					return res.status(400).json({ error: 'User with this email does not exist' });
 				}
-			} else {
-				console.log('Email sent: ' + info.response);
-				// res.send("email sent");
-				// var Otp = app.models.Otp;
-				// var newRec = {
-				// 	CreatedOn: new Date(),
-				// 	Attempts: 1,
-				// 	// OTP: OTP,
-				// 	Number: email
-				// };
-				// Otp.upsert(newRec)
-				// 	.then(function (inq) {
-				// 		res.send("Email Send Successfully");
-				// 		// console.log("created successfully");
-				// 	})
-				// 	.catch(function (err) {
-				// 		console.log(err);
-				// 	});
+
+
+				// Generate JWT token
+				const token = generateToken(email);
+
+				// Send verification email
+				await sendForgotEmail(email, token);
+
+				res.status(200).json({ message: 'Verification email sent successfully' });
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+
+			async function sendForgotEmail(emailAddress, token) {
+				debugger;
+				var nodemailer = require('nodemailer');
+				var smtpTransport = require('nodemailer-smtp-transport');
+				this.Param = app.models.Param;
+				const xoauth2 = require('xoauth2');
+				try {
+					const array = ["user", "clientId", "clientSecret", "refreshToken"];
+					const Param = this.Param;
+					const key = {};
+					const sParam = await Param.find({
+						where: {
+							and: [{
+								Code: {
+									inq: array
+								}
+
+							}]
+						}
+					});
+
+					for (const element of sParam) {
+						switch (element.Code) {
+							case "user":
+								key.user = element.Value;
+								break;
+							case "clientId":
+								key.clientId = element.Value;
+								break;
+							case "clientSecret":
+								key.clientSecret = element.Value;
+								break;
+							case "refreshToken":
+								key.refreshToken = element.Value;
+								break;
+						}
+					}
+					const verificationLink = `${req.headers.referer}#/updatePassword/${token}`;
+					const email = "contact@evotrainingsolutions.com";
+					const userEmail = emailAddress;
+
+					//   const OTP = generateOTP();
+					const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'Forgot.html', 'utf8');
+					var mailBody = mailContent.replace("$$verify$$", verificationLink)
+						.replace(/\$\$email\$\$/gi, email)
+						.replace(/\$\$user\$\$/gi, userEmail);
+
+
+
+					const transporter = nodemailer.createTransport(smtpTransport({
+						service: 'gmail',
+						host: 'smtp.gmail.com',
+						auth: {
+							xoauth2: xoauth2.createXOAuth2Generator({
+								user: key.user,
+								clientId: key.clientId,
+								clientSecret: key.clientSecret,
+								refreshToken: key.refreshToken
+							})
+						}
+					}));
+
+					const emailContent = {
+						//   from: 'dheeraj@soyuztechnologies.com',
+						to: emailAddress,
+						subject: "Verify Your OTP For Dheeraj Enterprisees",
+						html: mailBody
+					};
+
+					transporter.sendMail(emailContent, function (error, info) {
+
+						if (error) {
+							console.log(error);
+							if (error.code === "EAUTH") {
+								res.status(500).send('Username and Password not accepted, Please try again.');
+							} else {
+								res.status(500).send('Internal Error while Sending the email, Please try again.');
+							}
+						} else {
+							console.log('Email sent: ' + info.response);
+							// res.send("email sent");
+							// var Otp = app.models.Otp;
+							// var newRec = {
+							// 	CreatedOn: new Date(),
+							// 	Attempts: 1,
+							// 	// OTP: OTP,
+							// 	Number: email
+							// };
+							// Otp.upsert(newRec)
+							// 	.then(function (inq) {
+							// 		res.send("Email Send Successfully");
+							// 		// console.log("created successfully");
+							// 	})
+							// 	.catch(function (err) {
+							// 		console.log(err);
+							// 	});
+						}
+					});
+
+
+				} catch (error) {
+					console.error(error);
+					res.status(500).send('Internal server error');
+				}
 			}
 		});
-	
-	
-	  } catch (error) {
-		  console.error(error);
-		  res.status(500).send('Internal server error');
-	  }
-	}
-});
-// Verify JWT token route
-app.post('/Forgot/verifyToken', async (req, res) => {
-	debugger
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	try {
-	  const { token } = req.body;
-  
-	  // Verify the token and extract the email
-	  const decodedToken = jwt.verify(token, 'your_secret_key');
-	  const email = decodedToken.email;
-  
-	  // Check if the user already exists
-	  const existingUser = await this.User.findOne({ where: { email } });
-	  if (!existingUser) {
-		return res.status(400).json({ error: 'User with this email already exists' });
-	  }
-	  let msg = "token verfied"
-	  res.status(200).json({msg,email});
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).json({ error: 'Internal server error' });
-	}
-  });
-app.post('/reset/password', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-    try {
-        const {email,password } = req.body;
+		// Verify JWT token route
+		app.post('/Forgot/verifyToken', async (req, res) => {
+			debugger
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			try {
+				const { token } = req.body;
 
-        // // Verify the token
-        // const decodedToken = jwt.verify(token, 'your_secret_key');
-        // const email = decodedToken.email;
+				// Verify the token and extract the email
+				const decodedToken = jwt.verify(token, 'your_secret_key');
+				const email = decodedToken.email;
 
-        // Find the user
-        const Appuser = await this.AppUser.findOne({ where: { EmailId:email } });
-		const  user = await this.User.findOne({ where: {email}});	
-        if (!Appuser) {
-            return res.status(404).json({ error: 'User not found' });
-        };
-		
-		if(!user) {
-			return res.status(404).json({ error: 'User not found' });
-		};
-		// Update the user's password
-		user.password = password;
-		await user.save();
-		// Update the user's password
-		Appuser.password = password;
-		await Appuser.save();
-        res.status(200).json({ message: 'Password reset successful' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
- 
-//  ######################################################################
-// 								Signup call 
-//  ########################################################################
-
-app.post('/signup/verifyEmail', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-
-    try {
-        const { email } = req.body;
-
-        // Check if the user already exists
-        const existingUser = await this.User.findOne({ where: { email } });
-        if (existingUser) {
-            return res.status(400).json({ error: 'User with this email already exists' });
-        }
-
-        // Generate JWT token
-        const token = generateToken(email);
-
-        // Send verification email
-        await sendEmail(email, token);
-
-        res.status(200).json({ message: 'Verification email sent successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-	
-async function sendEmail(emailAddress,token) {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	  debugger;
-	  var nodemailer = require('nodemailer');
-	  var smtpTransport = require('nodemailer-smtp-transport');
-	  const xoauth2 = require('xoauth2');
-	  try {
-		  const array = ["user", "clientId", "clientSecret", "refreshToken"];
-		  const Param = this.Param;
-		  const key = {};
-		  const sParam = await Param.find({
-			  where: {
-				and: [{
-					Code: {
-						inq: array
-					}
-	
-				}]
-			  }
-		  });
-	
-		  for (const element of sParam) {
-			  switch (element.Code) {
-				  case "user":
-					  key.user = element.Value;
-					  break;
-				  case "clientId":
-					  key.clientId = element.Value;
-					  break;
-				  case "clientSecret":
-					  key.clientSecret = element.Value;
-					  break;
-				  case "refreshToken":
-					  key.refreshToken = element.Value;
-					  break;
-			  }
-		  }
-		  const verificationLink = `${req.headers.referer}#/userVerify/${token}`;	
-		  const email = "contact@evotrainingsolutions.com";
-	
-		//   const OTP = generateOTP();
-		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'verifyEmail.html', 'utf8');
-		  var mailBody = mailContent.replace("$$verify$$", verificationLink)
-		      .replace(/\$\$email\$\$/gi, email);
-	
-		  
-	
-		  const transporter = nodemailer.createTransport(smtpTransport({
-			service: 'gmail',
-			host: 'smtp.gmail.com',
-			auth: {
-			  xoauth2: xoauth2.createXOAuth2Generator({
-				user: key.user,
-				clientId: key.clientId,
-				clientSecret: key.clientSecret,
-				refreshToken: key.refreshToken
-			  })
-			}
-		  }));
-	
-		  const emailContent = {
-			//   from: 'dheeraj@soyuztechnologies.com',
-			  to: emailAddress,
-			  subject: "Verify Your OTP For Dheeraj Enterprisees",
-			  html: mailBody
-		  };
-	
-		  transporter.sendMail(emailContent, function (error, info) {
-					
-			if (error) {
-				console.log(error);
-				if (error.code === "EAUTH") {
-					res.status(500).send('Username and Password not accepted, Please try again.');
-				} else {
-					res.status(500).send('Internal Error while Sending the email, Please try again.');
+				// Check if the user already exists
+				const existingUser = await this.User.findOne({ where: { email } });
+				if (!existingUser) {
+					return res.status(400).json({ error: 'User with this email already exists' });
 				}
-			} else {
-				console.log('Email sent: ' + info.response);
-				// res.send("email sent");
-				// var Otp = app.models.Otp;
-				// var newRec = {
-				// 	CreatedOn: new Date(),
-				// 	Attempts: 1,
-				// 	// OTP: OTP,
-				// 	Number: email
-				// };
-				// Otp.upsert(newRec)
-				// 	.then(function (inq) {
-				// 		res.send("Email Send Successfully");
-				// 		// console.log("created successfully");
-				// 	})
-				// 	.catch(function (err) {
-				// 		console.log(err);
-				// 	});
+				let msg = "token verfied"
+				res.status(200).json({ msg, email });
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
-	
-	
-	  } catch (error) {
-		  console.error(error);
-		  res.status(500).send('Internal server error');
-	  }
-	}
-});
+		app.post('/reset/password', async (req, res) => {
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			try {
+				const { email, password } = req.body;
 
-// Verify JWT token route
-app.post('/signup/verifyToken', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	try {
-	  const { token } = req.body;
-  
-	  // Verify the token and extract the email
-	  const decodedToken = jwt.verify(token, 'your_secret_key');
-	  const email = decodedToken.email;
-  
-	  // Check if the user already exists
-	  const existingUser = await this.User.findOne({ where: { email } });
-	  if (existingUser) {
-		return res.status(400).json({ error: 'User with this email already exists' });
-	  }
-	  let msg = "token verfied"
-	  res.status(200).json({msg,email});
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).json({ error: 'Internal server error' });
-	}
-  });
+				// // Verify the token
+				// const decodedToken = jwt.verify(token, 'your_secret_key');
+				// const email = decodedToken.email;
 
-  app.post('/signup/createUser', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	try {
-	  const { email, password } = req.body;
-	  const role = 'Customer'; // Hardcoded role as 'Customer'
-  
-	  // Create the user in User table
-	  const newUser = await this.User.create({ email, password, Role: role, CreatedOn: new Date() });
-  
-	  // Create the user in AppUser table
-	  await this.AppUser.create({
-		TechnicalId: newUser.id,
-		EmailId: email,
-		UserName: "usermame",
-		CreatedOn: new Date(),
-		// Approved : "null",
-		Role: role
-	  });
-  
-	  console.log(`App User created: ${JSON.stringify(newUser.toJSON())}`);
-  
-	  res.status(200).json({ message: 'User created successfully' });
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).json({ error: 'Internal server error' });
-	}
-  });
-  
+				// Find the user
+				const Appuser = await this.AppUser.findOne({ where: { EmailId: email } });
+				const user = await this.User.findOne({ where: { email } });
+				if (!Appuser) {
+					return res.status(404).json({ error: 'User not found' });
+				};
 
-//  ######################################################################
-// 							Get call to get all the app users
-//  ########################################################################
-
-app.get('/users', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	try {
-	  const users = await this.AppUser.find(); // Retrieve all users
-  
-	  res.status(200).json(users);
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).json({ error: 'Internal server error' });
-	}
-});
+				if (!user) {
+					return res.status(404).json({ error: 'User not found' });
+				};
+				// Update the user's password
+				user.password = password;
+				await user.save();
+				// Update the user's password
+				Appuser.password = password;
+				await Appuser.save();
+				res.status(200).json({ message: 'Password reset successful' });
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
 
 
+		//  ######################################################################
+		// 								Signup call 
+		//  ########################################################################
+
+		app.post('/signup/verifyEmail', async (req, res) => {
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+
+			try {
+				const { email } = req.body;
+
+				// Check if the user already exists
+				const existingUser = await this.User.findOne({ where: { email } });
+				if (existingUser) {
+					return res.status(400).json({ error: 'User with this email already exists' });
+				}
+
+				// Generate JWT token
+				const token = generateToken(email);
+
+				// Send verification email
+				await sendEmail(email, token);
+
+				res.status(200).json({ message: 'Verification email sent successfully' });
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+
+			async function sendEmail(emailAddress, token) {
+				this.User = app.models.User;
+				this.Param = app.models.Param;
+				this.AppUser = app.models.AppUser;
+				debugger;
+				var nodemailer = require('nodemailer');
+				var smtpTransport = require('nodemailer-smtp-transport');
+				const xoauth2 = require('xoauth2');
+				try {
+					const array = ["user", "clientId", "clientSecret", "refreshToken"];
+					const Param = this.Param;
+					const key = {};
+					const sParam = await Param.find({
+						where: {
+							and: [{
+								Code: {
+									inq: array
+								}
+
+							}]
+						}
+					});
+
+					for (const element of sParam) {
+						switch (element.Code) {
+							case "user":
+								key.user = element.Value;
+								break;
+							case "clientId":
+								key.clientId = element.Value;
+								break;
+							case "clientSecret":
+								key.clientSecret = element.Value;
+								break;
+							case "refreshToken":
+								key.refreshToken = element.Value;
+								break;
+						}
+					}
+					const verificationLink = `${req.headers.referer}#/userVerify/${token}`;
+					const email = "contact@evotrainingsolutions.com";
+
+					//   const OTP = generateOTP();
+					const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'verifyEmail.html', 'utf8');
+					var mailBody = mailContent.replace("$$verify$$", verificationLink)
+						.replace(/\$\$email\$\$/gi, email);
+
+
+
+					const transporter = nodemailer.createTransport(smtpTransport({
+						service: 'gmail',
+						host: 'smtp.gmail.com',
+						auth: {
+							xoauth2: xoauth2.createXOAuth2Generator({
+								user: key.user,
+								clientId: key.clientId,
+								clientSecret: key.clientSecret,
+								refreshToken: key.refreshToken
+							})
+						}
+					}));
+
+					const emailContent = {
+						//   from: 'dheeraj@soyuztechnologies.com',
+						to: emailAddress,
+						subject: "Verify Your OTP For Dheeraj Enterprisees",
+						html: mailBody
+					};
+
+					transporter.sendMail(emailContent, function (error, info) {
+
+						if (error) {
+							console.log(error);
+							if (error.code === "EAUTH") {
+								res.status(500).send('Username and Password not accepted, Please try again.');
+							} else {
+								res.status(500).send('Internal Error while Sending the email, Please try again.');
+							}
+						} else {
+							console.log('Email sent: ' + info.response);
+							// res.send("email sent");
+							// var Otp = app.models.Otp;
+							// var newRec = {
+							// 	CreatedOn: new Date(),
+							// 	Attempts: 1,
+							// 	// OTP: OTP,
+							// 	Number: email
+							// };
+							// Otp.upsert(newRec)
+							// 	.then(function (inq) {
+							// 		res.send("Email Send Successfully");
+							// 		// console.log("created successfully");
+							// 	})
+							// 	.catch(function (err) {
+							// 		console.log(err);
+							// 	});
+						}
+					});
+
+
+				} catch (error) {
+					console.error(error);
+					res.status(500).send('Internal server error');
+				}
+			}
+		});
+
+		// Verify JWT token route
+		app.post('/signup/verifyToken', async (req, res) => {
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			try {
+				const { token } = req.body;
+
+				// Verify the token and extract the email
+				const decodedToken = jwt.verify(token, 'your_secret_key');
+				const email = decodedToken.email;
+
+				// Check if the user already exists
+				const existingUser = await this.User.findOne({ where: { email } });
+				if (existingUser) {
+					return res.status(400).json({ error: 'User with this email already exists' });
+				}
+				let msg = "token verfied"
+				res.status(200).json({ msg, email });
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
+
+		app.post('/signup/createUser', async (req, res) => {
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			try {
+				const { email, password } = req.body;
+				const role = 'Customer'; // Hardcoded role as 'Customer'
+
+				// Create the user in User table
+				const newUser = await this.User.create({ email, password, Role: role, CreatedOn: new Date() });
+
+				// Create the user in AppUser table
+				await this.AppUser.create({
+					TechnicalId: newUser.id,
+					EmailId: email,
+					UserName: "usermame",
+					CreatedOn: new Date(),
+					// Approved : "null",
+					Role: role
+				});
+
+				console.log(`App User created: ${JSON.stringify(newUser.toJSON())}`);
+
+				res.status(200).json({ message: 'User created successfully' });
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
+
+
+		//  ######################################################################
+		// 							Get call to get all the app users
+		//  ########################################################################
+
+		app.get('/users', async (req, res) => {
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			try {
+				const users = await this.AppUser.find(); // Retrieve all users
+
+				res.status(200).json(users);
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
+
+
+
+		app.post('/UploadAttachment', async (req, res) => {
+			debugger;
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			this.Attachments = app.models.Attachments;
+			try {
+				const { id,attachment,po} = req.body;
+				var ids = req.body.id;
+				var dd = req.body.attachment;
+				var PO = req.body.po;
+				// Create the user in User table
+				const Attachments = await this.AppUser.findOne({ where: { id} });
+				if (!Attachments) {
+					return res.status(400).json({ error: 'Customer is not Available' });
+				}
+
+
+				await this.Attachments.create({
+					customerId: ids,
+					attachment: dd
+				});
+				return res.status(200).json({ error: 'Customer is  Available' })
+
+			} catch (error) {
+
+				console.error(error);
+
+				res.status(500).json({ error: 'Internal server error' });
+
+			}
+
+		});
 
 
 
 
 
-  
+
+
+
 
 
 
@@ -2050,29 +2086,29 @@ app.get('/users', async (req, res) => {
 			var key = {};
 
 			const sParam = await Param.find({
-			  where: {
-				and: [{
-				  Code: {
-					inq: array
-				  }
-				}]
-			  }
+				where: {
+					and: [{
+						Code: {
+							inq: array
+						}
+					}]
+				}
 			});
 
 			for (let index = 0; index < sParam.length; index++) {
-			  const element = sParam[index].__data;
-			  if (element.Code === 'user') {
-				key.user = element.Value;
-			  }
-			  if (element.Code === 'clientId') {
-				key.clientId = element.Value;
-			  }
-			  if (element.Code === 'clientSecret') {
-				key.clientSecret = element.Value;
-			  }
-			  if (element.Code === 'refreshToken') {
-				key.refreshToken = element.Value;
-			  }
+				const element = sParam[index].__data;
+				if (element.Code === 'user') {
+					key.user = element.Value;
+				}
+				if (element.Code === 'clientId') {
+					key.clientId = element.Value;
+				}
+				if (element.Code === 'clientSecret') {
+					key.clientSecret = element.Value;
+				}
+				if (element.Code === 'refreshToken') {
+					key.refreshToken = element.Value;
+				}
 			}
 
 			const fs = require('fs');
@@ -2080,51 +2116,51 @@ app.get('/users', async (req, res) => {
 			const { Parent_Name, Camper_Name, Camp_Program_Name, Program_Dates, Payment_Amount, Payment_Date, Payment_Method, Email } = req.body;
 
 			this.htmlTemplate = this.htmlTemplate
-			  .replace('$$Parent_Name$$', Parent_Name)
-			  .replace(/\$\$Camper_Name\$\$/g, Camper_Name)
-			  .replace('$$Camp_Program_Name$$', 'Summer Camp 2023')
-			  .replace('$$Program_Dates$$', '20th May - 20th June 2023')
-			  .replace('$$Payment_Amount$$', Payment_Amount)
-			  .replace('$$Payment_Date$$', Payment_Date)
-			  .replace('$$Payment_Method$$', Payment_Method);
+				.replace('$$Parent_Name$$', Parent_Name)
+				.replace(/\$\$Camper_Name\$\$/g, Camper_Name)
+				.replace('$$Camp_Program_Name$$', 'Summer Camp 2023')
+				.replace('$$Program_Dates$$', '20th May - 20th June 2023')
+				.replace('$$Payment_Amount$$', Payment_Amount)
+				.replace('$$Payment_Date$$', Payment_Date)
+				.replace('$$Payment_Method$$', Payment_Method);
 
 			const transporter = nodemailer.createTransport(smtpTransport({
-			  service: 'gmail',
-			  host: 'smtp.gmail.com',
-			  auth: {
-				xoauth2: xoauth2.createXOAuth2Generator({
-				  user: key.user,
-				  clientId: key.clientId,
-				  clientSecret: key.clientSecret,
-				  refreshToken: key.refreshToken
-				})
-			  }
+				service: 'gmail',
+				host: 'smtp.gmail.com',
+				auth: {
+					xoauth2: xoauth2.createXOAuth2Generator({
+						user: key.user,
+						clientId: key.clientId,
+						clientSecret: key.clientSecret,
+						refreshToken: key.refreshToken
+					})
+				}
 			}));
 
 			// var ccs = [];
 			var emailContent = {};
 			var Subject = "Payment Verification";
 			emailContent = {
-			  from: 'contact@evotrainingsolutions.com',
-			  to: Email,
-			  subject:Subject,
-			  html: this.htmlTemplate
+				from: 'contact@evotrainingsolutions.com',
+				to: Email,
+				subject: Subject,
+				html: this.htmlTemplate
 			};
 
 			transporter.sendMail(emailContent, function (error, info) {
-			  if (error) {
-				console.log(error);
-				if (error.code === 'EAUTH') {
-				  res.status(500).send('Username and Password not accepted, Please try again.');
+				if (error) {
+					console.log(error);
+					if (error.code === 'EAUTH') {
+						res.status(500).send('Username and Password not accepted, Please try again.');
+					} else {
+						res.status(500).send('Internal Error while Sending the email, Please try again.');
+					}
 				} else {
-				  res.status(500).send('Internal Error while Sending the email, Please try again.');
+					console.log('Email sent: ' + info.response);
+					res.send('Email sent successfully');
 				}
-			  } else {
-				console.log('Email sent: ' + info.response);
-				res.send('Email sent successfully');
-			  }
 			});
-		  });
+		});
 
 		app.post('/sendOtpViaEmail',
 			async function (req, res) {
@@ -3039,9 +3075,9 @@ app.get('/users', async (req, res) => {
 				// var app = require('../server/server');
 				// var CourseMst = app.models.CourseMst;
 
-					// var Subject = req.body.Subject;
-					Subject =  `${req.body.CourseName} for ${req.body.WardName} 🟢`;
-					var contents = req.body.EmailTemplate.replace(/\$\$FatherName\$\$/gi,req.body.FatherName)
+				// var Subject = req.body.Subject;
+				Subject = `${req.body.CourseName} for ${req.body.WardName} 🟢`;
+				var contents = req.body.EmailTemplate.replace(/\$\$FatherName\$\$/gi, req.body.FatherName)
 					.replace(/\$\$WardName\$\$/gi, req.body.WardName).replace(/\$\$CourseName\$\$/gi, req.body.CourseName)
 					.replace(/\$\$CourseFee\$\$/gi, req.body.CourseFee);
 

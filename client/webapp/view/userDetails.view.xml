@@ -3,7 +3,7 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m">
-	<App >
+	<Page showHeader="false" >
 	<Table items="{appView>/userDetails}"  id="idProductsTable">
 		<headerToolbar>
 			<OverflowToolbar >
@@ -63,5 +63,5 @@
 			</ColumnListItem>
 		</items>
 	</Table>
-</App>
+</Page>
 </mvc:View>
