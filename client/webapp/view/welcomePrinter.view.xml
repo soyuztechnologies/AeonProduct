@@ -14,7 +14,7 @@
 		<ObjectListItem
 		  title="{appView>nameOFTheProduct}"
 		  type="Navigation"
-		  intro="{appView>JobId}"
+		  intro="{appView>jobCardNo}"
 		/>
 
 		</items>

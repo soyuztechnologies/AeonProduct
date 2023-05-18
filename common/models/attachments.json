@@ -1,18 +1,12 @@
 {
-	"name": "Attachment",
-	"plural": "Attachment",
+	"name": "Attachments",
+	"plural": "Attachments",
 	"base": "PersistedModel",
-	"idInjection": false,
+	"idInjection": true,
 	"options": {
 		"validateUpsert": true
 	},
 	"properties": {
-		"id": {
-			"type": "string",
-			"default": "null",
-			"required": true,
-			"id":true
-		},
 		"customerId": {
 			"type": "string",
 			"required": true,
