@@ -583,10 +583,25 @@ app.start = function () {
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+		app.get('/usersu', async (req, res) => {
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			try {
+			  const users = await this.User.find(); // Retrieve all users
+		  
+			  res.status(200).json(users);
+			} catch (error) {
+			  console.error(error);
+			  res.status(500).json({ error: 'Internal server error' });
+			}
+		});
 
+//  ######################################################################
+// 							Post calll for upload the documents 
+//  ########################################################################
 
-
-		app.post('/UploadAttachment', async (req, res) => {
+app.post('/UploadAttachment', async (req, res) => {
 			debugger;
 			this.User = app.models.User;
 			this.Param = app.models.Param;
@@ -618,34 +633,8 @@ app.start = function () {
 
 			}
 
-		});
+});
 
-app.get('/usersu', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	try {
-	  const users = await this.User.find(); // Retrieve all users
-  
-	  res.status(200).json(users);
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).json({ error: 'Internal server error' });
-	}
-});
-app.get('/users', async (req, res) => {
-	this.User = app.models.User;
-	this.Param = app.models.Param;
-	this.AppUser = app.models.AppUser;
-	try {
-	  const users = await this.AppUser.find(); // Retrieve all users
-  
-	  res.status(200).json(users);
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).json({ error: 'Internal server error' });
-	}
-});
 
 //  ######################################################################
 // 							Login call 
@@ -726,6 +715,8 @@ app.post('/addUserAdmin', async(req, res) => {
 	// Return a response indicating successful creation
 	res.status(201).json({ message: 'Customer created successfully', customer: newCustomer });
   });
+
+
   
 
   
