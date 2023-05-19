@@ -109,17 +109,17 @@
 					<!-- <ObjectIdentifier
 						title="{Name}"
 						text="{ProductId}"/> -->
-					<Text text=""></Text> 
-					<Text text="{appView>coating}"></Text>
-		            <Text text="{appView>spotuv}"></Text>
-				    <Text text="{appView>punching}"></Text>
-				    <Text text="{appView>packing}"></Text>
-			        <Text text="{appView>printing}"></Text>
-					<Text text="{appView>foiling}"></Text>
-					<Text text="{appView>embossing}"></Text>
-					<Text text="{appView>pasting}"></Text>
-					<Text text="{appView>incno}"></Text>
-					<Text text="{appView>deliveryno}"></Text>														
+					<Input editable="{appView>/onClickModify}" value="{appView>poNo}"></Input> 
+					<Input editable="{appView>/onClickModify}" value="{appView>coating}"></Input>
+		            <Input editable="{appView>/onClickModify}" value="{appView>spotuv}"></Input>
+				    <Input editable="{appView>/onClickModify}" value="{appView>punching}"></Input>
+				    <Input editable="{appView>/onClickModify}" value="{appView>packing}"></Input>
+			        <Input editable="{appView>/onClickModify}" value="{appView>printing}"></Input>
+					<Input editable="{appView>/onClickModify}" value="{appView>foiling}"></Input>
+					<Input editable="{appView>/onClickModify}" value="{appView>embossing}"></Input>
+					<Input editable="{appView>/onClickModify}" value="{appView>pasting}"></Input>
+					<Link  press="onClickPopup"  text="INC No." ></Link>
+					<Link  press="onClickPopup"  text="Del No." ></Link>				
 					<!-- <ObjectNumber
 						number="{WeightMeasure}"
 						unit="{WeightUnit}"
@@ -144,7 +144,7 @@
 	</Table>
 			</f:SimpleForm>
 			<Toolbar>
-				<Button text="Update" press="onClickUpdate"></Button>
+				<Button visible="{appView>/updBtnVisibility}"  text="Update" press="onClickUpdate"></Button>
 				<ToolbarSpacer />
 				<Button text="Modify" press="onClickModify"></Button>
 			</Toolbar>

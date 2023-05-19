@@ -22,6 +22,8 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/inputEditable",false);
 			this.getView().getModel("appView").setProperty("/pdfVisibility",false);
 			this.getView().getModel("appView").setProperty("/imgVisibility",false);
+			this.getView().getModel("appView").setProperty("/updBtnVisibility",false);
+			this.getView().getModel("appView").setProperty("/onClickModify",false);
 			this.getModel("appView").updateBindings();
 			this.loadForm();
 			this.loadForm2();
@@ -29,8 +31,10 @@ sap.ui.define([
 			// this.getJobsData();
 		},
 		onClickModify:function(){
-
+			
 			this.getView().getModel("appView").setProperty("/inputEditable",true)
+			this.getView().getModel("appView").setProperty("/updBtnVisibility",true)
+			this.getView().getModel("appView").setProperty("/onClickModify",true)
 		},
 		onClickUpdate:function(){
 			debugger;
