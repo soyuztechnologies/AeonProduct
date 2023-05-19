@@ -16,13 +16,15 @@
             <Label text="Website"/>
             <Input value = "{appView>Website}" />
             <Label required="true" text="Company Phone Number"/>
-            <Input value = "{appView>email}"/>
+            <Input value = "{appView>phoneNumber}"/>
             <Label required="true" text="Decceide Role"/>
             <Select selectedKey="{appView>Role}">
                 <core:Item key="Customer" text="Customer" />
                 <core:Item key="Admin" text="Admin" />
                 <core:Item key="Factory Manager" text="Factory Manager" />
             </Select>
+            <Label text="Password"/>
+            <Input value = "{appView>PassWord}" />
         </form:content>
     </form:SimpleForm>
 </core:FragmentDefinition>

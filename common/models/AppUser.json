@@ -66,7 +66,80 @@
     "ChangedBy": {
       "type": "string",
       "default": "null"
-    }
+    },
+  "CompanyEmail": {
+      "type":"string",
+      "default":null
+  },
+  "CompanyName": {
+      "type":"string",
+      "default":null
+  },
+  "GSTNO": {
+      "type":"string",
+      "default":null
+  },
+  "CompanyAddress": {
+      "type":"string",
+      "default":null
+  },
+  "Title": {
+      "type":"string",
+      "default":null
+  },
+  "FirstName": {
+      "type":"string",
+      "default":null
+  },
+  "LastName": {
+      "type":"string",
+      "default":null
+  },
+  "phoneNumber": {
+      "type":"number",
+      "default":null
+  },
+  "CompnayLogo": {
+      "type":"string",
+      "default":null
+  },
+  "Website": {
+      "type":"string",
+      "default":null
+  },
+  "BillingAddress": {
+      "type":"string",
+      "default":null
+  },
+  "ShippingZipCode": {
+      "type":"string",
+      "default":null
+  },
+  "BillingZipCode": {
+      "type":"string",
+      "default":null
+  },
+  "ShippingCountry": {
+      "type":"string",
+      "default":null
+  },
+  "ShippingCity": {
+      "type":"string",
+      "default":null
+  },
+  "BillingCity": {
+      "type":"string",
+      "default":null
+  },
+  "BillingCountry": {
+      "type":"string",
+      "default":null
+  },
+  
+  "ShippingAddress": {
+      "type":"string",
+      "default":null
+  }
   },
   "validations": [],
   "relations":{},

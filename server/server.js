@@ -523,7 +523,7 @@ app.post('/signup/verifyToken', async (req, res) => {
 // 							Get call to get all the app users
 //  ########################################################################
 
-app.get('/usersu', async (req, res) => {
+app.get('/usersTable', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
@@ -536,12 +536,12 @@ app.get('/usersu', async (req, res) => {
 	  res.status(500).json({ error: 'Internal server error' });
 	}
 });
-app.get('/users', async (req, res) => {
+app.get('/Appusers', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
 	try {
-	  const users = await this.AppUser.find(); // Retrieve all users
+	  const users = await this.User.find(); // Retrieve all users
   
 	  res.status(200).json(users);
 	} catch (error) {
@@ -555,6 +555,7 @@ app.get('/users', async (req, res) => {
 //  ########################################################################
 
 app.post('/login', async (req, res) => {
+	debugger;
 	this.User = app.models.User;
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
@@ -579,17 +580,19 @@ app.post('/login', async (req, res) => {
 	  
 	try {
 	  const user = await this.User.login(data);
-	  
 	  // Extract the required data from the user object
-	  const {id,status,Role,ttl,created,userId } = user;
+	  const {id,ttl,created,userId } = user;
 	
-	  // Send the extracted data and access token as a response
-	  return res.status(200).json({ id,status,Role,ttl,created,userId});
-	} catch (error) {
-	  // Handle login error
-	  return res.status(400).json({ error: 'Invalid email or password' });
-	}
-  });
+	 // Retrieve the status and role of the user from the appUsers table
+	 const appUser = await this.AppUser.findOne({ where: { EmailId : email} });
+	 const { Status, Blocked,Role } = appUser;
+ 
+	 return res.status(200).json({ id, Status, Role, ttl, created, userId,Blocked });
+   } catch (error) {
+	 return res.status(400).json({ error: 'Invalid email or password' });
+   }
+
+ });
   
 
 //  ######################################################################
@@ -597,39 +600,166 @@ app.post('/login', async (req, res) => {
 //  ########################################################################
 
 app.post('/addUserAdmin', async(req, res) => {
+	debugger;
 	this.User = app.models.User;
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
 	this.Customer = app.models.Customer;
-
 	const newCustomer = {};
-
 	for (const field in req.body) {
 		newCustomer[field] = req.body[field];
 	}
-	await this.Customer.create(newCustomer);
+	var email = newCustomer.EmailId;
+	var name = email.substring(0, email.indexOf("@"));
+	var requestPass = newCustomer.PassWord;
+	if (requestPass==""){
+		var password = generateRandomPassword();
+	}
+	else{
+		var password = requestPass;
+	}
+	
+	var Role = newCustomer.Role;
+	
+try{
+	const newUser = await this.User.create({ email, password, Role, CreatedOn: new Date(),status:"Pending" });
 
-	// const { Title, Name, Email, Phone,CompanyName,Role, CompanyAddress} = req.body;
-	// // Validate the input fields if needed
-  
-	// // Assuming you have a Customers model or database collection
-	// const newCustomer = {
-	// 	Title, 
-	// 	Name, 
-	// 	Email, 
-	// 	Phone,
-	// 	CompanyName,
-	// 	Role, 
-	// 	CompanyAddress
-	// };
-  
-	//  // Create the user in AppUser table
-	//  await this.Customer.create({newCustomer});
-  
+	 // Create the user in AppUser table
+	 await this.AppUser.create({
+		TechnicalId: newUser.id,
+		EmailId: email,
+		UserName: name,
+		CreatedOn: new Date(),
+		// Status : "Pending",
+		// Blocked : "No",
+		Role: Role
+	  });
+
+	  await sendEmailPass(email,password);
 	// Return a response indicating successful creation
-	res.status(201).json({ message: 'Customer created successfully', customer: newCustomer });
-  });
-  
+    return res.status(201).json('Customer created successfully');
+  } catch (error) {
+    // Handle error
+    return res.status(500).json({ error: 'Failed to create customer' });
+  }
+});
+function generateRandomPassword() {
+  const length = 8;
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset.charAt(randomIndex);
+  }
+  return password;
+}
+async function sendEmailPass(emailAddress,password) {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+	  debugger;
+	  var nodemailer = require('nodemailer');
+	  var smtpTransport = require('nodemailer-smtp-transport');
+	  const xoauth2 = require('xoauth2');
+	  try {
+		  const array = ["user", "clientId", "clientSecret", "refreshToken"];
+		  const Param = this.Param;
+		  const key = {};
+		  const sParam = await Param.find({
+			  where: {
+				and: [{
+					Code: {
+						inq: array
+					}
+	
+				}]
+			  }
+		  });
+	
+		  for (const element of sParam) {
+			  switch (element.Code) {
+				  case "user":
+					  key.user = element.Value;
+					  break;
+				  case "clientId":
+					  key.clientId = element.Value;
+					  break;
+				  case "clientSecret":
+					  key.clientSecret = element.Value;
+					  break;
+				  case "refreshToken":
+					  key.refreshToken = element.Value;
+					  break;
+			  }
+		  }
+		//   const verificationLink = `${req.headers.referer}#/userVerify/${token}`;	
+		//   const email = "contact@evotrainingsolutions.com";
+	
+		//   const OTP = generateOTP();
+		  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + 'NewUser.html', 'utf8');
+		  var mailBody = mailContent.replace("$$user$$", emailAddress)
+		      .replace(/\$\$password\$\$/gi, password);
+	
+		  
+	
+		  const transporter = nodemailer.createTransport(smtpTransport({
+			service: 'gmail',
+			host: 'smtp.gmail.com',
+			auth: {
+			  xoauth2: xoauth2.createXOAuth2Generator({
+				user: key.user,
+				clientId: key.clientId,
+				clientSecret: key.clientSecret,
+				refreshToken: key.refreshToken
+			  })
+			}
+		  }));
+	
+		  const emailContent = {
+			//   from: 'dheeraj@soyuztechnologies.com',
+			  to: emailAddress,
+			  subject: "Verify Your OTP For Dheeraj Enterprisees",
+			  html: mailBody
+		  };
+	
+		  transporter.sendMail(emailContent, function (error, info) {
+					
+			if (error) {
+				console.log(error);
+				if (error.code === "EAUTH") {
+					res.status(500).send('Username and Password not accepted, Please try again.');
+				} else {
+					res.status(500).send('Internal Error while Sending the email, Please try again.');
+				}
+			} else {
+				console.log('Email sent: ' + info.response);
+				// res.send("email sent");
+				// var Otp = app.models.Otp;
+				// var newRec = {
+				// 	CreatedOn: new Date(),
+				// 	Attempts: 1,
+				// 	// OTP: OTP,
+				// 	Number: email
+				// };
+				// Otp.upsert(newRec)
+				// 	.then(function (inq) {
+				// 		res.send("Email Send Successfully");
+				// 		// console.log("created successfully");
+				// 	})
+				// 	.catch(function (err) {
+				// 		console.log(err);
+				// 	});
+			}
+		});
+	
+	
+	  } catch (error) {
+		  console.error(error);
+		  res.status(500).send('Internal server error');
+	  }
+	}
+
+
   //  ######################################################################
 // 							upload Attachment calls
 //  ########################################################################
@@ -651,7 +781,6 @@ app.post('/addUserAdmin', async(req, res) => {
 		if (!Attachments) {
 			return res.status(400).json({ error: 'Customer is not Available' });
 		}
-
 
 		await this.Attachments.create({
 			customerId: ids,

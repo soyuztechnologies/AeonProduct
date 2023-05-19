@@ -8,22 +8,22 @@
         <f:content>
             <core:Title text="Bill to" />
             <Label required="true" text="Country"/>
-            <Input value = "" />
+            <Input value = "{appView>BillingCountry}" />
             <Label text="Billing City"/>
-            <Input value = "" />
+            <Input value = "{appView>BillingCity}" />
             <Label text="Zip code"/>
-            <Input value = "" />
+            <Input value = "{appView>BillingZipCode}" />
             <Label text="Billing Address"/>
-            <Input value = "" />
+            <Input value = "{appView>BillingAddress}" />
             <core:Title text="Ship to" />
             <Label required="true" text="Shipping Country"/>
-            <Input value = "" />
+            <Input value = "{appView>ShippingCountry}" />
             <Label text="Shipping City"/>
-            <Input value = "" />
+            <Input value = "{appView>ShippingCity}" />
             <Label text="Shipping City Code"/>
-            <Input value = "" />
+            <Input value = "{appView>ShippingZipCode}" />
             <Label text="Shipping Address"/>
-            <Input value = "" />
+            <Input value = "{appView>ShippingAddress}" />
         </f:content>
     </f:SimpleForm>
 </core:FragmentDefinition>

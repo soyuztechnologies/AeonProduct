@@ -42,7 +42,7 @@
 								<FlexItemData growFactor="1" />
 							</layoutData>
 						</Switch>
-						<Select selectedKey="{appView>Status}"  forceSelection="false">
+						<Select selectedKey="{appView>Status}"  forceSelection="false" change="onApproveCustomer">
 							<core:Item text="Pending" key="Pending" />
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />

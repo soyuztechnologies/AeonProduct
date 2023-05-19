@@ -20,7 +20,7 @@
             <Label text="Company Logo"/>
             <Input value = "{appView>CompanyLogo}"/>
             <Label required="true" text="Personal Mail Address"/>
-            <Input value = "{appView>email}" />
+            <Input value = "{appView>EmailId}" />
         </form:content>
     </form:SimpleForm>
     <!-- </Dialog>	 -->

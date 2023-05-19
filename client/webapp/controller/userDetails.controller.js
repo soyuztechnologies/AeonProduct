@@ -34,9 +34,9 @@ sap.ui.define([
 			debugger
 			var oView = this.getView();
             var that = this;
-			var oPersonalDetailsForm = this.getView().byId('idPersonalDetails');
+			// var oPersonalDetailsForm = this.getView().byId('idPersonalDetails');
 
-			var oFormData = {
+			this.oFormData = {
 					"email": "",
 					"CompanyEmail": "",
 					"CompanyName": "",
@@ -45,10 +45,22 @@ sap.ui.define([
 					"Title": "",
 					"FirstName": "",
 					"LastName": "",
-					"phoneNumber": ""
+					"phoneNumber": "",
+					"PassWord": "",
+					"BillingCountry": "",
+					"BillingCity": "",
+					"ShippingCity": "",
+					"ShippingCountry": "",
+					"BillingZipCode": "",
+					"ShippingZipCode": "",
+					"BillingAddress": "",
+					"ShippingAddress": "",
+
+
+
 			}
 
-			this.getView().getModel('appView').setProperty("/AddUserData", oFormData);
+			this.getView().getModel('appView').setProperty("/AddUserData", this.oFormData);
 
 			if (!this.userAdd) {
                 this.userAdd = Fragment.load({
@@ -91,6 +103,34 @@ sap.ui.define([
 				}
 			});
 		},
+		onApproveCustomer:function(oEvent){
+			debugger;
+			var selectedItem = oEvent.getParameter("selectedItem").getKey();
+			debugger;
+			var opath = oEvent.getSource().getBindingContext("appView").getPath();
+			var oid = this.getView().getModel("appView").getProperty(opath);
+			var custid = oid.id;
+			
+			const oModel = this.getView().getModel();
+			const sEntityPath = `/AppUsers('`+custid+"')"; // Replace with the appropriate entity set name and ID
+			// const sEntityPath = `/AppUsers/`+ custid; // Replace with the appropriate entity set name and ID
+			
+			const oData = {
+			// Update the properties of the entity
+			"Status": selectedItem
+			// Add more properties as needed
+			};
+
+		oModel.update(sEntityPath, oData, {
+			success: function(data) {
+				MessageToast.show("Customer " + selectedItem + " selected successfully");
+			},
+			error: function(error) {
+				this.middleWare.errorHandler(error, that);
+				// console.error("PATCH request failed");
+			}
+			});
+		},
 		onBlockCustomer:function(oEvent){
 			debugger;
 			var state = oEvent.getParameter('state');
@@ -110,23 +150,33 @@ sap.ui.define([
 			// Add more properties as needed
 			};
 
-			// this.middleWare.callMiddleWare(sEntityPath, "PATCH", oData)
-			// 		.then(function (data, status, xhr) {
-			// 			debugger;
-			// 		}.bind(this))
-			// 		.catch(function (jqXhr, textStatus, errorMessage) {
-			// 			this.middleWare.errorHandler(jqXhr, this);
-			// 		}.bind(this));
-
-			oModel.update(sEntityPath, oData, {
+		oModel.update(sEntityPath, oData, {
 			success: function(data) {
-				console.log("PATCH request successful:", data);
+				MessageToast.show("Customer Blocked Status is Changed Successfully")
+				// console.log("PATCH request successful:", data);
 			},
 			error: function(error) {
-				// this.middleWare.errorHandler(error, that);
-				console.error("PATCH request failed");
+				this.middleWare.errorHandler(error, that);
+				// console.error("PATCH request failed");
 			}
 			});
+		},
+		AddCustomers : function(){
+			debugger;
+			var that = this;
+			var payload =  this.oFormData;
+
+			this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
+				.then( function (data, status, xhr) {
+					// debugger
+					MessageToast.show("User Created Successfully");
+					that.onReject();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					// that.getView().byId("userid").setValueState('Error');
+					// that.getView().byId("pwd").setValueState('Error');
+					that.middleWare.errorHandler(jqXhr, that);
+				});
 		},
 		
 	});
