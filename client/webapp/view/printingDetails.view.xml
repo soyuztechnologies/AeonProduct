@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" controllerName="ent.ui.ecommerce.controller.printingDetails">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table" xmlns:f="sap.ui.layout.form" controllerName="ent.ui.ecommerce.controller.printingDetails">
 	<Page title="Job Details"> 
           <!-- <headerContent></headerContent> -->
 		<!-- <VBox class="sapUiSmallMargin"> -->
@@ -8,7 +8,7 @@
 						<core:Title></core:Title>
 
 						<Label text="PO NO"></Label>
-						<Input editable="false" value="{appView>poNo}"></Input>
+						<Link  press="onClickPopup"  text="{appView>poNo}" ></Link>
 
 						<Label text="Quantity"></Label>
 						<Input editable="false" value="{appView>qtyPcs}"></Input>
@@ -20,7 +20,7 @@
 						<core:Title></core:Title>
 
 						<Label text="Artwork"></Label>
-						<Input editable="false" value="{appView>artwork}"></Input>
+						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 
 						<Label text="Paper Board"></Label>
 						<Input editable="false" value="{appView>paperboard}"></Input>
@@ -31,7 +31,7 @@
 				</f:content>
 			</f:SimpleForm>
 			<f:SimpleForm title="Job Status" id="SimpleForm2" editable="true" layout="ResponsiveGridLayout" >
-				<f:content>
+				<!-- <f:content>
 						<Label text="Raw Material"></Label>	
 						<Input editable="false" value="{appView>poNo}"></Input>
 
@@ -64,8 +64,84 @@
 
 						<Label text="Delivery No."></Label>
 						<Input editable="{appView>/inputEditable}" value="{appView>deliveryno}"></Input>
-					<!-- </VBox> -->
-				</f:content>
+				</f:content> -->
+       <Table  id="jobStatusTab" autoPopinMode="true">
+		 <!-- visibleRowCount="4" selectionMode="Single" -->
+	     <columns>
+			<Column> 
+				  <Label text="Raw Material" />
+			</Column>
+			<Column>
+				  <Label text="Coating" />
+
+			</Column>
+			<Column>
+				<Label text="Spot UV" />
+			</Column>
+			<Column>
+				<Label text="Punching" />
+			</Column>
+			<Column>
+				<Label text="Packing" />
+			</Column>
+			<Column>
+				<Label text="Printing" />
+			</Column>
+			<Column>
+				<Label text="Foiling" />
+			</Column>
+			<Column>
+				<Label text="Embossing" />
+			</Column>
+			<Column>
+				<Label text="Pasting" />
+			</Column>
+			<Column>
+				<Label text="Inc. No." />
+			</Column>		
+			<Column>
+				<Label text="Delivery No." />
+			</Column>				
+		 </columns>
+		   <items>
+		 			<ColumnListItem >
+				<cells>
+					<!-- <ObjectIdentifier
+						title="{Name}"
+						text="{ProductId}"/> -->
+					<Text text=""></Text> 
+					<Text text="{appView>coating}"></Text>
+		            <Text text="{appView>spotuv}"></Text>
+				    <Text text="{appView>punching}"></Text>
+				    <Text text="{appView>packing}"></Text>
+			        <Text text="{appView>printing}"></Text>
+					<Text text="{appView>foiling}"></Text>
+					<Text text="{appView>embossing}"></Text>
+					<Text text="{appView>pasting}"></Text>
+					<Text text="{appView>incno}"></Text>
+					<Text text="{appView>deliveryno}"></Text>														
+					<!-- <ObjectNumber
+						number="{WeightMeasure}"
+						unit="{WeightUnit}"
+						state="{
+							parts: [
+								{path: 'WeightMeasure'},
+								{path: 'WeightUnit'}
+							],
+							formatter: 'sap.m.sample.Table.Formatter.weightState'
+						}" />
+					<ObjectNumber
+							number="{
+								parts:[{path:'Price'},{path:'CurrencyCode'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{CurrencyCode}" /> -->
+				</cells>
+			</ColumnListItem>
+		</items>
+		  
+	</Table>
 			</f:SimpleForm>
 			<Toolbar>
 				<Button text="Update" press="onClickUpdate"></Button>
