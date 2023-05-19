@@ -8,7 +8,7 @@
 						<core:Title></core:Title>
 
 						<Label text="PO NO"></Label>
-						<Input editable="false" value="{appView>poNo}"></Input>
+						<Link  press="onClickPopup"  text="{appView>poNo}" ></Link>
 
 						<Label text="Quantity"></Label>
 						<Input editable="false" value="{appView>qtyPcs}"></Input>
@@ -20,7 +20,7 @@
 						<core:Title></core:Title>
 
 						<Label text="Artwork"></Label>
-						<Input editable="false" value="{appView>artwork}"></Input>
+						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 
 						<Label text="Paper Board"></Label>
 						<Input editable="false" value="{appView>paperboard}"></Input>

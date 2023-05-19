@@ -20,7 +20,9 @@ sap.ui.define([
       this.getModel("appView").setProperty("/logoutVisibility", true);
       this.getModel("appView").setProperty("/pdfVisibility", false);
       this.getModel("appView").setProperty("/sideExpanded",true);
-      this.getModel("appView").setProperty("/simpleFormVisibility",false);
+      this.getModel("appView").setProperty("/simpleFormVisibility",true);
+      this.getModel("appView").setProperty("/uploadButtonVisibility",true);
+      this.getModel("appView").setProperty("/imgVisibility",false);
 			this.getModel("appView").updateBindings();
       this.onPopinLayoutChanged();
 
@@ -29,30 +31,30 @@ sap.ui.define([
     onPressNavigate:function(){
       this.getRouter().navTo("welcomePrinter");
     },
-    onFileUploadChange: function (oEvent) {
-        // debugger;
-        // var oParams = oEvent.getParameters();
-        // var oFile = oParams.files[0];
-        // var oFile2 = oEvent.getParameter("files")[0];
-        // var sFilename = oFile.name;
-        // var that = this;
-        // var oReader = new FileReader();
-        // oReader.onload = function (e) {
-        //   var sFileContent = e.target.result;
+    // onFileUploadChange: function (oEvent) {
+    //     // debugger;
+    //     // var oParams = oEvent.getParameters();
+    //     // var oFile = oParams.files[0];
+    //     // var oFile2 = oEvent.getParameter("files")[0];
+    //     // var sFilename = oFile.name;
+    //     // var that = this;
+    //     // var oReader = new FileReader();
+    //     // oReader.onload = function (e) {
+    //     //   var sFileContent = e.target.result;
 
-        //   // Parse the Excel file
-        //   var oWorkbook = XLSX.read(sFileContent, { type: "binary" });
-        //   var oWorksheet = oWorkbook.Sheets[oWorkbook.SheetNames[0]];
-        //   var aData = XLSX.utils.sheet_to_json(oWorksheet, { header: 1 });
-        //   that.extracDbFields(aData);
-        //   // debugger;
-        //   // Do something with the parsed data
-        //   // console.log(aData);
-        // };
+    //     //   // Parse the Excel file
+    //     //   var oWorkbook = XLSX.read(sFileContent, { type: "binary" });
+    //     //   var oWorksheet = oWorkbook.Sheets[oWorkbook.SheetNames[0]];
+    //     //   var aData = XLSX.utils.sheet_to_json(oWorksheet, { header: 1 });
+    //     //   that.extracDbFields(aData);
+    //     //   // debugger;
+    //     //   // Do something with the parsed data
+    //     //   // console.log(aData);
+    //     // };
 
 
-        // oReader.readAsBinaryString(oFile);
-      },
+    //     // oReader.readAsBinaryString(oFile);
+    //   },
       onFileUploaddChange: function(oEvent) {
 
         var that=this;
@@ -76,6 +78,8 @@ sap.ui.define([
           that.getView().getModel("appView").setProperty("/pdfUrl",sEncodedContent)
           that.getModel("appView").setProperty("/simpleFormVisibility",false);
           that.getModel("appView").setProperty("/pdfVisibility", true);
+          that.getModel("appView").setProperty("/uploadButtonVisibility",true);
+          that.getModel("appView").setProperty("/imgVisibility",false);
 
         };
         
@@ -90,6 +94,8 @@ sap.ui.define([
         // var oWordFrame = this.getView().byId("wordFrame");
         // oWordFrame.setAttribute("src", sWordContent);
         that.getView().getModel('appView').setProperty('/wordContent',sEncodedContent);
+        that.getModel("appView").setProperty("/uploadButtonVisibility",true);
+        that.getModel("appView").setProperty("/imgVisibility",false);
       }.bind(this);
       oReader.readAsBinaryString(oFile);
       }
@@ -100,6 +106,8 @@ sap.ui.define([
           var sEncodedContent = btoa(sUploadedFileContent);
           var sImageContent = "data:image/jpeg;base64," + sEncodedContent; // Update the MIME type accordingly if your image is of a different format
           that.getView().getModel('appView').setProperty('/imageContent',sImageContent);
+          that.getModel("appView").setProperty("/uploadButtonVisibility",true);
+          that.getModel("appView").setProperty("/imgVisibility",true);
         }.bind(this);
         oReader.readAsBinaryString(oFile);
       }
@@ -117,6 +125,8 @@ sap.ui.define([
           that.getModel("appView").setProperty("/pdfVisibility", false);
         
           that.getModel("appView").setProperty("/simpleFormVisibility",true);
+          that.getModel("appView").setProperty("/uploadButtonVisibility",false);
+          that.getModel("appView").setProperty("/imgVisibility",false);
 
           // debugger;
           // Do something with the parsed data
@@ -188,7 +198,7 @@ sap.ui.define([
         var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue"); 
         // Convert string to JSON object
         var payload = JSON.parse(oJsonInpValue);
-        payload.jobCardNo= "1004";
+        payload.jobCardNo= "1007";
 
         // post call for uploading the json into loopback 
 
@@ -206,8 +216,6 @@ sap.ui.define([
               that.middleWare.errorHandler(error, that);
               MessageToast.show("Error:");
             });
-
-
 
             // var oModel = this.getView().getModel();  //default model get at here
             // var that = this; 
@@ -227,18 +235,22 @@ sap.ui.define([
             //   MessageToast.show("Error reading data");
             //   }
             // });
-            
+   
+      }
 
-         
+
+      },
+      onUploadData:function(){
+        debugger;
           var allInfo = this.getView().getModel('appView').getProperty("/customerId"); 
           var deliveryDoc = this.getView().getModel('appView').getProperty("/pdfUrl"); 
           var po = this.getView().getModel('appView').getProperty("/wordContent"); 
- 
+          var img = this.getView().getModel('appView').getProperty('/imageContent');
+          if(allInfo&&deliveryDoc){
           debugger;
           var payload1 = {
             "id": allInfo,
             "attachment":deliveryDoc,
-            "po":po
             
           }
           
@@ -252,10 +264,51 @@ sap.ui.define([
            MessageToast.show("Error:");
          });
          
-   
-      }
+        }else{ 
+          MessageToast.show("Please Check Your Fields");
 
-
+        }
+         if(allInfo&&po){
+          debugger;
+          var payload1 = {
+            "id": allInfo,
+            "po":po
+            
+          }
+          
+ 
+         this.middleWare.callMiddleWare("UploadAttachment","POST",payload1).
+         then(function(){
+           MessageToast.show("Document Uploaded Successfully")
+         })
+         .catch(function (error) {
+           that.middleWare.errorHandler(error, that);
+           MessageToast.show("Error:");
+         });
+        }
+        if(allInfo&&img){
+          debugger;
+          var payload1 = {
+            "id": allInfo,
+            "img":img
+            
+          }
+          
+ 
+         this.middleWare.callMiddleWare("UploadAttachment","POST",payload1).
+         then(function(){
+           MessageToast.show("Document Uploaded Successfully")
+         })
+         .catch(function (error) {
+           that.middleWare.errorHandler(error, that);
+           MessageToast.show("Error:");
+         });
+        }
+        
+      },
+      onPressClear:function(oEvent){
+        debugger;
+        location.reload();
       },
       
       
