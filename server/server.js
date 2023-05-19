@@ -541,7 +541,7 @@ app.get('/Appusers', async (req, res) => {
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
 	try {
-	  const users = await this.User.find(); // Retrieve all users
+	  const users = await this.AppUser.find(); // Retrieve all users
   
 	  res.status(200).json(users);
 	} catch (error) {
@@ -620,24 +620,43 @@ app.post('/addUserAdmin', async(req, res) => {
 	}
 	
 	var Role = newCustomer.Role;
+	// if(Role==""){
+	// 	var role = "Customers";
+	// }
+	// else{
+		
+	// }
 	
 try{
-	const newUser = await this.User.create({ email, password, Role, CreatedOn: new Date(),status:"Pending" });
+	let userTable =await this.User.findOne({ where: {email: email} });
+	if(userTable=="" || userTable== null){
+		var newUser = await this.User.create({ email, password, Role, CreatedOn: new Date(),status:"Pending" });
+	}
+	else{
+		res.status(400).json("User Already Exists with this email address");
+	}
 
+	let AppUuser =await this.AppUser.findOne({ where: {EmailId : email} });
+
+	if(!AppUuser){
+		await this.AppUser.create({
+		   TechnicalId: newUser.id,
+		   EmailId: email,
+		   UserName: name,
+		   CreatedOn: new Date(),
+		   // Status : "Pending",
+		   // Blocked : "No",
+		   Role: Role
+		 });
+	}
+	else{
+		res.status(400).json("User Already Exists with this email address");
+	}
 	 // Create the user in AppUser table
-	 await this.AppUser.create({
-		TechnicalId: newUser.id,
-		EmailId: email,
-		UserName: name,
-		CreatedOn: new Date(),
-		// Status : "Pending",
-		// Blocked : "No",
-		Role: Role
-	  });
 
 	  await sendEmailPass(email,password);
 	// Return a response indicating successful creation
-    return res.status(201).json('Customer created successfully');
+    return res.status(200).json('Customer created successfully');
   } catch (error) {
     // Handle error
     return res.status(500).json({ error: 'Failed to create customer' });
@@ -759,6 +778,25 @@ async function sendEmailPass(emailAddress,password) {
 	  }
 	}
 
+app.post('/clearData', async (req, res) => {
+	const Model = app.models.User; // Replace 'YourModel' with your actual model name
+	
+	// const filter = req.body; // The filter object provided in the request body
+	const filter = { where: { email: "harsh@soyuztechnologies.com" } };
+	
+	try {
+		const deleteResult = await Model.deleteAll(filter);
+	
+		if (deleteResult.count > 0) {
+		return res.status(200).json({ message: 'Data cleared successfully' });
+		} else {
+		return res.status(404).json({ error: 'No data found matching the filter' });
+		}
+	} catch (error) {
+		return res.status(500).json({ error: 'Failed to clear data' });
+	}
+	});
+	  
 
   //  ######################################################################
 // 							upload Attachment calls
