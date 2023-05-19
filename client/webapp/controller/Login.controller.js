@@ -25,17 +25,18 @@ sap.ui.define([
 		},
 
 		Login: function () {
+			debugger;
 			var that = this;
 			var userName = this.getView().byId("userid").getValue();
 			var password = this.getView().byId("pwd").getValue();
 			var payload = {
 				"email": userName,
 				"password": password
-			}
+			};
 			if(userName===password){
 				that.getRouter().navTo("");
-			}
-			this.middleWare.callMiddleWare("api/Users/login", "POST", payload)
+			};
+			this.middleWare.callMiddleWare("login", "POST", payload)
 				.then( function (data, status, xhr) {
 					debugger;
 					MessageToast.show("Login Success");
@@ -51,6 +52,23 @@ sap.ui.define([
 					that.getView().byId("pwd").setValueState('Error');
 					that.middleWare.errorHandler(jqXhr, that);
 				});
+				
+			// this.middleWare.callMiddleWare("api/Users/login", "POST", payload)
+			// 	.then( function (data, status, xhr) {
+			// 		debugger;
+			// 		MessageToast.show("Login Success");
+			// 		that.getModel("appView").setProperty("/visibleHeader", true);
+			// 		that.getView().byId("userid").setValueState('None');
+			// 		that.getView().byId("pwd").setValueState('None');
+			// 		that.getModel("appView").updateBindings();
+			// 		that.getRouter().navTo("Carborator");
+
+			// 	})
+			// 	.catch(function (jqXhr, textStatus, errorMessage) {
+			// 		that.getView().byId("userid").setValueState('Error');
+			// 		that.getView().byId("pwd").setValueState('Error');
+			// 		that.middleWare.errorHandler(jqXhr, that);
+			// 	});
 		},
 
 		

@@ -136,7 +136,7 @@
 					"target":"welcomePrinter"
 				},
 				{
-					"pattern": "Carborator",
+					"pattern": "UploadDocuments",
 					"name":"Carborator",
 					"target":"Carborator"
 				},

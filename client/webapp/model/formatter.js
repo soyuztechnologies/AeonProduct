@@ -716,16 +716,30 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         return oDate;
       }
     },
-    VHcurrency: function(Code){
-      if(Code){
+    VHcurrency: function (Code) {
+      if (Code) {
         var oValueHelp = this.getModel("appView").getProperty("/VH_Currency");
         for (let val = 0; val < oValueHelp.length; val++) {
-          if(oValueHelp[val].Code == Code ){
+          if (oValueHelp[val].Code == Code) {
             return oValueHelp[val].Name;
           }
         }
       }
       return Code;
-    }
+    },
+    getBase64ToPdf: function (sBase64String) {
+      debugger;
+      if(sBase64String){
+        var decodedPdfContent = atob(sBase64String);
+        var byteArray = new Uint8Array(decodedPdfContent.length)
+        for (var i = 0; i < decodedPdfContent.length; i++) {
+            byteArray[i] = decodedPdfContent.charCodeAt(i);
+        }
+        var blob = new Blob([byteArray.buffer], { type: 'application/pdf' });
+        var _pdfurl = URL.createObjectURL(blob);
+        jQuery.sap.addUrlWhitelist("blob");
+        return _pdfurl;
+      }
+    },
   };
 });

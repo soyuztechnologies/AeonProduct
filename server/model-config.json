@@ -57,7 +57,7 @@
     "dataSource": "mongoatlas",
     "public": true
   },
-  "Attachment": {
+  "Attachments": {
     "dataSource": "mongoatlas",
     "public": true
   },
@@ -66,6 +66,10 @@
     "public": true
   },
   "Job": {
+    "dataSource": "mongoatlas",
+    "public": true
+  },
+  "Customer": {
     "dataSource": "mongoatlas",
     "public": true
   }

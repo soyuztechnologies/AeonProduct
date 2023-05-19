@@ -61,7 +61,7 @@ sap.ui.define([
 			oModel.read('/Jobs', {
 				success: function(data) {
 				// Success callback
-				MessageToast.show("Data read successfully");
+				// MessageToast.show("Data read successfully");
 				that.getView().getModel("appView").setProperty("/jobsData",data.results);
 				// Handle the retrieved data
 				// var aEntities = data.results; // Access the array of retrieved entities

@@ -46,11 +46,16 @@
             "default":null
         },
         "CompnayLogo": {
-            "type":"image",
+            "type":"string",
             "default":null
         },
         "Website": {
-            "type":"url",
+            "type":"string",
+            "default":null
+        },
+        "Role": {
+            "type":"string",
+            "enum": ["Customer", "Admin","Factory Manager"],
             "default":null
         }
 	},
