@@ -21,6 +21,9 @@
 				<Column minScreenWidth="Tablet" demandPopin="true">
 					<Text text="Email" />
 				</Column>
+				<Column minScreenWidth="Tablet" demandPopin="true">
+					<Text text="Role" />
+				</Column>
 				<!-- <Column minScreenWidth="Desktop" demandPopin="true" hAlign="End">
 				<Text text="CreatedOn" />
 			</Column> -->
@@ -36,7 +39,7 @@
 					<cells>
 						<Text text="{appView>UserName}" />
 						<Text text="{appView>EmailId}" />
-						<!-- <Text text="Created on" /> -->
+						<Text text="{appView>Role}" />
 						<Switch state="{=${appView>Blocked} === 'Yes' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">
 							<layoutData>
 								<FlexItemData growFactor="1" />

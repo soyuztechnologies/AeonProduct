@@ -6,16 +6,18 @@
     xmlns="sap.m">
     <Page  showHeader="{appView>/visibleHeader}" id="page">
         <content>
-            <HBox alignItems="Center" alignContent="Center" justifyContent="Center">
+            <HBox alignItems="Center" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop">
             <ComboBox   items="{appView>/userDetails}" id="idPopinLayout"
                 placeholder="Select User"
-                change="onPopinLayoutChanged">
+                change="onPopinLayoutChanged"
+                class="sapUiTinyMarginEnd">
                 <items>
                     <core:Item enabled="true"  text="{appView>UserName}"
                         key="{appView>id}"/>
                 </items>
             </ComboBox>
                 <u:FileUploader
+                class="sapUiTinyMarginBegin"
                 change="onFileUploaddChange"
                 buttonText="Browse"
                 fileType="docx,jpg,jpeg,xml,xlsx,pdf"
@@ -38,24 +40,6 @@
             <f:SimpleForm visible="{appView>/simpleFormVisibility}" width="100%" editable="true" id="SimpleForm-1" columnsM="2"
 			columnsL="3"
 			columnsXL="4"  layout="ColumnLayout">
-            
-                
-            <!-- <ComboBox textAlign="Center"   items="{appView>/userDetails}" id="idPopinLayout"
-                placeholder="Select User"
-                change="onPopinLayoutChanged">
-                <items>
-                    <core:Item enabled="true"  text="{appView>UserName}"
-                        key="{appView>id}"/>
-                </items>
-                </ComboBox>
-                    <u:FileUploader
-                    change="onFileUploaddChange"
-                    buttonText="Browse"
-                    fileType="docx,jpg,jpeg,xml,xlsx,pdf"
-                    multiple="false" /> -->
-
-
-
 				<f:content>
 					<!-- <VBox> -->
 						<core:Title></core:Title>
