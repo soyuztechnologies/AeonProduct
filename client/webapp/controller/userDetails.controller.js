@@ -55,9 +55,7 @@ sap.ui.define([
 					"ShippingZipCode": "",
 					"BillingAddress": "",
 					"ShippingAddress": "",
-
-
-
+					"Role": ""
 			}
 
 			this.getView().getModel('appView').setProperty("/AddUserData", this.oFormData);
