@@ -154,7 +154,8 @@ sap.ui.define([
 				// console.log("PATCH request successful:", data);
 			},
 			error: function(error) {
-				this.middleWare.errorHandler(error, that);
+				// this.middleWare.errorHandler(error, that);
+				MessageToast.show("Error while update the status")
 				// console.error("PATCH request failed");
 			}
 			});

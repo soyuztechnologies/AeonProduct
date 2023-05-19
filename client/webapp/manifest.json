@@ -146,7 +146,7 @@
 					"target":"Profile"
 				},
 				{
-					"pattern":"printingDetails",
+					"pattern":"printingDetails/{jobId}",
 					"name":"printingDetails",
 					"target":["welcomePrinter","printingDetails"]
 				},

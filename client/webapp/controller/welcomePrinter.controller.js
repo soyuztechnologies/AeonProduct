@@ -29,7 +29,7 @@ sap.ui.define([
 			// var oShift = oEvent.getParameter("arguments").oShift;
 			// var sPath = '/printingDetails/' + oShift;
 			// var oList = this.getView().byId("idWelcomeP");
-
+			debugger;
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader",true);
 			this.getModel("appView").setProperty("/visibility", true);
@@ -48,7 +48,9 @@ sap.ui.define([
 			debugger;
 			this.getView().getModel("appView").setProperty('/datas',datassss);
 			this.getModel("appView").updateBindings();
-			this.getRouter().navTo("printingDetails");
+			this.getRouter().navTo("printingDetails",{
+				jobId : datassss.poNo
+			});
 			debugger;
 			// this.getRouter().navTo("printingDetails");
 		},
