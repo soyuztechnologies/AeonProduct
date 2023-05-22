@@ -143,11 +143,20 @@
 		  
 	</Table>
 			</f:SimpleForm>
+			<!-- <footer>
 			<Toolbar>
 				<Button visible="{appView>/updBtnVisibility}"  text="Update" press="onClickUpdate"></Button>
 				<ToolbarSpacer />
 				<Button text="Modify" press="onClickModify"></Button>
 			</Toolbar>
+			</footer> -->
+		<footer>
+			<Toolbar>
+				<Button visible="{appView>/updBtnVisibility}"   type="Emphasized" text="Update" press="onClickUpdate"></Button>
+				<ToolbarSpacer />
+				<Button text="Modify"  type="Emphasized" press="onClickModify"></Button>
+			</Toolbar>
+		</footer>
 		<!-- </VBox> -->
 	</Page>
 </mvc:View>
