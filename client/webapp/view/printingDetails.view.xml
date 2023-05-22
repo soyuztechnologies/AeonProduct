@@ -2,7 +2,7 @@
 	<Page title="Job Details"> 
           <!-- <headerContent></headerContent> -->
 		<!-- <VBox class="sapUiSmallMargin"> -->
-			<f:SimpleForm title="O79 JNM RPRNT DCLRS 2D 04" id="SimpleForm-1" editable="true" layout="ResponsiveGridLayout"  >
+			<f:SimpleForm title="O79 JNM RPRNT DCLRS 2D 04" id="jobDetails" editable="true" layout="ResponsiveGridLayout"  >
 				<f:content>
 					<!-- <VBox> -->
 						<core:Title></core:Title>
@@ -30,7 +30,7 @@
 					<!-- </VBox> -->
 				</f:content>
 			</f:SimpleForm>
-			<f:SimpleForm title="Job Status" id="SimpleForm2" editable="true" layout="ResponsiveGridLayout" >
+			<f:SimpleForm title="Job Status" id="jobStatus" editable="true" layout="ResponsiveGridLayout" >
 				<!-- <f:content>
 						<Label text="Raw Material"></Label>	
 						<Input editable="false" value="{appView>poNo}"></Input>
@@ -152,9 +152,9 @@
 			</footer> -->
 		<footer>
 			<Toolbar>
-				<Button visible="{appView>/updBtnVisibility}"   type="Emphasized" text="Update" press="onClickUpdate"></Button>
+				<Button visible="{appView>/updBtnVisibility}"  icon="sap-icon://synchronize" type="Emphasized" text="Update" press="onClickUpdate"></Button>
 				<ToolbarSpacer />
-				<Button text="Modify"  type="Emphasized" press="onClickModify"></Button>
+				<Button icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onClickModify"></Button>
 			</Toolbar>
 		</footer>
 		<!-- </VBox> -->

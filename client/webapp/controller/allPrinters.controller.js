@@ -47,9 +47,10 @@ sap.ui.define([
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			debugger;
 			this.getView().getModel("appView").setProperty('/datas',datassss);
+			this.getView().getModel("appView").setProperty('/ids',datassss.poNo);
 			this.getModel("appView").updateBindings();
 			this.getRouter().navTo("printingDetails",{
-				jobId : datassss.poNo
+				jobId : datassss.jobCardNo
 			});
 			debugger;
 			// this.getRouter().navTo("printingDetails");
