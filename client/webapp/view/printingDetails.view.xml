@@ -152,9 +152,9 @@
 			</footer> -->
 		<footer>
 			<Toolbar>
-				<Button visible="{appView>/updBtnVisibility}"   type="Emphasized" text="Update" press="onClickUpdate"></Button>
+				<Button visible="{appView>/updBtnVisibility}"  icon="sap-icon://synchronize" type="Emphasized" text="Update" press="onClickUpdate"></Button>
 				<ToolbarSpacer />
-				<Button text="Modify"  type="Emphasized" press="onClickModify"></Button>
+				<Button icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onClickModify"></Button>
 			</Toolbar>
 		</footer>
 		<!-- </VBox> -->

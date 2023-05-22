@@ -19,6 +19,7 @@
                 <u:FileUploader
                 class="sapUiTinyMarginBegin"
                 change="onFileUploaddChange"
+                icon="sap-icon://browse-folder"
                 buttonText="Browse"
                 fileType="docx,jpg,jpeg,xml,xlsx,pdf"
                 multiple="false" />

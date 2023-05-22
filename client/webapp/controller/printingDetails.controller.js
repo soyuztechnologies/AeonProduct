@@ -39,7 +39,7 @@ sap.ui.define([
 				success: function(data) {
 					debugger;
 				// Success callback
-				MessageToast.show("Data get  successfully");
+				// MessageToast.show("Data get  successfully");
 				that.getView().getModel("appView").setProperty("/Jobs", data);
 				// Handle the retrieved data
 				// var aEntities = data.results; // Access the array of retrieved entities
@@ -101,7 +101,7 @@ sap.ui.define([
 
 		onFileUploaddChange: function (oEvent) {
 
-			var that = this;
+			var that = this;getPa
 			var oFileUploader = oEvent.getSource();
 			var oFile = oEvent.getParameter("files")[0];
 			debugger;
