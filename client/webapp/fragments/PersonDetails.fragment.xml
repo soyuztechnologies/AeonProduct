@@ -6,21 +6,23 @@
     <!-- <Dialog > -->
     <form:SimpleForm maxContainerCols="2" id="personDetails" editable="false" layout="ColumnLayout" labelSpanL="12" labelSpanM="12" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
         <form:content>
-            <Label required="true" text="Title"/>
-            <Select selectedKey="{appView>Title}">
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Title"/>
+            <Select selectedKey="{appView>Title}" editable="{appView>/editableFields}" change="onRoleChange">
                 <core:Item key="Mr." text="Mr." />
                 <core:Item key="Mrs." text="Mrs." />
             </Select>
-            <Label required="true" text="First Name"/>
-            <Input value = "{appView>FirstName}" />
-            <Label required="true" text="Last Name"/>
-            <Input value = "{appView>LastName}" />
-            <!-- <Label text="Office Phone Number"/>
-            <Input value = "" /> -->
+
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="First Name"/>
+            <Input value = "{appView>FirstName}" editable="{appView>/editableFields}"/>
+
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Last Name"/>
+            <Input value = "{appView>LastName}" editable="{appView>/editableFields}"/>
+           
             <Label text="Company Logo"/>
-            <Input value = "{appView>CompanyLogo}"/>
-            <Label required="true" text="Personal Mail Address"/>
-            <Input value = "{appView>EmailId}" />
+            <Input value = "{appView>CompanyLogo}" editable="{appView>/editableFields}"/>
+
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Personal Mail Address"/>
+            <Input value = "{appView>EmailId}" editable="{appView>/EmailVisible}"/>
         </form:content>
     </form:SimpleForm>
     <!-- </Dialog>	 -->

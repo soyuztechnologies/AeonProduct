@@ -7,23 +7,30 @@
     <f:SimpleForm id="SimpleFormDisplay480_12120Dual" editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false">
         <f:content>
             <core:Title text="Bill to" />
-            <Label required="true" text="Country"/>
-            <Input value = "{appView>BillingCountry}" />
-            <Label text="Billing City"/>
-            <Input value = "{appView>BillingCity}" />
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Country"/>
+            <Input value = "{appView>BillingCountry}" editable="{appView>/editableFields}"/>
+
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Billing City"/>
+            <Input value = "{appView>BillingCity}" editable="{appView>/editableFields}"/>
+
             <Label text="Zip code"/>
-            <Input value = "{appView>BillingZipCode}" />
+            <Input value = "{appView>BillingZipCode}" editable="{appView>/editableFields}"/>
+
             <Label text="Billing Address"/>
-            <Input value = "{appView>BillingAddress}" />
+            <Input value = "{appView>BillingAddress}" editable="{appView>/editableFields}" />
+
             <core:Title text="Ship to" />
-            <Label required="true" text="Shipping Country"/>
-            <Input value = "{appView>ShippingCountry}" />
-            <Label text="Shipping City"/>
-            <Input value = "{appView>ShippingCity}" />
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Shipping Country"/>
+            <Input value = "{appView>ShippingCountry}" editable="{appView>/editableFields}"/>
+
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Shipping City"/>
+            <Input value = "{appView>ShippingCity}" editable="{appView>/editableFields}"/>
+
             <Label text="Shipping City Code"/>
-            <Input value = "{appView>ShippingZipCode}" />
+            <Input value = "{appView>ShippingZipCode}" editable="{appView>/editableFields}"/>
+                
             <Label text="Shipping Address"/>
-            <Input value = "{appView>ShippingAddress}" />
+            <Input value = "{appView>ShippingAddress}" editable="{appView>/editableFields}"/>
         </f:content>
     </f:SimpleForm>
 </core:FragmentDefinition>

@@ -6,11 +6,9 @@
     xmlns:fiori="sap.ui.webc.fiori"
     xmlns:tnt="sap.tnt">
     <tnt:ToolPage sideExpanded="{appView>/sideNavExpended}">
+        
         <tnt:header >
             <tnt:ToolHeader  visible="true">
-                <!-- <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Toolbar" type="XML" /> -->
-               
-               
                    <Button visible="{appView>/hamburgerVisibility}"
                     press="onClickMenuButton"
                    icon="sap-icon://menu2">
@@ -22,14 +20,11 @@
                    <Button press="onPressLogout" icon="sap-icon://log" visible="{appView>/logoutVisibility}" text="Logout"></Button>
             </tnt:ToolHeader>
         </tnt:header>
+
         <tnt:mainContents>
-            <!-- <App  id="app" busy="{appView>/busy}"  busyIndicatorDelay="{appView>/delay}" navigate="onNavigation"> -->
-                
-            <!-- </App> -->
-            <!-- <NavContainer > -->
                 <f:FlexibleColumnLayout id="layout" layout="{appView>/layout}" backgroundDesign="Translucent" beginColumnNavigate="onNavigation" />
-            <!-- </NavContainer> -->
         </tnt:mainContents>
+
         <tnt:sideContent>
             <tnt:SideNavigation bindingContexts="true"  expanded="{appView>/sideNavExpended}" id="sideNavigation" visible="{appView>/visibility}"  itemSelect="onSelectItem">
                 <tnt:NavigationList>
@@ -40,5 +35,6 @@
                 </tnt:NavigationList>
             </tnt:SideNavigation>
         </tnt:sideContent>
+
     </tnt:ToolPage>
 </mvc:View>

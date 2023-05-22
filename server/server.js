@@ -9,6 +9,7 @@ var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 var express = require('express');
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie');
 const { RoleMapping } = require('loopback');
 
 
@@ -605,10 +606,12 @@ app.post('/addUserAdmin', async(req, res) => {
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
 	this.Customer = app.models.Customer;
+
 	const newCustomer = {};
 	for (const field in req.body) {
 		newCustomer[field] = req.body[field];
 	}
+	
 	var email = newCustomer.EmailId;
 	var name = email.substring(0, email.indexOf("@"));
 	var requestPass = newCustomer.PassWord;
@@ -662,6 +665,7 @@ try{
     return res.status(500).json({ error: 'Failed to create customer' });
   }
 });
+
 function generateRandomPassword() {
   const length = 8;
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -672,6 +676,7 @@ function generateRandomPassword() {
   }
   return password;
 }
+
 async function sendEmailPass(emailAddress,password) {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
@@ -776,8 +781,9 @@ async function sendEmailPass(emailAddress,password) {
 		  console.error(error);
 		  res.status(500).send('Internal server error');
 	  }
-	}
+}
 
+	
 app.post('/clearData', async (req, res) => {
 	const Model = app.models.User; // Replace 'YourModel' with your actual model name
 	
@@ -795,10 +801,9 @@ app.post('/clearData', async (req, res) => {
 	} catch (error) {
 		return res.status(500).json({ error: 'Failed to clear data' });
 	}
-	});
+});
 	  
-
-  //  ######################################################################
+ //  ######################################################################
 // 							upload Attachment calls
 //  ########################################################################
 
@@ -835,6 +840,81 @@ app.post('/clearData', async (req, res) => {
 	}
 
 });
+
+app.get('/getUserRole',  async(req, res) => {
+	// models data
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+	this.AccessToken = app.models.AccessToken;
+
+	const cookieHeader = req.headers.cookie;
+	// Parse the cookie string and extract the value of 'soyuz_session'
+	const cookies = cookie.parse(cookieHeader);
+	const sessionCookie = cookies.soyuz_session;
+  
+	try {
+		debugger;
+		  // Retrieve the access token based on the session cookie
+	  const accessToken = await this.AccessToken.findOne({ where: { id: sessionCookie } });
+  
+	  if (!accessToken) {
+		// Handle case when access token is not found
+		return res.status(404).json({ error: 'Session not found' });
+	  }
+	  const {id,ttl,created,userId } = accessToken;
+
+	  let userID = accessToken.userId;
+  
+	  // Retrieve the user based on the access token user ID
+	  const user =  await this.User.findOne({ where: { id: userID } });
+	  if (!user) {
+		// Handle case when user is not found
+		return res.status(404).json({ error: 'User not found' });
+	  }
+	//   const ID = user.id;
+
+	  const Appuser =  await this.AppUser.findOne({ where: { EmailId : user.email } });
+	  if (!Appuser) {
+		// Handle case when user is not found
+		return res.status(404).json({ error: 'User not found' });
+	  }
+  
+	  // Retrieve the user's role or any other relevant data
+	  const userRole = Appuser;
+	  const responseData = {
+		role: userRole,
+		// Include other relevant data if needed
+	  };
+  
+	  // Send the response
+	  res.status(200).json(responseData);
+	} catch (error) {
+	  // Handle any errors that occur during the process
+	  console.error('Error fetching user role:', error);
+	  res.status(500).json({ error: 'Internal server error' });
+	}
+  });
+
+
+
+// logout call 
+  app.post('/logout', (req, res) => {
+	const cookieHeader = req.headers.cookie;
+	const cookies = cookie.parse(cookieHeader);
+	const sessionCookie = cookies.soyuz_session;
+  
+	// Perform any necessary actions to invalidate the session
+	// For example, you can delete the session cookie or revoke the access token
+  
+	// Assuming you are using the 'cookie-parser' middleware, you can clear the session cookie
+	res.clearCookie('soyuz_session');
+  
+	// Optionally, you can revoke the access token or perform other logout actions
+  
+	// Send a response indicating successful logout
+	res.json({ message: 'Logout successful' });
+  });
   
   
 

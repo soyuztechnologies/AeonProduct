@@ -2,7 +2,8 @@ sap.ui.define(
   ["./BaseController", "sap/ui/model/json/JSONModel"],
   function (BaseController, JSONModel) {
     "use strict";
-
+    var userRole;
+    
     return BaseController.extend("ent.ui.ecommerce.controller.App", {
       onInit: function () {
         this._oRouter = this.getRouter();
@@ -69,8 +70,10 @@ sap.ui.define(
         if (!sessionStorage.showCartWarning)
           sessionStorage.showCartWarning = false;
       },
+
       onAfterRendering: function () {},
       onNavigation: function (oEvent) {},
+
       onSelectItem: function (oEvent) {
         debugger;
         var nav = oEvent.getSource().getSelectedKey();
@@ -90,15 +93,36 @@ sap.ui.define(
           this.getRouter().navTo("userDetails")
         }
       },
+
       onClickMenuButton: function (oEvent) {
         debugger;
         var oSideNavigation = this.byId("sideNavigation");
         var bExpanded = oSideNavigation.getExpanded();
         this.getView().getModel("appView").setProperty("/sideNavExpended", !bExpanded);
       },
+
       onPressLogout:function(){
-        this.getRouter().navTo("login");
+        // this.getRouter().navTo("login");
+        this.onLogOut();
       },
+
+      getUserData: function () {
+        var that = this;
+        this.middleWare.callMiddleWare("getUserRole", "get")
+          .then(function (data, status, xhr) {
+            debugger;
+            userRole = data.role.Role;
+            if(userRole == "Admin"){
+              that.getModel('appView').setProperty('/Passwordfield', false);
+            };
+          })
+          .catch(function (jqXhr, textStatus, errorMessage) {
+            debugger;
+            that.middleWare.errorHandler(jqXhr, that);
+          });
+      },
+
+      
     });
   }
 );

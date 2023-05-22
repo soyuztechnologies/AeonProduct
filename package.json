@@ -12,6 +12,7 @@
 		"axios": "^0.18.0",
 		"body-parser": "^1.14.1",
 		"compression": "^1.0.3",
+		"cookie": "^0.5.0",
 		"cors": "^2.5.2",
 		"event-stream": "^4.0.0",
 		"exceljs": "^1.14.0",

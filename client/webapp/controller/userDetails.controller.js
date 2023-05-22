@@ -13,10 +13,20 @@ sap.ui.define([
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("userDetails").attachPatternMatched(this._matchedHandler, this);
 		},
-		_matchedHandler:function(){
+		_matchedHandler:function(oEvent){
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader",true);
+
+			var oPath = oEvent.getParameter("name");
+			if(oPath == "userDetails"){
+				this.getModel('appView').setProperty('/editableFields', true);
+				this.getModel('appView').setProperty('/EmailVisible', true);
+				this.getModel('appView').setProperty('/Passwordfield', true);
+				// this.getModel('appView').setProperty('/requiredFields', true);
+			};
+
 			this.getUserData();
+			this.getUserRoleData();
 			this.getModel("appView").updateBindings();
 		},
 		randomPaswordGenerate : function(){
@@ -30,6 +40,13 @@ sap.ui.define([
 			return password.split('').sort(() => Math.random() - 0.5).join('');
 		},
 
+		onRoleChange : function(oEvent){
+			debugger;
+			var oSelectedKey = oEvent.getParameter("selectedItem").getKey();
+			var oModel = this.getView().getModel("appView");
+			
+			oModel.setProperty('/selectedrole',oSelectedKey)
+		},
 		AddUserDialog : function(){
 			debugger
 			var oView = this.getView();
@@ -82,6 +99,11 @@ sap.ui.define([
 				userAddFrag.close();
 		});
 		},
+		onRejectPass : function(){
+			this.passDialog.then(function (oPassDialog) {
+				oPassDialog.close();
+		});
+		},
 		getUserData:function(){
 			// debugger;
 			var oModel = this.getView().getModel();  //default model get at here
@@ -132,7 +154,7 @@ sap.ui.define([
 		onBlockCustomer:function(oEvent){
 			debugger;
 			var state = oEvent.getParameter('state');
-			state = state === 'true' ? 'No' : 'Yes';
+			state = state === true ? 'Yes' : 'No';
 			debugger;
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
 			var oid = this.getView().getModel("appView").getProperty(opath);
@@ -177,6 +199,25 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
+
+		openPassdialog : function(){
+			var oView = this.getView();
+            var that = this;
+            if (!this.passDialog) {
+                this.passDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "ent.ui.ecommerce.fragments.AddUserPass",
+                    controller: this
+                }).then(function (oPassDialog) {    
+                    oView.addDependent(oPassDialog);
+                    return oPassDialog;
+                }.bind(this));
+            }
+            this.passDialog.then(function (oPassDialog) {
+					oPassDialog.open();
+            });
+		},
+
 		
 	});
 });

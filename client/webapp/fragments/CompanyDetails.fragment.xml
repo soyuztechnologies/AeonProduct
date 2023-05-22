@@ -5,26 +5,37 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
     <form:SimpleForm maxContainerCols="2" id="companySimpleFrom" editable="false" layout="ColumnLayout" labelSpanL="12" labelSpanM="12" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
         <form:content>
-            <Label required="true" text="Mail Address"/>
-            <Input value = "{appView>CompanyEmail}" />
-            <Label required="true" text="Company Name"/>
-            <Input value = "{appView>CompanyName}" />
-            <Label text="Gst Number"/>
-            <Input value = "{appView>GSTNO}" />
-            <Label required="true" text="Company Address"/>
-            <Input value = "{appView>CompanyAddress}" />
-            <Label text="Website"/>
-            <Input value = "{appView>Website}" />
-            <Label required="true" text="Company Phone Number"/>
-            <Input value = "{appView>phoneNumber}"/>
-            <Label required="true" text="Decceide Role"/>
-            <Select selectedKey="{appView>Role}">
+
+           <Label required="{=${appView>/selectedrole} ? true : false}" text="User Role"/>
+            <Select selectedKey="{appView>Role}" editable="{appView>/editableFields}" change="onRoleChange" forceSelection="false">
                 <core:Item key="Customer" text="Customer" />
                 <core:Item key="Admin" text="Admin" />
                 <core:Item key="Factory Manager" text="Factory Manager" />
             </Select>
+
+
+            <Label required="{=${appView>/selectedrole} ? true : false}" text="Mail Address"/>
+            <Input value = "{appView>EmailId}"  editable="{appView>/EmailVisible}"/>
+
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Company Name"/>
+            <Input value = "{appView>CompanyName}" editable="{appView>/editableFields}"/>
+
+            <Label text="Gst Number"/>
+            <Input value = "{appView>GSTNO}"   editable="{appView>/editableFields}"/>
+
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Company Address"/>
+            <Input value = "{appView>CompanyAddress}" editable="{appView>/editableFields}" />
+
+            <Label text="Website"/>
+            <Input value = "{appView>Website}"  editable="{appView>/editableFields}"/>
+
+            <Label required="{=${appView>/selectedrole} ? ${appView>/selectedrole} === 'Admin' ? false : true : false}" text="Company Phone Number"/>
+            <Input value = "{appView>phoneNumber}" editable="{appView>/editableFields}"/>
+
+            
+
             <Label text="Password"/>
-            <Input value = "{appView>PassWord}" />
+            <Input value = "{appView>PassWord}" visible="{appView>/Passwordfield}" />
         </form:content>
     </form:SimpleForm>
 </core:FragmentDefinition>

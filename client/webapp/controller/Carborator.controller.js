@@ -25,7 +25,7 @@ sap.ui.define([
       this.getModel("appView").setProperty("/imgVisibility",false);
 			this.getModel("appView").updateBindings();
       this.onPopinLayoutChanged();
-
+      this.getUserRoleData();
 
 		},
     onPressNavigate:function(){

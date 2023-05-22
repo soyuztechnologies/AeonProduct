@@ -27,6 +27,7 @@ sap.ui.define([
 			this.getModel("appView").updateBindings();
 			this.loadForm();
 			this.loadForm2();
+			this.getUserRoleData();
 
 			// this.getJobsData();
 		},

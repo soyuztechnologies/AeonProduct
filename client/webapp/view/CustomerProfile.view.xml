@@ -6,26 +6,28 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:core="sap.ui.core">
 
+    <Page showHeader="false" id="profile_Id" >
     <ux:ObjectPageLayout id="ObjectPageLayout" showTitleInHeaderContent="true" alwaysShowContentHeader="false" preserveHeaderStateOnScroll="false" headerContentPinnable="true" isChildPage="true" upperCaseAnchorBar="false">
 
         <ux:headerTitle>
             <ux:ObjectPageDynamicHeaderTitle>
                 <ux:expandedHeading>
-                    <Title text="Tarun Makara" wrapping="true" class="sapUiSmallMarginEnd"/>
+                    <Title text="{appView>FirstName}" wrapping="true" class="sapUiSmallMarginEnd"/>
                 </ux:expandedHeading>
 
                 <ux:snappedHeading>
                     <FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
                         <FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
                             <f:Avatar src="../../../../../../../{products>ProductPicUrl}" displaySize="S" displayShape="Square"/>
-                            <Title text="Tarun" wrapping="true" class="sapUiTinyMarginEnd"/>
+                            <Title text="{appView>FirstName}" wrapping="true" class="sapUiTinyMarginEnd"/>
                         </FlexBox>
                     </FlexBox>
                 </ux:snappedHeading>
 
 
                 <ux:actions>
-                    <Button text="Edit" press="toggleAreaPriority" icon="sap-icon://edit"/>
+                    <Button text="Edit" press="onEditCustomerProfile" icon="sap-icon://edit" visible="{appView>/editVisible}"/>
+                    <Button text="Update" press="updateCustomerData" icon="sap-icon://edit" visible="{appView>/updateVisible}"/>
                 </ux:actions>
 
 
@@ -37,8 +39,8 @@
                 </f:Avatar>
                 <VBox justifyContent="Center" class="sapUiSmallMarginEnd">
                     <!-- <m:Label text="Main Category"/> -->
-                    <Text text="DEMO Customer D'ALESSANDRO"/>
-                    <Text text="Mail Addresscustomer@gmail.com"/>
+                    <Text text="{appView>CompanyAddress}"/>
+                    <Text text="{appView>CompanyEmail}"/>
 
                 </VBox>
                 <!-- <m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
@@ -47,7 +49,7 @@
         </m:VBox> -->
                 <VBox justifyContent="Center" class="sapUiSmallMarginEnd">
                     <Label text="Status"/>
-                    <ObjectNumber number="Approved" emphasized="false"/>
+                    <ObjectNumber number="{appView>Status}" emphasized="true" 	state="Success"/>
                 </VBox>
             </FlexBox>
         </ux:headerContent>
@@ -82,7 +84,7 @@
         </ux:ObjectPageSection>
 
     </ux:ObjectPageLayout>
-
+</Page>
 
 </mvc:View>
 
