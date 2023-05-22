@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="ent.ui.ecommerce.controller.welcomePrinter" >
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="ent.ui.ecommerce.controller.allPrinters" >
   <Page id='idWelcomeP' title="Welcome Printer" >
     <!-- <List id="idMyList" >
 		<ObjectListItem

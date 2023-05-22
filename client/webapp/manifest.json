@@ -131,9 +131,9 @@
 					"target": "updatePassword"
 				},
 				{
-					"pattern":"welcomePrinter",
-					"name":"welcomePrinter",
-					"target":"welcomePrinter"
+					"pattern":"allPrinters",
+					"name":"allPrinters",
+					"target":"allPrinters"
 				},
 				{
 					"pattern": "UploadDocuments",
@@ -146,9 +146,9 @@
 					"target":"Profile"
 				},
 				{
-					"pattern":"printingDetails/{jobId}",
+					"pattern":"allPrinters/{jobId}",
 					"name":"printingDetails",
-					"target":["welcomePrinter","printingDetails"]
+					"target":["allPrinters","printingDetails"]
 				},
 				{
 					"pattern":"userDetails",
@@ -170,11 +170,11 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId": "notFound"
 				},
-				"welcomePrinter":{
-					"viewName":"welcomePrinter",
+				"allPrinters":{
+					"viewName":"allPrinters",
 					"viewLevel":1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"welcomePrinter"
+					"viewId":"allPrinters"
 				},
 				"Carborator":{
 					"viewName": "Carborator",

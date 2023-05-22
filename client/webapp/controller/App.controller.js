@@ -80,8 +80,8 @@ sap.ui.define(
         // if (nav === "PrintingDetails") {
         //   this.getRouter().navTo("printingDetails");
         // }
-        if (nav === "WelcomePrinters") {
-          this.getRouter().navTo("welcomePrinter");
+        if (nav === "allPrinters") {
+          this.getRouter().navTo("allPrinters");
         }
         if (nav === "UploadXml") {
           this.getRouter().navTo("Carborator");

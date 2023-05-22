@@ -5,11 +5,11 @@ sap.ui.define([
 ], function (BaseController, JSONModel, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("ent.ui.ecommerce.controller.welcomePrinter", {
+	return BaseController.extend("ent.ui.ecommerce.controller.allPrinters", {
 
 		onInit: function () {
 			this._oRouter = this.getRouter();
-			this.getRouter().getRoute("welcomePrinter").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("allPrinters").attachPatternMatched(this._matchedHandler, this);
 		},
 		_matchedHandler:function(oEvent){
 			// var  PrintingId = oEvent.getParameter("arguments").PrintingId;

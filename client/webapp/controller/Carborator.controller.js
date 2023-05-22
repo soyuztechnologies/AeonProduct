@@ -29,7 +29,7 @@ sap.ui.define([
 
 		},
     onPressNavigate:function(){
-      this.getRouter().navTo("welcomePrinter");
+      this.getRouter().navTo("allPrinters");
     },
     // onFileUploadChange: function (oEvent) {
     //     // debugger;
@@ -160,7 +160,6 @@ sap.ui.define([
           // Handle the retrieved data
           // var aEntities = data.results; // Access the array of retrieved entities
           // ...
-          
           },
           error: function(error) {
           // Error callback
