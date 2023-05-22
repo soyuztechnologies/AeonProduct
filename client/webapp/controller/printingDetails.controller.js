@@ -25,11 +25,35 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/updBtnVisibility", false);
 			this.getView().getModel("appView").setProperty("/onClickModify", false);
 			this.getModel("appView").updateBindings();
+			debugger;
 			this.loadForm();
 			this.loadForm2();
-
-			// this.getJobsData();
+			var oArgs = oEvent.getParameter("arguments").jobId;
+			this.oGetAgru(oArgs);
 		},
+		oGetAgru: function(oArgs){
+			debugger;
+			var that = this;
+			var oModel= this.getView().getModel();
+			oModel.read("/Jobs('" + oArgs +"')", {
+				success: function(data) {
+					debugger;
+				// Success callback
+				MessageToast.show("Data get  successfully");
+				that.getView().getModel("appView").setProperty("/Jobs", data);
+				// Handle the retrieved data
+				// var aEntities = data.results; // Access the array of retrieved entities
+				// ...
+				
+				},
+				error: function(error) {
+					debugger;
+				// Error callback
+				that.middleWare.errorHandler(error, that);
+				MessageToast.show("Error reading data");
+				}
+			  });
+			},
 		onClickModify: function () {
 
 			this.getView().getModel("appView").setProperty("/inputEditable", true)
@@ -42,16 +66,17 @@ sap.ui.define([
 		},
 		loadForm: function () {
 			debugger;
-			var oSimpleForm = this.getView().byId('SimpleForm-1')
+			var oSimpleForm = this.getView().byId('jobDetails')
 			// oSimpleForm.setModel('appView');
-			oSimpleForm.bindElement('appView>/datas');
+			oSimpleForm.bindElement('appView>/Jobs');
+			// MessageToast.show("Checking...")
 
 
 		},
 		loadForm2: function () {
 
-			var oSimpleForm2 = this.getView().byId('SimpleForm2');
-			oSimpleForm2.bindElement('appView>/datas')
+			var oSimpleForm2 = this.getView().byId('jobStatus');
+			oSimpleForm2.bindElement('appView>/Jobs');
 		},
 		onClickPopup: function () {
 			var oView = this.getView();
