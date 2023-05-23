@@ -24,33 +24,54 @@
             "default": "Pending"
         },
 		"Printing": {
-            "type": "Number",
+            "type": "string",
             "default": null
         },
 		"Foiling": {
-            "type": "Number",
+            "type": "string",
             "default": null
         },
 		"Coating": {
-            "type": "Number",
+            "type": "string",
             "default": null
         },
 		"InvNo": {
-            "type": "Number",
+            "type": "string",
             "default": null
         },
 		"DeliveryNo": {
-            "type": "Number",
+            "type": "string",
             "default": null
         },
 		"Embossing": {
-            "type": "Number",
+            "type": "string",
             "default": null
         },
 		"Pasting": {
-            "type": "Number",
+            "type": "string",
             "default": null
-        }
+        },
+		"spotUV": {
+			"type":"string",
+			"default":null
+		},
+		"Punching": {
+			"type":"string",
+			"default":null
+		},
+		"Packing": {
+			"type":"string",
+			"default":null
+		},
+		"incAttachment":{
+			"type":"string",
+			"default":null
+		},
+		"deliveryAttachment":{
+			"type":"string",
+			"default":null
+		}
+		
 	},
 	"scope": {
 		"order": "CreatedOn DESC"

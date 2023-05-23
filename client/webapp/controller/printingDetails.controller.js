@@ -104,7 +104,7 @@ sap.ui.define([
 
 		onFileUploaddChange: function (oEvent) {
 
-			var that = this;getPa
+			var that = this;
 			var oFileUploader = oEvent.getSource();
 			var oFile = oEvent.getParameter("files")[0];
 			debugger;
@@ -190,64 +190,26 @@ sap.ui.define([
 		},
 		onUploadData: function () {
 			debugger;
-			var allInfo = this.getView().getModel('appView').getProperty("/customerId");
-			var deliveryDoc = this.getView().getModel('appView').getProperty("/pdfUrl");
-			var po = this.getView().getModel('appView').getProperty("/wordContent");
-			var img = this.getView().getModel('appView').getProperty('/imageContent');
-			if (deliveryDoc) {
-				debugger;
-				var payload1 = {
-					"attachment": deliveryDoc,
-
+			var oModel = this.getView().getModel();  //default model get at here
+			var that = this; 
+			var ids = this.getView().getModel('appView').getProperty("/jobId");
+			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
+			// Perform the read operation
+			const oUpdatedData = {
+			poAttachment: poFile,
+			// artworkAttachment:artworkFile
+		  };
+			oModel.update(`/Jobs('${ids}')`,oUpdatedData ,{
+				success: function(data) {
+					debugger;
+					MessageToast.show("Successfully Uploaded")
+				},
+				error: function(error) {
+				// Error callback
+				// that.middleWare.errorHandler(error, that);
+				MessageToast.show("Error reading data");
 				}
-
-
-				this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-					then(function () {
-						MessageToast.show("Document Uploaded Successfully")
-					})
-					.catch(function (error) {
-						that.middleWare.errorHandler(error, that);
-						MessageToast.show("Error:");
-					});
-
-			}
-			if (po) {
-				debugger;
-				var payload1 = {
-
-					"po": po
-
-				}
-
-
-				this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-					then(function () {
-						MessageToast.show("Document Uploaded Successfully")
-					})
-					.catch(function (error) {
-						that.middleWare.errorHandler(error, that);
-						MessageToast.show("Error:");
-					});
-			}
-			if (img) {
-				debugger;
-				var payload1 = {
-
-					"img": img
-
-				}
-
-
-				this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-					then(function () {
-						MessageToast.show("Document Uploaded Successfully")
-					})
-					.catch(function (error) {
-						that.middleWare.errorHandler(error, that);
-						MessageToast.show("Error:");
-					});
-			}
+			});
 
 		},
 
