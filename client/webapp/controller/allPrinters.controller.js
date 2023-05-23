@@ -1,8 +1,9 @@
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
-	"sap/m/MessageToast"
-], function (BaseController, JSONModel, MessageToast) {
+	"sap/m/MessageToast",
+	"sap/ui/core/BusyIndicator"
+], function (BaseController, JSONModel, MessageToast, BusyIndicator) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.allPrinters", {
@@ -36,6 +37,8 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
 			this.getJobsData();
+			this.getUserRoleData();
+
 		},
 		onListItemPress:function(oEvent){
 			debugger;
@@ -47,7 +50,7 @@ sap.ui.define([
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			debugger;
 			this.getView().getModel("appView").setProperty('/datas',datassss);
-			this.getView().getModel("appView").setProperty('/ids',datassss.poNo);
+			this.getView().getModel("appView").setProperty('/jobId',datassss.jobCardNo);
 			this.getModel("appView").updateBindings();
 			this.getRouter().navTo("printingDetails",{
 				jobId : datassss.jobCardNo
@@ -58,6 +61,7 @@ sap.ui.define([
 
 		getJobsData: function() {
 			debugger;
+			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this; 
 			// Perform the read operation
@@ -66,6 +70,7 @@ sap.ui.define([
 				// Success callback
 				// MessageToast.show("Data read successfully");
 				that.getView().getModel("appView").setProperty("/jobsData",data.results);
+				BusyIndicator.hide();
 				// Handle the retrieved data
 				// var aEntities = data.results; // Access the array of retrieved entities
 				// ...
@@ -74,6 +79,7 @@ sap.ui.define([
 				// Error callback
 				// that.middleWare.errorHandler(error, that);
 				MessageToast.show("Error reading data");
+				BusyIndicator.hide();
 				}
 			});
   

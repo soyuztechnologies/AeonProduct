@@ -191,13 +191,16 @@ sap.ui.define([
           MessageToast.show("Please Check Your Fields");
         }
         else{
-
+         debugger;
         var oModel = this.getView().getModel();  //default model get at here
         var that = this; 
         var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue"); 
         // Convert string to JSON object
         var payload = JSON.parse(oJsonInpValue);
-        payload.jobCardNo= "1007";
+        
+        payload.jobCardNo= "1005";
+        this.getView().getModel("appView").setProperty("/postId",payload.jobCardNo)
+        this.onUploadId();
 
         // post call for uploading the json into loopback 
 
@@ -208,6 +211,7 @@ sap.ui.define([
             // debugger;
 
 
+            
             MessageToast.show("Job created successfully");
           
           })
@@ -309,7 +313,45 @@ sap.ui.define([
         debugger;
         location.reload();
       },
-      
+      onUploadId: function () {
+        debugger;
+        var oModel = this.getView().getModel();  //default model get at here
+        var that = this;
+        var ids = this.getView().getModel("appView").getProperty("/postId")
+        const sEntityPath = `/JobStatus`;
+        // Perform the read operation
+        const oUpdatedData = {
+          
+            JobId: "Pending",
+            JobStatusId: ids,
+            rawMaterial: "Pending",
+            Printing: "Pending",
+            Foiling: "Pending",
+            Coating: "Pending",
+            InvNo: "Pending",
+            DeliveryNo: "Pending",
+            Embossing: "Pending",
+            Pasting: "Pending",
+            spotUV: "Pending",
+            Punching: "Pending",
+            Packing: "Pending",
+            incAttachment: "Pending",
+            deliveryAttachment: "Pending"
+          
+        };
+        oModel.create(sEntityPath, oUpdatedData, {
+          success: function (oUpdatedData) {
+            debugger;
+            MessageToast.show("Successfully Uploaded");
+          },
+          error: function (error) {
+            // Error callback
+            // that.middleWare.errorHandler(error, that);
+            MessageToast.show("Error reading data");
+          }
+        });
+  
+      },
       
       extracDbFields: function(data){
 
@@ -452,7 +494,7 @@ sap.ui.define([
           "value": "107mm",
           "label": "L",
           "dbField": "sizeL",
-          "group": "Size in mm",
+          "group": "Size in mm",
           "groupCell": "D13"
         },
         "E14": {
@@ -460,7 +502,7 @@ sap.ui.define([
           "value": "10mm",
           "label": "W",
           "dbField": "sizeW",
-          "group": "Size in mm",
+          "group": "Size in mm",
           "groupCell": "D13"
         },
         "F14": {
@@ -468,7 +510,7 @@ sap.ui.define([
           "value": "147mm",
           "label": "H",
           "dbField": "sizeH",
-          "group": "Size in mm",
+          "group": "Size in mm",
           "groupCell": "D13"
         },
         "G13": {

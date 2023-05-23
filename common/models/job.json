@@ -13,6 +13,16 @@
 			"required": true,
 			"id":true
 		},
+		"poAttachment":{
+			"type":"string",
+			"default":null,
+			"required":false
+		},
+		"artworkAttachment":{
+			"type":"string",
+			"default":null,
+			"required":false
+		},
 		"CustomerId": {
 			"type": "string",
 			"default": null

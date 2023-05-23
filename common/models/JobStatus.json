@@ -9,8 +9,8 @@
 	"properties": {
 		"JobId": {
 			"type": "string",
-			"default": null,
-			"required": true
+			"default": "Pending",
+			"required": false
 		},
 		"JobStatusId": {
 			"type": "string",
@@ -24,33 +24,54 @@
             "default": "Pending"
         },
 		"Printing": {
-            "type": "Number",
-            "default": null
+            "type": "string",
+            "default": "Pending"
         },
 		"Foiling": {
-            "type": "Number",
-            "default": null
+            "type": "string",
+            "default": "Pending"
         },
 		"Coating": {
-            "type": "Number",
-            "default": null
+            "type": "string",
+            "default": "Pending"
         },
 		"InvNo": {
-            "type": "Number",
-            "default": null
+            "type": "string",
+            "default": "Pending"
         },
 		"DeliveryNo": {
-            "type": "Number",
-            "default": null
+            "type": "string",
+            "default": "Pending"
         },
 		"Embossing": {
-            "type": "Number",
-            "default": null
+            "type": "string",
+            "default": "Pending"
         },
 		"Pasting": {
-            "type": "Number",
-            "default": null
-        }
+            "type": "string",
+            "default": "Pending"
+        },
+		"spotUV": {
+			"type":"string",
+			"default":"Pending"
+		},
+		"Punching": {
+			"type":"string",
+			"default":"Pending"
+		},
+		"Packing": {
+			"type":"string",
+			"default":"Pending"
+		},
+		"incAttachment":{
+			"type":"string",
+			"default":null
+		},
+		"deliveryAttachment":{
+			"type":"string",
+			"default":null
+		}
+		
 	},
 	"scope": {
 		"order": "CreatedOn DESC"
