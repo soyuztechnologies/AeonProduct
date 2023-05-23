@@ -20,7 +20,7 @@
 						<core:Title></core:Title>
 
 						<Label text="Artwork"></Label>
-						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
+						<Link press="onClickPopupArt" text="{appView>artworkCode}"></Link>
 
 						<Label text="Paper Board"></Label>
 						<Input editable="false" value="{appView>paperboard}"></Input>
@@ -65,7 +65,7 @@
 						<Label text="Delivery No."></Label>
 						<Input editable="{appView>/inputEditable}" value="{appView>deliveryno}"></Input>
 				</f:content> -->
-       <Table  id="jobStatusTab" autoPopinMode="true">
+       <Table items="{appView>/getData}"  id="jobStatusTab" autoPopinMode="true">
 		 <!-- visibleRowCount="4" selectionMode="Single" -->
 	     <columns>
 			<Column> 
@@ -154,7 +154,7 @@
 			<Toolbar>
 				<Button visible="{appView>/updBtnVisibility}"  icon="sap-icon://synchronize" type="Emphasized" text="Update" press="onClickUpdate"></Button>
 				<ToolbarSpacer />
-				<Button icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onClickModify"></Button>
+				<Button  icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onClickModify"></Button>
 			</Toolbar>
 		</footer>
 		<!-- </VBox> -->

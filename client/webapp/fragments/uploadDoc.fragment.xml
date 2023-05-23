@@ -9,22 +9,32 @@
     >
         
     <u:FileUploader
+    visible="{appView>/browseVis}"
     change="onFileUploaddChange"
+    buttonText="Browse"
+    fileType="docx,jpg,jpeg,xml,xlsx,pdf"
+    multiple="false" />
+    <u:FileUploader
+    visible="{appView>/browseVisArtwork}"
+    change="onFileUploaddChangeArtwork"
     buttonText="Browse"
     fileType="docx,jpg,jpeg,xml,xlsx,pdf"
     multiple="false" />
     </HBox>
 
     <PDFViewer visible="{appView>/pdfVisibility}" source="{path: 'appView>/pdfUrl', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" />
-        <Image visible="{appView>/imgVisibility}"  id="image" src="{appView>/imageContent}" />
+    <PDFViewer visible="{appView>/pdfartworkVisibility}" source="{path: 'appView>/pdfArtwork', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" />
+    <PDFViewer visible="{appView>/viewPo}"  errorPlaceholderMessage="File Not Attached" source="{path: 'appView>/pdfUrldec', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" />
+    <PDFViewer visible="{appView>/viewArt}" errorPlaceholderMessage="File Not Attached" source="{path: 'appView>/pdfUrlartwork', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" />
+    <Image visible="{appView>/imgVisibility}"  id="image" src="{appView>/imageContent}" />
 
 
     </content>
     <beginButton>
-        <Button text="Upload" type="Accept" press="onUploadData" enabled="{appView>/submitEnable}"/>
+        <Button visible="{appView>/btnVisibility}" text="Upload" type="Accept" press="onUploadData" enabled="{appView>/submitEnable}"/>
     </beginButton>
     <endButton>
-        <Button text="Cancel" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
+        <Button text="Close" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
     </endButton>
 </Dialog>		
 </core:FragmentDefinition>

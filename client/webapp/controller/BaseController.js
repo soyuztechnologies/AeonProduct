@@ -56,7 +56,7 @@ sap.ui.define([
 			}
 			else if(sUserRole === "Customer"){
 				this.getView().getModel("appView").setProperty('/upDocNavVisb',false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb',false);
+				this.getView().getModel("appView").setProperty('/welPrintNavVisb',true);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb',false);
 			}
 			else if (sUserRole === "Factory Manager"){

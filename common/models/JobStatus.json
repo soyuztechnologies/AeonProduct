@@ -9,8 +9,8 @@
 	"properties": {
 		"JobId": {
 			"type": "string",
-			"default": null,
-			"required": true
+			"default": "Pending",
+			"required": false
 		},
 		"JobStatusId": {
 			"type": "string",
@@ -25,43 +25,43 @@
         },
 		"Printing": {
             "type": "string",
-            "default": null
+            "default": "Pending"
         },
 		"Foiling": {
             "type": "string",
-            "default": null
+            "default": "Pending"
         },
 		"Coating": {
             "type": "string",
-            "default": null
+            "default": "Pending"
         },
 		"InvNo": {
             "type": "string",
-            "default": null
+            "default": "Pending"
         },
 		"DeliveryNo": {
             "type": "string",
-            "default": null
+            "default": "Pending"
         },
 		"Embossing": {
             "type": "string",
-            "default": null
+            "default": "Pending"
         },
 		"Pasting": {
             "type": "string",
-            "default": null
+            "default": "Pending"
         },
 		"spotUV": {
 			"type":"string",
-			"default":null
+			"default":"Pending"
 		},
 		"Punching": {
 			"type":"string",
-			"default":null
+			"default":"Pending"
 		},
 		"Packing": {
 			"type":"string",
-			"default":null
+			"default":"Pending"
 		},
 		"incAttachment":{
 			"type":"string",
