@@ -25,6 +25,7 @@ sap.ui.define([
 				this.getModel('appView').setProperty('/EmailVisible', false);
 				this.getModel('appView').setProperty('/updateVisible', false);
 			};
+			this.getUserRoleData();
 			this.getUserData();
 			this.getModel("appView").updateBindings();
 		},
