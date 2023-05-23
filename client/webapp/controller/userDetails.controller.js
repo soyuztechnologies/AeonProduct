@@ -22,29 +22,19 @@ sap.ui.define([
 				this.getModel('appView').setProperty('/editableFields', true);
 				this.getModel('appView').setProperty('/EmailVisible', true);
 				this.getModel('appView').setProperty('/Passwordfield', true);
-				// this.getModel('appView').setProperty('/requiredFields', true);
 			};
+			var omodel = this.getView().getModel("appView");
+			omodel.setProperty("/newPass",false);
+			omodel.setProperty("/conPass",false);
 
 			this.getUserData();
 			this.getUserRoleData();
 			this.getModel("appView").updateBindings();
 		},
-		randomPaswordGenerate : function(){
-			const length = 8;
-			const specialChars = '!@#$%^&*';
-			const getRandomChar = (characters) => characters[Math.floor(Math.random() * characters.length)];
-			let password = '';
-			for (let i = 0; i < length - 2; i++) password += String.fromCharCode(97 + Math.floor(Math.random() * 26));
-			password += getRandomChar(specialChars);
-			password += String.fromCharCode(65 + Math.floor(Math.random() * 26));
-			return password.split('').sort(() => Math.random() - 0.5).join('');
-		},
-
 		onRoleChange : function(oEvent){
 			debugger;
 			var oSelectedKey = oEvent.getParameter("selectedItem").getKey();
 			var oModel = this.getView().getModel("appView");
-			
 			oModel.setProperty('/selectedrole',oSelectedKey)
 		},
 		AddUserDialog : function(){
@@ -54,7 +44,7 @@ sap.ui.define([
 			// var oPersonalDetailsForm = this.getView().byId('idPersonalDetails');
 
 			this.oFormData = {
-					"email": "",
+					"EmailId": "",
 					"CompanyEmail": "",
 					"CompanyName": "",
 					"GSTNO": "",
@@ -117,9 +107,9 @@ sap.ui.define([
 				// that.getView().getModel("appView").setProperty("/status",data.tatus);
 				},
 				error: function(error) {
-				// Error callback
-				that.middleWare.errorHandler(error, that);
-				MessageToast.show("Error reading data");
+					// Error callback
+					that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
 				}
 			});
 		},
@@ -136,19 +126,19 @@ sap.ui.define([
 			// const sEntityPath = `/AppUsers/`+ custid; // Replace with the appropriate entity set name and ID
 			
 			const oData = {
-			// Update the properties of the entity
-			"Status": selectedItem
-			// Add more properties as needed
+				// Update the properties of the entity
+				"Status": selectedItem
+				// Add more properties as needed
 			};
-
-		oModel.update(sEntityPath, oData, {
-			success: function(data) {
-				MessageToast.show("Customer " + selectedItem + " selected successfully");
-			},
-			error: function(error) {
-				this.middleWare.errorHandler(error, that);
-				// console.error("PATCH request failed");
-			}
+			
+			oModel.update(sEntityPath, oData, {
+				success: function(data) {
+					MessageToast.show("Customer " + selectedItem + " selected successfully");
+				},
+				error: function(error) {
+					this.middleWare.errorHandler(error, that);
+					// console.error("PATCH request failed");
+				}
 			});
 		},
 		onBlockCustomer:function(oEvent){
@@ -165,22 +155,54 @@ sap.ui.define([
 			// const sEntityPath = `/AppUsers/`+ custid; // Replace with the appropriate entity set name and ID
 			
 			const oData = {
-			// Update the properties of the entity
-			"Blocked": state
-			// Add more properties as needed
+				// Update the properties of the entity
+				"Blocked": state
+				// Add more properties as needed
 			};
-
-		oModel.update(sEntityPath, oData, {
-			success: function(data) {
-				MessageToast.show("Customer Blocked Status is Changed Successfully")
-				// console.log("PATCH request successful:", data);
-			},
-			error: function(error) {
-				// this.middleWare.errorHandler(error, that);
-				MessageToast.show("Error while update the status")
-				// console.error("PATCH request failed");
-			}
+			
+			oModel.update(sEntityPath, oData, {
+				success: function(data) {
+					MessageToast.show("Customer Blocked Status is Changed Successfully")
+					// console.log("PATCH request successful:", data);
+				},
+				error: function(error) {
+					// this.middleWare.errorHandler(error, that);
+					MessageToast.show("Error while update the status")
+					// console.error("PATCH request failed");
+				}
 			});
+		},
+		showPassField : function(oEvent){
+			debugger;
+			var passSwitchState = oEvent.getParameter('state');
+			var omodel = this.getView().getModel("appView");
+			if(passSwitchState === false){
+				omodel.setProperty("/newPass",true);
+				omodel.setProperty("/conPass",true);
+			}
+			else{
+			omodel.setProperty("/newPass",false);
+			omodel.setProperty("/conPass",false);
+			}
+		},
+
+		onAddUserViaAdmin : function(oEvent){
+			debugger;
+			var oModel = this.getView().getModel("appView");
+			var pass = oModel.getProperty("/conPassWord");
+			var Conpass = oModel.getProperty("/NewPassword");
+			this.oFormData.PassWord = Conpass;
+			 if(!pass && !Conpass) {
+				MessageToast.show("Please Enter the Password");
+			 }
+			 else if (pass !== Conpass ){
+				MessageToast.show("Passwords doesn't Match");
+			 }
+			 else if (pass === Conpass) {
+				MessageToast.show("Matched Password");
+			 }
+
+			 this.AddCustomers();
 		},
 		AddCustomers : function(){
 			debugger;
@@ -192,6 +214,7 @@ sap.ui.define([
 					// debugger
 					MessageToast.show("User Created Successfully");
 					that.onReject();
+					that.onRejectPass();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					// that.getView().byId("userid").setValueState('Error');
@@ -201,9 +224,56 @@ sap.ui.define([
 		},
 
 		openPassdialog : function(){
+			debugger;
 			var oView = this.getView();
             var that = this;
-            if (!this.passDialog) {
+			var oModel = this.getView().getModel('appView');
+			var roleUSerSelected =  oModel.getProperty('/selectedrole');
+			var Email = this.oFormData.EmailId;
+			var phone = this.oFormData.phoneNumber;
+			var firstName =  this.oFormData.FirstName;
+			var lastName = this.oFormData.LastName;
+			var address = this.oFormData.CompanyAddress;
+			var billingCity = this.oFormData.BillingCity;
+			var ShippingCity = this.oFormData.ShippingCity;
+			var phoneRegex = /^\d{10}$/;
+			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+
+			if (phone && !phone.match(phoneRegex)) {
+			MessageToast.show("Phone number should be 10 digits");
+			return;
+			}
+			if (Email && !Email.match(emailRegex)) {
+				MessageToast.show("Please enter a valid email address");
+				return;
+			}
+
+			if(!roleUSerSelected){
+				MessageToast.show("Please Select a Role for the New user");
+				return;
+			}
+			if(roleUSerSelected === "Admin" && !Email ){
+				MessageToast.show("Please enter the email address");
+				return;
+			};
+			if(roleUSerSelected === "Customer" && (!Email || !phone || !firstName || !lastName || !address || !billingCity || !ShippingCity)) {
+				MessageToast.show("Please enter the required fields");
+				return;
+			  }
+			  
+			  if(roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
+				MessageToast.show("Please enter the required fields");
+				return;
+			  }
+			  
+
+			this.openDialog();
+		},
+		openDialog:function(){
+			var oView = this.getView();
+            var that = this;
+		if (!this.passDialog) {
                 this.passDialog = Fragment.load({
                     id: oView.getId(),
                     name: "ent.ui.ecommerce.fragments.AddUserPass",

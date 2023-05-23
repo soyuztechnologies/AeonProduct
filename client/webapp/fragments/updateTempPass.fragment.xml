@@ -4,29 +4,24 @@
     xmlns:i="sap.ui.core"	
     xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog title="Add PassWord" showHeader="true" >
+    <Dialog title="update Your PassWord" showHeader="true" >
     <f:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false">
         <f:content>
-            <VBox >
-                <Text text="You May Enter the PassWord Manaualy"></Text>
-                <Switch state="true" change="showPassField"  customTextOn="Yes" customTextOff="No" >
-                    <layoutData>
-                        <FlexItemData growFactor="3" />
-                    </layoutData>
-                </Switch>
-            </VBox>
+            <Label text="Temporary Password"/>
+            <Input value = "{appView>/prevPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" />
+
             <Label text="New PassWord"/>
-            <Input value = "{appView>/NewPassword}" visible="{appView>/newPass}" />
+            <Input value = "{appView>/Pass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" />
                 
             <Label text="Confirm New PassWord"/>
-            <Input value ="{appView>/conPassWord}" visible="{appView>/conPass}"/>
+            <Input value ="{appView>/NewPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password"  />
         </f:content>
     </f:SimpleForm>
     <beginButton>
-        <Button text="OK" type="Accept" press="onAddUserViaAdmin" />
+        <Button text="OK" type="Accept" press="onUpdatePassOk" />
     </beginButton>
     <endButton>
-        <Button text="Cancel" type="Reject" press="onRejectPass" />
+        <Button text="Cancel" type="Reject" press="onRejectCan" />
     </endButton>
     </Dialog>
 </core:FragmentDefinition>

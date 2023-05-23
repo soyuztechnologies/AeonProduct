@@ -292,27 +292,56 @@ app.post('/reset/password', async (req, res) => {
     try {
         const {email,password } = req.body;
 
+		const User = await this.User.findOne({ where: { email } });
+	if (User) {
+		 // Update the password in both tables
+		 User.updateAttributes({ password: password }, (err, updatedUser) => {
+			if (err) {
+			  console.error('Error updating password:', err);
+			  return res.status(500).send('Internal server error');
+			}
+	  
+			// // Update the password in the AppUser table
+			// AppUser.updateAttributes({ TechnicalId: user.id }, { password: newPassword }, (err) => {
+			//   if (err) {
+			// 	console.error('Error updating password in AppUser table:', err);
+			// 	return res.status(500).send('Internal server error');
+			//   }
+	  
+			  return res.status(200).send('Password updated successfully');
+			});
+		//   });
+	  }
+
+
+
         // // Verify the token
         // const decodedToken = jwt.verify(token, 'your_secret_key');
         // const email = decodedToken.email;
 
         // Find the user
-        const Appuser = await this.AppUser.findOne({ where: { EmailId:email } });
-		const  user = await this.User.findOne({ where: {email}});	
-        if (!Appuser) {
-            return res.status(404).json({ error: 'User not found' });
-        };
+        // const Appuser = await this.AppUser.findOne({ where: { EmailId:email } });
+		// const  user = await this.User.findOne({ where: {email}});	
+        // if (!Appuser) {
+        //     return res.status(404).json({ error: 'User not found' });
+        // };
 		
-		if(!user) {
-			return res.status(404).json({ error: 'User not found' });
-		};
-		// Update the user's password
-		user.password = password;
-		await user.save();
-		// Update the user's password
-		Appuser.password = password;
-		await Appuser.save();
-        res.status(200).json({ message: 'Password reset successful' });
+		// if(!user) {
+		// 	return res.status(404).json({ error: 'User not found' });
+		// };
+		// user.updateAttributes({ password: password }, (err, updatedUser) => {
+		// 	if (err) {
+		// 	  console.error('Error updating password:', err);
+		// 	  return res.status(500).send('Internal server error');
+		// 	}
+		// });
+		// // Update the user's password
+		// user.password = password;
+		// await user.save();
+		// // Update the user's password
+		// Appuser.password = password;
+		// await Appuser.save();
+        // res.status(200).json({ message: 'Password reset successful' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });
@@ -554,46 +583,77 @@ app.get('/Appusers', async (req, res) => {
 //  ######################################################################
 // 							Login call 
 //  ########################################################################
-
 app.post('/login', async (req, res) => {
 	debugger;
 	this.User = app.models.User;
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
-	
+  
 	const { email, password } = req.body;
-	// const username = email.substring(0, email.indexOf("@"));
-	
+  
 	if (!email || !password) {
 	  return res.status(400).json({ error: 'Email and password are required' });
 	}
-	
+  
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	
+  
 	if (!emailRegex.test(email)) {
 	  return res.status(400).json({ error: 'Invalid email format' });
 	}
-
-	data ={
-		email,
-		password
+  
+	data = {
+	  email,
+	  password
+	};
+	try {
+		const [user, appUser] = await Promise.all([
+		  this.User.login(data),
+		  this.AppUser.findOne({ where: { EmailId: email } })
+		]);
+	  
+		let tempPass = null;
+		let temp = false;
+		
+		const tempUser = await this.User.findOne({ where: { email, TempPass: password } });
+		if (tempUser) {
+		  tempPass = tempUser.TempPass;
+		  temp = true;
+		}
+	  
+		// Extract the required data from the user object
+		const { id, ttl, created, userId } = user;
+	  
+		// Retrieve the status and role of the user from the appUsers table
+		const { Status, Blocked, Role } = appUser;
+	  
+		return res.status(200).json({ id, Status, Role, ttl, created, userId, Blocked, temp, tempPass });
+	  } catch (error) {
+		return res.status(400).json({ error: 'Invalid email or password' });
 	  }
 	  
-	try {
-	  const user = await this.User.login(data);
-	  // Extract the required data from the user object
-	  const {id,ttl,created,userId } = user;
-	
-	 // Retrieve the status and role of the user from the appUsers table
-	 const appUser = await this.AppUser.findOne({ where: { EmailId : email} });
-	 const { Status, Blocked,Role } = appUser;
- 
-	 return res.status(200).json({ id, Status, Role, ttl, created, userId,Blocked });
-   } catch (error) {
-	 return res.status(400).json({ error: 'Invalid email or password' });
-   }
+  
+	// try {
+	// const tempUser = await this.User.findOne({ where: { email, TempPass: password } });
+	// const {TempPass} = tempUser
+	//   const temp = tempUser ? true : false;
 
- });
+	//   const user = await this.User.login(data);
+	//   // Extract the required data from the user object
+	//   const { id, ttl, created, userId } = user;
+  
+	//   // Retrieve the status and role of the user from the appUsers table
+	//   const appUser = await this.AppUser.findOne({ where: { EmailId: email } });
+	//   const { Status, Blocked, Role } = appUser;
+  
+	  
+		
+	  
+	//   return res.status(200).json({ id, Status, Role, ttl, created, userId, Blocked, temp ,TempPass});
+	// } catch (error) {
+	//   return res.status(400).json({ error: 'Invalid email or password' });
+	// }
+  });
+  
   
 
 //  ######################################################################
@@ -632,8 +692,9 @@ app.post('/addUserAdmin', async(req, res) => {
 	
 try{
 	let userTable =await this.User.findOne({ where: {email: email} });
-	if(userTable=="" || userTable== null){
-		var newUser = await this.User.create({ email, password, Role, CreatedOn: new Date(),status:"Pending" });
+	if(!userTable){
+		var newUser = await this.User.create({ email, TempPass:password, password, Role, CreatedOn: new Date(),status:"Pending" });
+
 	}
 	else{
 		res.status(400).json("User Already Exists with this email address");
@@ -914,6 +975,40 @@ app.get('/getUserRole',  async(req, res) => {
   
 	// Send a response indicating successful logout
 	res.json({ message: 'Logout successful' });
+  });
+
+
+// logout call 
+  app.post('/updatePassword', async(req, res) => {
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+
+	const { email, password, newPassword } = req.body;
+
+	const tempUser = await this.User.findOne({ where: { email, TempPass: password } });
+	if (tempUser) {
+		 // Update the password in both tables
+		 tempUser.updateAttributes({ password: newPassword }, (err, updatedUser) => {
+			if (err) {
+			  console.error('Error updating password:', err);
+			  return res.status(500).send('Internal server error');
+			}
+	  
+			// // Update the password in the AppUser table
+			// AppUser.updateAttributes({ TechnicalId: user.id }, { password: newPassword }, (err) => {
+			//   if (err) {
+			// 	console.error('Error updating password in AppUser table:', err);
+			// 	return res.status(500).send('Internal server error');
+			//   }
+	  
+			  return res.status(200).send('Password updated successfully');
+			});
+		//   });
+	  }
+
+  
+
   });
   
   

@@ -70,8 +70,8 @@ sap.ui.define([
 
         onCreateUser: function (oEvent) {
             var that = this;
-            var pass = this.getModel("appView").getProperty('/Pass');
-            var Conpass = this.getModel("appView").getProperty('/ConPass');
+            var pass = this.getModel("appView").getProperty('/setNewPass');
+            var Conpass = this.getModel("appView").getProperty('/setConPass');
             var oRouteName = oEvent.getParameter("name") === "userVerify";
             if (pass !== Conpass) {
                 MessageToast.show("Password Does not match")
@@ -86,8 +86,8 @@ sap.ui.define([
                     .then(function (data, status, xhr) {
                         debugger;
                         MessageToast.show("User Register Successful");
-                        this.onReject();
-                        this.timerText();
+                        that.onReject();
+                        that.timerText();
 
                     })
                     .catch(function (jqXhr, textStatus, errorMessage) {

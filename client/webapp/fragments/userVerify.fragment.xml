@@ -12,9 +12,9 @@
             <Input  value="{appView>/userEmail}" editable="false"></Input>
 
             <Label text="Password" />
-            <Input placeholder="Password" value=""></Input>
+            <Input placeholder="Password" value="{appView>/setNewPass}"></Input>
             <Label text="Confirm Password" />
-            <Input placeholder="Confirm Password" value=""></Input>
+            <Input placeholder="Confirm Password" value="{appView>/setConPass}"></Input>
             
         </f:content>
     </f:SimpleForm>

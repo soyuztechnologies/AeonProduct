@@ -15,27 +15,27 @@
 
 
             <Label required="{=${appView>/selectedrole} ? true : false}" text="Mail Address"/>
-            <Input value = "{appView>EmailId}"  editable="{appView>/EmailVisible}"/>
+            <Input required ="{=${appView>/selectedrole} ? true : false}" value = "{appView>EmailId}"  editable="{appView>/EmailVisible}"/>
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Company Name"/>
-            <Input value = "{appView>CompanyName}" editable="{appView>/editableFields}"/>
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyName}" editable="{appView>/editableFields}"/>
 
             <Label text="Gst Number"/>
             <Input value = "{appView>GSTNO}"   editable="{appView>/editableFields}"/>
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Company Address"/>
-            <Input value = "{appView>CompanyAddress}" editable="{appView>/editableFields}" />
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyAddress}" editable="{appView>/editableFields}" />
 
             <Label text="Website"/>
             <Input value = "{appView>Website}"  editable="{appView>/editableFields}"/>
 
             <Label required="{=${appView>/selectedrole} ? ${appView>/selectedrole} === 'Admin' ? false : true : false}" text="Company Phone Number"/>
-            <Input value = "{appView>phoneNumber}" editable="{appView>/editableFields}"/>
+            <Input required="{=${appView>/selectedrole} ? ${appView>/selectedrole} === 'Admin' ? false : true : false}" value = "{appView>phoneNumber}" editable="{appView>/editableFields}"/>
 
             
 
-            <Label text="Password"/>
-            <Input value = "{appView>PassWord}" visible="{appView>/Passwordfield}" />
+                <!-- <Label text="Password"/>
+                <Input value = "{appView>PassWord}" visible="{appView>/Passwordfield}" /> -->
         </form:content>
     </form:SimpleForm>
 </core:FragmentDefinition>

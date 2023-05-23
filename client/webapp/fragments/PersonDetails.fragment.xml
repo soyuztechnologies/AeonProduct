@@ -13,16 +13,16 @@
             </Select>
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="First Name"/>
-            <Input value = "{appView>FirstName}" editable="{appView>/editableFields}"/>
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>FirstName}" editable="{appView>/editableFields}"/>
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Last Name"/>
-            <Input value = "{appView>LastName}" editable="{appView>/editableFields}"/>
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>LastName}" editable="{appView>/editableFields}"/>
            
             <Label text="Company Logo"/>
             <Input value = "{appView>CompanyLogo}" editable="{appView>/editableFields}"/>
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Personal Mail Address"/>
-            <Input value = "{appView>EmailId}" editable="{appView>/EmailVisible}"/>
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>EmailId}" editable="{appView>/EmailVisible}"/>
         </form:content>
     </form:SimpleForm>
     <!-- </Dialog>	 -->

@@ -9,6 +9,7 @@ sap.ui.define([
 	"use strict";
 	// try {
 		var isSignupButton = false; // Global flag variable
+		var uId;
 	return BaseController.extend("ent.ui.ecommerce.controller.Login", {
 		onInit: function onInit(oEvent) {
 			this.getRouter()
@@ -43,6 +44,23 @@ sap.ui.define([
 					if(data.Blocked=="Yes"){
 						MessageBox.information("Your Account has been blocked by Administrator, For Further Details Contact Admin");
 					}
+					else if(data.temp === true){
+						that.openUpdateDialog();
+					}
+					else if(data.Role==="Customer"){
+						that.getModel("appView").setProperty("/visibleHeader", true);
+						that.getView().byId("userid").setValueState('None');
+						that.getView().byId("pwd").setValueState('None');
+						that.getModel("appView").updateBindings();
+						that.getRouter().navTo("allPrinters");
+					}
+					else if(data.Role==="Factory Manager"){
+						that.getModel("appView").setProperty("/visibleHeader", true);
+						that.getView().byId("userid").setValueState('None');
+						that.getView().byId("pwd").setValueState('None');
+						that.getModel("appView").updateBindings();
+						that.getRouter().navTo("allPrinters");
+					}
 					else {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getView().byId("userid").setValueState('None');
@@ -50,6 +68,7 @@ sap.ui.define([
 						that.getModel("appView").updateBindings();
 						that.getRouter().navTo("Carborator");
 					}
+					uId = data.userId;
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
@@ -78,6 +97,67 @@ sap.ui.define([
 
 		
 
+		openUpdateDialog : function(){
+			debugger
+			var oView = this.getView();
+            var that = this;
+			
+            if (!this.passUpdateDialog) {
+                this.passUpdateDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "ent.ui.ecommerce.fragments.updateTempPass",
+                    controller: this
+                }).then(function (oDialog) {    
+                    // Add dialog to view hierarchy
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+               
+            }
+            this.passUpdateDialog.then(function (oDialog) {
+					oDialog.open();
+            });
+		},
+
+		onUpdatePassOk : function(){
+			// Regular expression to check for password validation
+ 			 var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+			 var oModel = this.getView().getModel("appView");
+			 var passValue =  oModel.getProperty("/Pass");
+			 var conPassValue = oModel.getProperty("/NewPass");
+			 var prevPass = oModel.getProperty("/prevPass");
+			 var userName = this.getView().byId("userid").getValue();
+
+			 if (!passwordRegex.test(passValue) || !passwordRegex.test(conPassValue)) {
+				MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+				return;
+			  }
+
+			if(!conPassValue || !passValue) {
+				MessageToast.show("Enter the Password");
+			}
+			else if(conPassValue !== passValue){
+				MessageToast.show("Your Entered Password is not similar");
+			}
+			var payload = {
+				email:userName, 
+				password:prevPass, 
+				newPassword:conPassValue
+			}
+	
+			this.middleWare.callMiddleWare("updatePassword", "POST", payload)
+				.then( function (data, status, xhr) {
+					debugger;
+					MessageToast.show(" Success");
+
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+
+					
+
+		},
 		openDialog : function(){
 			debugger
 			var oView = this.getView();
@@ -107,9 +187,6 @@ sap.ui.define([
 					oModel.setProperty("/Email","");
 					oModel.updateBindings();
 				}
-                // that.onRefresh(/);
-                
-                // that.getView().getModel('local').refresh();
             });
 		},
 
