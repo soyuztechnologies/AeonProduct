@@ -1,8 +1,6 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table" xmlns:f="sap.ui.layout.form" controllerName="ent.ui.ecommerce.controller.printingDetails">
 	<Page title="Job Details"> 
-          <!-- <headerContent></headerContent> -->
-		<!-- <VBox class="sapUiSmallMargin"> -->
-			<f:SimpleForm title="O79 JNM RPRNT DCLRS 2D 04" id="jobDetails" editable="true" layout="ResponsiveGridLayout"  >
+		<f:SimpleForm title="O79 JNM RPRNT DCLRS 2D 04" id="jobDetails" editable="true" layout="ResponsiveGridLayout"  >
 				<f:content>
 					<!-- <VBox> -->
 						<core:Title></core:Title>
@@ -29,43 +27,13 @@
 						<Input editable="false" value="{appView>coating}"></Input>
 					<!-- </VBox> -->
 				</f:content>
-			</f:SimpleForm>
-			<f:SimpleForm title="Job Status" id="jobStatus" editable="true" layout="ResponsiveGridLayout" >
-				<!-- <f:content>
-						<Label text="Raw Material"></Label>	
-						<Input editable="false" value="{appView>poNo}"></Input>
-
-						<Label text="Coating"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>coating}"></Input>
-
-						<Label text="Spot UV"></Label>
-						<Input editable="{appView>/inputEditable}"  value="{appView>spotuv}"></Input>
-
-						<Label text="Punching"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>punching}"></Input>
-
-						<Label text="Packing"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>packing}"></Input>
-
-						<Label text="Printing"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>printing}"></Input>
-
-						<Label text="Foiling"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>foiling}"></Input>
-
-						<Label text="Embossing"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>embossing}"></Input>
-
-						<Label text="Pasting"></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>pasting}"></Input>
-
-						<Label text="Inc. No."></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>incno}"></Input>
-
-						<Label text="Delivery No."></Label>
-						<Input editable="{appView>/inputEditable}" value="{appView>deliveryno}"></Input>
-				</f:content> -->
-       <Table  id="jobStatusTab" autoPopinMode="true">
+		</f:SimpleForm>
+       <Table   autoPopinMode="true">
+		 <headerToolbar>
+			<Toolbar>
+				<Title text="Job Status" />
+			</Toolbar>
+		 </headerToolbar>
 		 <!-- visibleRowCount="4" selectionMode="Single" -->
 	     <columns>
 			<Column> 
@@ -103,46 +71,26 @@
 				<Label text="Delivery No." />
 			</Column>				
 		 </columns>
-		   <items>
-		 			<ColumnListItem >
-				<cells>
-					<!-- <ObjectIdentifier
-						title="{Name}"
-						text="{ProductId}"/> -->
-					<Input editable="{appView>/onClickModify}" value="{appView>poNo}"></Input> 
-					<Input editable="{appView>/onClickModify}" value="{appView>coating}"></Input>
-		            <Input editable="{appView>/onClickModify}" value="{appView>spotuv}"></Input>
-				    <Input editable="{appView>/onClickModify}" value="{appView>punching}"></Input>
-				    <Input editable="{appView>/onClickModify}" value="{appView>packing}"></Input>
-			        <Input editable="{appView>/onClickModify}" value="{appView>printing}"></Input>
-					<Input editable="{appView>/onClickModify}" value="{appView>foiling}"></Input>
-					<Input editable="{appView>/onClickModify}" value="{appView>embossing}"></Input>
-					<Input editable="{appView>/onClickModify}" value="{appView>pasting}"></Input>
-					<Link  press="onClickPopup"  text="INC No." ></Link>
-					<Link  press="onClickPopup"  text="Del No." ></Link>				
-					<!-- <ObjectNumber
-						number="{WeightMeasure}"
-						unit="{WeightUnit}"
-						state="{
-							parts: [
-								{path: 'WeightMeasure'},
-								{path: 'WeightUnit'}
-							],
-							formatter: 'sap.m.sample.Table.Formatter.weightState'
-						}" />
-					<ObjectNumber
-							number="{
-								parts:[{path:'Price'},{path:'CurrencyCode'}],
-								type: 'sap.ui.model.type.Currency',
-								formatOptions: {showMeasure: false}
-							}"
-							unit="{CurrencyCode}" /> -->
-				</cells>
-			</ColumnListItem>
-		</items>
+		    <items>
+				<ColumnListItem >
+					<cells>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/rawMaterial}"></Input> 
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Coating}"></Input>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/spotUV}"></Input>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Punching}"></Input>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Packing}"></Input>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Printing}"></Input>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Foiling}"></Input>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Embossing}"></Input>
+						<Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Pasting}"></Input>
+						<Link  press="onClickPopup"  text="{appView>/jobStatusTabData/InvNo}" ></Link>
+						<Link  press="onClickPopup"  text="{appView>/jobStatusTabData/DeliveryNo}" ></Link>				
+					</cells>
+				</ColumnListItem>
+		    </items>
 		  
 	</Table>
-			</f:SimpleForm>
+	
 			<!-- <footer>
 			<Toolbar>
 				<Button visible="{appView>/updBtnVisibility}"  text="Update" press="onClickUpdate"></Button>

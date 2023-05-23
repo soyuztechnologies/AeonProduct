@@ -27,36 +27,35 @@ sap.ui.define([
 			this.getModel("appView").updateBindings();
 			debugger;
 			this.loadForm();
-			this.loadForm2();
 			this.getUserRoleData();
-
-			// this.getJobsData();
-			var oArgs = oEvent.getParameter("arguments").jobId;
-			this.oGetAgru(oArgs);
+			this.oArgs = oEvent.getParameter("arguments").jobId;
+			// this.getView().getModel("appView").setProperty('/oId',this.oArgs);
+			this.oGetAgru();
+			this.onReadJobStatus();
 		},
-		oGetAgru: function(oArgs){
+		oGetAgru: function () {
 			debugger;
 			var that = this;
-			var oModel= this.getView().getModel();
-			oModel.read("/Jobs('" + oArgs +"')", {
-				success: function(data) {
+			var oModel = this.getView().getModel();
+			oModel.read("/Jobs('" + this.oArgs + "')", {
+				success: function (data) {
 					debugger;
-				// Success callback
-				// MessageToast.show("Data get  successfully");
-				that.getView().getModel("appView").setProperty("/Jobs", data);
-				// Handle the retrieved data
-				// var aEntities = data.results; // Access the array of retrieved entities
-				// ...
-				
+					// Success callback
+					// MessageToast.show("Data get  successfully");
+					that.getView().getModel("appView").setProperty("/Jobs", data);
+					// Handle the retrieved data
+					// var aEntities = data.results; // Access the array of retrieved entities
+					// ...
+
 				},
-				error: function(error) {
+				error: function (error) {
 					debugger;
-				// Error callback
-				that.middleWare.errorHandler(error, that);
-				MessageToast.show("Error reading data");
+					// Error callback
+					that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
 				}
-			  });
-			},
+			});
+		},
 		onClickModify: function () {
 
 			this.getView().getModel("appView").setProperty("/inputEditable", true)
@@ -66,6 +65,29 @@ sap.ui.define([
 		onClickUpdate: function () {
 			debugger;
 			this.getView().getModel("appView").setProperty("/inputEditable", false);
+			this.onUploadData();
+		},
+		onUpdatePress: function () {
+			var oModel = this.getView().getModel();  //default model get at here
+			var that = this;
+			var ids = this.getView().getModel('appView').getProperty("/jobId");
+			// var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
+			// Perform the read operation
+			const oUpdatedData = {
+
+				// artworkAttachment:artworkFile
+			};
+			oModel.update(`/JobStatus('${ids}')`, oUpdatedData, {
+				success: function (data) {
+					debugger;
+					MessageToast.show("Successfully Uploaded")
+				},
+				error: function (error) {
+					// Error callback
+					// that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
+				}
+			});
 		},
 		loadForm: function () {
 			debugger;
@@ -76,11 +98,11 @@ sap.ui.define([
 
 
 		},
-		loadForm2: function () {
+		// loadForm2: function () {
 
-			var oSimpleForm2 = this.getView().byId('jobStatus');
-			oSimpleForm2.bindElement('appView>/Jobs');
-		},
+		// 	var oSimpleForm2 = this.getView().byId('jobStatus');
+		// 	oSimpleForm2.bindElement('appView>/jobStatusData');
+		// },
 		onClickPopup: function () {
 			var oView = this.getView();
 			var that = this;
@@ -191,26 +213,79 @@ sap.ui.define([
 		onUploadData: function () {
 			debugger;
 			var oModel = this.getView().getModel();  //default model get at here
-			var that = this; 
-			var ids = this.getView().getModel('appView').getProperty("/jobId");
-			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
+			var that = this;
+			var ids = this.oArgs;
+			const sEntityPath = `/JobStatus('${ids}')`;
+			var rowmaterial = this.getView().getModel('appView').getProperty("/jobStatusTabData/rawMaterial");
+			var punching = this.getView().getModel('appView').getProperty("/jobStatusTabData/Punching");
+			var foiling = this.getView().getModel('appView').getProperty("/jobStatusTabData/Foiling");
+			var coating = this.getView().getModel('appView').getProperty("/jobStatusTabData/Coating");
+			var delivery_no = this.getView().getModel('appView').getProperty("/jobStatusTabData/DeliveryNo");
+			var embossing = this.getView().getModel('appView').getProperty("/jobStatusTabData/Embossing");
+			var inv_no = this.getView().getModel('appView').getProperty("/jobStatusTabData/InvNo");
+			var job_id = this.getView().getModel('appView').getProperty("/jobStatusTabData/JobId");
+			var jobstatus_id = this.getView().getModel('appView').getProperty("/jobStatusTabData/JobStatusId");
+			var packing = this.getView().getModel('appView').getProperty("/jobStatusTabData/Packing");
+			var pasting = this.getView().getModel('appView').getProperty("/jobStatusTabData/Pasting");
+			var printing = this.getView().getModel('appView').getProperty("/jobStatusTabData/Printing");
+			var delivery_att = this.getView().getModel('appView').getProperty("/jobStatusTabData/deliveryAttachment");
+			var inc_att = this.getView().getModel('appView').getProperty("/jobStatusTabData/incAttachment");
+			var spot_uv = this.getView().getModel('appView').getProperty("/jobStatusTabData/spotUV");
 			// Perform the read operation
 			const oUpdatedData = {
-			poAttachment: poFile,
-			// artworkAttachment:artworkFile
-		  };
-			oModel.update(`/Jobs('${ids}')`,oUpdatedData ,{
-				success: function(data) {
+				Coating: coating,
+				DeliveryNo: delivery_no,
+                Embossing: embossing,
+                Foiling: foiling,
+                InvNo: inv_no,
+                JobId: job_id,
+                JobStatusId: jobstatus_id,
+                Packing: packing,
+                Pasting: pasting,
+                Printing: printing,
+                Punching: punching,
+                deliveryAttachment: delivery_att,
+                incAttachment: inc_att,
+                rawMaterial: rowmaterial,
+                spotUV: spot_uv
+			};
+			oModel.update(sEntityPath, oUpdatedData, {
+				success: function (oUpdatedData) {
 					debugger;
 					MessageToast.show("Successfully Uploaded")
+					console.log("Data updated successfully:", oUpdatedData);
+					this.onReadJobStatus();
 				},
-				error: function(error) {
-				// Error callback
-				// that.middleWare.errorHandler(error, that);
-				MessageToast.show("Error reading data");
+				error: function (error) {
+					// Error callback
+					// that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
 				}
 			});
 
+		},
+		onReadJobStatus: function () {
+			debugger;
+			var oModel = this.getView().getModel(); //default model get at here
+			var that = this;
+			var ids = this.oArgs;
+			// var readParam = "/JobStatus" + ids;
+			const sEntityPath = `/JobStatus('${ids}')`;
+			oModel.read(sEntityPath, {
+				success: function (data) {
+					debugger;
+					// console.log(data)
+					// MessageToast.show("Successfully Uploaded")
+					that.getView().getModel("appView").setProperty("/jobStatusTabData", data);
+					// that.getView().getModel('appView').updateBindings();
+					// that.getView().getModel('appView').refresh();
+				},
+				error: function (error) {
+					// Error callback
+					// that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
+				}
+			});
 		},
 
 		// getJobsData: function() {
