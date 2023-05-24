@@ -64,7 +64,7 @@ sap.ui.define([
 		},
 		onClickUpdate: function () {
 			debugger;
-			this.getView().getModel("appView").setProperty("/inputEditable", false);
+			this.getView().getModel("appView").setProperty("/updBtnVisibility", false);
 			this.onUploadData();
 		},
 		onUpdatePress: function () {
@@ -318,54 +318,28 @@ sap.ui.define([
 		onUploadDataPress: function () {
 
 			debugger;
-
 			var oModel = this.getView().getModel(); ///default model get at here
-
 			var that = this;
-
 			var ids = this.oArgs
-
 			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
-
 			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfUrlArtwork")
-
 			// Perform the read operation
-
 			const oUpdatedData = {
-
 				poAttachment: poFile,
-
 				artworkAttachment: artworkAttachment
-
 				// artworkAttachment:artworkFile
-
 			};
-
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
-
 				success: function (data) {
-
 					debugger;
-
 					MessageToast.show("Successfully Uploaded")
-
 				},
-
 				error: function (error) {
-
 					// Error callback
-
 					// that.middleWare.errorHandler(error, that);
-
 					MessageToast.show("Error reading data");
-
 				}
-
 			});
-
-
-
-
 		},
 
 

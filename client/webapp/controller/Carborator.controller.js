@@ -198,7 +198,7 @@ sap.ui.define([
         // Convert string to JSON object
         var payload = JSON.parse(oJsonInpValue);
         
-        payload.jobCardNo= "1005";
+        payload.jobCardNo= "1008";
         this.getView().getModel("appView").setProperty("/postId",payload.jobCardNo)
         this.onUploadId();
 
@@ -240,7 +240,6 @@ sap.ui.define([
             // });
    
       }
-
 
       },
       onUploadData:function(){

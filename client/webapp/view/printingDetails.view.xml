@@ -21,10 +21,10 @@
 						<Link press="onClickPopupArt" text="{appView>artworkCode}"></Link>
 
 						<Label text="Paper Board"></Label>
-						<Input editable="false" value="{appView>paperboard}"></Input>
+						<Input editable="false" value="{appView>artworkCode} / {appView>printing}"></Input>
 
 						<Label text="Coating"></Label>
-						<Input editable="false" value="{appView>coating}"></Input>
+						<Input editable="false" value="{appView>PaperGSM}"></Input>
 					<!-- </VBox> -->
 				</f:content>
 		</f:SimpleForm>

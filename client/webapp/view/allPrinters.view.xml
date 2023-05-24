@@ -1,24 +1,66 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="ent.ui.ecommerce.controller.allPrinters" >
-  <Page id='idWelcomeP' title="Welcome Printer" >
-    <!-- <List id="idMyList" >
-		<ObjectListItem
-		  title="Product"
-		  type="Active"
-		  intro="1"
-		  press="onListItemPress"
-		/>
-	  </List> -->
-    <List itemPress="onListItemPress" items="{appView>/jobsData}">
-		<items>
-
-		<ObjectListItem
-		  title="{appView>nameOFTheProduct}"
-		  type="Navigation"
-		  intro="{appView>jobCardNo}"
-		/>
-
-		</items>
-		
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="ent.ui.ecommerce.controller.allPrinters" >
+  <Page id='idWelcomeP' showHeader="false">
+	  <subHeader>
+		<Toolbar>
+				<content>
+					<Title text="Welcome Printer"/>
+					<ToolbarSpacer/>
+					<SearchField liveChange="onSearchJob" width="auto"/>
+				</content>
+		</Toolbar>
+	  </subHeader>
+		<Toolbar>
+		   <content>
+				 <Title text="Job Status"/>
+				 <ToolbarSpacer/>
+			     <ComboBox  selectedKey="new_1"  id="jobStatusComboBox"
+				            selectionChange="onComboBoxSelectionChange">
+							<!-- items="{appView>/jobsData}"
+							text="{appView>Status}"> -->
+                  <core:Item key="new_1" text="New" />
+                  <core:Item key="new_2" text="New" />
+                  <core:Item key="new_3" text="New" />
+                  <core:Item key="new_4" text="New" />
+                  <core:Item key="new_5" text="New" />
+                  <core:Item key="new_6" text="New" />
+                  <core:Item key="new_7" text="New" />
+                </ComboBox>
+			</content>
+		</Toolbar>
+      <List  id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
+			<items>
+					<ObjectListItem
+							type="Navigation"
+							title="{appView>nameOFTheProduct}"
+							intro="{appView>jobCardNo}">
+							<firstStatus>
+							    <ObjectStatus text="{appView>Status}" />
+							</firstStatus>
+					</ObjectListItem>
+			</items>	
 	  </List>
   </Page>
 </mvc:View>
+
+
+		<!-- <ObjectListItem
+			title="{Name}"
+			type="Active"
+			press="onListItemPress"
+			number="{
+				parts:[{path:'Price'},{path:'CurrencyCode'}],
+				type: 'sap.ui.model.type.Currency',
+				formatOptions: {showMeasure: false}
+			}"
+			numberUnit="{CurrencyCode}">
+			<firstStatus>
+				<ObjectStatus
+					text="{Status}"
+					state="{
+						path: 'Status',
+						formatter: 'sap.m.sample.ObjectListItem.Formatter.status'
+					}" />
+			</firstStatus>
+			<ObjectAttribute text="{WeightMeasure} {WeightUnit}" />
+			<ObjectAttribute text="{Width} x {Depth} x {Height} {DimUnit}" />
+		</ObjectListItem> -->
