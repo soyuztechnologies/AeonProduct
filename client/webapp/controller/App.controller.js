@@ -1,5 +1,5 @@
 sap.ui.define(
-  ["./BaseController", "sap/ui/model/json/JSONModel"],
+  ["./BaseController","sap/ui/model/json/JSONModel","sap/m/MessageToast"],
   function (BaseController, JSONModel) {
     "use strict";
     var userRole;
@@ -121,8 +121,43 @@ sap.ui.define(
             that.middleWare.errorHandler(jqXhr, that);
           });
       },
+      onMenuButtonPress: function (event) {
+        var oButton = event.getSource();
+        var oMenu = this.getView().byId("logOutMenu");
+        oMenu.openBy(oButton);
+      },
+      onMenuPress: function(oEvent){
+        debugger;
 
-      
+      },
+      onPressitemMenu: function(oEvent) {
+        var selectedItem = oEvent.getSource();
+        var selectedText = selectedItem.getText();
+        
+        // Perform actions based on the selected menu option
+        switch (selectedText) {
+          case "User":
+            // MessageToast.show("User is Arrived");
+            break;
+            case "Home":
+              // var nav = oEvent.getSource();
+              // if (nav === "UploadDocuments") {
+              // this.getRouter().navTo("UploadDocuments");
+              // }
+              
+              break;
+          case "LogOut":
+            // this.onLogOut();
+            // MessageToast.show("User is Arrived");
+            break;
+          default:
+            break;
+        }
+        
+        // Close the menu after performing the action
+        var oMenu = this.getView().byId("logOutMenu");
+        oMenu.close();
+      }
     });
   }
 );

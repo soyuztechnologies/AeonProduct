@@ -364,7 +364,7 @@
 			"default": null
 			
 		},
-		"varnish/Lamination":{
+		"varnish_Lamination":{
 			"type": "string",
 			"default": null
 			
@@ -413,6 +413,10 @@
 			"type": "string",
 			"default": null
 			
+		},
+		"Status":{
+			"type": "string",
+			"default": "new"
 		}
 	},
 	"scope": {

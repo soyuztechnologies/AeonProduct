@@ -1,0 +1,72 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
+    <Table   autoPopinMode="true">
+        <headerToolbar>
+           <Toolbar>
+               <Title text="Job Status" />
+               <ToolbarSpacer/>
+               <Button
+                   visible="{appView>/addJobStatusVis}"
+                   icon="sap-icon://add"
+                   press="onPressAdd"
+               >   
+               </Button>
+
+           </Toolbar>
+        </headerToolbar>
+        <!-- visibleRowCount="4" selectionMode="Single" -->
+        <columns>
+           <Column> 
+                 <Label text="Raw Material" />
+           </Column>
+           <Column>
+                 <Label text="Coating" />
+
+           </Column>
+           <Column>
+               <Label text="Spot UV" />
+           </Column>
+           <Column>
+               <Label text="Punching" />
+           </Column>
+           <Column>
+               <Label text="Packing" />
+           </Column>
+           <Column>
+               <Label text="Printing" />
+           </Column>
+           <Column>
+               <Label text="Foiling" />
+           </Column>
+           <Column>
+               <Label text="Embossing" />
+           </Column>
+           <Column>
+               <Label text="Pasting" />
+           </Column>
+           <Column>
+               <Label text="Inc. No." />
+           </Column>		
+           <Column>
+               <Label text="Delivery No." />
+           </Column>				
+        </columns>
+           <items>
+               <ColumnListItem >
+                   <cells>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/rawMaterial}"></Input> 
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Coating}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/spotUV}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Punching}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Packing}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Printing}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Foiling}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Embossing}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Pasting}"></Input>
+                       <Link  press="onClickPopup"  text="{appView>/jobStatusTabData/InvNo}" ></Link>
+                       <Link  press="onClickPopup"  text="{appView>/jobStatusTabData/DeliveryNo}" ></Link>				
+                   </cells>
+               </ColumnListItem>
+           </items>
+         
+   </Table>
+</core:FragmentDefinition>

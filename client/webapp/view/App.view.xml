@@ -17,7 +17,14 @@
                    <Image src="logo/logo.png" width="4%"/>
                    <Title text="Aeon Products"></Title>
                    <ToolbarSpacer/>
-                   <Button press="onPressLogout" icon="sap-icon://log" visible="{appView>/logoutVisibility}" text="Logout"></Button>
+                   <Button press="onMenuButtonPress" icon="sap-icon://account" class="sapUiSmallMarginEnd"  visible="{appView>/logoutVisibility}"/>
+                   <Menu itemSelected ="onMenuPress"  id="logOutMenu">
+                     <items>
+                            <MenuItem key="User" text="User" icon="sap-icon://person-placeholder" />
+                            <MenuItem key="Home" text="Home" icon="sap-icon://home" />
+                            <MenuItem key="Logout" text="Logout" icon="sap-icon://log" press="onPressLogout" />
+                     </items>
+                   </Menu>
             </tnt:ToolHeader>
         </tnt:header>
 

@@ -31,87 +31,14 @@ sap.ui.define([
     onPressNavigate:function(){
       this.getRouter().navTo("allPrinters");
     },
-    // onFileUploadChange: function (oEvent) {
-    //     // debugger;
-    //     // var oParams = oEvent.getParameters();
-    //     // var oFile = oParams.files[0];
-    //     // var oFile2 = oEvent.getParameter("files")[0];
-    //     // var sFilename = oFile.name;
-    //     // var that = this;
-    //     // var oReader = new FileReader();
-    //     // oReader.onload = function (e) {
-    //     //   var sFileContent = e.target.result;
-
-    //     //   // Parse the Excel file
-    //     //   var oWorkbook = XLSX.read(sFileContent, { type: "binary" });
-    //     //   var oWorksheet = oWorkbook.Sheets[oWorkbook.SheetNames[0]];
-    //     //   var aData = XLSX.utils.sheet_to_json(oWorksheet, { header: 1 });
-    //     //   that.extracDbFields(aData);
-    //     //   // debugger;
-    //     //   // Do something with the parsed data
-    //     //   // console.log(aData);
-    //     // };
-
-
-    //     // oReader.readAsBinaryString(oFile);
-    //   },
+    
       onFileUploaddChange: function(oEvent) {
 
         var that=this;
         var oFileUploader = oEvent.getSource();
         var oFile = oEvent.getParameter("files")[0];
         debugger;
-        if(oFile.type==="application/pdf"){
-        var oReader = new FileReader();
-        oReader.onload = function(e) {
-          var sUploadedFileContent = e.target.result;
-          var sEncodedContent = btoa(sUploadedFileContent);
-          var sPdfContent = "data:application/pdf;base64," + sEncodedContent;
-          that.getView().getModel('appView').setProperty('/pdf',sPdfContent);
-          
-          // var oPdfFrame = document.getElementById("pdfFrame");
-          // oPdfFrame.src = sPdfContent;
-          var a = document.createElement('a');
-          a.href = sPdfContent;
-          var pdfUrl = a.href;
-          // console.log('PDF URL:', pdfUrl);
-          that.getView().getModel("appView").setProperty("/pdfUrl",sEncodedContent)
-          that.getModel("appView").setProperty("/simpleFormVisibility",false);
-          that.getModel("appView").setProperty("/pdfVisibility", true);
-          that.getModel("appView").setProperty("/uploadButtonVisibility",true);
-          that.getModel("appView").setProperty("/imgVisibility",false);
-
-        };
-        
-        oReader.readAsBinaryString(oFile);
-      }
-      if(oFile.type==='application/msword'){
-        var oReader = new FileReader();
-        oReader.onload = function(e) {
-        var sUploadedFileContent = e.target.result;
-        var sEncodedContent = btoa(sUploadedFileContent);
-        var sWordContent = "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64," + sEncodedContent;
-        // var oWordFrame = this.getView().byId("wordFrame");
-        // oWordFrame.setAttribute("src", sWordContent);
-        that.getView().getModel('appView').setProperty('/wordContent',sEncodedContent);
-        that.getModel("appView").setProperty("/uploadButtonVisibility",true);
-        that.getModel("appView").setProperty("/imgVisibility",false);
-      }.bind(this);
-      oReader.readAsBinaryString(oFile);
-      }
-      if(oFile.type==='image/jpeg'){
-        var oReader = new FileReader();
-        oReader.onload = function(e) {
-          var sUploadedFileContent = e.target.result;
-          var sEncodedContent = btoa(sUploadedFileContent);
-          var sImageContent = "data:image/jpeg;base64," + sEncodedContent; // Update the MIME type accordingly if your image is of a different format
-          that.getView().getModel('appView').setProperty('/imageContent',sImageContent);
-          that.getModel("appView").setProperty("/uploadButtonVisibility",true);
-          that.getModel("appView").setProperty("/imgVisibility",true);
-        }.bind(this);
-        oReader.readAsBinaryString(oFile);
-      }
-      if(oFile.type.includes("xml")){
+     
         debugger;
         var oReader = new FileReader();
         oReader.onload = function (e) {
@@ -127,19 +54,15 @@ sap.ui.define([
           that.getModel("appView").setProperty("/simpleFormVisibility",true);
           that.getModel("appView").setProperty("/uploadButtonVisibility",false);
           that.getModel("appView").setProperty("/imgVisibility",false);
-
-          // debugger;
-          // Do something with the parsed data
-          // console.log(aData);
         };
 
         oReader.readAsBinaryString(oFile);
-      }
+      
       },
-      // onViewPdf:function(){
-      //   var viewPdf = this.getView().getModel("appView").getProperty("/pdfUrl")
-      //   window.open(viewPdf, '_blank', 'width=600,height=800')
-      // },
+      onViewPdf:function(){
+        var viewPdf = this.getView().getModel("appView").getProperty("/pdfUrl")
+        window.open(viewPdf, '_blank', 'width=600,height=800')
+      },
       onPopinLayoutChanged:function(oEvent){
         debugger;
         var oModel = this.getView().getModel();  //default model get at here
@@ -198,7 +121,7 @@ sap.ui.define([
         // Convert string to JSON object
         var payload = JSON.parse(oJsonInpValue);
         
-        payload.jobCardNo= "1005";
+        payload.jobCardNo= "1008";
         this.getView().getModel("appView").setProperty("/postId",payload.jobCardNo)
         this.onUploadId();
 
@@ -240,7 +163,6 @@ sap.ui.define([
             // });
    
       }
-
 
       },
       onUploadData:function(){
