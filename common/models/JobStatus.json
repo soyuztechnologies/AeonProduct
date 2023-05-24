@@ -9,7 +9,7 @@
 	"properties": {
 		"JobId": {
 			"type": "string",
-			"default": "Pending",
+			"default": "",
 			"required": false
 		},
 		"JobStatusId": {
@@ -21,47 +21,47 @@
 		"rawMaterial": {
             "type": "string",
             "enum": ["Pending", "In Stock"],
-            "default": "Pending"
+            "default": ""
         },
 		"Printing": {
             "type": "string",
-            "default": "Pending"
+            "default": ""
         },
 		"Foiling": {
             "type": "string",
-            "default": "Pending"
+            "default": ""
         },
 		"Coating": {
             "type": "string",
-            "default": "Pending"
+            "default": ""
         },
 		"InvNo": {
             "type": "string",
-            "default": "Pending"
+            "default": ""
         },
 		"DeliveryNo": {
             "type": "string",
-            "default": "Pending"
+            "default": ""
         },
 		"Embossing": {
             "type": "string",
-            "default": "Pending"
+            "default": ""
         },
 		"Pasting": {
             "type": "string",
-            "default": "Pending"
+            "default": ""
         },
 		"spotUV": {
 			"type":"string",
-			"default":"Pending"
+			"default":""
 		},
 		"Punching": {
 			"type":"string",
-			"default":"Pending"
+			"default":""
 		},
 		"Packing": {
 			"type":"string",
-			"default":"Pending"
+			"default":""
 		},
 		"incAttachment":{
 			"type":"string",

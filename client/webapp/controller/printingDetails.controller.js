@@ -24,14 +24,15 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/imgVisibility", false);
 			this.getView().getModel("appView").setProperty("/updBtnVisibility", false);
 			this.getView().getModel("appView").setProperty("/onClickModify", false);
+			this.getView().getModel("appView").setProperty("/cancleBtnVis", false);
+			this.getView().getModel("appView").setProperty("/modifybtnvis", true);
 			this.getModel("appView").updateBindings();
-			debugger;
-			this.loadForm();
 			this.getUserRoleData();
+			this.loadForm();
 			this.oArgs = oEvent.getParameter("arguments").jobId;
-			// this.getView().getModel("appView").setProperty('/oId',this.oArgs);
 			this.oGetAgru();
 			this.onReadJobStatus();
+			
 		},
 		oGetAgru: function () {
 			debugger;
@@ -46,7 +47,6 @@ sap.ui.define([
 					// Handle the retrieved data
 					// var aEntities = data.results; // Access the array of retrieved entities
 					// ...
-
 				},
 				error: function (error) {
 					debugger;
@@ -56,26 +56,45 @@ sap.ui.define([
 				}
 			});
 		},
-		onClickModify: function () {
+		onModify: function () {
 
 			this.getView().getModel("appView").setProperty("/inputEditable", true)
 			this.getView().getModel("appView").setProperty("/updBtnVisibility", true)
 			this.getView().getModel("appView").setProperty("/onClickModify", true)
+			this.getView().getModel("appView").setProperty("/modifybtnvis", false)
+			this.getView().getModel("appView").setProperty("/cancleBtnVis", true)
+			this.getUserDataLocal = JSON.parse(JSON.stringify(this.getModel("appView").getProperty("/jobStatusTabData")));
 		},
 		onClickUpdate: function () {
 			debugger;
+<<<<<<< HEAD
 			this.getView().getModel("appView").setProperty("/updBtnVisibility", false);
+=======
+			this.getView().getModel("appView").setProperty("/onClickModify", false);
+			this.getView().getModel("appView").setProperty("/modifybtnvis", true)
+			this.getView().getModel("appView").setProperty("/cancleBtnVis", false)
+			this.getView().getModel("appView").setProperty("/updBtnVisibility", false)
+
+>>>>>>> 9741de76a5fc400e3b8e5656c996626d89a5e717
 			this.onUploadData();
+		},
+		onClickCancle:function(){
+			this.getView().getModel("appView").setProperty("/onClickModify", false);
+			this.getView().getModel("appView").setProperty("/modifybtnvis", true);
+			this.getView().getModel("appView").setProperty("/cancleBtnVis", false);
+			this.getView().getModel("appView").setProperty("/updBtnVisibility", false)
+			this.getView().getModel("appView").setProperty("/jobStatusTabData", this.getUserDataLocal)
+			this.getModel("appView").updateBindings();
+			// this.getView().getModel("appView").refresh();
+			
+			// this.onReadJobStatus();
+
 		},
 		onUpdatePress: function () {
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
 			var ids = this.getView().getModel('appView').getProperty("/jobId");
-			// var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
-			// Perform the read operation
 			const oUpdatedData = {
-
-				// artworkAttachment:artworkFile
 			};
 			oModel.update(`/JobStatus('${ids}')`, oUpdatedData, {
 				success: function (data) {
@@ -107,6 +126,10 @@ sap.ui.define([
 		// var oSimpleForm2 = this.getView().byId('jobStatus');
 		// oSimpleForm2.bindElement('appView>/Jobs');
 		// },
+
+
+
+
 
 		// ######################################################################
 
@@ -141,16 +164,6 @@ sap.ui.define([
 				that.getView().getModel('appView').setProperty('/viewArt', false);
 				that.getView().getModel('appView').setProperty('/pdfartworkVisibility', false);
 				that.getView().getModel('appView').setProperty('/pdfVisibility', false);
-
-
-				// var pdfView = that.getView().getModel('appView').getProperty('/pdfVisibility');
-				// if(!pdfView){
-				// 	that.getView().getModel('appView').setProperty('/pdfVisibility',false);
-				// }
-				// else{
-				// 	that.getView().getModel('appView').setProperty('/pdfVisibility',true);
-				// }
-
 				var sUserRole = that.getView().getModel('appView').getProperty('/UserRole');
 				if (sUserRole === 'Customer') {
 
@@ -187,12 +200,17 @@ sap.ui.define([
 			}
 			this.oUploadDialog.then(function (oDialog) {
 				oDialog.open();
+
+				
+
+
 				that.getView().getModel('appView').setProperty('/viewPo', false);
 				that.getView().getModel('appView').setProperty('/viewArt', true);
 				that.getView().getModel('appView').setProperty('/browseVisArtwork', true);
 				that.getView().getModel('appView').setProperty('/browseVis', false);
 				that.getView().getModel('appView').setProperty('/pdfVisibility', false);
-				that.getView().getModel('appView').setProperty('/pdfartworkVisibility', true);
+				that.getView().getModel('appView').setProperty('/pdfartworkVisibility', false);
+				that.getView().getModel('appView').setProperty('/showImg', false);
 
 				// var pdfView1 = that.getView().getModel('appView').getProperty('/pdfartworkVisibility');
 				// if(!pdfView1){
@@ -208,20 +226,62 @@ sap.ui.define([
 
 					that.getModel('appView').setProperty('/btnVisibility', false);
 					that.getModel('appView').setProperty('/browseVis', false);
+					// that.getModel('appView').setProperty('/modifybtnvis', false);
+					// that.getModel('appView').setProperty('/updBtnVisibility', false);
 
 				}
 			});
 		},
 
-		// ######################################################################
-
-		//      Upload the PO No. Attachment
-
-		//  #####################################################################
+	
+		
 
 
+
+
+	// ######################################################################
+
+	//      Opens Fragment for Job Status 
+
+	//  #####################################################################
+	onPressAdd: function () {
+		var oView = this.getView();
+		var that = this;
+
+		if (!this.Jobstatus) {
+			this.Jobstatus = Fragment.load({
+				id: oView.getId(),
+				name: "ent.ui.ecommerce.fragments.Jobstatusdialog",
+				controller: this
+			}).then(function (oDialog) {
+				// Add dialog to view hierarchy
+				oView.addDependent(oDialog);
+				return oDialog;
+			}.bind(this));
+
+		}
+		this.Jobstatus.then(function (oDialog) {
+			oDialog.open();
+		});
+	},
+	onClose: function () {
+		this.Jobstatus.then(function (oDialog) {
+			oDialog.close();
+
+		});
+	},
+
+
+
+
+
+
+	// ######################################################################
+
+	//      Upload the PO No. Attachment
+
+	//  #####################################################################
 		onFileUploaddChange: function (oEvent) {
-
 			var that = this;
 			var oFileUploader = oEvent.getSource();
 			var oFile = oEvent.getParameter("files")[0];
@@ -233,17 +293,12 @@ sap.ui.define([
 					var sEncodedContent = btoa(sUploadedFileContent);
 					var sPdfContent = "data:application/pdf;base64," + sEncodedContent;
 					that.getView().getModel('appView').setProperty('/pdf', sPdfContent);
-					// var oPdfFrame = document.getElementById("pdfFrame");
-					// oPdfFrame.src = sPdfContent;
-					var a = document.createElement('a');
-					a.href = sPdfContent;
-					var pdfUrl = a.href;
-					// console.log('PDF URL:', pdfUrl);
 					that.getView().getModel("appView").setProperty("/pdfUrl", sEncodedContent)
 					that.getModel("appView").setProperty("/simpleFormVisibility", false);
 					that.getModel("appView").setProperty("/pdfVisibility", true);
 					that.getModel("appView").setProperty("/uploadButtonVisibility", true);
 					that.getModel("appView").setProperty("/imgVisibility", false);
+					that.getModel("appView").setProperty("/showImg", false);
 					var data = that.getModel("appView").getProperty("/pdfVisibility");
 					if (!data) {
 						that.getModel("appView").setProperty("/viewPo", true);
@@ -257,20 +312,6 @@ sap.ui.define([
 
 				oReader.readAsBinaryString(oFile);
 			}
-			if (oFile.type === 'application/msword') {
-				var oReader = new FileReader();
-				oReader.onload = function (e) {
-					var sUploadedFileContent = e.target.result;
-					var sEncodedContent = btoa(sUploadedFileContent);
-					var sWordContent = "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64," + sEncodedContent;
-					// var oWordFrame = this.getView().byId("wordFrame");
-					// oWordFrame.setAttribute("src", sWordContent);
-					that.getView().getModel('appView').setProperty('/wordContent', sEncodedContent);
-					that.getModel("appView").setProperty("/uploadButtonVisibility", true);
-					that.getModel("appView").setProperty("/imgVisibility", false);
-				}.bind(this);
-				oReader.readAsBinaryString(oFile);
-			}
 			if (oFile.type === 'image/jpeg') {
 				var oReader = new FileReader();
 				oReader.onload = function (e) {
@@ -279,7 +320,9 @@ sap.ui.define([
 					var sImageContent = "data:image/jpeg;base64," + sEncodedContent; // Update the MIME type accordingly if your image is of a different format
 					that.getView().getModel('appView').setProperty('/imageContent', sImageContent);
 					that.getModel("appView").setProperty("/uploadButtonVisibility", true);
+					that.getModel("appView").setProperty("/viewPo", false);
 					that.getModel("appView").setProperty("/imgVisibility", true);
+					that.getModel("appView").setProperty("/showImg", false);
 				}.bind(this);
 				oReader.readAsBinaryString(oFile);
 			}
@@ -295,7 +338,6 @@ sap.ui.define([
 					var aData = XLSX.utils.sheet_to_json(oWorksheet, { header: 1 });
 					that.extracDbFields(aData);
 					that.getModel("appView").setProperty("/pdfVisibility", false);
-
 					that.getModel("appView").setProperty("/simpleFormVisibility", true);
 					that.getModel("appView").setProperty("/uploadButtonVisibility", false);
 					that.getModel("appView").setProperty("/imgVisibility", false);
@@ -315,13 +357,20 @@ sap.ui.define([
 			});
 		},
 
-		onUploadDataPress: function () {
 
+
+
+
+
+
+
+		onUploadDataPress: function () {
 			debugger;
 			var oModel = this.getView().getModel(); ///default model get at here
 			var that = this;
 			var ids = this.oArgs
 			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
+<<<<<<< HEAD
 			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfUrlArtwork")
 			// Perform the read operation
 			const oUpdatedData = {
@@ -329,6 +378,38 @@ sap.ui.define([
 				artworkAttachment: artworkAttachment
 				// artworkAttachment:artworkFile
 			};
+=======
+			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfArtwork")
+			
+			if (!poFile){
+				var poFileimg = this.getView().getModel('appView').getProperty("/imageContent");
+				var artworkAttachmentimg = this.getView().getModel('appView').getProperty("/imageContentArtwork");
+
+				var oUpdatedData = {
+					poAttachment: poFileimg,
+					artworkAttachment:artworkAttachmentimg
+					// artworkAttachment:artworkFile
+				};
+			}
+			if(!artworkAttachment){
+				var artworkAttachmentimg = this.getView().getModel('appView').getProperty("/imageContentArtwork");
+				var poFileimg = this.getView().getModel('appView').getProperty("/imageContent");
+				var oUpdatedData = {
+					poAttachment: poFileimg,
+					artworkAttachment:artworkAttachmentimg
+					// artworkAttachment:artworkFile
+				};
+			}
+			if(poFile||artworkAttachment){
+				var oUpdatedData = {
+					poAttachment: poFile,
+					artworkAttachment: artworkAttachment
+					// artworkAttachment:artworkFile
+				};
+			}
+			// Perform the read operation
+			
+>>>>>>> 9741de76a5fc400e3b8e5656c996626d89a5e717
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
 				success: function (data) {
 					debugger;
@@ -343,8 +424,13 @@ sap.ui.define([
 		},
 
 
-		onFileUploaddChangeArtwork: function (oEvent) {
 
+
+
+
+
+
+		onFileUploaddChangeArtwork: function (oEvent) {
 			var that = this;
 			var oFileUploader = oEvent.getSource();
 			var oFile = oEvent.getParameter("files")[0];
@@ -356,34 +442,23 @@ sap.ui.define([
 					var sEncodedContent = btoa(sUploadedFileContent);
 					var sPdfContent = "data:application/pdf;base64," + sEncodedContent;
 					that.getView().getModel('appView').setProperty('/pdf', sPdfContent);
-					// var oPdfFrame = document.getElementById("pdfFrame");
-					// oPdfFrame.src = sPdfContent;
-					var a = document.createElement('a');
-					a.href = sPdfContent;
-					var pdfUrl = a.href;
-					// console.log('PDF URL:', pdfUrl);
 					that.getView().getModel("appView").setProperty("/pdfArtwork", sEncodedContent)
 					that.getModel("appView").setProperty("/simpleFormVisibility", false);
-					that.getModel("appView").setProperty("/pdfVisibility", true);
+					that.getModel("appView").setProperty("/pdfVisibility", false);
+					that.getModel("appView").setProperty("/pdfartworkVisibility", true);
 					that.getModel("appView").setProperty("/uploadButtonVisibility", true);
 					that.getModel("appView").setProperty("/imgVisibility", false);
+					that.getModel("appView").setProperty("/showImg", false);
+					
 
+					var data = that.getModel("appView").getProperty("/pdfartworkVisibility");
+					if (!data) {
+						that.getModel("appView").setProperty("/viewArt", true);
+					}
+					else {
+						that.getModel("appView").setProperty("/viewArt", false);
+					}
 				};
-
-				oReader.readAsBinaryString(oFile);
-			}
-			if (oFile.type === 'application/msword') {
-				var oReader = new FileReader();
-				oReader.onload = function (e) {
-					var sUploadedFileContent = e.target.result;
-					var sEncodedContent = btoa(sUploadedFileContent);
-					var sWordContent = "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64," + sEncodedContent;
-					// var oWordFrame = this.getView().byId("wordFrame");
-					// oWordFrame.setAttribute("src", sWordContent);
-					that.getView().getModel('appView').setProperty('/wordContent', sEncodedContent);
-					that.getModel("appView").setProperty("/uploadButtonVisibility", true);
-					that.getModel("appView").setProperty("/imgVisibility", false);
-				}.bind(this);
 				oReader.readAsBinaryString(oFile);
 			}
 			if (oFile.type === 'image/jpeg') {
@@ -392,9 +467,10 @@ sap.ui.define([
 					var sUploadedFileContent = e.target.result;
 					var sEncodedContent = btoa(sUploadedFileContent);
 					var sImageContent = "data:image/jpeg;base64," + sEncodedContent; // Update the MIME type accordingly if your image is of a different format
-					that.getView().getModel('appView').setProperty('/imageContent', sImageContent);
+					that.getView().getModel('appView').setProperty('/imageContentArtwork', sImageContent);
 					that.getModel("appView").setProperty("/uploadButtonVisibility", true);
-					that.getModel("appView").setProperty("/imgVisibility", true);
+					that.getModel("appView").setProperty("/viewArt", false);
+					that.getModel("appView").setProperty("/showImgArt", true);
 				}.bind(this);
 				oReader.readAsBinaryString(oFile);
 			}
@@ -500,6 +576,7 @@ sap.ui.define([
 					debugger;
 					// console.log(data)
 					// MessageToast.show("Successfully Uploaded")
+					
 					that.getView().getModel("appView").setProperty("/jobStatusTabData", data);
 					// that.getView().getModel('appView').updateBindings();
 					// that.getView().getModel('appView').refresh();
@@ -526,8 +603,19 @@ sap.ui.define([
 				success: function (data) {
 					debugger;
 					console.log(data)
-					that.getView().getModel("appView").setProperty("/pdfUrldec", data.poAttachment)
-					that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
+					var isImg = data.poAttachment.startsWith("data:image/jpeg;base64,");
+					
+					if(isImg){
+						that.getView().getModel("appView").setProperty("/imageBase", data.poAttachment)
+						that.getView().getModel("appView").setProperty("/viewPo", false)
+
+					}
+					else{
+						that.getView().getModel("appView").setProperty("/pdfUrldec", data.poAttachment)
+					}
+					
+					// that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
+					that.getView().getModel("appView").setProperty('/showImgArt',false);
 					MessageToast.show("Read Successfully")
 				},
 				error: function (error) {
@@ -551,8 +639,16 @@ sap.ui.define([
 			oModel.read(`/Jobs('${ids}')`, {
 				success: function (data) {
 					debugger;
-					console.log(data)
-					that.getView().getModel("appView").setProperty("/pdfartwork", data.artworkAttachment)
+					var isImgArtwork = data.artworkAttachment.startsWith("data:image/jpeg;base64,");
+					if(isImgArtwork){
+						that.getView().getModel("appView").setProperty("/imageBaseArtwork", data.artworkAttachment)
+					}
+					else{
+						console.log(data)
+
+						that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
+					}
+
 					MessageToast.show("Read Successfully")
 				},
 				error: function (error) {
