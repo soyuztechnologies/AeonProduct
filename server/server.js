@@ -219,7 +219,7 @@ async function sendForgotEmail(emailAddress,token) {
 		  const emailContent = {
 			//   from: 'dheeraj@soyuztechnologies.com',
 			  to: emailAddress,
-			  subject: "Verify Your OTP For Dheeraj Enterprisees",
+			  subject: "Verify Your Email",
 			  html: mailBody
 		  };
 	
@@ -444,7 +444,7 @@ async function sendEmail(emailAddress,token) {
 		  const emailContent = {
 			//   from: 'dheeraj@soyuztechnologies.com',
 			  to: emailAddress,
-			  subject: "Verify Your OTP For Dheeraj Enterprisees",
+			  subject: "Verify Your Email",
 			  html: mailBody
 		  };
 	
@@ -675,20 +675,13 @@ app.post('/addUserAdmin', async(req, res) => {
 	var email = newCustomer.EmailId;
 	var name = email.substring(0, email.indexOf("@"));
 	var requestPass = newCustomer.PassWord;
+	var Role = newCustomer.Role;
 	if (requestPass==""){
 		var password = generateRandomPassword();
 	}
 	else{
 		var password = requestPass;
 	}
-	
-	var Role = newCustomer.Role;
-	// if(Role==""){
-	// 	var role = "Customers";
-	// }
-	// else{
-		
-	// }
 	
 try{
 	let userTable =await this.User.findOne({ where: {email: email} });
@@ -803,7 +796,7 @@ async function sendEmailPass(emailAddress,password) {
 		  const emailContent = {
 			//   from: 'dheeraj@soyuztechnologies.com',
 			  to: emailAddress,
-			  subject: "Verify Your OTP For Dheeraj Enterprisees",
+			  subject: "Verify Your Email",
 			  html: mailBody
 		  };
 	

@@ -1,7 +1,8 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core"
     xmlns:form="sap.ui.layout.form"
     xmlns="sap.m"
-    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:i="sap.ui.core"
+    xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
     <!-- <Dialog > -->
     <form:SimpleForm maxContainerCols="2" id="personDetails" editable="false" layout="ColumnLayout" labelSpanL="12" labelSpanM="12" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
@@ -17,12 +18,17 @@
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Last Name"/>
             <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>LastName}" editable="{appView>/editableFields}"/>
-           
-            <Label text="Company Logo"/>
-            <Input value = "{appView>CompanyLogo}" editable="{appView>/editableFields}"/>
+
+               <Label  text="{i18n>CompanyLogo}"  />
+                <u:FileUploader name="myFileUpload" enabled="{appView>/enabledCompanyLogo}" uploadUrl="/upload" visible="true" change="handleUploadPress" tooltip="UploadYourFileToTheLocalServer" uploadComplete="handleUploadComplete">
+                    <u:parameters>
+                        <u:FileUploaderParameter name="createdBy" />
+                    </u:parameters>
+                </u:FileUploader>
+                <Button text="Show Logo"  tooltip="checkLogo" press="onLogo" />
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Personal Mail Address"/>
-            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>EmailId}" editable="{appView>/EmailVisible}"/>
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyEmail}" editable="{appView>/editableFields}"/>
         </form:content>
     </form:SimpleForm>
     <!-- </Dialog>	 -->

@@ -3,7 +3,7 @@
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m">
 	<Page showHeader="false">
-		<Table items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders">
+		<Table items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressUser">
 			<headerToolbar>
 				<OverflowToolbar >
 					<content>
@@ -35,7 +35,7 @@
 				</Column>
 			</columns>
 			<items>
-				<ColumnListItem vAlign="Middle">
+				<ColumnListItem vAlign="Middle" type="Active">
 					<cells>
 						<Text text="{appView>UserName}" />
 						<Text text="{appView>EmailId}" />

@@ -14,22 +14,21 @@ sap.ui.define([
 			this.getRouter().getRoute("userDetails").attachPatternMatched(this._matchedHandler, this);
 		},
 		_matchedHandler:function(oEvent){
-			this.getModel("appView").setProperty("/layout", "OneColumn");
-			this.getModel("appView").setProperty("/visibleHeader",true);
+			var oModel = this.getView().getModel("appView");
+			oModel.setProperty("/layout", "OneColumn");
+			oModel.setProperty("/visibleHeader",true);
 
 			var oPath = oEvent.getParameter("name");
 			if(oPath == "userDetails"){
-				this.getModel('appView').setProperty('/editableFields', true);
-				this.getModel('appView').setProperty('/EmailVisible', true);
-				this.getModel('appView').setProperty('/Passwordfield', true);
+				oModel.setProperty('/editableFields', true);
+				oModel.setProperty('/EmailVisible', true);
+				oModel.setProperty('/Passwordfield', true);
 			};
-			var omodel = this.getView().getModel("appView");
-			omodel.setProperty("/newPass",false);
-			omodel.setProperty("/conPass",false);
-
+			oModel.setProperty("/newPass",false);
+			oModel.setProperty("/conPass",false);
+			oModel.updateBindings();
 			this.getUserData();
 			this.getUserRoleData();
-			this.getModel("appView").updateBindings();
 		},
 		onRoleChange : function(oEvent){
 			debugger;
@@ -37,6 +36,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel("appView");
 			oModel.setProperty('/selectedrole',oSelectedKey)
 		},
+
 		AddUserDialog : function(){
 			debugger
 			var oView = this.getView();
@@ -62,6 +62,7 @@ sap.ui.define([
 					"ShippingZipCode": "",
 					"BillingAddress": "",
 					"ShippingAddress": "",
+					"Companylogo":'',
 					"Role": ""
 			}
 
@@ -83,36 +84,48 @@ sap.ui.define([
 					userAddFrag.open();
 					userAddFrag.bindElement('appView>/AddUserData');
             });
+
+			this.getView().getModel('appView').setProperty('/existingData',false);
 		},
+
 		onReject : function(){
-			this.userAdd.then(function (userAddFrag) {
-				userAddFrag.close();
-		});
+			debugger;
+			var oModel =  this.getView().getModel('appView');
+			var bExistingData = oModel.getProperty('/existingData');
+			if (!bExistingData){
+				this.userAdd.then(function (userAddFrag) {
+					userAddFrag.close();
+			});
+			return;
+			}
+			else {
+				this.editAddUserDialog.then(function (userAddFrag) {
+					userAddFrag.close();
+					// userAddFrag.bindElement('appView>/userData');
+            });
+			}
 		},
+
 		onRejectPass : function(){
 			this.passDialog.then(function (oPassDialog) {
 				oPassDialog.close();
 		});
 		},
+		
 		getUserData:function(){
-			// debugger;
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this; 
-			// Perform the read operation
 			oModel.read('/AppUsers', {
 				success: function(data) {
-				// Success callback
-				// MessageToast.show("Data read successfully");
 				that.getView().getModel("appView").setProperty("/userDetails",data.results);
-				// that.getView().getModel("appView").setProperty("/status",data.tatus);
 				},
 				error: function(error) {
-					// Error callback
 					that.middleWare.errorHandler(error, that);
 					MessageToast.show("Error reading data");
 				}
 			});
 		},
+
 		onApproveCustomer:function(oEvent){
 			debugger;
 			var selectedItem = oEvent.getParameter("selectedItem").getKey();
@@ -141,6 +154,65 @@ sap.ui.define([
 				}
 			});
 		},
+		handleUploadPress: function (oEvent) {
+			debugger;
+			var files = oEvent.getParameter("files");
+			var that = this;
+			if (!files.length) {
+			} else {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					try {
+						var vContent = e.currentTarget.result; //.result.replace("data:image/jpeg;base64,", "");
+						// that.img.Content = vContent;
+						var stream = that.getImageUrlFromContent(vContent);
+						
+						// that.getModel("appView").setProperty("/companyLogo", stream);
+						that.getModel("appView").setProperty("/LogoAvonUserProfile", vContent);
+						var logoProperty = this.getView().getModel("appView").getProperty("/LogoAvonUserProfile");
+                        var base64String = logoProperty.split(",")[1];
+						that.oFormData.CompanyLogo = base64String;
+						that.getModel("appView").updateBindings();
+					} catch (jqXhr) {
+						that.middleWare.errorHandler(jqXhr, that);
+					}
+				};
+				reader.readAsDataURL(files[0]);
+			}
+		},
+		onLogo: function () {
+			var oLogo = this.getModel("appView").getProperty("/LogoAvonUserProfile");
+			var stream = this.formatter.getImageUrlFromContent(oLogo);
+			if (!this.lightBox) {
+				this.lightBox = new sap.m.LightBox("lightBox", {
+					imageContent: [new sap.m.LightBoxItem({
+						imageSrc: stream
+					})]
+				});
+				this.lightBox.open();
+			} else {
+				this.lightBox.getImageContent()[0].setImageSrc(stream);
+				this.lightBox.open();
+			}
+		},
+		getImageUrlFromContent: function (base64Stream) {
+			if (base64Stream) {
+				var b64toBlob = function (dataURI) {
+					var byteString = atob(dataURI.split(',')[1]);
+					var ab = new ArrayBuffer(byteString.length);
+					var ia = new Uint8Array(ab);
+					for (var i = 0; i < byteString.length; i++) {
+						ia[i] = byteString.charCodeAt(i);
+					}
+					return new Blob([ab], {
+						type: 'image/jpeg'
+					});
+				};
+				var x = b64toBlob(base64Stream);
+				return URL.createObjectURL(x);
+			}
+		},
+
 		onBlockCustomer:function(oEvent){
 			debugger;
 			var state = oEvent.getParameter('state');
@@ -207,6 +279,7 @@ sap.ui.define([
 		AddCustomers : function(){
 			debugger;
 			var that = this;
+
 			var payload =  this.oFormData;
 
 			this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
@@ -217,8 +290,6 @@ sap.ui.define([
 					that.onRejectPass();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-					// that.getView().byId("userid").setValueState('Error');
-					// that.getView().byId("pwd").setValueState('Error');
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
@@ -229,46 +300,73 @@ sap.ui.define([
             var that = this;
 			var oModel = this.getView().getModel('appView');
 			var roleUSerSelected =  oModel.getProperty('/selectedrole');
-			var Email = this.oFormData.EmailId;
-			var phone = this.oFormData.phoneNumber;
-			var firstName =  this.oFormData.FirstName;
-			var lastName = this.oFormData.LastName;
-			var address = this.oFormData.CompanyAddress;
-			var billingCity = this.oFormData.BillingCity;
-			var ShippingCity = this.oFormData.ShippingCity;
-			var phoneRegex = /^\d{10}$/;
-			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			// var Email = this.oFormData.EmailId;
+			// var phone = this.oFormData.phoneNumber;
+			// var firstName =  this.oFormData.FirstName;
+			// var lastName = this.oFormData.LastName;
+			// var address = this.oFormData.CompanyAddress;
+			// var billingCity = this.oFormData.BillingCity;
+			// var ShippingCity = this.oFormData.ShippingCity;
+			// var phoneRegex = /^\d{10}$/;
+			// var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+			var bExistingData = oModel.getProperty('/existingData');
 
 
-			if (phone && !phone.match(phoneRegex)) {
-			MessageToast.show("Phone number should be 10 digits");
-			return;
-			}
-			if (Email && !Email.match(emailRegex)) {
-				MessageToast.show("Please enter a valid email address");
-				return;
-			}
+			// if (phone && !phone.match(phoneRegex)) {
+			// MessageToast.show("Phone number should be 10 digits");
+			// return;
+			// }
+			// if (Email && !Email.match(emailRegex)) {
+			// 	MessageToast.show("Please enter a valid email address");
+			// 	return;
+			// }
 
-			if(!roleUSerSelected){
-				MessageToast.show("Please Select a Role for the New user");
-				return;
-			}
-			if(roleUSerSelected === "Admin" && !Email ){
-				MessageToast.show("Please enter the email address");
-				return;
-			};
-			if(roleUSerSelected === "Customer" && (!Email || !phone || !firstName || !lastName || !address || !billingCity || !ShippingCity)) {
-				MessageToast.show("Please enter the required fields");
-				return;
-			  }
+			// if(!roleUSerSelected){
+			// 	MessageToast.show("Please Select a Role for the New user");
+			// 	return;
+			// }
+			// if(roleUSerSelected === "Admin" && !Email ){
+			// 	MessageToast.show("Please enter the email address");
+			// 	return;
+			// };
+			// if(roleUSerSelected === "Customer" && (!Email || !phone || !firstName || !lastName || !address || !billingCity || !ShippingCity)) {
+			// 	MessageToast.show("Please enter the required fields");
+			// 	return;
+			//   }
 			  
-			  if(roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
-				MessageToast.show("Please enter the required fields");
-				return;
-			  }
+			//   if(roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
+			// 	MessageToast.show("Please enter the required fields");
+			// 	return;
+			//   }
 			  
+			  if(!bExistingData){ // value is false
+				// if user press add nee button
+				this.openDialog();
+			  }else if(bExistingData){
+				this.updateRowData();
+			  }
+			
+		},
+		updateRowData : function(){
+			var oModel = this.getView().getModel("appView");
+			var dModel = this.getView().getModel();
+			var dataModel = oModel.getProperty("/userData");
+			var userId = dataModel.id;
+			const sEntityPath = `/AppUsers('${userId}')`; // Replace with the appropriate entity set name and ID
 
-			this.openDialog();
+			dModel.update(sEntityPath, dataModel, {
+				success: function (data) {
+					sap.m.MessageToast.show("Customer updated successfully");
+					// that.getModel('appView').setProperty('/SaCaVisible', false);
+					// that.getModel('appView').setProperty('/editVisible', true);
+					// that.getModel('appView').setProperty('/editableFields', false);
+					oModel.updateBindings();
+				},
+				error: function (error) {
+					console.error("PATCH request failed");
+				}
+			});
 		},
 		openDialog:function(){
 			var oView = this.getView();
@@ -288,6 +386,35 @@ sap.ui.define([
             });
 		},
 
+		rowItemsPressUser :function(oEvent){
+			debugger;
+			var oParameter = oEvent.getParameter('listItem');
+			var omodel = this.getView().getModel("appView");
+			var sData =oParameter.getBindingContext('appView').getObject();
+			omodel.setProperty('/userData', sData)
+			var oView = this.getView();
+            var that = this;
+			if (!this.editAddUserDialog) {
+                this.editAddUserDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "ent.ui.ecommerce.fragments.Adduser",
+                    controller: this
+                }).then(function (userAddFrag) {    
+                    // Add dialog to view hierarchy
+                    oView.addDependent(userAddFrag);
+                    return userAddFrag;
+                }.bind(this));
+
+				omodel.setProperty('/existingData', true);
+               
+            }
+            this.editAddUserDialog.then(function (userAddFrag) {
+					userAddFrag.open();
+					userAddFrag.bindElement('appView>/userData');
+            });
+
+
+		},
 		
 	});
 });

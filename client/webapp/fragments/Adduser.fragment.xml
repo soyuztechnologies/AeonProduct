@@ -27,7 +27,7 @@
             <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Adduser" type="XML"></core:Fragment>
         </VBox> -->
         <beginButton>
-            <Button text="OK" type="Accept" press="openPassdialog" />
+            <Button text="{=${appView>/existingData} === true ? 'Update' : 'Save'}" type="Accept" press="openPassdialog" />
         </beginButton>
         <endButton>
             <Button text="Cancel" type="Reject" press="onReject" />

@@ -52,7 +52,7 @@ sap.ui.define([
 			debugger;
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if(sUserRole === "Admin"){
-				this.getView().getModel("appView").setProperty('/profilNavVisb',false);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb',false);
 			}
 			else if(sUserRole === "Customer"){
 				this.getView().getModel("appView").setProperty('/upDocNavVisb',false);
@@ -63,7 +63,7 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/upDocNavVisb',false);
 				// this.getView().getModel("appView").setProperty('/welPrintNavVisb',false);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb',false);
-				this.getView().getModel("appView").setProperty('/profilNavVisb',false);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb',false);
 		    }
 		},
 

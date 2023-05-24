@@ -4,6 +4,7 @@
     xmlns:ux="sap.uxap"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:form="sap.ui.layout.form"
+    xmlns:u="sap.ui.unified"
     xmlns:core="sap.ui.core">
 
     <Page showHeader="false" id="profile_Id" >
@@ -18,7 +19,7 @@
                 <ux:snappedHeading>
                     <FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
                         <FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
-                            <f:Avatar src="../../../../../../../{products>ProductPicUrl}" displaySize="S" displayShape="Square"/>
+                            <f:Avatar src="{appView>/companyLogo}" displaySize="S" displayShape="Square"/>
                             <Title text="{appView>FirstName}" wrapping="true" class="sapUiTinyMarginEnd"/>
                         </FlexBox>
                     </FlexBox>
@@ -26,8 +27,9 @@
 
 
                 <ux:actions>
-                    <Button text="Edit" press="onEditCustomerProfile" icon="sap-icon://edit" visible="{appView>/editVisible}"/>
-                    <Button text="Update" press="updateCustomerData" icon="sap-icon://edit" visible="{appView>/updateVisible}"/>
+                    <Button text="Edit" type="Emphasized" press="onEditCustomerProfile" icon="sap-icon://edit" visible="{appView>/editVisible}"/>
+                    <Button text="Save" type="Success" press="updateCustomerData" icon="sap-icon://save" visible="{appView>/SaCaVisible}"/>
+                    <Button text="Cancel" type="Negative"  press="onCancelProfile" icon="sap-icon://cancel" visible="{appView>/SaCaVisible}"/>
                 </ux:actions>
 
 
@@ -35,7 +37,7 @@
         </ux:headerTitle>
         <ux:headerContent>
             <FlexBox wrap="Wrap" fitContainer="true" alignItems="Stretch">
-                <f:Avatar src="../../../../../../../{products>ProductPicUrl}" displaySize="L" displayShape="Square" class="sapUiTinyMarginEnd">
+                <f:Avatar src="data:image/jpeg;base64,{appView>Companylogo}" displaySize="L" displayShape="Square" class="sapUiTinyMarginEnd">
                 </f:Avatar>
                 <VBox justifyContent="Center" class="sapUiSmallMarginEnd">
                     <!-- <m:Label text="Main Category"/> -->
