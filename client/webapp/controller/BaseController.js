@@ -53,17 +53,23 @@ sap.ui.define([
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if(sUserRole === "Admin"){
 				this.getView().getModel("appView").setProperty('/profilNavVisb',false);
+				this.getView().getModel("appView").setProperty("/modifybtnvis", true)
+				this.getView().getModel("appView").setProperty("/addJobStatusVis", true)
 			}
 			else if(sUserRole === "Customer"){
 				this.getView().getModel("appView").setProperty('/upDocNavVisb',false);
+				this.getView().getModel("appView").setProperty('/addJobStatusVis',false);
 				this.getView().getModel("appView").setProperty('/welPrintNavVisb',true);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb',false);
+				this.getView().getModel('appView').setProperty('/modifybtnvis', false);
 			}
 			else if (sUserRole === "Factory Manager"){
 				this.getView().getModel("appView").setProperty('/upDocNavVisb',false);
 				// this.getView().getModel("appView").setProperty('/welPrintNavVisb',false);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb',false);
 				this.getView().getModel("appView").setProperty('/profilNavVisb',false);
+				this.getView().getModel("appView").setProperty("/modifybtnvis", true)
+				this.getView().getModel("appView").setProperty("/addJobStatusVis", true)
 		    }
 		},
 
