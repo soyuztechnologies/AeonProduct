@@ -741,5 +741,20 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         return _pdfurl;
       }
     },
+    getStatusColor:function(status){
+      switch (status) {
+        case "new":
+            return "Success";
+            break;
+        case "Completed":
+            return "Error";
+            break;           
+        case "Packing":
+            return "Warning";
+            break;
+        default:
+            break;
+      }
+    }
   };
 });

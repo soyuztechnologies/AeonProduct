@@ -1,5 +1,5 @@
 sap.ui.define(
-  ["./BaseController","sap/ui/model/json/JSONModel","sap/m/MessageToast"],
+  ["./BaseController","sap/ui/model/json/JSONModel"],
   function (BaseController, JSONModel) {
     "use strict";
     var userRole;
@@ -69,6 +69,7 @@ sap.ui.define(
         });
         if (!sessionStorage.showCartWarning)
           sessionStorage.showCartWarning = false;
+          this.getUserIdMenu();
       },
 
       onAfterRendering: function () {},
@@ -93,7 +94,18 @@ sap.ui.define(
           this.getRouter().navTo("userDetails")
         }
       },
-
+      getUserIdMenu: function () {
+        debugger;
+        var that = this;
+        this.middleWare.callMiddleWare("getUserRole", "get")
+          .then(function (data, status, xhr) {
+            var emailName = data.role.EmailId
+            that.getView().getModel('appView').setProperty('/UserEmail', emailName);
+          })
+          .catch(function (jqXhr, textStatus, errorMessage) {
+            that.middleWare.errorHandler(jqXhr, that);
+          });
+      },
       onClickMenuButton: function (oEvent) {
         debugger;
         var oSideNavigation = this.byId("sideNavigation");
@@ -137,17 +149,6 @@ sap.ui.define(
         // Perform actions based on the selected menu option
         switch (selectedText) {
           case "User":
-            // MessageToast.show("User is Arrived");
-            break;
-            case "Home":
-              // var nav = oEvent.getSource();
-              // if (nav === "UploadDocuments") {
-              // this.getRouter().navTo("UploadDocuments");
-              // }
-              
-              break;
-          case "LogOut":
-            // this.onLogOut();
             // MessageToast.show("User is Arrived");
             break;
           default:
