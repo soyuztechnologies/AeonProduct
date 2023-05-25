@@ -2,9 +2,10 @@ sap.ui.define([
 	"./BaseController",
 	"sap/m/MessageToast",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/Fragment"
+	"sap/ui/core/Fragment",
+	"sap/ui/core/BusyIndicator",
 	
-], function (BaseController,MessageToast, JSONModel,Fragment) {
+], function (BaseController,MessageToast, JSONModel,Fragment,BusyIndicator) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.userDetails", {
@@ -13,6 +14,8 @@ sap.ui.define([
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("userDetails").attachPatternMatched(this._matchedHandler, this);
 		},
+		
+		// * RMh funciton
 		_matchedHandler:function(oEvent){
 			var oModel = this.getView().getModel("appView");
 			oModel.setProperty("/layout", "OneColumn");
@@ -30,6 +33,9 @@ sap.ui.define([
 			this.getUserData();
 			this.getUserRoleData();
 		},
+
+		// * this function will get the role form the company details fragment.
+
 		onRoleChange : function(oEvent){
 			debugger;
 			var oSelectedKey = oEvent.getParameter("selectedItem").getKey();
@@ -37,11 +43,29 @@ sap.ui.define([
 			oModel.setProperty('/selectedrole',oSelectedKey)
 		},
 
-		AddUserDialog : function(){
-			debugger
+		// * this function will load the smae fragement for user add and edit the user data too.
+
+		openUserDialog: function () {
 			var oView = this.getView();
+			var that = this;
+			if (!this.userAdd) {
+				this.userAdd = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.Adduser",
+					controller: this
+				}).then(function (oDialog) {
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.userAdd;
+		},
+
+		//  * this fucntion will opne the add user fragment and create the payload too and set into the property.
+		AddUserDialog : function(){
+			// debugger
             var that = this;
-			// var oPersonalDetailsForm = this.getView().byId('idPersonalDetails');
+			var oModel = this.getView().getModel('appView');
 
 			this.oFormData = {
 					"EmailId": "",
@@ -66,82 +90,73 @@ sap.ui.define([
 					"Role": ""
 			}
 
-			this.getView().getModel('appView').setProperty("/AddUserData", this.oFormData);
+			// the whole form data will be set to the  "AddUserData" property in appView model.
+			oModel.setProperty("/AddUserData", this.oFormData);
 
-			if (!this.userAdd) {
-                this.userAdd = Fragment.load({
-                    id: oView.getId(),
-                    name: "ent.ui.ecommerce.fragments.Adduser",
-                    controller: this
-                }).then(function (userAddFrag) {    
-                    // Add dialog to view hierarchy
-                    oView.addDependent(userAddFrag);
-                    return userAddFrag;
-                }.bind(this));
-               
-            }
-            this.userAdd.then(function (userAddFrag) {
-					userAddFrag.open();
-					userAddFrag.bindElement('appView>/AddUserData');
-            });
+			// this will open the dilaog to add the user 
+			this.openUserDialog().then(function (userAddFrag) {
+				userAddFrag.open();
+				userAddFrag.bindElement('appView>/AddUserData');
+				oModel.setProperty('/TitleUserAdd', "AddUser");
+				oModel.setProperty('/existingData',false);
+				oModel.setProperty('/userEditBtn',false);
+				oModel.setProperty('/userCancelBtn',true);
+				oModel.setProperty('/userupdateBtn',true);
+				oModel.setProperty('/currentLogo',false);
 
-			this.getView().getModel('appView').setProperty('/existingData',false);
+			});
+
 		},
 
+		// * this function is close the dialog on add user and edit user.
 		onReject : function(){
 			debugger;
 			var oModel =  this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
-			if (!bExistingData){
-				this.userAdd.then(function (userAddFrag) {
-					userAddFrag.close();
+			this.openUserDialog().then(function (userAddFrag) {
+				userAddFrag.close();
+				// that.getView().getModel('appView').setProperty('/existingData',false);
 			});
-			return;
-			}
-			else {
-				this.editAddUserDialog.then(function (userAddFrag) {
-					userAddFrag.close();
-					// userAddFrag.bindElement('appView>/userData');
-            });
-			}
+			
 		},
 
+		// * this function is close the dialog which ask for the passwprd when user add.
 		onRejectPass : function(){
 			this.passDialog.then(function (oPassDialog) {
 				oPassDialog.close();
 		});
 		},
 		
+		// * this function is read the all appUsers data.
 		getUserData:function(){
+			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this; 
 			oModel.read('/AppUsers', {
 				success: function(data) {
 				that.getView().getModel("appView").setProperty("/userDetails",data.results);
+				BusyIndicator.hide();
 				},
 				error: function(error) {
+					BusyIndicator.hide();
 					that.middleWare.errorHandler(error, that);
 					MessageToast.show("Error reading data");
 				}
 			});
 		},
 
+		// * this function is make the update call for change the approval status.
 		onApproveCustomer:function(oEvent){
-			debugger;
+			// debugger;
 			var selectedItem = oEvent.getParameter("selectedItem").getKey();
-			debugger;
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
 			var oid = this.getView().getModel("appView").getProperty(opath);
 			var custid = oid.id;
 			
 			const oModel = this.getView().getModel();
 			const sEntityPath = `/AppUsers('`+custid+"')"; // Replace with the appropriate entity set name and ID
-			// const sEntityPath = `/AppUsers/`+ custid; // Replace with the appropriate entity set name and ID
-			
 			const oData = {
-				// Update the properties of the entity
 				"Status": selectedItem
-				// Add more properties as needed
 			};
 			
 			oModel.update(sEntityPath, oData, {
@@ -154,10 +169,42 @@ sap.ui.define([
 				}
 			});
 		},
+
+		// * this function is make the update call for block and unblock the customer.
+		onBlockCustomer:function(oEvent){
+			// debugger;
+			var state = oEvent.getParameter('state');
+			state = state === true ? 'Yes' : 'No';
+			var opath = oEvent.getSource().getBindingContext("appView").getPath();
+			var oid = this.getView().getModel("appView").getProperty(opath);
+			var custid = oid.id;
+			
+			const oModel = this.getView().getModel();
+			const sEntityPath = `/AppUsers('`+custid+"')"; // Replace with the appropriate entity set name and ID
+			
+			const oData = {
+				"Blocked": state
+			};
+			
+			oModel.update(sEntityPath, oData, {
+				success: function(data) {
+					MessageToast.show("Customer Blocked Status is Changed Successfully")
+				},
+				error: function(error) {
+					this.middleWare.errorHandler(error, that);
+					MessageToast.show("Error while update the status")
+				}
+			});
+		},
+
+		// * this function is handling the image and convert into the base64 after that setinto the property.
 		handleUploadPress: function (oEvent) {
 			debugger;
 			var files = oEvent.getParameter("files");
 			var that = this;
+			var oModel = this.getView().getModel("appView");
+			var Data = oModel.getProperty("/userData");
+			oModel.setProperty("/logoUpdate", Data.Companylogo);
 			if (!files.length) {
 			} else {
 				var reader = new FileReader();
@@ -168,11 +215,13 @@ sap.ui.define([
 						var stream = that.getImageUrlFromContent(vContent);
 						
 						// that.getModel("appView").setProperty("/companyLogo", stream);
-						that.getModel("appView").setProperty("/LogoAvonUserProfile", vContent);
-						var logoProperty = this.getView().getModel("appView").getProperty("/LogoAvonUserProfile");
-                        var base64String = logoProperty.split(",")[1];
-						that.oFormData.CompanyLogo = base64String;
-						that.getModel("appView").updateBindings();
+						oModel.setProperty("/LogoAvonUserProfile", vContent);
+						oModel.setProperty("/streamUrlLogo", stream)
+						// var logo = oModel.getProperty("logoUpdate")	
+						// var logoProperty = oModel.getProperty("/LogoAvonUserProfile");
+                        // var base64String = logoProperty.split(",")[1];
+						// logo = base64String;
+						oModel.updateBindings();
 					} catch (jqXhr) {
 						that.middleWare.errorHandler(jqXhr, that);
 					}
@@ -180,8 +229,10 @@ sap.ui.define([
 				reader.readAsDataURL(files[0]);
 			}
 		},
+
+		// * this function works to show the logo when user clicks on the show logo button
 		onLogo: function () {
-			var oLogo = this.getModel("appView").getProperty("/LogoAvonUserProfile");
+			var oLogo = this.getModel("appView").getProperty("/streamUrlLogo");
 			var stream = this.formatter.getImageUrlFromContent(oLogo);
 			if (!this.lightBox) {
 				this.lightBox = new sap.m.LightBox("lightBox", {
@@ -195,6 +246,8 @@ sap.ui.define([
 				this.lightBox.open();
 			}
 		},
+
+		// * this function will convert the base 64 image url into the stream url to show the image.
 		getImageUrlFromContent: function (base64Stream) {
 			if (base64Stream) {
 				var b64toBlob = function (dataURI) {
@@ -213,37 +266,7 @@ sap.ui.define([
 			}
 		},
 
-		onBlockCustomer:function(oEvent){
-			debugger;
-			var state = oEvent.getParameter('state');
-			state = state === true ? 'Yes' : 'No';
-			debugger;
-			var opath = oEvent.getSource().getBindingContext("appView").getPath();
-			var oid = this.getView().getModel("appView").getProperty(opath);
-			var custid = oid.id;
-			
-			const oModel = this.getView().getModel();
-			const sEntityPath = `/AppUsers('`+custid+"')"; // Replace with the appropriate entity set name and ID
-			// const sEntityPath = `/AppUsers/`+ custid; // Replace with the appropriate entity set name and ID
-			
-			const oData = {
-				// Update the properties of the entity
-				"Blocked": state
-				// Add more properties as needed
-			};
-			
-			oModel.update(sEntityPath, oData, {
-				success: function(data) {
-					MessageToast.show("Customer Blocked Status is Changed Successfully")
-					// console.log("PATCH request successful:", data);
-				},
-				error: function(error) {
-					// this.middleWare.errorHandler(error, that);
-					MessageToast.show("Error while update the status")
-					// console.error("PATCH request failed");
-				}
-			});
-		},
+		// * this onSelect event works to show the passWord field in the Password Fragment.
 		showPassField : function(oEvent){
 			debugger;
 			var passSwitchState = oEvent.getParameter('state');
@@ -258,6 +281,7 @@ sap.ui.define([
 			}
 		},
 
+		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
 		onAddUserViaAdmin : function(oEvent){
 			debugger;
 			var oModel = this.getView().getModel("appView");
@@ -276,6 +300,8 @@ sap.ui.define([
 
 			 this.AddCustomers();
 		},
+
+		// * it make a post call to create the user via admin side.
 		AddCustomers : function(){
 			debugger;
 			var that = this;
@@ -294,64 +320,81 @@ sap.ui.define([
 				});
 		},
 
+		// * this funciton handle the validation on the add user and open the password fragment to make call.
 		openPassdialog : function(){
+			debugger;
+			var oModel = this.getView().getModel('appView');
+			var bExistingData = oModel.getProperty('/existingData');
+
+			if(!bExistingData){ // value is false
+				// if user press add nee button
+				this.userPassDialogValidation();
+			  }else if(bExistingData){
+				this.updateRowData();
+			  }
+		},
+
+		userPassDialogValidation: function(){
 			debugger;
 			var oView = this.getView();
             var that = this;
 			var oModel = this.getView().getModel('appView');
 			var roleUSerSelected =  oModel.getProperty('/selectedrole');
-			// var Email = this.oFormData.EmailId;
-			// var phone = this.oFormData.phoneNumber;
-			// var firstName =  this.oFormData.FirstName;
-			// var lastName = this.oFormData.LastName;
-			// var address = this.oFormData.CompanyAddress;
-			// var billingCity = this.oFormData.BillingCity;
-			// var ShippingCity = this.oFormData.ShippingCity;
-			// var phoneRegex = /^\d{10}$/;
-			// var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			var Email = this.oFormData.EmailId;
+			var phone = this.oFormData.phoneNumber;
+			var firstName =  this.oFormData.FirstName;
+			var lastName = this.oFormData.LastName;
+			var address = this.oFormData.CompanyAddress;
+			var billingCity = this.oFormData.BillingCity;
+			var ShippingCity = this.oFormData.ShippingCity;
+			var phoneRegex = /^\d{10}$/;
+			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-			var bExistingData = oModel.getProperty('/existingData');
+			if (phone && !phone.match(phoneRegex)) {
+			MessageToast.show("Phone number should be 10 digits");
+			return;
+			}
+			if (Email && !Email.match(emailRegex)) {
+				MessageToast.show("Please enter a valid email address");
+				return;
+			}
 
-
-			// if (phone && !phone.match(phoneRegex)) {
-			// MessageToast.show("Phone number should be 10 digits");
-			// return;
-			// }
-			// if (Email && !Email.match(emailRegex)) {
-			// 	MessageToast.show("Please enter a valid email address");
-			// 	return;
-			// }
-
-			// if(!roleUSerSelected){
-			// 	MessageToast.show("Please Select a Role for the New user");
-			// 	return;
-			// }
-			// if(roleUSerSelected === "Admin" && !Email ){
-			// 	MessageToast.show("Please enter the email address");
-			// 	return;
-			// };
-			// if(roleUSerSelected === "Customer" && (!Email || !phone || !firstName || !lastName || !address || !billingCity || !ShippingCity)) {
-			// 	MessageToast.show("Please enter the required fields");
-			// 	return;
-			//   }
-			  
-			//   if(roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
-			// 	MessageToast.show("Please enter the required fields");
-			// 	return;
-			//   }
-			  
-			  if(!bExistingData){ // value is false
-				// if user press add nee button
-				this.openDialog();
-			  }else if(bExistingData){
-				this.updateRowData();
+			if(!roleUSerSelected){
+				MessageToast.show("Please Select a Role for the New user");
+				return;
+			}
+			if(roleUSerSelected === "Admin" && !Email ){
+				MessageToast.show("Please enter the email address");
+				return;
+			};
+			if(roleUSerSelected === "Customer" && (!Email || !phone || !firstName || !lastName || !address || !billingCity || !ShippingCity)) {
+				MessageToast.show("Please enter the required fields");
+				return;
 			  }
-			
+			  
+			  if(roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
+				MessageToast.show("Please enter the required fields");
+				return;
+			  }
+		
+			this.openDialog();
 		},
+
+		// * this fucntion will do a update call when admin edit the user data.
 		updateRowData : function(){
 			var oModel = this.getView().getModel("appView");
 			var dModel = this.getView().getModel();
 			var dataModel = oModel.getProperty("/userData");
+			var logoProperty = this.getView().getModel("appView").getProperty("/LogoAvonUserProfile");
+			if (!logoProperty){
+				var Companylogo = dataModel.Companylogo;
+				dataModel.Companylogo = Companylogo;
+			}
+			else{
+            var base64String = logoProperty.split(",")[1];
+			dataModel.Companylogo = base64String;
+			}
+
 			var userId = dataModel.id;
 			const sEntityPath = `/AppUsers('${userId}')`; // Replace with the appropriate entity set name and ID
 
@@ -361,6 +404,7 @@ sap.ui.define([
 					// that.getModel('appView').setProperty('/SaCaVisible', false);
 					// that.getModel('appView').setProperty('/editVisible', true);
 					// that.getModel('appView').setProperty('/editableFields', false);
+					that.onReject();
 					oModel.updateBindings();
 				},
 				error: function (error) {
@@ -368,10 +412,12 @@ sap.ui.define([
 				}
 			});
 		},
+
+		// * this fucntion load and open the Adduserpass fragment dialog at here.
 		openDialog:function(){
 			var oView = this.getView();
             var that = this;
-		if (!this.passDialog) {
+			if (!this.passDialog) {
                 this.passDialog = Fragment.load({
                     id: oView.getId(),
                     name: "ent.ui.ecommerce.fragments.AddUserPass",
@@ -386,34 +432,67 @@ sap.ui.define([
             });
 		},
 
+		onUserEdit: function(){
+			var omodel = this.getView().getModel("appView");
+			omodel.setProperty('/userupdateBtn',true);
+			omodel.setProperty('/userCancelBtn',true);
+			omodel.setProperty('/editableFields',true);
+			omodel.setProperty('/EmailVisible',false);
+			omodel.setProperty('/RoleField',true);
+			omodel.setProperty('/enabledCompanyLogo',true);
+			omodel.setProperty('/LogoShowButton',true);
+			omodel.setProperty('/userEditBtn',false);
+
+		},
+
+		// * this fucntion will get the entity data and bind the data into the edit user fragment.
 		rowItemsPressUser :function(oEvent){
-			debugger;
+			// debugger;
 			var oParameter = oEvent.getParameter('listItem');
 			var omodel = this.getView().getModel("appView");
 			var sData =oParameter.getBindingContext('appView').getObject();
 			omodel.setProperty('/userData', sData)
 			var oView = this.getView();
             var that = this;
-			if (!this.editAddUserDialog) {
-                this.editAddUserDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "ent.ui.ecommerce.fragments.Adduser",
-                    controller: this
-                }).then(function (userAddFrag) {    
-                    // Add dialog to view hierarchy
-                    oView.addDependent(userAddFrag);
-                    return userAddFrag;
-                }.bind(this));
 
+			this.openUserDialog().then(function (userAddFrag) {
+				userAddFrag.open();
+				userAddFrag.bindElement('appView>/userData');
 				omodel.setProperty('/existingData', true);
-               
-            }
-            this.editAddUserDialog.then(function (userAddFrag) {
-					userAddFrag.open();
-					userAddFrag.bindElement('appView>/userData');
-            });
+				omodel.setProperty('/TitleUserAdd', "Edit User");
+				omodel.setProperty('/userupdateBtn',false);
+				omodel.setProperty('/userCancelBtn',true);
+				omodel.setProperty('/editableFields',false);
+				omodel.setProperty('/EmailVisible',false);
+				omodel.setProperty('/RoleField',false);
+				omodel.setProperty('/enabledCompanyLogo',false);
+				omodel.setProperty('/LogoShowButton',false);
+				omodel.setProperty('/userEditBtn',true);
+			});
 
+		},
 
+		SendEmailExistUser : function(oEvent){
+				debugger;
+				var that= this;
+				var oRow = oEvent.getSource().getBindingContext('appView').getObject();
+				var Email = oRow.EmailId;
+				var id = oRow.TechnicalId;
+				var payload = {
+					EmailId : Email,
+					TechnicalId : id
+				}
+
+				this.middleWare.callMiddleWare("sendEmailExistUser", "POST", payload)
+				.then( function (data, status, xhr) {
+					// debugger
+					MessageToast.show("Mail Sent Succefully");
+					// that.onReject();
+					// that.onRejectPass();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
 		},
 		
 	});

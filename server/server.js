@@ -127,7 +127,7 @@ function generateToken(email) {
 //  ########################################################################
 
 
-app.post('/forgotPasswordEmailVerify', async (req, res) => {
+app.post('/', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
@@ -999,12 +999,40 @@ app.get('/getUserRole',  async(req, res) => {
 			});
 		//   });
 	  }
-
-  
-
   });
   
   
+  app.post('/sendEmailExistUser', async(req, res) => {
+	debugger;
+	this.User = app.models.User;
+	this.Param = app.models.Param;
+	this.AppUser = app.models.AppUser;
+	this.Customer = app.models.Customer;
+
+	const newCustomer = {};
+	for (const field in req.body) {
+		newCustomer[field] = req.body[field];
+	}
+	
+	var EmailId = newCustomer.EmailId;
+	var id   = newCustomer.TechnicalId;
+	
+try{
+	let userTableUser =await this.User.findOne({ where: { email:EmailId,id:id} });
+	let TempPassW = userTableUser.TempPass;
+	if(!TempPassW){
+		res.status(404).json("this user doesn't exist with the temporary password");
+		return;
+	}
+	 const { email, TempPass} = userTableUser;
+	  await sendEmailPass(email,TempPass);
+
+    return res.status(200).json('Email send successfully');
+  } catch (error) {
+    // Handle error
+    return res.status(500).json({ error: 'Failed to Send Email' });
+  }
+});
 
 
 

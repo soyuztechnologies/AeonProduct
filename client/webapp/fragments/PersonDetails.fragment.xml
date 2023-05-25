@@ -2,7 +2,8 @@
     xmlns:form="sap.ui.layout.form"
     xmlns="sap.m"
     xmlns:i="sap.ui.core"
-    xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:u="sap.ui.unified"
+    xmlns:f="sap.f"
     xmlns:html="http://www.w3.org/1999/xhtml">
     <!-- <Dialog > -->
     <form:SimpleForm maxContainerCols="2" id="personDetails" editable="false" layout="ColumnLayout" labelSpanL="12" labelSpanM="12" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
@@ -19,13 +20,18 @@
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Last Name"/>
             <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>LastName}" editable="{appView>/editableFields}"/>
 
-               <Label  text="{i18n>CompanyLogo}"  />
+            <Label text="{i18n>CurrentCompanyLogo}" visible="{appView>/currentLogo}"/>
+            <Image src="data:image/jpeg;base64,{appView>/userData/Companylogo}" width="50%" height="50%"/>
+
+               <Label  text="{i18n>NewCompanyLogo}"/>
+                
+                   <!-- <f:Avatar src="" displaySize="S" displayShape="Square"/>     -->
                 <u:FileUploader name="myFileUpload" enabled="{appView>/enabledCompanyLogo}" uploadUrl="/upload" visible="true" change="handleUploadPress" tooltip="UploadYourFileToTheLocalServer" uploadComplete="handleUploadComplete">
-                    <u:parameters>
+                <u:parameters>
                         <u:FileUploaderParameter name="createdBy" />
                     </u:parameters>
                 </u:FileUploader>
-                <Button text="Show Logo"  tooltip="checkLogo" press="onLogo" />
+                <Button text="Show Logo"  tooltip="checkLogo" press="onLogo" enabled="{appView>/LogoShowButton}"/>
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Personal Mail Address"/>
             <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyEmail}" editable="{appView>/editableFields}"/>

@@ -9,8 +9,8 @@
 					<content>
 						<Title text="User Details" level="H2"/>
 						<ToolbarSpacer />
-						<Button textDirection="Inherit" icon="sap-icon://refresh" press="getUserData"></Button>
-						<Button text="Add" icon="sap-icon://add" press="AddUserDialog"/>
+						<Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
+						<Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
 					</content>
 				</OverflowToolbar>
 			</headerToolbar>
@@ -24,14 +24,15 @@
 				<Column minScreenWidth="Tablet" demandPopin="true">
 					<Text text="Role" />
 				</Column>
-				<!-- <Column minScreenWidth="Desktop" demandPopin="true" hAlign="End">
-				<Text text="CreatedOn" />
-			</Column> -->
+		
 				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
 					<Text text="Blocked" />
 				</Column>
-				<Column hAlign="End">
+				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
 					<Text text="Approval" />
+				</Column>
+				<Column hAlign="End">
+					<Text text="Send Email" />
 				</Column>
 			</columns>
 			<items>
@@ -50,7 +51,7 @@
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />
 						</Select>
-						<!-- <Button type="Accept" text="Access"></Button> -->
+						<Button type="Accept"  press="SendEmailExistUser" text="Send Email" icon="sap-icon://email"></Button>
 					</cells>
 				</ColumnListItem>
 			</items>

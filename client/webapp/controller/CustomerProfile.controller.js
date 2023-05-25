@@ -116,19 +116,27 @@ sap.ui.define([
 			debugger;
 			var that = this;
 			const oModel = this.getView().getModel();
+			var appmodel = this.getView().getModel("appView");
 			var datamodel = this.getView().getModel("appView").getProperty("/CustomerData");
 			var logoProperty = this.getView().getModel("appView").getProperty("/LogoAvonProfile");
+			if (!logoProperty){
+				var Companylogo = datamodel.Companylogo;
+				datamodel.Companylogo = Companylogo;
+			}
+			else{
             var base64String = logoProperty.split(",")[1];
 			datamodel.Companylogo = base64String;
-			const sEntityPath = `/AppUsers('${userId}')`; // Replace with the appropriate entity set name and ID
+			}
+			const sEntityPath = `/AppUsers('${userId}')`; 
 
 			oModel.update(sEntityPath, datamodel, {
 				success: function (data) {
 					sap.m.MessageToast.show("Customer updated successfully");
-					that.getModel('appView').setProperty('/SaCaVisible', false);
-					that.getModel('appView').setProperty('/editVisible', true);
-					that.getModel('appView').setProperty('/editableFields', false);
-					oModel.updateBindings();
+					appmodel.setProperty('/SaCaVisible', false);
+					appmodel.setProperty('/editVisible', true);
+					appmodel.setProperty('/editableFields', false);
+					appmodel.setProperty('/enabledCompanyLogo', false);
+					appmodel.updateBindings();
 				},
 				error: function (error) {
 					console.error("PATCH request failed");

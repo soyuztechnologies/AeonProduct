@@ -6,10 +6,11 @@
     xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:core="sap.ui.core">
     <Dialog title="Add User" showHeader="false" >
+        <content>
         <!-- <headerToolbar> -->
             <OverflowToolbar >
                 <content>
-                    <Title text="Add User" level="H2"/>
+                    <Title text="{appView>/TitleUserAdd}" level="H2"/>
                     <ToolbarSpacer />
                 </content>
             </OverflowToolbar>
@@ -23,14 +24,25 @@
         <VBox tooltip="User Personal Details">
             <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Address" type="XML"></core:Fragment>
         </VBox>
-        <!-- <VBox>
-            <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Adduser" type="XML"></core:Fragment>
-        </VBox> -->
-        <beginButton>
-            <Button text="{=${appView>/existingData} === true ? 'Update' : 'Save'}" type="Accept" press="openPassdialog" />
-        </beginButton>
-        <endButton>
-            <Button text="Cancel" type="Reject" press="onReject" />
-        </endButton>
+    </content>
+
+    <footer>
+		<Toolbar>
+			<content>
+                <ToolbarSpacer />
+                <Button text="Edit" type="Emphasized" press="onUserEdit"  icon="sap-icon://edit" visible="{appView>/userEditBtn}"/>
+                <Button text="{=${appView>/existingData} === true ? 'Update' : 'Save'}" type="Accept" press="openPassdialog" icon="sap-icon://save" visible="{appView>/userupdateBtn}"/>
+                <Button text="Cancel" type="Reject" press="onReject"  icon="sap-icon://cancel"  visible="{appView>/userCancelBtn}"/>
+            </content>
+		</Toolbar>
+	</footer>
+
+            <!-- <beginButton>
+                <Button text="{=${appView>/existingData} === true ? 'Update' : 'Save'}" type="Accept" press="openPassdialog" icon="sap-icon://save"/>
+                </beginButton>
+                <Button text="Edit" type="Emphasized" press="onReject"  icon="sap-icon://edit" visible="{appView>/userAdd/EditDialog}"/>
+            <endButton>
+                <Button text="Cancel" type="Reject" press="onReject"  icon="sap-icon://cancel"/>
+            </endButton> -->
     </Dialog>	
 </core:FragmentDefinition>

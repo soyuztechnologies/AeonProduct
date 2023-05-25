@@ -159,94 +159,136 @@ sap.ui.define([
 
 		},
 		openDialog : function(){
-			debugger
 			var oView = this.getView();
-            var that = this;
-			
-            if (!this.oDialog) {
-                this.oDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "ent.ui.ecommerce.fragments.Signup",
-                    controller: this
-                }).then(function (oDialog) {    
-                    // Add dialog to view hierarchy
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                }.bind(this));
-               
-            }
-            this.oDialog.then(function (oDialog) {
-				if(isSignupButton==true){
-					oDialog.open();
-					that.getView().getModel('appView').setProperty("/Title","Signup");
-				}
-				else{
-					oDialog.open();
-					var oModel = that.getView().getModel('appView')
-					oModel.setProperty("/Title","Forgot Password");
-					oModel.setProperty("/Email","");
-					oModel.updateBindings();
-				}
-            });
+			var that = this;
+			if (!this.signupDialog) {
+				this.signupDialog = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.Signup",
+					controller: this
+				}).then(function (oDialog) {
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.signupDialog;
 		},
 
+		onReject: function () {
+			var oModel = this.getView().getModel('appView');
+            this.openDialog().then(function (oDialog) {
+				oDialog.close();
+				oModel.setProperty("/Email","");
+			})
+        },
+
 		SignUp : function (){
-			debugger
-			isSignupButton = true;
-			this.openDialog();
+			var that=this;
+			var oModel = that.getView().getModel('appView');
+			this.openDialog().then(function (oDialog) {
+				oDialog.open();
+				oModel.setProperty("/Title","Signup");
+				isSignupButton =true;
+			})
         },
 
 		ForgotPasswprd : function(){
-			debugger
-			isSignupButton = false;
-			this.openDialog();
+			var oModel = this.getView().getModel('appView');
+			var that=this;
+			this.openDialog().then(function (oDialog) {
+				oDialog.open();
+				oModel.setProperty("/Title","Forgot Password");
+				isSignupButton = false;
+			})
         },
 
-		onSubmit : function () {
+		onSignupEmailVerifyCall : function(){
 			var that = this; 
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
+
+			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (oEmail && !oEmail.match(emailRegex)) {
+				MessageToast.show("Please enter a valid email address");
+				return;
+			}
+			else if(!oEmail) {
+				MessageToast.show("Please enter a email address");
+				return;
+			};
+
 			var payload = {
 				"email" : oEmail
 			}; 	
-			if(isSignupButton == true){
-				// debugger;
-				this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
-					.then( function (data, status, xhr) {
-						debugger;
-						MessageToast.show("Verfication Email Sent to Your Mail");
-						that.getView().getModel('appView').setProperty("/EmailEditable", false);
-						that.OtpSend();
-	
-					})
-					.catch(function (jqXhr, textStatus, errorMessage) {
-						debugger;
-						that.middleWare.errorHandler(jqXhr, that);
-					});
-			}
-			else{
-				this.middleWare.callMiddleWare("forgotPasswordEmailVerify", "POST", payload)
+			this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
 				.then( function (data, status, xhr) {
 					debugger;
-					MessageToast.show("forgot Password Email Sent to Your Mail");
+					MessageToast.show("Verfication Email Sent to Your Mail");
 					that.getView().getModel('appView').setProperty("/EmailEditable", false);
-					that.OtpSend();
+					that.ResendEmailSend();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					debugger;
+					that.middleWare.errorHandler(jqXhr, that);
+			});
+		},
+
+		onForgotPasswordEmailVerfiyCall : function(){
+			var that = this; 
+			var oEmail = this.getView().getModel('appView').getProperty("/Email");
+
+			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (oEmail && !oEmail.match(emailRegex)) {
+				MessageToast.show("Please enter a valid email address");
+				return;
+			}
+			else if(!oEmail) {
+				MessageToast.show("Please enter a email address");
+				return;
+			};
+			var payload = {
+				"email" : oEmail
+			};
+			this.middleWare.callMiddleWare("forgotPasswordEmailVerify", "POST", payload)
+				.then( function (data, status, xhr) {
+					debugger;
+					// MessageToast.show("forgot Password Email Sent to Your Mail");
+					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
+					MessageBox.information("You will receive a Email to forgot you Password.")
+					that.onReject();
+					// that.OtpSend();
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					debugger;
 					that.middleWare.errorHandler(jqXhr, that);
-				});
-			}
-
-
-
+			});
 		},
 
-		onReject: function () {
-            this.oDialog.then(function (oDialog) {
-                oDialog.close();
-            });
-        },
+		onEmailLiveChange : function(oEvent){
+			var emailInput = oEvent.getSource();
+			var email = emailInput.getValue();
+			var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailPattern.test(email)) {
+				// Invalid email format
+				emailInput.setValueState('Error');
+				emailInput.setValueStateText("Enter a valid email address");
+			} else {
+				// Valid email format
+				emailInput.setValueState('None');
+			}
+		},
+
+		onSubmit : function () {
+			if(isSignupButton == true){
+				this.onSignupEmailVerifyCall();
+			}
+			else{
+				this.onForgotPasswordEmailVerfiyCall();
+			}
+		},
+
+		
 
 		resetFrag:function(){
 			var oView = this.getView();
@@ -274,7 +316,7 @@ sap.ui.define([
 		resendOTP:function(){
 			this.onSubmit();
 		},
-		OtpSend: function () {
+		ResendEmailSend: function () {
             
             this.emailCount += 1;
             var that = this;
