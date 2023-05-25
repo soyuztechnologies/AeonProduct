@@ -67,15 +67,11 @@ sap.ui.define([
 		},
 		onClickUpdate: function () {
 			debugger;
-<<<<<<< HEAD
-			this.getView().getModel("appView").setProperty("/updBtnVisibility", false);
-=======
 			this.getView().getModel("appView").setProperty("/onClickModify", false);
 			this.getView().getModel("appView").setProperty("/modifybtnvis", true)
 			this.getView().getModel("appView").setProperty("/cancleBtnVis", false)
 			this.getView().getModel("appView").setProperty("/updBtnVisibility", false)
 
->>>>>>> 9741de76a5fc400e3b8e5656c996626d89a5e717
 			this.onUploadData();
 		},
 		onClickCancle:function(){
@@ -370,15 +366,6 @@ sap.ui.define([
 			var that = this;
 			var ids = this.oArgs
 			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
-<<<<<<< HEAD
-			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfUrlArtwork")
-			// Perform the read operation
-			const oUpdatedData = {
-				poAttachment: poFile,
-				artworkAttachment: artworkAttachment
-				// artworkAttachment:artworkFile
-			};
-=======
 			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfArtwork")
 			
 			if (!poFile){
@@ -409,7 +396,6 @@ sap.ui.define([
 			}
 			// Perform the read operation
 			
->>>>>>> 9741de76a5fc400e3b8e5656c996626d89a5e717
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
 				success: function (data) {
 					debugger;

@@ -20,17 +20,10 @@
 						<Link press="onClickPopupArt" text="{appView>artworkCode}"></Link>
 
 						<Label text="Paper Board"></Label>
-<<<<<<< HEAD
-						<Input editable="false" value="{appView>artworkCode} / {appView>printing}"></Input>
-
-						<Label text="Coating"></Label>
-						<Input editable="false" value="{appView>PaperGSM}"></Input>
-=======
 						<Input editable="false" value="{appView>artworkCode} + {appView>color}"></Input>
 
 						<Label text="Coating"></Label>
 						<Input editable="false" value="{appView>varnish_Lamination}"></Input>
->>>>>>> 9741de76a5fc400e3b8e5656c996626d89a5e717
 					<!-- </VBox> -->
 				</f:content>
 		</f:SimpleForm>
