@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
-    <Table   autoPopinMode="true">
+    <Table items="{appView>/jobStatusTabData}"  autoPopinMode="true">
         <headerToolbar>
            <Toolbar>
                <Title text="Job Status" />
@@ -53,17 +53,17 @@
            <items>
                <ColumnListItem >
                    <cells>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/rawMaterial}"></Input> 
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Coating}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/spotUV}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Punching}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Packing}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Printing}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Foiling}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Embossing}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>/jobStatusTabData/Pasting}"></Input>
-                       <Link  press="onClickPopup"  text="{appView>/jobStatusTabData/InvNo}" ></Link>
-                       <Link  press="onClickPopup"  text="{appView>/jobStatusTabData/DeliveryNo}" ></Link>				
+                       <Input editable="{appView>/onClickModify}" value="{appView>JobStatusId}"></Input> 
+                       <Input editable="{appView>/onClickModify}" value="{appView>Coating}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>Packing}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>Printing}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>Foiling}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>Embossing}"></Input>
+                       <Input editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
+                       <Link  press="onClickPopup"  text="{appView>InvNo}" ></Link>
+                       <Link  press="onClickPopup"  text="{appView>DeliveryNo}" ></Link>				
                    </cells>
                </ColumnListItem>
            </items>
