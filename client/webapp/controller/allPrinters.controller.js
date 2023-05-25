@@ -119,6 +119,8 @@ sap.ui.define([
 					aFilters.push(oFilter);
 				});
 				oBinding.filter(aFilters);
+			}else{
+				this.onViewSettingsCancel();
 			}
 		},
 		onViewSettingsCancel: function () {

@@ -744,14 +744,20 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     getStatusColor:function(status){
       switch (status) {
         case "new":
-            return "Success";
+            return "None";
             break;
         case "Completed":
-            return "Error";
+            return "Success";
             break;           
         case "Packing":
             return "Warning";
             break;
+        case "In Progress":
+            return "Error";
+            break;
+        case "In Transit":
+            return "Warning";
+            break;       
         default:
             break;
       }
