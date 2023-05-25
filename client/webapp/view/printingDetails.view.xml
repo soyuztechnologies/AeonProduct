@@ -18,12 +18,11 @@
 						<core:Title></core:Title>
 						<Label text="Artwork"></Label>
 						<Link press="onClickPopupArt" text="{appView>artworkCode}"></Link>
-
 						<Label text="Paper Board"></Label>
 						<Input editable="false" value="{appView>artworkCode} + {appView>color}"></Input>
 
 						<Label text="Coating"></Label>
-						<Input editable="false" value="{appView>varnish_Lamination}"></Input>
+						<Input editable="false" value="{appView>PaperGSM}"></Input>
 					<!-- </VBox> -->
 				</f:content>
 		</f:SimpleForm>
