@@ -115,8 +115,9 @@ app.start = function () {
 
 		// Generate JWT token
 function generateToken(email) {
+	const expirationTime = Math.floor(Date.now() / 1000) + (30 * 60);
     const secretKey = 'your_secret_key'; // Replace with your actual secret key
-    return jwt.sign({ email }, secretKey);
+    return jwt.sign({ email,exp: expirationTime }, secretKey);
 }
 
 
@@ -127,7 +128,7 @@ function generateToken(email) {
 //  ########################################################################
 
 
-app.post('/', async (req, res) => {
+app.post('/forgotPasswordEmailVerify', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
 	this.AppUser = app.models.AppUser;
@@ -268,10 +269,18 @@ app.post('/Forgot/verifyToken', async (req, res) => {
 	this.AppUser = app.models.AppUser;
 	try {
 	  const { token } = req.body;
-  
+		var email;
+	  jwt.verify(token, 'your_secret_key', function(err, decoded) {
+		if (err) {
+			res.status(500).send('Token is Expired');
+		}
+		else {
+			email = decoded.email;
+		}
+	});
 	  // Verify the token and extract the email
-	  const decodedToken = jwt.verify(token, 'your_secret_key');
-	  const email = decodedToken.email;
+	//   const decodedToken = jwt.verify(token, 'your_secret_key');
+	//   const email = decodedToken.email;
   
 	  // Check if the user already exists
 	  const existingUser = await this.User.findOne({ where: { email } });
@@ -493,10 +502,20 @@ app.post('/signup/verifyToken', async (req, res) => {
 	this.AppUser = app.models.AppUser;
 	try {
 	  const { token } = req.body;
+	  var email;
+
+	  jwt.verify(token, 'your_secret_key', function(err, decoded) {
+		if (err) {
+			res.status(500).send('Token is Expired');
+		}
+		else {
+			email = decoded.email;
+		}
+	});
   
-	  // Verify the token and extract the email
-	  const decodedToken = jwt.verify(token, 'your_secret_key');
-	  const email = decodedToken.email;
+	//   // Verify the token and extract the email
+	//   const decodedToken = jwt.verify(token, 'your_secret_key');
+	//   const email = decodedToken.email;
   
 	  // Check if the user already exists
 	  const existingUser = await this.User.findOne({ where: { email } });

@@ -32,7 +32,7 @@
 					<Text text="Approval" />
 				</Column>
 				<Column hAlign="End">
-					<Text text="Send Email" />
+					<Text text="Send Email with Temporary Password" />
 				</Column>
 			</columns>
 			<items>
@@ -51,7 +51,7 @@
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />
 						</Select>
-						<Button type="Accept"  press="SendEmailExistUser" text="Send Email" icon="sap-icon://email"></Button>
+						<Button type="Accept"  press="SendEmailExistUser" icon="sap-icon://email"></Button>
 					</cells>
 				</ColumnListItem>
 			</items>
