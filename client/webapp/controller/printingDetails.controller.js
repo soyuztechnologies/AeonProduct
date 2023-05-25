@@ -29,10 +29,11 @@ sap.ui.define([
 			this.getModel("appView").updateBindings();
 			this.getUserRoleData();
 			this.loadForm();
+
 			this.oArgs = oEvent.getParameter("arguments").jobId;
 			this.oGetAgru();
 			this.onReadJobStatus();
-			
+
 		},
 		oGetAgru: function () {
 			debugger;
@@ -74,7 +75,7 @@ sap.ui.define([
 
 			this.onUploadData();
 		},
-		onClickCancle:function(){
+		onClickCancle: function () {
 			this.getView().getModel("appView").setProperty("/onClickModify", false);
 			this.getView().getModel("appView").setProperty("/modifybtnvis", true);
 			this.getView().getModel("appView").setProperty("/cancleBtnVis", false);
@@ -82,7 +83,7 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/jobStatusTabData", this.getUserDataLocal)
 			this.getModel("appView").updateBindings();
 			// this.getView().getModel("appView").refresh();
-			
+
 			// this.onReadJobStatus();
 
 		},
@@ -111,13 +112,11 @@ sap.ui.define([
 			// oSimpleForm.setModel('appView');
 			oSimpleForm.bindElement('appView>/Jobs');
 			// MessageToast.show("Checking...")
-
-
 		},
 		// loadForm2: function () {
 
-		// 	var oSimpleForm2 = this.getView().byId('jobStatus');
-		// 	oSimpleForm2.bindElement('appView>/jobStatusData');
+		// 	var oSimpleForm2 = this.getView().byId('jobStatusDialog');
+		// 	oSimpleForm2.bindElement('appView>/jobStatusTabData');
 		// },
 		// var oSimpleForm2 = this.getView().byId('jobStatus');
 		// oSimpleForm2.bindElement('appView>/Jobs');
@@ -125,34 +124,15 @@ sap.ui.define([
 
 
 
-
-
-		// ######################################################################
-
-		//      Opens the Po No. Popup
-
-		//  #####################################################################
-
-
+		//* Opens the PO No. Popup
 		onClickPopup: function () {
 			var oView = this.getView();
 			var that = this;
 			this.onReadData();
 			this.onReadDataArt();
 
-			if (!this.oUploadDialog) {
-				this.oUploadDialog = Fragment.load({
-					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.uploadDoc",
-					controller: this
-				}).then(function (oDialog) {
-					// Add dialog to view hierarchy
-					oView.addDependent(oDialog);
-					return oDialog;
-				}.bind(this));
 
-			}
-			this.oUploadDialog.then(function (oDialog) {
+			this.oDialogOpen().then(function (oDialog) {
 				oDialog.open();
 				that.getView().getModel('appView').setProperty('/viewPo', true);
 				that.getView().getModel('appView').setProperty('/browseVisArtwork', false);
@@ -169,19 +149,9 @@ sap.ui.define([
 				}
 			});
 		},
-
-		// ######################################################################
-
-		//      Opens the Artwork Popup
-
-		//  #####################################################################
-
-		onClickPopupArt: function () {
+		oDialogOpen: function () {
 			var oView = this.getView();
 			var that = this;
-			this.onReadData();
-			this.onReadDataArt();
-
 			if (!this.oUploadDialog) {
 				this.oUploadDialog = Fragment.load({
 					id: oView.getId(),
@@ -194,12 +164,22 @@ sap.ui.define([
 				}.bind(this));
 
 			}
-			this.oUploadDialog.then(function (oDialog) {
+			return this.oUploadDialog;
+		},
+		// ######################################################################
+
+		//      Opens the Artwork Popup
+
+		//  #####################################################################
+
+		onClickPopupArt: function () {
+			var oView = this.getView();
+			var that = this;
+			this.onReadData();
+			this.onReadDataArt();
+
+			this.oDialogOpen().then(function (oDialog) {
 				oDialog.open();
-
-				
-
-
 				that.getView().getModel('appView').setProperty('/viewPo', false);
 				that.getView().getModel('appView').setProperty('/viewArt', true);
 				that.getView().getModel('appView').setProperty('/browseVisArtwork', true);
@@ -229,54 +209,78 @@ sap.ui.define([
 			});
 		},
 
-	
-		
-
-
-
-
-	// ######################################################################
-
-	//      Opens Fragment for Job Status 
-
-	//  #####################################################################
-	onPressAdd: function () {
-		var oView = this.getView();
-		var that = this;
-
-		if (!this.Jobstatus) {
-			this.Jobstatus = Fragment.load({
-				id: oView.getId(),
-				name: "ent.ui.ecommerce.fragments.Jobstatusdialog",
-				controller: this
-			}).then(function (oDialog) {
-				// Add dialog to view hierarchy
-				oView.addDependent(oDialog);
-				return oDialog;
-			}.bind(this));
-
-		}
-		this.Jobstatus.then(function (oDialog) {
-			oDialog.open();
-		});
-	},
-	onClose: function () {
-		this.Jobstatus.then(function (oDialog) {
-			oDialog.close();
-
-		});
-	},
 
 
 
 
 
 
-	// ######################################################################
+		// ######################################################################
 
-	//      Upload the PO No. Attachment
+		//      Opens Fragment for Job Status 
 
-	//  #####################################################################
+		//  #####################################################################
+		onPressAdd: function () {
+			var oView = this.getView();
+			var that = this;
+
+			var oNewJob = {
+				"JobStatusId" : this.oArgs,
+				"Coating": "",
+				"DeliveryNo": "",
+				"Embossing": "",
+				"Foiling": "",
+				"InvNo": "",
+				"CreatedOn":new Date(),
+				"JobId": "",
+				"Packing": "",
+				"Pasting": "",
+				"Printing": "",
+				"Punching": "",
+				"deliveryAttachment": "",
+				"incAttachment": "",
+				"rawMaterial": "",
+				"spotUV": ""
+			}
+
+			this.getModel('appView').setProperty('/newJob',oNewJob);
+
+			if (!this.Jobstatus) {
+				this.Jobstatus = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.Jobstatusdialog",
+					controller: this
+				}).then(function (oDialog) {
+					// Add dialog to view hierarchy
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+
+			}
+			this.Jobstatus.then(function (oDialog) {
+				oDialog.open();
+				// that.loadForm2();
+				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
+				oSimpleForm2.bindElement('appView>/newJob');
+			});
+		},
+		onClose: function () {
+			this.Jobstatus.then(function (oDialog) {
+				oDialog.close();
+
+			});
+		},
+
+
+
+
+
+
+		// ######################################################################
+
+		//      Upload the PO No. Attachment
+
+		//  #####################################################################
 		onFileUploaddChange: function (oEvent) {
 			var that = this;
 			var oFileUploader = oEvent.getSource();
@@ -367,27 +371,27 @@ sap.ui.define([
 			var ids = this.oArgs
 			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
 			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfArtwork")
-			
-			if (!poFile){
+
+			if (!poFile) {
 				var poFileimg = this.getView().getModel('appView').getProperty("/imageContent");
 				var artworkAttachmentimg = this.getView().getModel('appView').getProperty("/imageContentArtwork");
 
 				var oUpdatedData = {
 					poAttachment: poFileimg,
-					artworkAttachment:artworkAttachmentimg
+					artworkAttachment: artworkAttachmentimg
 					// artworkAttachment:artworkFile
 				};
 			}
-			if(!artworkAttachment){
+			if (!artworkAttachment) {
 				var artworkAttachmentimg = this.getView().getModel('appView').getProperty("/imageContentArtwork");
 				var poFileimg = this.getView().getModel('appView').getProperty("/imageContent");
 				var oUpdatedData = {
 					poAttachment: poFileimg,
-					artworkAttachment:artworkAttachmentimg
+					artworkAttachment: artworkAttachmentimg
 					// artworkAttachment:artworkFile
 				};
 			}
-			if(poFile||artworkAttachment){
+			if (poFile || artworkAttachment) {
 				var oUpdatedData = {
 					poAttachment: poFile,
 					artworkAttachment: artworkAttachment
@@ -395,7 +399,6 @@ sap.ui.define([
 				};
 			}
 			// Perform the read operation
-			
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
 				success: function (data) {
 					debugger;
@@ -435,7 +438,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/uploadButtonVisibility", true);
 					that.getModel("appView").setProperty("/imgVisibility", false);
 					that.getModel("appView").setProperty("/showImg", false);
-					
+
 
 					var data = that.getModel("appView").getProperty("/pdfartworkVisibility");
 					if (!data) {
@@ -490,6 +493,27 @@ sap.ui.define([
 
 			});
 		},
+		onSubmitData: function () {
+			debugger;
+				var oNewJobData = this.getModel('appView').getProperty('/newJob');
+				var oModel = this.getView().getModel();  //default model get at here
+				var that = this;
+				var ids = this.getView().getModel('appView').getProperty("/jobId");
+				const oUpdatedData = {
+				};
+				oModel.create(`/JobStatus`, oNewJobData, {
+					success: function (data) {
+						debugger;
+						MessageToast.show("Successfully Uploaded")
+					},
+					error: function (error) {
+						// Error callback
+						// that.middleWare.errorHandler(error, that);
+						MessageToast.show("Error reading data");
+					}
+				});
+
+		},
 		// ######################################################################
 
 		//      Upload the Document to the Backend
@@ -517,6 +541,8 @@ sap.ui.define([
 			var delivery_att = this.getView().getModel('appView').getProperty("/jobStatusTabData/deliveryAttachment");
 			var inc_att = this.getView().getModel('appView').getProperty("/jobStatusTabData/incAttachment");
 			var spot_uv = this.getView().getModel('appView').getProperty("/jobStatusTabData/spotUV");
+			// var date = new Date()
+			// this.getView().getModel('appView').setProperty("/latestDate",date)
 			// Perform the read operation
 			const oUpdatedData = {
 				Coating: coating,
@@ -524,6 +550,7 @@ sap.ui.define([
 				Embossing: embossing,
 				Foiling: foiling,
 				InvNo: inv_no,
+				CreatedOn: new Date(),
 				JobId: job_id,
 				JobStatusId: jobstatus_id,
 				Packing: packing,
@@ -540,7 +567,7 @@ sap.ui.define([
 					debugger;
 					MessageToast.show("Successfully Uploaded")
 					console.log("Data updated successfully:", oUpdatedData);
-					this.onReadJobStatus();
+					// this.onReadJobStatus();
 				},
 				error: function (error) {
 					// Error callback
@@ -552,27 +579,45 @@ sap.ui.define([
 		},
 		onReadJobStatus: function () {
 			debugger;
-			var oModel = this.getView().getModel(); //default model get at here
+			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
-			// var readParam = "/JobStatus" + ids;
-			const sEntityPath = `/JobStatus('${ids}')`;
-			oModel.read(sEntityPath, {
-				success: function (data) {
-					debugger;
-					// console.log(data)
-					// MessageToast.show("Successfully Uploaded")
-					
+			var jobId = this.getView().getModel("appView").getProperty("/postId")
+			var payload = {
+				"jobId": ids
+			}
+
+			this.middleWare.callMiddleWare("jobStatusData", "POST", payload)
+				.then(function (data) {
 					that.getView().getModel("appView").setProperty("/jobStatusTabData", data);
-					// that.getView().getModel('appView').updateBindings();
-					// that.getView().getModel('appView').refresh();
-				},
-				error: function (error) {
-					// Error callback
-					// that.middleWare.errorHandler(error, that);
-					MessageToast.show("Error reading data");
-				}
-			});
+					debugger
+					MessageToast.show("Success")
+				})
+				.catch(function (jqXhr, textStatus, errorMessage, error) {
+					debugger;
+					MessageToast.show("Error");
+				});
+			// var oModel = this.getView().getModel(); //default model get at here
+			// var that = this;
+			// var ids = this.oArgs;
+			// // var readParam = "/JobStatus" + ids;
+			// const sEntityPath = `/JobStatus('${ids}')`;
+			// oModel.read(sEntityPath, {
+			// 	success: function (data) {
+			// 		debugger;
+			// 		// console.log(data)
+			// 		// MessageToast.show("Successfully Uploaded")
+
+			// 		that.getView().getModel("appView").setProperty("/jobStatusTabData", data);
+			// 		// that.getView().getModel('appView').updateBindings();
+			// 		// that.getView().getModel('appView').refresh();
+			// 	},
+			// 	error: function (error) {
+			// 		// Error callback
+			// 		// that.middleWare.errorHandler(error, that);
+			// 		MessageToast.show("Error reading data");
+			// 	}
+			// });
 		},
 
 		// ######################################################################
@@ -590,18 +635,18 @@ sap.ui.define([
 					debugger;
 					console.log(data)
 					var isImg = data.poAttachment.startsWith("data:image/jpeg;base64,");
-					
-					if(isImg){
+
+					if (isImg) {
 						that.getView().getModel("appView").setProperty("/imageBase", data.poAttachment)
 						that.getView().getModel("appView").setProperty("/viewPo", false)
 
 					}
-					else{
+					else {
 						that.getView().getModel("appView").setProperty("/pdfUrldec", data.poAttachment)
 					}
-					
+
 					// that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
-					that.getView().getModel("appView").setProperty('/showImgArt',false);
+					that.getView().getModel("appView").setProperty('/showImgArt', false);
 					MessageToast.show("Read Successfully")
 				},
 				error: function (error) {
@@ -626,10 +671,10 @@ sap.ui.define([
 				success: function (data) {
 					debugger;
 					var isImgArtwork = data.artworkAttachment.startsWith("data:image/jpeg;base64,");
-					if(isImgArtwork){
+					if (isImgArtwork) {
 						that.getView().getModel("appView").setProperty("/imageBaseArtwork", data.artworkAttachment)
 					}
-					else{
+					else {
 						console.log(data)
 
 						that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)

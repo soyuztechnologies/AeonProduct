@@ -2,7 +2,7 @@
 	"name": "JobStatus",
 	"plural": "JobStatus",
 	"base": "PersistedModel",
-	"idInjection": false,
+	"idInjection": true,
 	"options": {
 		"validateUpsert": true
 	},
@@ -15,60 +15,63 @@
 		"JobStatusId": {
 			"type": "string",
 			"default": null,
-			"required": true,
-			"id":true
+			"required": false
 		},
 		"rawMaterial": {
-            "type": "string",
+            "type": "number",
             "enum": ["Pending", "In Stock"],
             "default": ""
         },
 		"Printing": {
-            "type": "string",
+            "type": "number",
             "default": ""
         },
 		"Foiling": {
-            "type": "string",
+            "type": "number",
             "default": ""
         },
 		"Coating": {
-            "type": "string",
+            "type": "number",
             "default": ""
         },
 		"InvNo": {
-            "type": "string",
+            "type": "number",
             "default": ""
         },
+		"CreatedOn":{
+			"type":"date",
+			"default":null
+		},
 		"DeliveryNo": {
-            "type": "string",
+            "type": "number",
             "default": ""
         },
 		"Embossing": {
-            "type": "string",
+            "type": "number",
             "default": ""
         },
 		"Pasting": {
-            "type": "string",
+            "type": "number",
             "default": ""
         },
 		"spotUV": {
-			"type":"string",
+			"type":"number",
 			"default":""
 		},
 		"Punching": {
-			"type":"string",
+			"type":"number",
 			"default":""
 		},
 		"Packing": {
-			"type":"string",
+			"type":"number",
 			"default":""
 		},
 		"incAttachment":{
-			"type":"string",
+			"type":"number",
 			"default":null
 		},
 		"deliveryAttachment":{
-			"type":"string",
+			"type":"number",
 			"default":null
 		}
 		

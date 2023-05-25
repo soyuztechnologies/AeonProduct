@@ -414,9 +414,14 @@
 			"default": null
 			
 		},
+		"UserName":{
+			"type": "string",
+			"default": null
+			
+		},
 		"Status":{
 			"type": "string",
-			"default": "new"
+			"default": null
 		}
 	},
 	"scope": {

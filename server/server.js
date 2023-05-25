@@ -566,6 +566,8 @@ app.get('/usersTable', async (req, res) => {
 	  res.status(500).json({ error: 'Internal server error' });
 	}
 });
+
+
 app.get('/Appusers', async (req, res) => {
 	this.User = app.models.User;
 	this.Param = app.models.Param;
@@ -999,8 +1001,24 @@ app.get('/getUserRole',  async(req, res) => {
 			});
 		//   });
 	  }
+
   });
-  
+
+  app.post('/jobStatusData', async (req, res) => {
+	debugger;
+	const JobStatus = app.models.JobStatus;
+	const { jobId } = req.body;
+	try {
+	  const jobStatusData = await JobStatus.find({ where: { JobStatusId:jobId } }); // Retrieve job status data
+	
+	//   res.status(200).json(jobStatusData);
+		// var data = JSON.stringify(jobStatusData);
+	  res.status(200).json(jobStatusData);
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).json({ error: 'Internal server error' });
+	}
+  });
   
   app.post('/sendEmailExistUser', async(req, res) => {
 	debugger;

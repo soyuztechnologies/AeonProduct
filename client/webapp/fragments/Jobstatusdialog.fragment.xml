@@ -1,44 +1,55 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
 
-<Dialog contentWidth="100%" contentHeight="100%" title="Job Status"
+<Dialog contentWidth="auto" contentHeight="auto" title="Job Status"
   
 resizable="false" >
 <content>
-    <f:SimpleForm id="SimpleFormChange354"
+    <f:SimpleForm id="jobStatusDialog"
 			editable="true"
 			layout="ColumnLayout"
             columnsM="2"
-            class="sapUiNoMargin"
+			columnsL="3"
+			class="sapUiNoMargin sapUiNoPadding"
 			singleContainerFullSize="false" >
 			<f:content>
+				<Label text="JobStatusId" />
+				<Text  text="{appView>JobStatusId}" />
+				<Label text="CreatedOn" />
+				<!-- <Text
+					text="{appView>/jobStatusTabData/CreatedOn}"
+					
+				>
+					
+				</Text> -->
+				<DatePicker dateValue="{appView>CreatedOn}"/>
 				<Label text="Raw Material" />
-				<Input value="" />
+				<Input type="Number" value="{appView>rawMaterial}" />
 				<Label text="Coating" />
-				<Input value="" />
+				<Input type="Number" value="{appView>Coating}" />
 				<Label text="Spot UV" />
-				<Input value="" />
+				<Input type="Number" value="{appView>spotUV}" />
 				<Label text="Punching" />
-				<Input value="" />
+				<Input type="Number" value="{appView>Punching}" />
 				<Label text="Packing" />
-				<Input value="" />
+				<Input type="Number" value="{appView>Packing}" />
 				<Label text="Printing" />
-				<Input value="" />
+				<Input type="Number" value="{appView>Printing}" />
 				<Label text="Foiling" />
-				<Input value="" />
+				<Input type="Number" value="{appView>Foiling}" />
 				<Label text="Embossing" />
-				<Input value="" />
+				<Input type="Number" value="{appView>Embossing}" />
 				<Label text="Pasting" />
-				<Input value="" />
+				<Input type="Number" value="{appView>Pasting}" />
 				<Label text="Inc. No." />
-				<Input value="" />
+				<Input type="Number" value="{appView>InvNo}" />
 				<Label text="Delivery No." />
-				<Input value="" />
+				<Input type="Number" value="{appView>DeliveryNo}" />
 
 			</f:content>
 		</f:SimpleForm>
 </content>
 <beginButton>
-    <Button text="Save" type="Accept" press="onSubmit" enabled="{appView>/submitEnable}"/>
+    <Button text="Save" type="Accept" press="onSubmitData" enabled="{appView>/submitEnable}"/>
 </beginButton>
 <endButton>
     <Button text="Cancel" type="Reject" press="onClose" enabled="{appView>/submitEnable}"/>

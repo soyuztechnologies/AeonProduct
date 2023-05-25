@@ -4,8 +4,9 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/ui/core/BusyIndicator",
 	'sap/ui/model/Filter',
-	'sap/ui/model/FilterOperator'
-], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator) {
+	'sap/ui/model/FilterOperator',
+	"sap/ui/core/Fragment"
+], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.allPrinters", {
@@ -13,6 +14,8 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("allPrinters").attachPatternMatched(this._matchedHandler, this);
+			this.oViewSettingsDialog = sap.ui.xmlfragment("ent.ui.ecommerce.fragments.Jobstatuspopup", this);
+			this.getView().addDependent(this.oViewSettingsDialog);
 		},
 		_matchedHandler: function (oEvent) {
 			// var  PrintingId = oEvent.getParameter("arguments").PrintingId;
@@ -101,49 +104,30 @@ sap.ui.define([
 		onAfterRendering: function () {
 			this.getJobsData();
 		},
-		onFilterIconPress: function (event) {
-			var oButton = event.getSource();
-			var oPopover = this.getView().byId("popover");
-			oPopover.openBy(oButton);
-		  },
-		  
-		  onComboBoxSelectionChange: function (event) {
-			var selectedKey = event.getParameter("selectedItem").getKey();
-			
-			// Perform actions based on the selected item
-			switch (selectedKey) {
-			  case "1":
-				// Action for Option 1
-				break;
-			  case "2":
-				// Action for Option 2
-				break;
-			  case "3":
-				// Action for Option 3
-				break;
-			  case "4":
-				// Action for Option 4
-				break;
-			  case "5":
-				// Action for Option 5
-				break;
-			  case "6":
-				// Action for Option 6
-				break;
-			  case "7":
-				// Action for Option 7
-				break;
-			  default:
-				break;
+		onFilterPressJobStatus: function () {
+			this.oViewSettingsDialog.open();
+		},
+		onViewSettingsConfirm: function (oEvent) {
+			var aFilterItems = oEvent.getParameter("filterItems");
+			if (aFilterItems.length > 0) {
+				var oTable = this.getView().byId("idListAllPrinters");
+				var oBinding = oTable.getBinding("items");
+				var aFilters = [];
+				aFilterItems.forEach(function (oFilterItem) {
+					var sKey = oFilterItem.getKey();
+					var oFilter = new Filter("Status", FilterOperator.EQ, sKey);
+					aFilters.push(oFilter);
+				});
+				oBinding.filter(aFilters);
 			}
-			
-			// Close the popover after performing the action
-			var oPopover = this.getView().byId("popover");
-			oPopover.close();
-		  },
+		},
+		onViewSettingsCancel: function () {
+			var oTable = this.getView().byId("idListAllPrinters");
+			var oBinding = oTable.getBinding("items");
+			oBinding.filter([]);
+		},
 		onSearchJob: function (oEvent) {
 			//here have to take search value from searchField
-			debugger;
 			var sValue = oEvent.getParameter("query");
 			//for live change we need to fire if condition
 			if (!sValue) {
@@ -153,7 +137,7 @@ sap.ui.define([
 			// var oFilter1 = new Filter("PRODUCT_ID", FilterOperator.Contains, sValue);
 			var oFilter1= new Filter("jobCardNo", FilterOperator.Contains, sValue);
 			var oFilter2= new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
-			var oFilter3= new Filter("Status", FilterOperator.Contains, sValue);
+			var oFilter3= new Filter("UserName", FilterOperator.Contains, sValue);
 			// var oFilter3 = new Filter("price", FilterOperator.Contains, sValue);
 			// var oFilter4 = new Filter("status", FilterOperator.Contains, sValue);
 			var aFilter = [oFilter1, oFilter2, oFilter3];

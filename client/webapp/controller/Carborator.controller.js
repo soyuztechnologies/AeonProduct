@@ -121,9 +121,9 @@ sap.ui.define([
         // Convert string to JSON object
         var payload = JSON.parse(oJsonInpValue);
         
-        payload.jobCardNo= "1008";
-        this.getView().getModel("appView").setProperty("/postId",payload.jobCardNo)
-        this.onUploadId();
+        payload.jobCardNo= "1005";
+        // this.getView().getModel("appView").setProperty("/postId",payload.jobCardNo)
+        // this.onUploadId();
 
         // post call for uploading the json into loopback 
 
@@ -245,7 +245,7 @@ sap.ui.define([
         const oUpdatedData = {
           
             JobId: "Pending",
-            JobStatusId: ids,
+            JobStatusId: "",
             rawMaterial: "Pending",
             Printing: "Pending",
             Foiling: "Pending",
