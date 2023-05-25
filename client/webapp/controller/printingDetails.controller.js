@@ -399,7 +399,6 @@ sap.ui.define([
 				};
 			}
 			// Perform the read operation
-
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
 				success: function (data) {
 					debugger;

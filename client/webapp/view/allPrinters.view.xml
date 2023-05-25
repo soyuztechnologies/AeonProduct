@@ -4,27 +4,14 @@
 		<Toolbar>
 				<content>
 					<Title text="Welcome Printer"/>
-					<ToolbarSpacer/>
-					<SearchField liveChange="onSearchJob" width="auto"/>
 				</content>
 		</Toolbar>
 	  </subHeader>
 		<Toolbar>
 		   <content>
-				 <Title text="Job Status"/>
-				 <ToolbarSpacer/>
-			     <ComboBox  selectedKey="new_1"  id="jobStatusComboBox"
-				            selectionChange="onComboBoxSelectionChange">
-							<!-- items="{appView>/jobsData}"
-							text="{appView>Status}"> -->
-                  <core:Item key="new_1" text="New" />
-                  <core:Item key="new_2" text="New" />
-                  <core:Item key="new_3" text="New" />
-                  <core:Item key="new_4" text="New" />
-                  <core:Item key="new_5" text="New" />
-                  <core:Item key="new_6" text="New" />
-                  <core:Item key="new_7" text="New" />
-                </ComboBox>
+				<SearchField liveChange="onSearchJob" width="50%"/>
+				<ToolbarSpacer/>
+				<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
 			</content>
 		</Toolbar>
       <List  id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
@@ -32,9 +19,10 @@
 					<ObjectListItem
 							type="Navigation"
 							title="{appView>nameOFTheProduct}"
-							intro="{appView>jobCardNo}">
+							intro="{appView>UserName}"
+							number="{appView>jobCardNo}">
 							<firstStatus>
-							    <ObjectStatus text="{appView>Status}" />
+							    <ObjectStatus text="{appView>Status}" state="{path: 'appView>Status', formatter: '.formatter.getStatusColor'}" />
 							</firstStatus>
 					</ObjectListItem>
 			</items>	
