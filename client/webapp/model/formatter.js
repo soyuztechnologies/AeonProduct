@@ -743,7 +743,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     },
     getStatusColor:function(status){
       switch (status) {
-        case "new":
+        case "New":
             return "None";
             break;
         case "Completed":

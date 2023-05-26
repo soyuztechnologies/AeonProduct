@@ -17,6 +17,12 @@
         <columns>
            <Column> 
                  <Label text="Raw Material" />
+                  <Select id="idRawMaterial" selectedKey="instock">
+			    	<items>
+						<core:Item text="In Stock" key="instock" />
+						<core:Item text="Pending" key="pending" />
+					</items>
+				 </Select>
            </Column>
            <Column>
                  <Label text="Coating" />

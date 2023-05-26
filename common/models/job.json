@@ -421,7 +421,7 @@
 		},
 		"Status":{
 			"type": "string",
-			"default": null
+			"default": "New"
 		}
 	},
 	"scope": {

@@ -43,6 +43,7 @@ sap.ui.define([
 			this.getModel("appView").updateBindings();
 			this.getUserRoleData();
 			this.getJobsData();
+			// this.getUserName();
 			
 
 		},
@@ -123,7 +124,14 @@ sap.ui.define([
 				this.onViewSettingsCancel();
 			}
 		},
-		onViewSettingsCancel: function () {
+		getUserName: function(oEvent){
+        debugger;
+		var oModel = this.getView().getModel("appView");
+          var oSelectedItem = oEvent.getParameter("value");
+           oModel.setProperty("/Username",oSelectedItem);
+            console.log("Selected User ID:", oSelectedItem);
+	    },		
+	    onViewSettingsCancel: function () {
 			var oTable = this.getView().byId("idListAllPrinters");
 			var oBinding = oTable.getBinding("items");
 			oBinding.filter([]);
