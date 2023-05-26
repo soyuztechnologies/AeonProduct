@@ -114,96 +114,96 @@ app.start = function () {
 		});
 
 		// * this function is send the email to the user in secenerio like signup,forgot password,admin add user etc.
-		async function sendEmail(email, token, replacements,templateFileName,emailSubject) {
+		async function sendEmail(email, token, replacements, templateFileName, emailSubject) {
 			debugger;
 			var nodemailer = require('nodemailer');
 			var smtpTransport = require('nodemailer-smtp-transport');
 			this.Param = app.models.Param;
 			const xoauth2 = require('xoauth2');
 			const fs = require('fs');
-			
+
 			try {
-			  const array = ["user", "clientId", "clientSecret", "refreshToken"];
-			  const Param = this.Param;
-			  const key = {};
-			  const sParam = await Param.find({
-				where: {
-				  and: [{
-					Code: {
-					  inq: array
+				const array = ["user", "clientId", "clientSecret", "refreshToken"];
+				const Param = this.Param;
+				const key = {};
+				const sParam = await Param.find({
+					where: {
+						and: [{
+							Code: {
+								inq: array
+							}
+						}]
 					}
-				  }]
+				});
+
+				for (const element of sParam) {
+					switch (element.Code) {
+						case "user":
+							key.user = element.Value;
+							break;
+						case "clientId":
+							key.clientId = element.Value;
+							break;
+						case "clientSecret":
+							key.clientSecret = element.Value;
+							break;
+						case "refreshToken":
+							key.refreshToken = element.Value;
+							break;
+					}
 				}
-			  });
-		  
-			  for (const element of sParam) {
-				switch (element.Code) {
-				  case "user":
-					key.user = element.Value;
-					break;
-				  case "clientId":
-					key.clientId = element.Value;
-					break;
-				  case "clientSecret":
-					key.clientSecret = element.Value;
-					break;
-				  case "refreshToken":
-					key.refreshToken = element.Value;
-					break;
-				}
-			  }
-	
-			  const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + templateFileName,'utf8');
-			  var mailBody = await replaceTemplatePlaceholders(mailContent, replacements);
-		  
-			  const transporter = nodemailer.createTransport(smtpTransport({
-				service: 'gmail',
-				host: 'smtp.gmail.com',
-				auth: {
-				  xoauth2: xoauth2.createXOAuth2Generator({
-					user: key.user,
-					clientId: key.clientId,
-					clientSecret: key.clientSecret,
-					refreshToken: key.refreshToken
-				  })
-				}
-			  }));
-		  
-			  const emailContent = {
-				to: email,
-				subject: emailSubject,
-				html: mailBody
-			  };
-		  
-			  transporter.sendMail(emailContent, function (error, info) {
-				if (error) {
-				  console.log(error);
-				  if (error.code === "EAUTH") {
-					res.status(500).send('Username and Password not accepted, Please try again.');
-				  } else {
-					res.status(500).send('Internal Error while Sending the email, Please try again.');
-				  }
-				} else {
-				  console.log('Email sent: ' + info.response);
-				  // Handle success
-				}
-			  });
+
+				const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + templateFileName, 'utf8');
+				var mailBody = await replaceTemplatePlaceholders(mailContent, replacements);
+
+				const transporter = nodemailer.createTransport(smtpTransport({
+					service: 'gmail',
+					host: 'smtp.gmail.com',
+					auth: {
+						xoauth2: xoauth2.createXOAuth2Generator({
+							user: key.user,
+							clientId: key.clientId,
+							clientSecret: key.clientSecret,
+							refreshToken: key.refreshToken
+						})
+					}
+				}));
+
+				const emailContent = {
+					to: email,
+					subject: emailSubject,
+					html: mailBody
+				};
+
+				transporter.sendMail(emailContent, function (error, info) {
+					if (error) {
+						console.log(error);
+						if (error.code === "EAUTH") {
+							res.status(500).send('Username and Password not accepted, Please try again.');
+						} else {
+							res.status(500).send('Internal Error while Sending the email, Please try again.');
+						}
+					} else {
+						console.log('Email sent: ' + info.response);
+						// Handle success
+					}
+				});
 			} catch (error) {
-			  console.error(error);
-			  res.status(500).send('Internal server error');
+				console.error(error);
+				res.status(500).send('Internal server error');
 			}
-		  }
-		
+		}
+
 		// * this fucntion working to replace the dynamic characters in the email body,like usernameand and emaol etc.
-		  async function replaceTemplatePlaceholders(content, replacements) {
+		async function replaceTemplatePlaceholders(content, replacements) {
 			let replacedContent = content;
 			for (const placeholder in replacements) {
-			  const regex = new RegExp('\\$\\$' + placeholder + '\\$\\$', 'gi');
-			  replacedContent = replacedContent.replace(regex, replacements[placeholder]);
+				const regex = new RegExp('\\$\\$' + placeholder + '\\$\\$', 'gi');
+				replacedContent = replacedContent.replace(regex, replacements[placeholder]);
 			}
 			return replacedContent;
-		  }
-		  
+		}
+
 		//  * this function is generating the JWt token.
 		function generateToken(email) {
 			const expirationTime = Math.floor(Date.now() / 1000) + (30 * 60);
@@ -232,14 +232,14 @@ app.start = function () {
 				const token = generateToken(email);
 
 				const replacements = {
-					verify : `${req.headers.referer}#/updatePassword/${token}`,
-					email : "contact@evotrainingsolutions.com",
-					user : email,
+					verify: `${req.headers.referer}#/updatePassword/${token}`,
+					email: "contact@evotrainingsolutions.com",
+					user: email,
 				};
 				const templateFileName = "Forgot.html"
 				const emailSubject = "Reset Your Password";
 				// Send verification email
-				await sendEmail(email, token,replacements,templateFileName,emailSubject);
+				await sendEmail(email, token, replacements, templateFileName, emailSubject);
 
 				res.status(200).json({ message: 'Verification email sent successfully' });
 			} catch (error) {
@@ -369,14 +369,14 @@ app.start = function () {
 				const token = generateToken(email);
 
 				const replacements = {
-					verify : `${req.headers.referer}#/userVerify/${token}`,
-					email : "contact@evotrainingsolutions.com",
+					verify: `${req.headers.referer}#/userVerify/${token}`,
+					email: "contact@evotrainingsolutions.com",
 					// user : email,
 				};
 				const templateFileName = "verifyEmail.html";
 				const emailSubject = "Verfiy Your Registration Email";
 				// Send verification email
-				await sendEmail(email, token,replacements,templateFileName,emailSubject);
+				await sendEmail(email, token, replacements, templateFileName, emailSubject);
 
 				res.status(200).json({ message: 'Verification email sent successfully' });
 			} catch (error) {
@@ -583,7 +583,7 @@ app.start = function () {
 			}
 		});
 
-        // * this get call is getting the all AppuserTable users.
+		// * this get call is getting the all AppuserTable users.
 
 		app.get('/Appusers', async (req, res) => {
 			this.User = app.models.User;
@@ -728,15 +728,15 @@ app.start = function () {
 				// await sendEmailPass(email, password);
 				const replacements = {
 					// verify : `${req.headers.referer}#/updatePassword/${token}`,
-					email : "contact@evotrainingsolutions.com",
-					user : email,
-					password : password,
+					email: "contact@evotrainingsolutions.com",
+					user: email,
+					password: password,
 				};
 				const templateFileName = "NewUser.html"
 				const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
-				const token="";
+				const token = "";
 				// Send verification email
-				await sendEmail(email,token,replacements,templateFileName,emailSubject);
+				await sendEmail(email, token, replacements, templateFileName, emailSubject);
 
 				// Return a response indicating successful creation
 				return res.status(200).json('Customer created successfully');
@@ -928,6 +928,23 @@ app.start = function () {
 			}
 		});
 
+		app.get('/getJobsData', async (req, res) => {
+			debugger;
+			const Job = app.models.Job;
+			const AppUser = app.models.AppUser;
+			var data = await Job.find({ where: { jobCardNo: '9' }, include: 'appUser' });
+			var jobs = data[0].__data;
+			var custId = jobs.CustomerId;
+
+			const customer = await AppUser.findById(custId);
+			var CustomerData = customer.__data;
+			var FullName = CustomerData.FirstName + " " + CustomerData.LastName;
+			jobs.CustomerId = FullName;
+			// res.send(jobs);
+			return res.status(200).json(jobs);
+
+		});
+
 		// * this call is sending the emol to the existing user that admin create.
 		// todo need this to optimize 
 		app.post('/sendEmailExistUser', async (req, res) => {
@@ -953,17 +970,17 @@ app.start = function () {
 					return;
 				}
 				const { email, TempPass } = userTableUser;
-				const token="";
+				const token = "";
 				const replacements = {
 					// verify : `${req.headers.referer}#/updatePassword/${token}`,
-					email : "contact@evotrainingsolutions.com",
-					user : email,
-					password : TempPass,
+					email: "contact@evotrainingsolutions.com",
+					user: email,
+					password: TempPass,
 				};
 				const templateFileName = "NewUser.html"
 				const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
 				// Send verification email
-				await sendEmail(email,token,replacements,templateFileName,emailSubject);
+				await sendEmail(email, token, replacements, templateFileName, emailSubject);
 
 				return res.status(200).json('Email send successfully');
 			} catch (error) {
@@ -1013,6 +1030,52 @@ app.start = function () {
 		// 	}
 		//   });
 	
+		// app.post('/uploadJobData', async (req, res) => {
+		// 	debugger;
+		// 	this.User = app.models.User;
+		// 	this.Param = app.models.Param;
+		// 	this.AppUser = app.models.AppUser;
+		// 	this.Job = app.models.Job;
+
+		// 	const newJob = {};
+		// 	for (const field in req.body) {
+		// 		newJob[field] = req.body[field];
+		// 	}
+
+		// 	try {
+		// 		// Create the job entry in the job table
+		// 		//   const job = await Job.create(newCustomer);
+		// 		let jobId = newJob.jobCardNo;
+		// 		var jobs = await this.Job.findOne({ where: { jobCardNo: jobId } });
+		// 		if (!jobs) {
+		// 			var job = await this.Job.create(newJob);
+		// 		}
+		// 		else {
+		// 			res.status(404).json("Job is already exists with this job card no.")
+		// 		}
+
+		// 		// Fetch only firstname and lastname from the appusers table using the customer ID
+		// 		const customerId = newJob.CustomerId; // Assuming the customer ID field is 'customerId'
+		// 		const appUser = await this.AppUser.findOne({ where: { id: customerId } });
+
+		// 		if (!appUser) {
+		// 			res.status(404).json("Customer id Is not Valid");
+		// 		}
+		// 		// Include the fetched firstname and lastname in the response
+		// 		// job.FirstName = appUser.FirstName;
+		// 		// job.LastName = appUser.LastName;
+
+		// 		const { FirstName, LastName } = appUser;
+
+		// 		job.userName = FirstName + " " + LastName;
+
+		// 		res.status(200).json(job);
+		// 	} catch (error) {
+		// 		console.error(error);
+		// 		res.status(500).json({ error: 'An error occurred while processing the request' });
+		// 	}
+		// });
+
 
 
 
@@ -2900,6 +2963,8 @@ app.start = function () {
 
 				);
 		});
+
+
 
 
 		app.post('/TakeBackup', function (req, res) {

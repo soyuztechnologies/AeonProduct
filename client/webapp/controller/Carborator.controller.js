@@ -120,6 +120,7 @@ sap.ui.define([
         var payload = JSON.parse(oJsonInpValue);
         payload.CustomerId = userValue;
         payload.jobCardNo = "9"
+        // payload.jobCardNo = ""
 
 
         oModel.create("/Jobs", payload, {

@@ -44,6 +44,18 @@ resizable="false" >
 				<Input type="Number" value="{appView>InvNo}" />
 				<Label text="Delivery No." />
 				<Input type="Number" value="{appView>DeliveryNo}" />
+				<Label text="Status" />
+				<Select id="idStatus" selectedKey="new">
+			    	<items>
+						<core:Item text="New" key="new" />
+						<core:Item text="In Progress" key="inprogress" />
+						<core:Item text="Completed" key="completed" />
+						<core:Item text="Packing" key="packing" />
+						<core:Item text="In Transit" key="intransit" />
+						<core:Item text="Delivered" key="delivered" />
+						<core:Item text="Cancelled" key="cancelled" />
+					</items>
+				</Select>
 
 			</f:content>
 		</f:SimpleForm>
