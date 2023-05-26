@@ -126,6 +126,7 @@ sap.ui.define([
 
 		//* Opens the PO No. Popup
 		onClickPopup: function () {
+			debugger;
 			var oView = this.getView();
 			var that = this;
 			this.onReadData();

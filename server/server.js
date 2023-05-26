@@ -972,51 +972,46 @@ app.start = function () {
 			}
 		});
 
-		app.post('/uploadJobData', async (req, res) => {
-			debugger;
-			 this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			this.Job = app.models.Job;
+		// ! right now this call is not useful bus may be in future.
+		// app.post('/uploadJobData', async (req, res) => {
+		// 	debugger;
+		// 	 this.User = app.models.User;
+		// 	this.Param = app.models.Param;
+		// 	this.AppUser = app.models.AppUser;
+		// 	this.Job = app.models.Job;
 		  
-			const newJob = {};
-			for (const field in req.body) {
-				newJob[field] = req.body[field];
-			}
+		// 	const newJob = {};
+		// 	for (const field in req.body) {
+		// 		newJob[field] = req.body[field];
+		// 	}
 		  
-			try {
-			  // Create the job entry in the job table
-			//   const job = await Job.create(newCustomer);
-			  let jobId = newJob.jobCardNo;
-			   var jobs = await this.Job.findOne({ where: { jobCardNo: jobId} });
-				if (!jobs) {
-					var job = await this.Job.create(newJob);
-				}
-				else{
-					res.status(404).json("Job is already exists with this job card no.")
-				}
+		// 	try {
+		// 	  let jobId = newJob.jobCardNo;
+		// 	   var jobs = await this.Job.findOne({ where: { jobCardNo: jobId} });
+		// 		if (!jobs) {
+		// 			var job = await this.Job.create(newJob);
+		// 		}
+		// 		else{
+		// 			res.status(404).json("Job is already exists with this job card no.")
+		// 		}
 		  
-			  // Fetch only firstname and lastname from the appusers table using the customer ID
-			  const customerId = newJob.CustomerId; // Assuming the customer ID field is 'customerId'
-			  const appUser = await this.AppUser.findOne({where: { id:customerId } });
+		// 	  // Fetch only firstname and lastname from the appusers table using the customer ID
+		// 	  const customerId = newJob.CustomerId; // Assuming the customer ID field is 'customerId'
+		// 	  const appUser = await this.AppUser.findOne({where: { id:customerId } });
 		  
-			  if (!appUser) {
-				res.status(404).json("Customer id Is not Valid");
-			  }
-				// Include the fetched firstname and lastname in the response
-				// job.FirstName = appUser.FirstName;
-				// job.LastName = appUser.LastName;
-
-				const { FirstName, LastName } = appUser;
+		// 	  if (!appUser) {
+		// 		res.status(404).json("Customer id Is not Valid");
+		// 	  }
+		// 		const { FirstName, LastName } = appUser;
 				
-				job.userName = FirstName + " " + LastName;
+		// 		job.userName = FirstName + " " + LastName;
 		  
-			  res.status(200).json(job);
-			} catch (error) {
-			  console.error(error);
-			  res.status(500).json({ error: 'An error occurred while processing the request' });
-			}
-		  });
+		// 	  res.status(200).json(job);
+		// 	} catch (error) {
+		// 	  console.error(error);
+		// 	  res.status(500).json({ error: 'An error occurred while processing the request' });
+		// 	}
+		//   });
 	
 
 

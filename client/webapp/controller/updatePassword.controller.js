@@ -22,8 +22,16 @@ sap.ui.define([
 			this.getModel("appView").updateBindings();
             // this.timerText();
             this.verifytokens();
+            this.getView().getModel("appView").setProperty("/messagePageTextUpdate","Update Password....");
+            this.getView().getModel("appView").setProperty("/timerTextUpdate","");
+            this.getView().getModel("appView").setProperty("/updateIcon",'sap-icon://past');
+            this.getView().getModel("appView").setProperty("/updateLogout",false);
             // this.loadFragment();
 		},
+
+        onMessagePageLogout:function(){
+            this.onLogOut();
+        },
 
         verifytokens: function () {
             // Get the URL parameters
@@ -33,6 +41,7 @@ sap.ui.define([
                 "token": oParams
             };
             debugger;
+            var oModel = this.getView("appView").getModel("appView"); 
             this.middleWare.callMiddleWare("Forgot/verifyToken", "POST", payload)
                 .then(function (data, status, xhr) {
                     // debugger;
@@ -44,6 +53,10 @@ sap.ui.define([
                 .catch(function (jqXhr, textStatus, errorMessage) {
                     debugger;
                     that.middleWare.errorHandler(jqXhr, that);
+                    oModel.setProperty("/messagePageTextUpdate","Error....");
+                    oModel.setProperty("/timerTextUpdate","");
+                    oModel.setProperty("/updateIcon",'sap-icon://error');
+                    oModel.setProperty("/updateLogout",true);
                     // that.getRouter().navTo("notFound");
                 });
         },
@@ -89,10 +102,17 @@ sap.ui.define([
                         MessageToast.show("Password Reset Successful");
                         that.onReject();
                         that.timerText();
+                        oModel.setProperty("/messagePageTextUpdate","Success....");
+                        oModel.setProperty("/timerTextUpdate","Redirecting to the login page in ");
+                        oModel.setProperty("/verifyIcon",'sap-icon://message-success');
 
                     })
                     .catch(function (jqXhr, textStatus, errorMessage) {
                         debugger;
+                        oModel.setProperty("/messagePageTextUpdate","Error....");
+                        oModel.setProperty("/timerTextUpdate","R");
+                        oModel.setProperty("/updateIcon",'sap-icon://error');
+                        oModel.setProperty("/updateLogout",true);
                         that.middleWare.errorHandler(jqXhr, that);
                         // that.getRouter().navTo("notFound");
                     });

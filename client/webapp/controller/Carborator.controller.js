@@ -105,35 +105,47 @@ sap.ui.define([
 
     // * this fucntion is saving the jobs data into the loopback for this we user server call.
     onSavePayload: function () {
-
       debugger;
+      var that = this;
       var userValue = this.getModel("appView").getProperty("/customerId");
       var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
+      var oModel = this.getView().getModel();
 
       if (!userValue || !oJsonInpValue) {
         MessageToast.show("Please Check Your Fields");
       }
       // else {
       //   debugger;
-        var that = this;
-        // var oModel = this.getView().getModel();  //default model get at here
-        // var oJsonInpValue = oModel.getProperty("/jsonValue");
-        // var custId = oModel.getProperty("/customerId");
 
         var payload = JSON.parse(oJsonInpValue);
         payload.CustomerId = userValue;
-        payload.jobCardNo = "91uuuuuu"
+        payload.jobCardNo = "9"
 
-        this.middleWare.callMiddleWare("uploadJobData", "POST", payload)
-          .then(function (data, status, xhr) {
+
+        oModel.create("/Jobs", payload, {
+          success: function (oUpdatedData) {
             debugger;
             MessageToast.show("Job created successfully");
-          })
-          .catch(function (jqXhr, textStatus, errorMessage, error) {
-            debugger;
+          },
+          error: function (error) {
+            // Error callback
             that.middleWare.errorHandler(error, that);
-            MessageToast.show("Error:");
-          });
+            MessageToast.show("Error While Psot the data");
+          }
+        });
+
+
+        // ? still in confusion for use this.
+        // this.middleWare.callMiddleWare("uploadJobData", "POST", payload)
+        //   .then(function (data, status, xhr) {
+        //     debugger;
+        //     MessageToast.show("Job created successfully");
+        //   })
+        //   .catch(function (jqXhr, textStatus, errorMessage, error) {
+        //     debugger;
+        //     that.middleWare.errorHandler(error, that);
+        //     MessageToast.show("Error:");
+        //   });
       // }
 
     },
