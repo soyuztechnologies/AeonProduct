@@ -22,7 +22,7 @@
 							intro="{appView>UserName}"
 							number="{appView>jobCardNo}">
 							<firstStatus>
-							    <ObjectStatus text="{appView>Status}" state="{path: 'appView>Status', formatter: '.formatter.getStatusColor'}" />
+							    <ObjectStatus text="{appView>status}" state="{path: 'appView>Status', formatter: '.formatter.getStatusColor'}" />
 							</firstStatus>
 					</ObjectListItem>
 			</items>	

@@ -116,7 +116,7 @@ sap.ui.define([
 				var aFilters = [];
 				aFilterItems.forEach(function (oFilterItem) {
 					var sKey = oFilterItem.getKey();
-					var oFilter = new Filter("Status", FilterOperator.EQ, sKey);
+					var oFilter = new Filter("status", FilterOperator.EQ, sKey);
 					aFilters.push(oFilter);
 				});
 				oBinding.filter(aFilters);

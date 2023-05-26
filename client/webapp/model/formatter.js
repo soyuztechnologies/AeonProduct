@@ -752,10 +752,10 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         case "Packing":
             return "Warning";
             break;
-        case "In Progress":
+        case "In_Progress":
             return "Error";
             break;
-        case "In Transit":
+        case "In_Transit":
             return "Warning";
             break;       
         default:

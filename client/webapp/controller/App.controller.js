@@ -69,10 +69,12 @@ sap.ui.define(
         });
         if (!sessionStorage.showCartWarning)
           sessionStorage.showCartWarning = false;
-          this.getUserIdMenu();
+          this.getUserId();
       },
 
-      onAfterRendering: function () {},
+      onAfterRendering: function () {
+        this.getUserId();
+      },
       onNavigation: function (oEvent) {},
 
       onSelectItem: function (oEvent) {
@@ -94,7 +96,7 @@ sap.ui.define(
           this.getRouter().navTo("userDetails")
         }
       },
-      getUserIdMenu: function () {
+      getUserId: function () {
         debugger;
         var that = this;
         this.middleWare.callMiddleWare("getUserRole", "get")

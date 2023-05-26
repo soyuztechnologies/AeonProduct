@@ -23,7 +23,12 @@ resizable="false" >
 				</Text> -->
 				<DatePicker dateValue="{appView>CreatedOn}"/>
 				<Label text="Raw Material" />
-				<Input type="Number" value="{appView>rawMaterial}" />
+				<Select id="idRawMaterialPopup" selectedKey="instock">
+					<items>
+						<core:Item text="In Stock" key="instock" />
+						<core:Item text="Pending" key="pending" />
+					</items>
+				</Select>
 				<Label text="Coating" />
 				<Input type="Number" value="{appView>Coating}" />
 				<Label text="Spot UV" />
@@ -45,9 +50,8 @@ resizable="false" >
 				<Label text="Delivery No." />
 				<Input type="Number" value="{appView>DeliveryNo}" />
 				<Label text="Status" />
-				<Select id="idStatus" selectedKey="new">
+				<Select id="idStatus" selectedKey="inprogress">
 			    	<items>
-						<core:Item text="New" key="new" />
 						<core:Item text="In Progress" key="inprogress" />
 						<core:Item text="Completed" key="completed" />
 						<core:Item text="Packing" key="packing" />
