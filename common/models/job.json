@@ -7,21 +7,21 @@
 		"validateUpsert": true
 	},
 	"properties": {
-		"jobCardNo":{
+		"jobCardNo": {
 			"type": "string",
 			"default": null,
 			"required": true,
-			"id":true
+			"id": true
 		},
-		"poAttachment":{
-			"type":"string",
-			"default":null,
-			"required":false
+		"poAttachment": {
+			"type": "string",
+			"default": null,
+			"required": false
 		},
-		"artworkAttachment":{
-			"type":"string",
-			"default":null,
-			"required":false
+		"artworkAttachment": {
+			"type": "string",
+			"default": null,
+			"required": false
 		},
 		"CustomerId": {
 			"type": "string",
@@ -39,401 +39,332 @@
 			"type": "date",
 			"default": null
 		},
-		"poNo":{
+		"poNo": {
 			"type": "string",
 			"default": null
-			
 		},
-		"jobCode":{
+		"jobCode": {
 			"type": "string",
 			"default": null
-			
 		},
-		"date":{
+		"date": {
 			"type": "string",
 			"default": null
-			
 		},
-		"artworkCode":{
+		"artworkCode": {
 			"type": "string",
 			"default": null
-			
 		},
-		"clientPONo":{
+		"clientPONo": {
 			"type": "string",
 			"default": null
-			
 		},
-		"nameOFTheProduct":{
+		"nameOFTheProduct": {
 			"type": "string",
 			"default": null
-			
 		},
-		"industry":{
+		"industry": {
 			"type": "string",
 			"default": null
-			
 		},
-		"cartonType":{
+		"cartonType": {
 			"type": "string",
 			"default": null
-			
 		},
-		"qtyPcs":{
+		"qtyPcs": {
 			"type": "string",
 			"default": null
-			
 		},
-		"PaperGSM":{
+		"PaperGSM": {
 			"type": "string",
 			"default": null
-			
 		},
-		"paperQuality":{
+		"paperQuality": {
 			"type": "string",
 			"default": null
-			
 		},
-		"printing":{
+		"printing": {
 			"type": "string",
 			"default": null
-			
 		},
-		"color":{
+		"color": {
 			"type": "string",
 			"default": null
-			
 		},
-		"sizeL":{
+		"sizeL": {
 			"type": "string",
 			"default": null
-			
 		},
-		"sizeW":{
+		"sizeW": {
 			"type": "string",
 			"default": null
-			
 		},
-		"sizeH":{
+		"sizeH": {
 			"type": "string",
 			"default": null
-			
 		},
-		"varLmt":{
+		"varLmt": {
 			"type": "string",
 			"default": null
-			
 		},
-		"effects":{
+		"effects": {
 			"type": "string",
 			"default": null
-			
 		},
-		"lock":{
+		"lock": {
 			"type": "string",
 			"default": null
-			
 		},
-		"tF":{
+		"tF": {
 			"type": "string",
 			"default": null
-			
 		},
-		"pF":{
+		"pF": {
 			"type": "string",
 			"default": null
-			
 		},
-		"doubleCut":{
+		"doubleCut": {
 			"type": "string",
 			"default": null
-			
 		},
-		"trimTF":{
+		"trimTF": {
 			"type": "string",
 			"default": null
-			
 		},
-		"trimPF":{
+		"trimPF": {
 			"type": "string",
 			"default": null
-			
 		},
-		"noOfUps-1":{
+		"noOfUps-1": {
 			"type": "string",
 			"default": null
-			
 		},
-		"noOfUps-2":{
+		"noOfUps-2": {
 			"type": "string",
 			"default": null
-			
 		},
-		"noOfUps-3":{
+		"noOfUps-3": {
 			"type": "string",
 			"default": null
-			
 		},
-		"noOfSheets-1":{
+		"noOfSheets-1": {
 			"type": "string",
 			"default": null
-			
 		},
-		"noOfSheets-2":{
+		"noOfSheets-2": {
 			"type": "string",
 			"default": null
-			
 		},
-		"wastage":{
+		"wastage": {
 			"type": "string",
 			"default": null
-			
 		},
-		"wtKgs":{
+		"wtKgs": {
 			"type": "string",
 			"default": null
-			
 		},
-		"printingSheetSizeL1":{
+		"printingSheetSizeL1": {
 			"type": "string",
 			"default": null
-			
 		},
-		"printingSheetSizeW1":{
+		"printingSheetSizeW1": {
 			"type": "string",
 			"default": null
-			
 		},
-		"printingSheetSizeL2":{
+		"printingSheetSizeL2": {
 			"type": "string",
 			"default": null
-			
 		},
-		"printingMachine":{
+		"printingMachine": {
 			"type": "string",
 			"default": null
-			
 		},
-		"punchingMachine":{
+		"punchingMachine": {
 			"type": "string",
 			"default": null
-			
 		},
-		"pastingMachine":{
+		"pastingMachine": {
 			"type": "string",
 			"default": null
-			
 		},
-		"ref":{
+		"ref": {
 			"type": "string",
 			"default": null
-			
 		},
-		"old":{
+		"old": {
 			"type": "string",
 			"default": null
-			
 		},
-		"none":{
+		"none": {
 			"type": "string",
 			"default": null
-			
 		},
-		"b-2-A":{
+		"b-2-A": {
 			"type": "string",
 			"default": null
-			
 		},
-		"127Level3":{
+		"127Level3": {
 			"type": "string",
 			"default": null
-			
 		},
-		"none1":{
+		"none1": {
 			"type": "string",
 			"default": null
-			
 		},
-		"none2":{
+		"none2": {
 			"type": "string",
 			"default": null
-			
 		},
-		"13Level2":{
+		"13Level2": {
 			"type": "string",
 			"default": null
-			
 		},
-		"batchNo":{
+		"batchNo": {
 			"type": "string",
 			"default": null
-			
 		},
-		"mfgDate":{
+		"mfgDate": {
 			"type": "string",
 			"default": null
-			
 		},
-		"expDate":{
+		"expDate": {
 			"type": "string",
 			"default": null
-			
 		},
-		"correctionsInArtwork":{
+		"correctionsInArtwork": {
 			"type": "string",
 			"default": null
-			
 		},
-		"remarks":{
+		"remarks": {
 			"type": "string",
 			"default": null
-			
 		},
-		"totalA+B":{
+		"totalA+B": {
 			"type": "string",
 			"default": null
-			
 		},
-		"profit":{
+		"profit": {
 			"type": "string",
 			"default": null
-			
 		},
-		"totalCostOfJob":{
+		"totalCostOfJob": {
 			"type": "string",
 			"default": null
-			
 		},
-		"costPerPc":{
+		"costPerPc": {
 			"type": "string",
 			"default": null
-			
 		},
-		"plate":{
+		"plate": {
 			"type": "string",
 			"default": null
-			
 		},
-		"pantoneInks":{
+		"pantoneInks": {
 			"type": "string",
 			"default": null
-			
 		},
-		"foilBlocks":{
+		"foilBlocks": {
 			"type": "string",
 			"default": null
-			
 		},
-		"positive":{
+		"positive": {
 			"type": "string",
 			"default": null
-			
 		},
-		"embossBlock":{
+		"embossBlock": {
 			"type": "string",
 			"default": null
-			
 		},
-		"punch":{
+		"punch": {
 			"type": "string",
 			"default": null
-			
 		},
-		"reference":{
+		"reference": {
 			"type": "string",
 			"default": null
-			
 		},
-		"cartonLength":{
+		"cartonLength": {
 			"type": "string",
 			"default": null
-			
 		},
-		"cartonWidth":{
+		"cartonWidth": {
 			"type": "string",
 			"default": null
-			
 		},
-		"paperCost":{
+		"paperCost": {
 			"type": "string",
 			"default": null
-			
 		},
-		"printingCharges":{
+		"printingCharges": {
 			"type": "string",
 			"default": null
-			
 		},
-		"varnish_Lamination":{
+		"varnish_Lamination": {
 			"type": "string",
 			"default": null
-			
 		},
-		"embossing":{
+		"embossing": {
 			"type": "string",
 			"default": null
-			
 		},
-		"punching":{
+		"punching": {
 			"type": "string",
 			"default": null
-			
 		},
-		"bSOPasting":{
+		"bSOPasting": {
 			"type": "string",
 			"default": null
-			
 		},
-		"lBTOPasting":{
+		"lBTOPasting": {
 			"type": "string",
 			"default": null
-			
 		},
-		"packing":{
+		"packing": {
 			"type": "string",
 			"default": null
-			
 		},
-		"transportation":{
+		"transportation": {
 			"type": "string",
 			"default": null
-			
 		},
-		"total":{
+		"total": {
 			"type": "string",
 			"default": null
-			
 		},
-		"plateCharges":{
+		"plateCharges": {
 			"type": "string",
 			"default": null
-		
 		},
-		"blanketCharges":{
+		"blanketCharges": {
 			"type": "string",
 			"default": null
-			
 		},
-		"userName":{
+		"userName": {
 			"type": "string"
-			
 		},
-		"status":{
+		"status": {
 			"type": "string",
 			"default": "New"
 		}
-		
 	},
 	"scope": {
 		"order": "CreatedOn DESC"
 	},
 	"validations": [],
-  	"relations": {},
-	"acls": [{
-		"accessType": "*",
-		"principalType": "ROLE",
-		"principalId": "$unauthenticated",
-		"permission": "DENY"
-	}],
+	"relations": {
+		"appUser": {
+			"type": "hasOne",
+			"model": "AppUser",
+			"foreignKey": "CustomerId"
+		}
+	},
+	"acls": [
+		{
+			"accessType": "*",
+			"principalType": "ROLE",
+			"principalId": "$unauthenticated",
+			"permission": "DENY"
+		}
+	],
 	"methods": {}
 }

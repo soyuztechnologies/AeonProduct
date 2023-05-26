@@ -20,6 +20,11 @@ sap.ui.define([
             this.getModel("appView").setProperty("/hamburgerVisibility", false);
 			this.getModel("appView").setProperty("/visibleHeader",true);
 			this.getModel("appView").updateBindings();
+            this.getView().getModel("appView").setProperty("/messagePageText","Verifying....");
+            this.getView().getModel("appView").setProperty("/timerText","");
+            this.getView().getModel("appView").setProperty("/verifyIcon",'sap-icon://past');
+            this.getView().getModel("appView").setProperty("/verifyLogout",false);
+
             // this.timerText();
             this.verifytokens();
 		},
@@ -32,6 +37,7 @@ sap.ui.define([
                 "token": oParams
             };
             // debugger;
+            var oModel = this.getView("appView").getModel("appView"); 
             this.middleWare.callMiddleWare("signup/verifyToken", "POST", payload)
                 .then(function (data, status, xhr) {
                     // debugger;
@@ -43,6 +49,10 @@ sap.ui.define([
                 .catch(function (jqXhr, textStatus, errorMessage) {
                     debugger;
                     that.middleWare.errorHandler(jqXhr, that);
+                    oModel.setProperty("/messagePageText","Error....");
+                    oModel.setProperty("/timerText","");
+                    oModel.setProperty("/verifyIcon",'sap-icon://error');
+                    oModel.setProperty("/verifyLogout",true);
                     // that.getRouter().navTo("notFound");
                 });
         },
@@ -67,11 +77,15 @@ sap.ui.define([
                 oDialog.open();
             });
         },
+        onMessagePageLogout:function(){
+            this.onLogOut();
+        },
 
         onCreateUser: function (oEvent) {
             var that = this;
             var pass = this.getModel("appView").getProperty('/setNewPass');
             var Conpass = this.getModel("appView").getProperty('/setConPass');
+            var oModel = this.getView("appView").getModel("appView");
             var oRouteName = oEvent.getParameter("name") === "userVerify";
             if (pass !== Conpass) {
                 MessageToast.show("Password Does not match")
@@ -88,10 +102,17 @@ sap.ui.define([
                         MessageToast.show("User Register Successful");
                         that.onReject();
                         that.timerText();
+                        oModel.setProperty("/messagePageText","Success....");
+                        oModel.setProperty("/timerText","Redirecting to the login page in ");
+                        oModel.setProperty("/verifyIcon",'sap-icon://message-success');
 
                     })
                     .catch(function (jqXhr, textStatus, errorMessage) {
                         debugger;
+                        oModel.setProperty("/messagePageText","Error....");
+                        oModel.setProperty("/timerText","R");
+                        oModel.setProperty("/verifyIcon",'sap-icon://error');
+                        oModel.setProperty("/verifyLogout",true);
                         that.middleWare.errorHandler(jqXhr, that);
                         // that.getRouter().navTo("notFound");
                     });
