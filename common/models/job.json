@@ -414,15 +414,15 @@
 			"default": null
 			
 		},
-		"UserName":{
-			"type": "string",
-			"default": null
+		"userName":{
+			"type": "string"
 			
 		},
-		"Status":{
+		"status":{
 			"type": "string",
-			"default": null
+			"default": "New"
 		}
+		
 	},
 	"scope": {
 		"order": "CreatedOn DESC"

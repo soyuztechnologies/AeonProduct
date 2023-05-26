@@ -9,12 +9,12 @@
         <f:content>
             <!-- <HBox></HBox> -->
             <Label text="Email" />
-            <Input  value="{appView>/userEmail}" editable="false"></Input>
+            <Input  value="{appView>/userEmail}" editable="false" ></Input>
 
             <Label text="Password" />
-            <Input placeholder="Password" value="{appView>/setNewPass}"></Input>
+            <Input placeholder="Password" value="{appView>/setNewPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick"></Input>
             <Label text="Confirm Password" />
-            <Input placeholder="Confirm Password" value="{appView>/setConPass}"></Input>
+            <Input placeholder="Confirm Password" value="{appView>/setConPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick"></Input>
             
         </f:content>
     </f:SimpleForm>

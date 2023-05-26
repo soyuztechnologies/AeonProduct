@@ -18,11 +18,13 @@ sap.ui.define([
 		},
 
 		_matchedHandler: function (oEvent) {
-			this.getModel("appView").setProperty("/visibleHeader", false);
-			this.getModel("appView").setProperty("/visibility", false);
-			this.getModel("appView").setProperty("/layout", "OneColumn");
-			this.getModel("appView").setProperty("/hamburgerVisibility", false);
-			this.getModel("appView").setProperty("/logoutVisibility", false);
+			var oModel = this.getView().getModel('appView');
+			oModel.setProperty("/visibleHeader", false);
+			oModel.setProperty("/visibility", false);
+			oModel.setProperty("/layout", "OneColumn");
+			oModel.setProperty("/hamburgerVisibility", false);
+			oModel.setProperty("/logoutVisibility", false);
+			oModel.setProperty("/ResendStatusSignup",false);
 		},
 
 		Login: function () {
@@ -196,6 +198,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel('appView');
 			var that=this;
 			this.openDialog().then(function (oDialog) {
+				oModel.setProperty("/ResendStatusSignup",false);
 				oDialog.open();
 				oModel.setProperty("/Title","Forgot Password");
 				isSignupButton = false;
@@ -205,6 +208,7 @@ sap.ui.define([
 		onSignupEmailVerifyCall : function(){
 			var that = this; 
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
+			var oModel = that.getView().getModel('appView');
 
 			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if (oEmail && !oEmail.match(emailRegex)) {
@@ -223,7 +227,8 @@ sap.ui.define([
 				.then( function (data, status, xhr) {
 					debugger;
 					MessageToast.show("Verfication Email Sent to Your Mail");
-					that.getView().getModel('appView').setProperty("/EmailEditable", false);
+					oModel.setProperty("/ResendStatusSignup",true);
+					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
 					that.ResendEmailSend();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
@@ -254,6 +259,7 @@ sap.ui.define([
 					// MessageToast.show("forgot Password Email Sent to Your Mail");
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
 					MessageBox.information("You will receive a Email to forgot you Password.")
+					oModel.setProperty("/ResendStatusSignup",false);
 					that.onReject();
 					// that.OtpSend();
 

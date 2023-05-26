@@ -8,7 +8,7 @@
                 <Label text="Mail Address: " visible="{appView>/emailVisible}" />
                 <Input id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
             </VBox>
-            <ObjectStatus  press="resendOTP" title="{appView>/ResendMsg}" active="{appView>/onResendOTP}" id="countdownT" text="{appView>/timerText}" visible="true"/>
+            <ObjectStatus  press="ResendEmailSend" title="{appView>/ResendMsg}" active="{appView>/onResendOTP}" id="countdownT" text="{appView>/timerText}" visible="{appView>/ResendStatusSignup}"/>
         </f:SimpleForm>
     </content>
     <beginButton>
