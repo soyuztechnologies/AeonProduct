@@ -592,7 +592,7 @@ sap.ui.define([
 				.then(function (data) {
 					that.getView().getModel("appView").setProperty("/jobStatusTabData", data);
 					debugger
-					MessageToast.show("Success")
+					// MessageToast.show("Success")
 				})
 				.catch(function (jqXhr, textStatus, errorMessage, error) {
 					debugger;
@@ -647,8 +647,8 @@ sap.ui.define([
 					}
 
 					// that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
-					that.getView().getModel("appView").setProperty('/showImgArt', false);
-					MessageToast.show("Read Successfully")
+					that.getView().getModel("appView").setProperty('/showImgArtwork', false);
+					// MessageToast.show("Read Successfully")
 				},
 				error: function (error) {
 					// Error callback
@@ -681,7 +681,7 @@ sap.ui.define([
 						that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
 					}
 
-					MessageToast.show("Read Successfully")
+					// MessageToast.show("Read Successfully")
 				},
 				error: function (error) {
 					// Error callback
