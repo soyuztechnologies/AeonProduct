@@ -853,9 +853,9 @@ app.start = function () {
 				}
 
 				// Retrieve the user's role or any other relevant data
-				const userRole = Appuser;
+				const {Status,TechnicalId,Role,EmailId} = Appuser;
 				const responseData = {
-					role: userRole,
+					role: {Status,TechnicalId,Role,EmailId},
 					// Include other relevant data if needed
 				};
 

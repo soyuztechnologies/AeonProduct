@@ -1,46 +1,23 @@
-<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:i="sap.ui.core" xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog contentWidth="100%" contentHeight="100%" title="Upload Documents"
-  
-     id="captchaDialog">
-    <content>
-    <HBox
-    justifyContent="Center"
-    alignContent="Center"
-    >
-        
-    <u:FileUploader
-    visible="{appView>/browseVis}"
-    change="onFileUploaddChange"
-    buttonText="Browse"
-    fileType="docx,jpg,jpeg,xml,xlsx,pdf"
-    multiple="false" />
+<core:FragmentDefinition xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"
+    xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+    <Dialog contentWidth="100%" contentHeight="100%" title="Upload Documents" id="captchaDialog">
+        <content>
+            <HBox justifyContent="Center" alignContent="Center">
+                <u:FileUploader visible="{appView>/browseVisArtwork}" change="onFileUploaddChangeArtwork" buttonText="Browse" value="{appview>/fileUploaderValue}" fileType="docx,jpg,jpeg,xml,xlsx,pdf" multiple="false" />
+            </HBox>
 
-
-    <u:FileUploader
-    visible="{appView>/browseVisArtwork}"
-    change="onFileUploaddChangeArtwork"
-    buttonText="Browse"
-    fileType="docx,jpg,jpeg,xml,xlsx,pdf"
-    multiple="false" />
-    </HBox>
-
-    <PDFViewer visible="true" source="{path: 'appView>pdfArtwork', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" />
-    <!-- <PDFViewer visible="{appView>/pdfartworkVisibility}" source="{path: 'appView>/pdfArtwork', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" />
-    <PDFViewer visible="{appView>/viewPo}"  errorPlaceholderMessage="Po File Not Attached" source="{path: 'appView>/pdfUrldec', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" />
-    <PDFViewer visible="{appView>/viewArt}" errorPlaceholderMessage="Artwork File Not Attached" source="{path: 'appView>/pdfUrlartwork', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" /> -->
-    <Image visible="{appView>/imgVisibility}"  id="image" src="{appView>/imageContent}" />
-    <!-- <Image visible="{appView>/showImg}" src="{appView>/imageBase}" />
-    <Image visible="{appView>/showImgArtwork}" src="{appView>/imageContentArtwork}" />
-    <Image visible="true" src="{appView>/imageBaseArtwork}" /> -->
-        
-
-
-    </content>
-    <beginButton>
-        <Button visible="{appView>/btnVisibility}" text="Upload" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/>
-    </beginButton>
-    <endButton>
-        <Button text="Close" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
-    </endButton>
-</Dialog>		
+            <PDFViewer visible="true" source="{path: 'appView>/pdfArtwork', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />
+            <Image visible="{appView>/imgVisibility}" id="image" src="{appView>/imageContent}" />
+            <!-- <Image visible="true" src="{appView>/imageBaseArtwork}" />  -->
+        </content>
+        <beginButton>
+            <Button visible="{appView>/btnVisibility}" text="Upload" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/>
+        </beginButton>
+        <endButton>
+            <Button text="Close" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
+        </endButton>
+    </Dialog>
 </core:FragmentDefinition>

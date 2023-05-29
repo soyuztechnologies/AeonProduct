@@ -17,25 +17,9 @@ sap.ui.define([
 			this.oViewSettingsDialog = sap.ui.xmlfragment("ent.ui.ecommerce.fragments.Jobstatuspopup", this);
 			this.getView().addDependent(this.oViewSettingsDialog);
 		},
+
+		// * root match handler function.
 		_matchedHandler: function (oEvent) {
-			// var  PrintingId = oEvent.getParameter("arguments").PrintingId;
-			// var spath = '/PrintingId/' + PrintingId;
-			// var oList = this.getView().byId("idMyList");
-			// var aItems = oList.getItems();
-			// for (let i = 0; i < aItems.length; i++) {
-			//     const element = aItems[i];
-			//     if(element.getBindingContextPath()===spath){
-			//         var oItemObject = element;
-			//         break;
-			//     }
-			// }
-			// oList.setSelectedItem(oItemObject);
-
-
-			// var oShift = oEvent.getParameter("arguments").oShift;
-			// var sPath = '/printingDetails/' + oShift;
-			// var oList = this.getView().byId("idWelcomeP");
-			// debugger;
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader", true);
 			this.getModel("appView").setProperty("/visibility", true);
@@ -44,16 +28,12 @@ sap.ui.define([
 			this.getUserRoleData();
 			this.getJobsData();
 			// this.getUserName();
-			
-
 		},
+
+		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
 			debugger;
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
-			// var oAppcon = this.getView().getParent();
-			// var oV2 = oAppcon.getPages()[0];
-			// oV2.bindElement(sPath);
-
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			debugger;
 			this.getView().getModel("appView").setProperty('/datas', datassss);
@@ -63,60 +43,60 @@ sap.ui.define([
 				jobId: datassss.jobCardNo
 			});
 			debugger;
-			// this.getRouter().navTo("printingDetails");
 		},
 
+
+		// * this fucntion will get the list of the all jobs in the allPrinters screen.
 		getJobsData: function () {
 			debugger;
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
-			// Define the entity set and properties you want to retrieve
-			var sEntitySet = "/Jobs";
-			var sProperties = "JobId, Title, Description, appUser/Name";
-
-			// Build the expand query option
-            var sExpand = "appUser";
-			// Build the request URL with the entity set, properties, and expand option
-            var sUrl = sEntitySet + "?$select=" + sProperties + "&$expand=" + sExpand;
-			
 			// Perform the read operation
-			oModel.read(sUrl, {
+			oModel.read("/Jobs", {
+				urlParameters: {
+					"$expand" : 'appUser'
+				},
 				success: function (data) {
-					// Success callback
-					// MessageToast.show("Data read successfully");
 					that.getView().getModel("appView").setProperty("/jobsData", data.results);
 					BusyIndicator.hide();
-					// Handle the retrieved data
-					// var aEntities = data.results; // Access the array of retrieved entities
-					// ...
 				},
 				error: function (error) {
-					// Error callback
-					// that.middleWare.errorHandler(error, that);
 					MessageToast.show("Error reading data");
 					BusyIndicator.hide();
 				}
 			});
+			// debugger;
+			// BusyIndicator.show(0);
+			// var oModel = this.getView().getModel();  //default model get at here
+			// var that = this;
+			// var sEntitySet = "/Jobs";
+			// var sProperties = "JobId, Title, Description, appUser/Name";
 
-			// Ajax  call for get the data 
-			// this.middleWare.callMiddleWare("api/Jobs", "GET")
-			// .then( function (data) {
-			// //   debugger;
-			// //   MessageToast.show("Job find successfully");
-			//   that.getModel("appView").setProperty("/jobsData",data);
-			// })
-			// .catch(function (jqXhr, textStatus, errorMessage,error) {
-			//   that.middleWare.errorHandler(error, that);
-			//   MessageToast.show("Error:");
+            // var sExpand = "appUser";
+            // var sUrl = sEntitySet + "?$select=" + sProperties + "&$expand=" + sExpand;
+			
+			// oModel.read(sUrl, {
+			// 	success: function (data) {
+			// 		that.getView().getModel("appView").setProperty("/jobsData", data.results);
+			// 		BusyIndicator.hide();
+			// 	},
+			// 	error: function (error) {
+			// 		MessageToast.show("Error reading data");
+			// 		BusyIndicator.hide();
+			// 	}
 			// });
+
 		},
+
 		onAfterRendering: function () {
 			this.getJobsData();
 		},
+
 		onFilterPressJobStatus: function () {
 			this.oViewSettingsDialog.open();
 		},
+
 		onViewSettingsConfirm: function (oEvent) {
 			var aFilterItems = oEvent.getParameter("filterItems");
 			if (aFilterItems.length > 0) {
@@ -133,40 +113,39 @@ sap.ui.define([
 				this.onViewSettingsCancel();
 			}
 		},
-		getUserName: function(oEvent){
-        debugger;
-		var oModel = this.getView().getModel("appView");
-          var oSelectedItem = oEvent.getParameter("value");
-           oModel.setProperty("/Username",oSelectedItem);
-            console.log("Selected User ID:", oSelectedItem);
-	    },		
-	    onViewSettingsCancel: function () {
+		
+		onViewSettingsCancel: function () {
 			var oTable = this.getView().byId("idListAllPrinters");
 			var oBinding = oTable.getBinding("items");
 			oBinding.filter([]);
 		},
+
+		//* this function is getting the userName into the Select dialog box.
+		getUserName: function(oEvent){
+        // debugger;
+		var oModel = this.getView().getModel("appView");
+          var oSelectedItem = oEvent.getParameter("value");
+           oModel.setProperty("/Username",oSelectedItem);
+            // console.log("Selected User ID:", oSelectedItem);
+	    },
+
+		// * this fcuntion is working to search the data into the allPrinters screen.
 		onSearchJob: function (oEvent) {
-			//here have to take search value from searchField
 			var sValue = oEvent.getParameter("query");
-			//for live change we need to fire if condition
 			if (!sValue) {
 			    var sValue = oEvent.getParameter("newValue")
 			}
-			//now we have to create a filter for the search value so that the ui can understand what we want
-			// var oFilter1 = new Filter("PRODUCT_ID", FilterOperator.Contains, sValue);
 			var oFilter1= new Filter("jobCardNo", FilterOperator.Contains, sValue);
 			var oFilter2= new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
 			var oFilter3= new Filter("UserName", FilterOperator.Contains, sValue);
-			// var oFilter3 = new Filter("price", FilterOperator.Contains, sValue);
-			// var oFilter4 = new Filter("status", FilterOperator.Contains, sValue);
 			var aFilter = [oFilter1, oFilter2, oFilter3];
-			//so for searching 2 items together so we have to do this
 			var oFilter = new Filter({
 			    filters: aFilter,
 			    and: false
 			});
-			//now we have to bind the items in list control
 			this.getView().byId("idListAllPrinters").getBinding("items").filter(oFilter);
-		}
+		},
+
+
 	});
 });

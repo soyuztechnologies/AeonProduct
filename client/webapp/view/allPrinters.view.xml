@@ -19,8 +19,9 @@
 					<ObjectListItem
 							type="Navigation"
 							title="{appView>nameOFTheProduct}"
-							intro="{appView>UserName}"
-							number="{appView>jobCardNo}">
+							intro="{appView>Appuser/FirstName}"
+							number="{appView>jobCardNo}"
+							>
 							<firstStatus>
 							    <ObjectStatus text="{appView>status}" state="{path: 'appView>Status', formatter: '.formatter.getStatusColor'}" />
 							</firstStatus>
