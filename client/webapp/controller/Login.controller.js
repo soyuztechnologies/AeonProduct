@@ -46,6 +46,12 @@ sap.ui.define([
 					if(data.Blocked=="Yes"){
 						MessageBox.information("Your Account has been blocked by Administrator, For Further Details Contact Admin");
 					}
+					else if(data.Status === "Pending"){
+						MessageBox.information("Your Account Status is Pending, so please contact Admin for further Details");
+					}
+					else if(data.Status === "Reject"){
+						MessageBox.information("Your Account Status is Reject, For Further Details Contact Admin");
+					}
 					else if(data.temp === true){
 						that.openUpdateDialog();
 					}

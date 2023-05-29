@@ -35,7 +35,7 @@ sap.ui.define([
 			// var oShift = oEvent.getParameter("arguments").oShift;
 			// var sPath = '/printingDetails/' + oShift;
 			// var oList = this.getView().byId("idWelcomeP");
-			debugger;
+			// debugger;
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader", true);
 			this.getModel("appView").setProperty("/visibility", true);
@@ -71,8 +71,17 @@ sap.ui.define([
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
+			// Define the entity set and properties you want to retrieve
+			var sEntitySet = "/Jobs";
+			var sProperties = "JobId, Title, Description, appUser/Name";
+
+			// Build the expand query option
+            var sExpand = "appUser";
+			// Build the request URL with the entity set, properties, and expand option
+            var sUrl = sEntitySet + "?$select=" + sProperties + "&$expand=" + sExpand;
+			
 			// Perform the read operation
-			oModel.read('/Jobs', {
+			oModel.read(sUrl, {
 				success: function (data) {
 					// Success callback
 					// MessageToast.show("Data read successfully");

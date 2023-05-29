@@ -32,7 +32,7 @@ sap.ui.define([
 
 		},
 		getUserRoleData: function () {
-			debugger;
+			// debugger;
 			var that = this;
 			this.middleWare.callMiddleWare("getUserRole", "get")
 			  .then(function (data, status, xhr) {
@@ -49,7 +49,7 @@ sap.ui.define([
 		  },
 
 		userRole: function(){
-			debugger;
+			// debugger;
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if(sUserRole === "Admin"){
 				this.getView().getModel("appView").setProperty('/profilNavVisb',false);

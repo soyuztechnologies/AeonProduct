@@ -61,7 +61,7 @@ sap.ui.define(
         // this.getCustomData();
 
         $(document).ajaxStart(function (x, y, z) {
-          debugger;
+          // debugger;
           sap.ui.core.BusyIndicator.show();
         });
         $(document).ajaxStop(function (x, y, z) {
@@ -97,7 +97,7 @@ sap.ui.define(
         }
       },
       getUserId: function () {
-        debugger;
+        // debugger;
         var that = this;
         this.middleWare.callMiddleWare("getUserRole", "get")
           .then(function (data, status, xhr) {

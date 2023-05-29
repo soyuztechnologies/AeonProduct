@@ -233,7 +233,7 @@ app.start = function () {
 
 				const replacements = {
 					verify: `${req.headers.referer}#/updatePassword/${token}`,
-					email: "contact@evotrainingsolutions.com",
+					email: "noreply@aeonproducts.com",
 					user: email,
 				};
 				const templateFileName = "Forgot.html"
@@ -370,7 +370,7 @@ app.start = function () {
 
 				const replacements = {
 					verify: `${req.headers.referer}#/userVerify/${token}`,
-					email: "contact@evotrainingsolutions.com",
+					email: "noreply@aeonproducts.com",
 					// user : email,
 				};
 				const templateFileName = "verifyEmail.html";
@@ -728,7 +728,7 @@ app.start = function () {
 				// await sendEmailPass(email, password);
 				const replacements = {
 					// verify : `${req.headers.referer}#/updatePassword/${token}`,
-					email: "contact@evotrainingsolutions.com",
+					email: "noreply@aeonproducts.com",
 					user: email,
 					password: password,
 				};
@@ -973,7 +973,7 @@ app.start = function () {
 				const token = "";
 				const replacements = {
 					// verify : `${req.headers.referer}#/updatePassword/${token}`,
-					email: "contact@evotrainingsolutions.com",
+					email: "noreply@aeonproducts.com",
 					user: email,
 					password: TempPass,
 				};
@@ -1075,6 +1075,57 @@ app.start = function () {
 		// 		res.status(500).json({ error: 'An error occurred while processing the request' });
 		// 	}
 		// });
+
+		app.post('/usersRemove', (req, res) => {
+			const userEmail = "dheeraj@soyuztechnologies.com";
+		  
+			// Assuming you are using a database library or ORM, such as Sequelize or Mongoose
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
+		  
+			// Find the user by email
+			User.findOne({ email: userEmail })
+			  .then((user) => {
+				if (!user) {
+				  return res.status(404).send('User not found');
+				}
+		  
+				// Delete the user
+				user.remove()
+				  .then(() => {
+					// Find the appUser by email
+					AppUser.findOne({ email: userEmail })
+					  .then((appUser) => {
+						if (!appUser) {
+						  return res.status(404).send('AppUser not found');
+						}
+		  
+						// Delete the appUser
+						appUser.remove()
+						  .then(() => {
+							return res.status(200).send('User and AppUser deleted successfully');
+						  })
+						  .catch((error) => {
+							console.error('Error deleting appUser:', error);
+							return res.status(500).send('Internal server error');
+						  });
+					  })
+					  .catch((error) => {
+						console.error('Error finding appUser:', error);
+						return res.status(500).send('Internal server error');
+					  });
+				  })
+				  .catch((error) => {
+					console.error('Error deleting user:', error);
+					return res.status(500).send('Internal server error');
+				  });
+			  })
+			  .catch((error) => {
+				console.error('Error finding user:', error);
+				return res.status(500).send('Internal server error');
+			  });
+		  });
+		  
 
 
 
@@ -2642,7 +2693,7 @@ app.start = function () {
 			var emailContent = {};
 			var Subject = "Payment Verification";
 			emailContent = {
-				from: 'contact@evotrainingsolutions.com',
+				from: 'noreply@aeonproducts.com',
 				to: Email,
 				subject: Subject,
 				html: this.htmlTemplate
@@ -2745,7 +2796,7 @@ app.start = function () {
 				var Email = req.body.eMail
 				var Subject = "Verify Your OTP For Evosolutions Registration";
 				emailContent = {
-					from: 'contact@evotrainingsolutions.com',
+					from: 'noreply@aeonproducts.com',
 					to: Email, //req.body.EmailId    FirstName  CourseName
 					cc: ccs,
 					subject: Subject,
@@ -3603,7 +3654,7 @@ app.start = function () {
 				var ccs = [];
 				var mailOptions = {};
 				mailOptions = {
-					from: 'contact@evotrainingsolutions.com',
+					from: 'noreply@aeonproducts.com',
 					to: req.body.EmailId, //req.body.EmailId    FirstName  CourseName
 					cc: ccs,
 					subject: Subject,
