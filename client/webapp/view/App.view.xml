@@ -17,9 +17,9 @@
                    <Image src="logo/logo.png" width="4%"/>
                    <Title text="Aeon Products"></Title>
                    <ToolbarSpacer/> 
-                   <FlexBox alignItems="Center">
+                   <FlexBox visible="{appView>/visibility}" alignItems="Center">
                         <core:Icon src="sap-icon://person-placeholder"  class="sapUiTinyMargin"/>
-                        <Text text="{appView>/UserEmail}" />
+                        <Text text="{appView>/UserEmail}({appView>/userRole})" />
                     </FlexBox>
                    <Button press="onPressLogout" icon="sap-icon://log" class="sapUiSmallMarginEnd"  visible="{appView>/logoutVisibility}"/>
             </tnt:ToolHeader>

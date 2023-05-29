@@ -103,6 +103,7 @@ sap.ui.define(
           .then(function (data, status, xhr) {
             var emailName = data.role.EmailId
             that.getView().getModel('appView').setProperty('/UserEmail', emailName);
+            that.getView().getModel('appView').setProperty('/userRole', data.role.Role);
           })
           .catch(function (jqXhr, textStatus, errorMessage) {
             that.middleWare.errorHandler(jqXhr, that);

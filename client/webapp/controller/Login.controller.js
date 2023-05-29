@@ -41,8 +41,8 @@ sap.ui.define([
 			};
 			this.middleWare.callMiddleWare("login", "POST", payload)
 				.then( function (data, status, xhr) {
-					debugger;
-					// MessageToast.show("Login Success");
+					debugger;					// MessageToast.show("Login Success");
+					that.UserRole = data.Role
 					if(data.Blocked=="Yes"){
 						MessageBox.information("Your Account has been blocked by Administrator, For Further Details Contact Admin");
 					}
@@ -51,6 +51,7 @@ sap.ui.define([
 					}
 					else if(data.Role==="Customer"){
 						that.getModel("appView").setProperty("/visibleHeader", true);
+						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();
@@ -58,6 +59,7 @@ sap.ui.define([
 					}
 					else if(data.Role==="Factory Manager"){
 						that.getModel("appView").setProperty("/visibleHeader", true);
+						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();
@@ -65,6 +67,7 @@ sap.ui.define([
 					}
 					else {
 						that.getModel("appView").setProperty("/visibleHeader", true);
+						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();
