@@ -39,6 +39,7 @@ sap.ui.define([
 				debugger;
 				var role = data.role.Role
 				  that.getView().getModel('appView').setProperty('/UserRole',role);
+				  that.getView().getModel('appView').setProperty('/UserEmail',data.role.EmailId);
 				  that.userRole();
 				// };
 			  })

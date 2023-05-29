@@ -5,7 +5,7 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 ], function (BaseController, MessageToast, JSONModel, Fragment) {
 	"use strict";
-
+	var isPono;
 	return BaseController.extend("ent.ui.ecommerce.controller.printingDetails", {
 
 		onInit: function () {
@@ -122,6 +122,8 @@ sap.ui.define([
 		// oSimpleForm2.bindElement('appView>/Jobs');
 		// },
 
+		
+
 
 
 		//* Opens the PO No. Popup
@@ -135,6 +137,7 @@ sap.ui.define([
 
 			this.oDialogOpen().then(function (oDialog) {
 				oDialog.open();
+				isPono =  true;
 				that.getView().getModel('appView').setProperty('/viewPo', true);
 				that.getView().getModel('appView').setProperty('/browseVisArtwork', false);
 				that.getView().getModel('appView').setProperty('/browseVis', true);
@@ -181,6 +184,7 @@ sap.ui.define([
 
 			this.oDialogOpen().then(function (oDialog) {
 				oDialog.open();
+				isPono =  false;
 				that.getView().getModel('appView').setProperty('/viewPo', false);
 				that.getView().getModel('appView').setProperty('/viewArt', true);
 				that.getView().getModel('appView').setProperty('/browseVisArtwork', true);
@@ -327,7 +331,7 @@ sap.ui.define([
 				}.bind(this);
 				oReader.readAsBinaryString(oFile);
 			}
-			if (oFile.type.includes("xml")) {
+			if (oFile.type.includes("xlxs")) {
 				debugger;
 				var oReader = new FileReader();
 				oReader.onload = function (e) {
@@ -358,6 +362,60 @@ sap.ui.define([
 			});
 		},
 
+		onUploadPoNo : function(){
+			var oModel = this.getView().getModel(); ///default model get at here
+			var that = this;
+			var ids = this.oArgs
+			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
+			if(!poFile){
+				MessageToast.show("Please Upload The Document");
+				return
+			}
+				var oUpdatedData = {
+					poAttachment: poFile,
+					// artworkAttachment:artworkFile
+				};
+				oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
+					success: function (data) {
+						debugger;
+						MessageToast.show("Successfully Uploaded")
+					},
+					error: function (error) {
+						// Error callback
+						// that.middleWare.errorHandler(error, that);
+						MessageToast.show("Error reading data");
+					}
+				});
+			MessageToast.show("upload the pono files.")
+
+
+		},
+		onUploadArtWork : function(){
+			var oModel = this.getView().getModel(); ///default model get at here
+			var that = this;
+			var ids = this.oArgs
+			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfArtwork")
+			if(!artworkAttachment){
+				MessageToast.show("Please Upload The Document");
+				return
+			}
+				var oUpdatedData = {
+					artworkAttachment: artworkAttachment,
+					// artworkAttachment:artworkFile
+				};
+				oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
+					success: function (data) {
+						debugger;
+						MessageToast.show("Successfully Uploaded")
+					},
+					error: function (error) {
+						// Error callback
+						// that.middleWare.errorHandler(error, that);
+						MessageToast.show("Error reading data");
+					}
+				});
+			MessageToast.show("upload the artwork files.")
+		},
 
 
 
@@ -367,12 +425,17 @@ sap.ui.define([
 
 		onUploadDataPress: function () {
 			debugger;
+			if(isPono ==  true){
+				this.onUploadPoNo();
+			}
+			else{
+				this.onUploadArtWork();
+			}
 			var oModel = this.getView().getModel(); ///default model get at here
 			var that = this;
 			var ids = this.oArgs
 			var poFile = this.getView().getModel('appView').getProperty("/pdfUrl");
 			var artworkAttachment = this.getView().getModel('appView').getProperty("/pdfArtwork")
-
 			if (!poFile) {
 				var poFileimg = this.getView().getModel('appView').getProperty("/imageContent");
 				var artworkAttachmentimg = this.getView().getModel('appView').getProperty("/imageContentArtwork");
@@ -592,7 +655,7 @@ sap.ui.define([
 				.then(function (data) {
 					that.getView().getModel("appView").setProperty("/jobStatusTabData", data);
 					debugger
-					MessageToast.show("Success")
+					// MessageToast.show("Success")
 				})
 				.catch(function (jqXhr, textStatus, errorMessage, error) {
 					debugger;
@@ -631,6 +694,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
+			// var pdfArtwork
 			oModel.read(`/Jobs('${ids}')`, {
 				success: function (data) {
 					debugger;
@@ -643,12 +707,12 @@ sap.ui.define([
 
 					}
 					else {
-						that.getView().getModel("appView").setProperty("/pdfUrldec", data.poAttachment)
+						that.getView().getModel("appView").setProperty("/pdfUrl", data.poAttachment)
 					}
 
 					// that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
-					that.getView().getModel("appView").setProperty('/showImgArt', false);
-					MessageToast.show("Read Successfully")
+					that.getView().getModel("appView").setProperty('/showImgArtwork', false);
+					// MessageToast.show("Read Successfully")
 				},
 				error: function (error) {
 					// Error callback
@@ -678,10 +742,10 @@ sap.ui.define([
 					else {
 						console.log(data)
 
-						that.getView().getModel("appView").setProperty("/pdfUrlartwork", data.artworkAttachment)
+						that.getView().getModel("appView").setProperty("/pdfArtwork", data.artworkAttachment)
 					}
 
-					MessageToast.show("Read Successfully")
+					// MessageToast.show("Read Successfully")
 				},
 				error: function (error) {
 					// Error callback
