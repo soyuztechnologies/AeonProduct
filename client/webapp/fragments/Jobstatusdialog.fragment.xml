@@ -23,7 +23,7 @@ resizable="false" >
 				</Text> -->
 				<DatePicker dateValue="{appView>CreatedOn}"/>
 				<Label text="Raw Material" />
-				<Select id="idRawMaterialPopup" selectedKey="instock">
+				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" text="{appView>rawMaterial}">
 					<items>
 						<core:Item text="In Stock" key="instock" />
 						<core:Item text="Pending" key="pending" />
@@ -50,11 +50,13 @@ resizable="false" >
 				<Label text="Delivery No." />
 				<Input type="Number" value="{appView>DeliveryNo}" />
 				<Label text="Status" />
-				<Select id="idStatus" selectedKey="inprogress">
+				<Select id="idStatus" forceSelection="false" selectedKey="partiallycompleted"  change="onSelectKeyStatus" text="{appView>rawMaterial}">
 			    	<items>
+						<core:Item text="Partially Completed" key="partiallycompleted" />
 						<core:Item text="In Progress" key="inprogress" />
 						<core:Item text="Completed" key="completed" />
 						<core:Item text="Packing" key="packing" />
+						<core:Item text="Partially Dispatched" key="partiallydispatched" />
 						<core:Item text="In Transit" key="intransit" />
 						<core:Item text="Delivered" key="delivered" />
 						<core:Item text="Cancelled" key="cancelled" />

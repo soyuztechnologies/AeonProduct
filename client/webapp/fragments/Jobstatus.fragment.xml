@@ -53,7 +53,7 @@
            <items>
                <ColumnListItem >
                    <cells>
-                       <Input editable="{appView>/onClickModify}" value="{appView>JobStatusId}"></Input> 
+                       <Input editable="{appView>/onClickModify}" value="{appView>rawMaterial}"></Input> 
                        <Input editable="{appView>/onClickModify}" value="{appView>Coating}"></Input>
                        <Input editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input>
                        <Input editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
