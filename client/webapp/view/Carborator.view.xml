@@ -3,46 +3,247 @@
     xmlns:f="sap.ui.layout.form"
     xmlns:core="sap.ui.core"  
     xmlns:core.h="sap.ui.core.HTML"  
-    xmlns="sap.m">
-    <Page  showHeader="{appView>/visibleHeader}" id="page">
+    xmlns="sap.m"
+    xmlns:ux="sap.uxap">
+    <Page enableScrolling="false"  showHeader="{appView>/visibleHeader}" id="SimpleForm-1">
         <content>
-            <HBox alignItems="Center" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop">
-            <ComboBox   items="{appView>/userDetails}" id="idPopinLayout"
-                placeholder="Select User"
-                change="onPopinLayoutChanged"
-                class="sapUiTinyMarginEnd">
-                <items>
-                    <core:Item enabled="true"  text="{appView>UserName}"
-                        key="{appView>id}"/>
-                </items>
-            </ComboBox>
-                <u:FileUploader
-                class="sapUiTinyMarginBegin"
-                change="onFileUploaddChange"
-                icon="sap-icon://browse-folder"
-                buttonText="Browse"
-                fileType="docx,jpg,jpeg,xml,xlsx,pdf"
-                multiple="false" />
-                
-            </HBox>
-            <!-- <Button visible="{appView>/uploadButtonVisibility}" text="Upload" press="onUploadData"></Button> -->
-            <!-- <VBox
-            alignItems="Center"
 
-            >
-            <Image visible="{appView>/imgVisibility}"  id="image" src="{appView>/imageContent}" />
-            </VBox>
-            <PDFViewer visible="{appView>/pdfVisibility}" source="{path: 'appView>/pdfUrl', formatter:'.formatter.getBase64ToPdf'}"  width="100%" height="600px" /> -->
-            
-            <VBox class="sapUiLargeMargin" id="_IDGenVBox1" alignItems="Center">
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
+            <HBox alignItems="Start" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop">
+                <ComboBox   items="{appView>/userDetails}" id="idPopinLayout"
+                    placeholder="Select User"
+                    change="onPopinLayoutChanged"
+                    class="sapUiTinyMarginEnd">
+                    <items>
+                        <core:Item enabled="true"  text="{appView>UserName}"
+                            key="{appView>id}"/>
+                    </items>
+                </ComboBox>
+                    <u:FileUploader
+                    id="fileUploader"
+                    class="sapUiTinyMarginBegin"
+                    change="onFileUploaddChange"
+                    icon="sap-icon://browse-folder"
+                    buttonText="Browse"
+                    fileType="docx,jpg,jpeg,xml,xlsx,pdf"
+                    multiple="false" />  
+                </HBox>
+            
+            <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
+                
+        <ux:headerTitle>
+            
+            <ux:ObjectPageDynamicHeaderTitle expandedContent="false">
+                
+            
+            </ux:ObjectPageDynamicHeaderTitle>
+        </ux:headerTitle>
+        <ux:ObjectPageSection title="Product Details">
+            <ux:subSections  >
+                <ux:ObjectPageSubSection>
+                    <ux:blocks>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false">
+                            <f:content >
+                                <Label text="Name of the Product"/>
+                                <Input value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Carton Type"/>
+                                <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Quantity (pcs)"/>
+                                <Input value = "{appView>qtyPcs}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Paper GSM"/>
+                                <Input value = "{appView>PaperGSM}" editable="{appView>/editableFields}" />
+                    
+                                
+                                <Label text="Paper Quality"/>
+                                <Input value = "{appView>paperQuality}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Printing"/>
+                                <Input value = "{appView>printing}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Color"/>
+                                <Input value = "{appView>color}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Size (L x W x H)"/>
+                                <Input value="{path: 'appView>sizeL'} x {path: 'appView>sizeW'} x {path: 'appView>sizeH'}" editable="{appView>/editableFields}"/>
+                               
+                                <Label text="Var. Lmt."/>
+                                <Input value = "{appView>varLmt}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Effects"/>
+                                <Input value = "{appView>effects}" editable="{appView>/editableFields}"/>
 
 
-            <f:SimpleForm visible="{appView>/simpleFormVisibility}" width="100%" editable="true" id="SimpleForm-1" columnsM="2"
+                                <Label text="Lock"/>
+                                <Input value = "{appView>lock}" editable="{appView>/editableFields}"/>
+                                <Label text="TF"/>
+                                <Input value = "{appView>tF}" editable="{appView>/editableFields}"/>
+                                <Label text="PF"/>
+                                <Input value = "{appView>pF}" editable="{appView>/editableFields}"/>
+                                <Label text="Double Cut"/>
+                                <Input value = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
+                                <Label text="Trin in TF"/>
+                                <Input value = "{appView>trimTF}" editable="{appView>/editableFields}"/>
+                                
+                                
+                            </f:content>
+                        </f:SimpleForm>
+                    </ux:blocks>
+                </ux:ObjectPageSubSection>
+            </ux:subSections>
+        </ux:ObjectPageSection>
+
+        <ux:ObjectPageSection title="Paper and Layouts">
+            <ux:subSections>
+                <ux:ObjectPageSubSection>
+                    <ux:blocks>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <Label text="No of Ups"/>
+                                <Input value="{path: 'appView>noOfUps-1'} x {path: 'appView>noOfUps-2'} = {path: 'appView>noOfUps-3'}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="No of Sheets"/>
+                                <Input value = "{appView>noOfSheets-1}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Printing Sheet Size"/>
+                                <Input value = "{appView>printingSheetSizeL1} x {appView>printingSheetSizeW1}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Procured Sheets"/>
+                                <Input value = "{appView>noOfSheets-2}" editable="{appView>/editableFields}"/>
+                                
+                                <Label text="Procured Sheet Size"/>
+                                <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Wastage"/>
+                                <Input value = "{appView>wastage}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Weight in Kgs"/>
+                                <Input value = "{appView>wtKgs}" editable="{appView>/editableFields}" />
+                    
+                            </f:content>
+                        </f:SimpleForm>
+                    </ux:blocks>
+                </ux:ObjectPageSubSection>
+            </ux:subSections>
+        </ux:ObjectPageSection>
+
+        <ux:ObjectPageSection title="Machine Details">
+            <ux:subSections>
+                <ux:ObjectPageSubSection>
+                    <ux:blocks>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <Label text="Printing Machine"/>
+                                <Input value = "{appView>printingMachine}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Punching Machine"/>
+                                <Input value = "{appView>punchingMachine}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Pasting Machine"/>
+                                <Input value = "{appView>pastingMachine}" editable="{appView>/editableFields}"/>
+
+                                <!-- <Label text="Old"/>
+                                <Input value = "{appView>noOfSheets-2}" editable="{appView>/editableFields}"/>
+                                
+                                <Label text="Ref."/>
+                                <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="None"/>
+                                <Input value = "{appView>wastage}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Weight in Kgs"/>
+                                <Input value = "{appView>wtKgs}" editable="{appView>/editableFields}" /> -->
+                    
+                            </f:content>
+                        </f:SimpleForm>
+                    </ux:blocks>
+                </ux:ObjectPageSubSection>
+            </ux:subSections>
+        </ux:ObjectPageSection>
+
+
+        <ux:ObjectPageSection title="Cost">
+            <ux:subSections>
+                <ux:ObjectPageSubSection>
+                    <ux:blocks>
+                        <f:SimpleForm editable="false"    columnsXL="2" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Cost Structure" />
+                                    
+                                <Label text="Paper Cost"/>
+                                <Input value="{path: 'appView>paperCost'}" editable="{appView>/editableFields}"/>
+                                <Input value="{path: 'appView>paperCost2'}" editable="{appView>/editableFields}"/>
+                                
+                                
+                    
+                                <Label text="Printing Charges"/>
+                                <Input value = "{appView>printingCharges}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Varnish/Lamination"/>
+                                <Input value = "{appView>varnishandLamination}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Foil Blocks"/>
+                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
+                                <Input value="{path: 'appView>foilBlocksPerPs'}" editable="{appView>/editableFields}"/>
+                                
+                                <Label text="Positive"/>
+                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
+                                <Input value = "{appView>positivePerPs}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Embossing"/>
+                                <Input value = "{appView>embossing}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Punching"/>
+                                <Input value = "{appView>punching}" editable="{appView>/editableFields}" />
+                                <Label text="BSO Pasting"/>
+                                <Input value = "{appView>bSOPasting}" editable="{appView>/editableFields}" />
+                                <Label text="LBTO Pasting"/>
+                                <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
+                                <Label text="Packing"/>
+                                <Input value = "{appView>packing}" editable="{appView>/editableFields}" />
+                                <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
+                                <Label text="Transportation"/>
+                                <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />
+                                <Input value = "{appView>transportationPerKg}" editable="{appView>/editableFields}" />
+
+                                    <core:Title text="Development Cost" />
+
+                                    <Label text="Plate Charges"/>
+                                <Input value="{path: 'appView>plateCharges'}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Pantone Inks"/>
+                                <Input value = "{appView>pantoneInks}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Blanket Charges"/>
+                                <Input value = "{appView>blanketCharges}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Foil Blocks"/>
+                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
+                                
+                                <Label text="Positive"/>
+                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Emboss Block"/>
+                                <Input value = "{appView>embossBlock}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Punch"/>
+                                <Input value = "{appView>punch}" editable="{appView>/editableFields}" />
+                                <Label  design="Bold" text="Total" />
+                                <Text text="{appView>total}" />
+                    
+                            </f:content>
+                        </f:SimpleForm>
+                    </ux:blocks>
+                </ux:ObjectPageSubSection>
+            </ux:subSections>
+        </ux:ObjectPageSection>
+    </ux:ObjectPageLayout>
+            <!-- <f:SimpleForm visible="{appView>/simpleFormVisibility}" width="100%" editable="true" id="SimpleForm-1" columnsM="2"
 			columnsL="3"
 			columnsXL="4"  layout="ColumnLayout">
 				<f:content>
-					<!-- <VBox> -->
 						<core:Title></core:Title>
 						<Label design="Bold" text="Job CardNo."></Label>
 						<Text  text="{appView>jobCardNo}"/>
@@ -194,11 +395,11 @@
                             <Text text="{appView>plateCharges}" />
                             <Label  design="Bold" text="Blanket Charges" />
                             <Text text="{appView>blanketCharges}" />
-					<!-- </VBox> -->
+				
 				</f:content>
-			</f:SimpleForm>
+			</f:SimpleForm> -->
             
-        </VBox>
+        <!-- </VBox> -->
         </content>
         <footer>
             <Toolbar >

@@ -111,15 +111,18 @@ sap.ui.define([
       var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
       var oModel = this.getView().getModel();
 
+
+      
+
       if (!userValue || !oJsonInpValue) {
         MessageToast.show("Please Check Your Fields");
       }
-      // else {
+      else {
       //   debugger;
 
         var payload = JSON.parse(oJsonInpValue);
         payload.CustomerId = userValue;
-        payload.jobCardNo = "9"
+        // payload.jobCardNo = "9"
         // payload.jobCardNo = ""
 
 
@@ -128,10 +131,13 @@ sap.ui.define([
             debugger;
             MessageToast.show("Job created successfully");
           },
-          error: function (error) {
+          error: function (nts) {
             // Error callback
-            that.middleWare.errorHandler(error, that);
-            MessageToast.show("Error While Psot the data");
+            if(nts.responseText.includes("duplicate key")){
+              MessageToast.show("Nai chalega")
+            }
+            // that.middleWare.errorHandler(error, that);
+            // MessageToast.show("Error While Post the data");
           }
         });
 
@@ -147,78 +153,82 @@ sap.ui.define([
         //     that.middleWare.errorHandler(error, that);
         //     MessageToast.show("Error:");
         //   });
-      // }
-
-    },
-    onUploadData: function () {
-      debugger;
-      var allInfo = this.getView().getModel('appView').getProperty("/customerId");
-      var deliveryDoc = this.getView().getModel('appView').getProperty("/pdfUrl");
-      var po = this.getView().getModel('appView').getProperty("/wordContent");
-      var img = this.getView().getModel('appView').getProperty('/imageContent');
-      if (allInfo && deliveryDoc) {
-        debugger;
-        var payload1 = {
-          "id": allInfo,
-          "attachment": deliveryDoc,
-
-        }
-
-
-        this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-          then(function () {
-            MessageToast.show("Document Uploaded Successfully")
-          })
-          .catch(function (error) {
-            that.middleWare.errorHandler(error, that);
-            MessageToast.show("Error:");
-          });
-
-      } else {
-        MessageToast.show("Please Check Your Fields");
-
-      }
-      if (allInfo && po) {
-        debugger;
-        var payload1 = {
-          "id": allInfo,
-          "po": po
-
-        }
-
-
-        this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-          then(function () {
-            MessageToast.show("Document Uploaded Successfully")
-          })
-          .catch(function (error) {
-            that.middleWare.errorHandler(error, that);
-            MessageToast.show("Error:");
-          });
-      }
-      if (allInfo && img) {
-        debugger;
-        var payload1 = {
-          "id": allInfo,
-          "img": img
-
-        }
-
-
-        this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-          then(function () {
-            MessageToast.show("Document Uploaded Successfully")
-          })
-          .catch(function (error) {
-            that.middleWare.errorHandler(error, that);
-            MessageToast.show("Error:");
-          });
       }
 
     },
+    // onUploadData: function () {
+    //   debugger;
+    //   var allInfo = this.getView().getModel('appView').getProperty("/customerId");
+    //   var deliveryDoc = this.getView().getModel('appView').getProperty("/pdfUrl");
+    //   var po = this.getView().getModel('appView').getProperty("/wordContent");
+    //   var img = this.getView().getModel('appView').getProperty('/imageContent');
+    //   if (allInfo && deliveryDoc) {
+    //     debugger;
+    //     var payload1 = {
+    //       "id": allInfo,
+    //       "attachment": deliveryDoc,
+
+    //     }
+
+
+    //     this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
+    //       then(function () {
+    //         MessageToast.show("Document Uploaded Successfully")
+    //       })
+    //       .catch(function (error) {
+    //         that.middleWare.errorHandler(error, that);
+    //         MessageToast.show("Error:");
+    //       });
+
+    //   } else {
+    //     MessageToast.show("Please Check Your Fields");
+
+    //   }
+    //   if (allInfo && po) {
+    //     debugger;
+    //     var payload1 = {
+    //       "id": allInfo,
+    //       "po": po
+
+    //     }
+
+
+    //     this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
+    //       then(function () {
+    //         MessageToast.show("Document Uploaded Successfully")
+    //       })
+    //       .catch(function (error) {
+    //         that.middleWare.errorHandler(error, that);
+    //         MessageToast.show("Error:");
+    //       });
+    //   }
+    //   if (allInfo && img) {
+    //     debugger;
+    //     var payload1 = {
+    //       "id": allInfo,
+    //       "img": img
+
+    //     }
+
+
+    //     this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
+    //       then(function () {
+    //         MessageToast.show("Document Uploaded Successfully")
+    //       })
+    //       .catch(function (error) {
+    //         that.middleWare.errorHandler(error, that);
+    //         MessageToast.show("Error:");
+    //       });
+    //   }
+
+    // },
     onPressClear: function (oEvent) {
       debugger;
-      location.reload();
+      this.getView().getModel('appView').setProperty("/jsonData", "");
+      this.getView().getModel('appView').updateBindings();
+     this.getView().byId("idPopinLayout").setSelectedKey("")
+     this.getView().byId("fileUploader").setValue("")
+      
     },
     onUploadId: function () {
       debugger;
@@ -586,7 +596,7 @@ sap.ui.define([
         "data": "A35",
         "value": "SORSZ 2 Color - Heidelberg",
         "label": "Printing Machine :",
-        "dbField": "printingMachine ",
+        "dbField": "printingMachine",
         "group": "Machines & Ancillary Details",
         "groupCell": "A33"
       },
@@ -951,6 +961,15 @@ sap.ui.define([
         "group": "A) Cost Structure :",
         "groupCell": "P20"
       },
+      "P21-1": {
+        "data": "R21",
+        "value": "₹ 59.00",
+        "label": "Paper Cost :",
+        "dbField": "paperCost2",
+        "group": "A) Cost Structure :",
+        "groupCell": "P20"
+      },
+      
       "P22": {
         "data": "Q22",
         "value": "₹ 5,850.00",
@@ -963,7 +982,7 @@ sap.ui.define([
         "data": "Q23",
         "value": "₹ 14,152.46",
         "label": "Varnish/Lamination :",
-        "dbField": "varnish/Lamination",
+        "dbField": "varnishandLamination",
         "group": "A) Cost Structure :",
         "groupCell": "P20"
       },
@@ -975,11 +994,27 @@ sap.ui.define([
         "group": "A) Cost Structure :",
         "groupCell": "P20"
       },
+      "P24-1": {
+        "data": "R24",
+        "value": "₹ 0.00",
+        "label": "Foil Blocks :",
+        "dbField": "foilBlocksPerPs",
+        "group": "A) Cost Structure :",
+        "groupCell": "P20"
+      },
       "P25": {
         "data": "Q25",
         "value": "₹ 0.00",
         "label": "Positive :",
         "dbField": "positive",
+        "group": "A) Cost Structure :",
+        "groupCell": "P20"
+      },
+      "P25-1": {
+        "data": "R25",
+        "value": "₹ 0.00",
+        "label": "Positive :",
+        "dbField": "positivePerPs",
         "group": "A) Cost Structure :",
         "groupCell": "P20"
       },
@@ -1023,11 +1058,27 @@ sap.ui.define([
         "group": "A) Cost Structure :",
         "groupCell": "P20"
       },
+      "P30-1": {
+        "data": "R30",
+        "value": "₹ 2,691.12",
+        "label": "Packing :",
+        "dbField": "packingPerKg",
+        "group": "A) Cost Structure :",
+        "groupCell": "P20"
+      },
       "P31": {
         "data": "Q31",
         "value": "₹ 0.00",
         "label": "Transportation :",
         "dbField": "transportation",
+        "group": "A) Cost Structure :",
+        "groupCell": "P20"
+      },
+      "P31-1": {
+        "data": "R31",
+        "value": "₹ 0.00",
+        "label": "Transportation :",
+        "dbField": "transportationPerKg",
         "group": "A) Cost Structure :",
         "groupCell": "P20"
       },
