@@ -730,7 +730,8 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     getBase64ToPdf: function (sBase64String) {
       debugger;
       if(sBase64String){
-        var decodedPdfContent = atob(sBase64String);
+        // var decodedPdfContent = atob(sBase64String);
+        var decodedPdfContent = atob(sBase64String.split(',')[1]);
         var byteArray = new Uint8Array(decodedPdfContent.length)
         for (var i = 0; i < decodedPdfContent.length; i++) {
             byteArray[i] = decodedPdfContent.charCodeAt(i);
@@ -752,10 +753,10 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         case "Packing":
             return "Warning";
             break;
-        case "In_Progress":
+        case "In-Progress":
             return "Error";
             break;
-        case "In_Transit":
+        case "In-Transit":
             return "Warning";
             break;       
         default:
