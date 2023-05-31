@@ -778,6 +778,8 @@ app.start = function () {
 			}
 		});
 
+
+
 		// * this post call is use to hanlde the uploaded attachments in loopback.
 		app.post('/UploadAttachment', async (req, res) => {
 			debugger;
@@ -801,6 +803,35 @@ app.start = function () {
 					attachment: dd
 				});
 				return res.status(200).json({ error: 'Customer is  Available' })
+
+			} catch (error) {
+
+				console.error(error);
+
+				res.status(500).json({ error: 'Internal server error' });
+
+			}
+
+		});
+		app.post('/uploadjob', async (req, res) => {
+			debugger;
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			this.Attachments = app.models.Attachments;
+			this.Job = app.models.Job;
+			var key = req.body.jobCardNo;
+			try {
+			// 	const newJob = {};
+			// for (const field in req.body) {
+			// 	newJob[field] = req.body[field];
+			// }
+			var value = await this.Job.findOne({ where: { jobCardNo: key } });
+			if (value) {
+				return res.status(200).json({ success: 'Same Job Available' });
+			}else{
+				return res.status(500).json({ error: 'Not Available' });
+			}
 
 			} catch (error) {
 

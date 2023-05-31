@@ -13,6 +13,10 @@
 			"required": true,
 			"id": true
 		},
+		"fileName":{
+			"type": "string",
+			"default": null
+		},
 		"poAttachment": {
 			"type": "string",
 			"default": null,

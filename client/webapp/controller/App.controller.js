@@ -79,7 +79,13 @@ sap.ui.define(
 
       onSelectItem: function (oEvent) {
         debugger;
+        
         var nav = oEvent.getSource().getSelectedKey();
+        var okey = this.getModel("device").getData().system.desktop;
+        if(okey === false){
+          // if device is phone
+          this.onClickMenuButton();
+        }
         if (nav=== "Profile"){
           this.getRouter().navTo("Profile")
         }

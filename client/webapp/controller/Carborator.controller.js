@@ -2,8 +2,9 @@ sap.ui.define([
   "./BaseController",
   "sap/ui/model/json/JSONModel",
   "sap/m/MessageToast",
-  "sap/ui/core/Fragment"
-], function (BaseController, JSONModel, MessageToast, Fragment) {
+  "sap/ui/core/Fragment",
+  "sap/m/MessageBox",
+], function (BaseController, JSONModel, MessageToast, Fragment,MessageBox) {
   "use strict";
 
   return BaseController.extend("ent.ui.ecommerce.controller.Carborator", {
@@ -24,6 +25,14 @@ sap.ui.define([
       oModel.setProperty("/simpleFormVisibility", true);
       oModel.setProperty("/uploadButtonVisibility", true);
       oModel.setProperty("/imgVisibility", false);
+      oModel.setProperty("/editableFields", false);
+
+      var bSystemType = this.getModel("device").getData().system.desktop;
+      if(bSystemType){
+        oModel.setProperty('/desktop', true);
+      }else{
+        oModel.setProperty('/desktop', false);
+      }
       oModel.updateBindings();
       this.onPopinLayoutChanged();
       this.getUserRoleData();
@@ -34,13 +43,12 @@ sap.ui.define([
     },
 
     onFileUploaddChange: function (oEvent) {
-
+      debugger;
       var that = this;
+      var uploadFileName = oEvent.getParameter("files")[0].name;
+      that.getView().getModel("appView").setProperty("/uploadFile",uploadFileName)
       var oFileUploader = oEvent.getSource();
       var oFile = oEvent.getParameter("files")[0];
-      debugger;
-
-      debugger;
       var oReader = new FileReader();
       oReader.onload = function (e) {
         var sFileContent = e.target.result;
@@ -103,17 +111,17 @@ sap.ui.define([
       return json;
     },
 
+
+
+
     // * this fucntion is saving the jobs data into the loopback for this we user server call.
     onSavePayload: function () {
       debugger;
       var that = this;
       var userValue = this.getModel("appView").getProperty("/customerId");
       var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
+      var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
       var oModel = this.getView().getModel();
-
-
-      
-
       if (!userValue || !oJsonInpValue) {
         MessageToast.show("Please Check Your Fields");
       }
@@ -122,37 +130,50 @@ sap.ui.define([
 
         var payload = JSON.parse(oJsonInpValue);
         payload.CustomerId = userValue;
-        // payload.jobCardNo = "9"
-        // payload.jobCardNo = ""
-
-
-        oModel.create("/Jobs", payload, {
-          success: function (oUpdatedData) {
+        payload.fileName = getUploadFile;
+        var id = payload.jobCardNo;
+        this.middleWare.callMiddleWare("uploadjob", "POST", payload)
+          .then(function (data, status, xhr) {
             debugger;
-            MessageToast.show("Job created successfully");
-          },
-          error: function (nts) {
-            // Error callback
-            if(nts.responseText.includes("duplicate key")){
-              MessageToast.show("Nai chalega")
-            }
-            // that.middleWare.errorHandler(error, that);
-            // MessageToast.show("Error While Post the data");
-          }
-        });
-
-
-        // ? still in confusion for use this.
-        // this.middleWare.callMiddleWare("uploadJobData", "POST", payload)
-        //   .then(function (data, status, xhr) {
-        //     debugger;
-        //     MessageToast.show("Job created successfully");
-        //   })
-        //   .catch(function (jqXhr, textStatus, errorMessage, error) {
-        //     debugger;
-        //     that.middleWare.errorHandler(error, that);
-        //     MessageToast.show("Error:");
-        //   });
+            MessageBox.confirm("This job is already Exist do you want to replace it?",{
+              onClose:function(sAction){
+                if(sAction==="OK"){
+                  oModel.update(`/Jobs('${id}')`, payload, {
+                    success: function (oUpdatedData) {
+                      debugger;
+                      MessageToast.show("Job created successfully");
+                    },
+                    error: function (nts) {
+                      // Error callback
+                      // if(nts.responseText.includes("duplicate key")){
+                        MessageToast.show("Something Went Wrong")
+                      // }
+                      // that.middleWare.errorHandler(error, that);
+                      // MessageToast.show("Error While Post the data");
+                    }
+                  });
+                }
+              }
+            })
+            // MessageToast.show("Same Job Available");
+          })
+          .catch(function (jqXhr, textStatus, errorMessage, error) {
+            oModel.create("/Jobs", payload, {
+              success: function (oUpdatedData) {
+                debugger;
+                MessageToast.show("Job created successfully");
+              },
+              error: function (nts) {
+                // Error callback
+                // if(nts.responseText.includes("duplicate key")){
+                  MessageToast.show("Something Went Wrong")
+                // }
+                // that.middleWare.errorHandler(error, that);
+                // MessageToast.show("Error While Post the data");
+              }
+            });
+            // MessageToast.show("Not Available Want to Upload New");
+          });
       }
 
     },

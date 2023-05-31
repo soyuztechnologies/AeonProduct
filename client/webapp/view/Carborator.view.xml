@@ -9,7 +9,7 @@
         <content>
 
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
-            <HBox alignItems="Start" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop">
+            <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop">
                 <ComboBox   items="{appView>/userDetails}" id="idPopinLayout"
                     placeholder="Select User"
                     change="onPopinLayoutChanged"
@@ -42,10 +42,10 @@
             <ux:subSections  >
                 <ux:ObjectPageSubSection>
                     <ux:blocks>
-                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false">
+                        <f:SimpleForm  layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false">
                             <f:content >
                                 <Label text="Name of the Product"/>
-                                <Input value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
+                                <Input  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Carton Type"/>
                                 <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>
