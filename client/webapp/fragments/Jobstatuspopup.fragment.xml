@@ -30,13 +30,15 @@ resizable="false" >
     <filterItems>
       <ViewSettingsFilterItem key="statusFilter" text="Status" multiSelect="true">
         <items>
-          <ViewSettingsItem text="New" key="new" />
-          <ViewSettingsItem text="In-Progress" key="inprogress" />
-          <ViewSettingsItem text="Completed" key="completed" />
-          <ViewSettingsItem text="Packing" key="packing" />
-          <ViewSettingsItem text="In-Transit" key="intransit" />
-          <ViewSettingsItem text="Delivered" key="delivered" />
-          <ViewSettingsItem text="Cancelled" key="cancelled" />
+          <ViewSettingsItem text="New" key="New" />
+          <ViewSettingsItem text="Partially Completed" key="Partially Completed" />
+          <ViewSettingsItem text="In-Progress" key="In-Progress" />
+          <ViewSettingsItem text="Completed" key="Completed" />
+          <ViewSettingsItem text="Packing" key="Packing" />
+          <ViewSettingsItem text="Partially Dispatched" key="Partially Dispatched" />
+          <ViewSettingsItem text="In-Transit" key="In-Transit" />
+          <ViewSettingsItem text="Delivered" key="Delivered" />
+          <ViewSettingsItem text="Cancelled" key="Cancelled" />
         </items>
       </ViewSettingsFilterItem>
     </filterItems>

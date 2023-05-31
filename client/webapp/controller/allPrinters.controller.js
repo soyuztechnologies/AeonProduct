@@ -35,6 +35,14 @@ sap.ui.define([
 			debugger;
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
+			// if(datassss.status==="In-Progress"){
+			// 	this.getView().getModel("appView").setProperty('/addJobStatusVis', true);
+			// 	this.getView().getModel("appView").setProperty('/modifybtnvis', true);
+			// }
+			// else{
+			// 	this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
+			// 	this.getView().getModel("appView").setProperty('/modifybtnvis', false);
+			// }
 			debugger;
 			this.getView().getModel("appView").setProperty('/datas', datassss);
 			this.getView().getModel("appView").setProperty('/jobId', datassss.jobCardNo);
@@ -94,10 +102,12 @@ sap.ui.define([
 		},
 
 		onFilterPressJobStatus: function () {
+			// debugger;
 			this.oViewSettingsDialog.open();
 		},
 
 		onViewSettingsConfirm: function (oEvent) {
+			// debugger;
 			var aFilterItems = oEvent.getParameter("filterItems");
 			if (aFilterItems.length > 0) {
 				var oTable = this.getView().byId("idListAllPrinters");

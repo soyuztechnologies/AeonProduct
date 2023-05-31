@@ -729,12 +729,12 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     },
     getBase64ToPdf: function (sBase64String) {
       debugger;
-      if(sBase64String){
+      if (sBase64String) {
         // var decodedPdfContent = atob(sBase64String);
         var decodedPdfContent = atob(sBase64String.split(',')[1]);
         var byteArray = new Uint8Array(decodedPdfContent.length)
         for (var i = 0; i < decodedPdfContent.length; i++) {
-            byteArray[i] = decodedPdfContent.charCodeAt(i);
+          byteArray[i] = decodedPdfContent.charCodeAt(i);
         }
         var blob = new Blob([byteArray.buffer], { type: 'application/pdf' });
         var _pdfurl = URL.createObjectURL(blob);
@@ -742,25 +742,37 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         return _pdfurl;
       }
     },
-    getStatusColor:function(status){
+    getStatusColor: function (status) {
       switch (status) {
         case "New":
-            return "None";
-            break;
-        case "Completed":
-            return "Success";
-            break;           
-        case "Packing":
-            return "Warning";
-            break;
+          return "None";
+          break;
         case "In-Progress":
-            return "Error";
-            break;
+          return "Warning";
+          break;
+        case "Partially Completed":
+          return "Warning";
+          break;
+        case "Packing":
+          return "Warning";
+          break;
         case "In-Transit":
-            return "Warning";
-            break;       
+          return "Warning";
+          break;
+        case "Partially Dispatched":
+          return "Warning";
+          break;
+        case "Delivered":
+          return "Success";
+          break;
+        case "Completed":
+          return "Success";
+          break;
+        case "Cancelled":
+          return "Error";
+          break;
         default:
-            break;
+          break;
       }
     }
   };

@@ -1,6 +1,18 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table" xmlns:f="sap.ui.layout.form" controllerName="ent.ui.ecommerce.controller.printingDetails">
-	<Page title="Job Details"> 
-		<f:SimpleForm title="O79 JNM RPRNT DCLRS 2D 04" id="jobDetails" editable="true" layout="ResponsiveGridLayout"  >
+	<Page showHeader="false"> 
+	<!-- <Button text="Start Production" press="whenProductionStart"/> -->
+        <Toolbar>
+          <Title text="Job Details" />
+          <ToolbarSpacer/>
+          <Button
+		    visible="{=${appView>/Jobs/status} === 'New' ? true : false }"
+            text="Start Production"
+            press="whenProductionStart"
+          >   
+          </Button>
+
+        </Toolbar>
+		<f:SimpleForm title="{appView>nameOFTheProduct}" id="jobDetails" editable="true" layout="ResponsiveGridLayout"  >
 				<f:content>
 					<!-- <VBox> -->
 						<core:Title></core:Title>
@@ -31,8 +43,8 @@
 			<Toolbar>
 			<ToolbarSpacer/>
 				<Button visible="{appView>/updBtnVisibility}"  icon="sap-icon://save" type="Emphasized" text="Save" press="onClickUpdate"></Button>
-				
-				<Button visible="{appView>/modifybtnvis}" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button>
+				<Button visible="{appView>/asUrgentVis}"  icon="sap-icon://save" type="Emphasized" text="Make As Urgent" press="onClickUrgent"></Button>
+				<Button  visible="{=${appView>/Jobs/status} !== 'New' ? true : false }" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button>
 				<Button visible="{appView>/cancleBtnVis}" icon="sap-icon://cancel" text="Cancle"  type="Emphasized" press="onClickCancle"></Button>
 			</Toolbar>
 		</footer>

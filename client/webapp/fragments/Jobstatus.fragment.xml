@@ -5,7 +5,7 @@
                <Title text="Job Status" />
                <ToolbarSpacer/>
                <Button
-                   visible="{appView>/addJobStatusVis}"
+                   visible="{=${appView>/Jobs/status} !== 'New' ? true : false }"
                    icon="sap-icon://add"
                    press="onPressAdd"
                >   
