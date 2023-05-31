@@ -662,7 +662,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return oCol;
     },
     transColumnVisible: function (oStatus) {
-      debugger;
+      
       if (oStatus) {
         if (oStatus.includes('OK') || oStatus.includes('IGNORE_NOT_SETTLED') || oStatus.includes('IGNORE_DUPLICATE') || oStatus.includes('Object')) {
           return false;
@@ -728,7 +728,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return Code;
     },
     getBase64ToPdf: function (sBase64String) {
-      debugger;
+      
       if (sBase64String) {
         // var decodedPdfContent = atob(sBase64String);
         var decodedPdfContent = atob(sBase64String.split(',')[1]);

@@ -61,7 +61,7 @@ sap.ui.define(
         // this.getCustomData();
 
         $(document).ajaxStart(function (x, y, z) {
-          // debugger;
+          
           sap.ui.core.BusyIndicator.show();
         });
         $(document).ajaxStop(function (x, y, z) {
@@ -78,7 +78,7 @@ sap.ui.define(
       onNavigation: function (oEvent) {},
 
       onSelectItem: function (oEvent) {
-        debugger;
+        
         
         var nav = oEvent.getSource().getSelectedKey();
         var okey = this.getModel("device").getData().system.desktop;
@@ -103,7 +103,7 @@ sap.ui.define(
         }
       },
       getUserId: function () {
-        // debugger;
+        
         var that = this;
         this.middleWare.callMiddleWare("getUserRole", "get")
           .then(function (data, status, xhr) {
@@ -116,7 +116,7 @@ sap.ui.define(
           });
       },
       onClickMenuButton: function (oEvent) {
-        debugger;
+        
         var oSideNavigation = this.byId("sideNavigation");
         var bExpanded = oSideNavigation.getExpanded();
         this.getView().getModel("appView").setProperty("/sideNavExpended", !bExpanded);
@@ -131,14 +131,14 @@ sap.ui.define(
         var that = this;
         this.middleWare.callMiddleWare("getUserRole", "get")
           .then(function (data, status, xhr) {
-            debugger;
+            
             userRole = data.role.Role;
             if(userRole == "Admin"){
               that.getModel('appView').setProperty('/Passwordfield', false);
             };
           })
           .catch(function (jqXhr, textStatus, errorMessage) {
-            debugger;
+            
             that.middleWare.errorHandler(jqXhr, that);
           });
       },
@@ -148,7 +148,7 @@ sap.ui.define(
         oMenu.openBy(oButton);
       },
       onMenuPress: function(oEvent){
-        debugger;
+        
 
       },
       onPressitemMenu: function(oEvent) {

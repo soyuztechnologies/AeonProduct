@@ -37,7 +37,7 @@ sap.ui.define([
 		// * this function will get the role form the company details fragment.
 
 		onRoleChange : function(oEvent){
-			debugger;
+			
 			var oSelectedKey = oEvent.getParameter("selectedItem").getKey();
 			var oModel = this.getView().getModel("appView");
 			oModel.setProperty('/selectedrole',oSelectedKey)
@@ -110,7 +110,7 @@ sap.ui.define([
 
 		// * this function is close the dialog on add user and edit user.
 		onReject : function(){
-			debugger;
+			
 			var oModel =  this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
 			this.openUserDialog().then(function (userAddFrag) {
@@ -147,7 +147,7 @@ sap.ui.define([
 
 		// * this function is make the update call for change the approval status.
 		onApproveCustomer:function(oEvent){
-			// debugger;
+			
 			var selectedItem = oEvent.getParameter("selectedItem").getKey();
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
 			var oid = this.getView().getModel("appView").getProperty(opath);
@@ -172,7 +172,7 @@ sap.ui.define([
 
 		// * this function is make the update call for block and unblock the customer.
 		onBlockCustomer:function(oEvent){
-			// debugger;
+			
 			var state = oEvent.getParameter('state');
 			state = state === true ? 'Yes' : 'No';
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
@@ -199,7 +199,7 @@ sap.ui.define([
 
 		// * this function is handling the image and convert into the base64 after that setinto the property.
 		handleUploadPress: function (oEvent) {
-			debugger;
+			
 			var files = oEvent.getParameter("files");
 			var that = this;
 			var oModel = this.getView().getModel("appView");
@@ -268,7 +268,7 @@ sap.ui.define([
 
 		// * this onSelect event works to show the passWord field in the Password Fragment.
 		showPassField : function(oEvent){
-			debugger;
+			
 			var passSwitchState = oEvent.getParameter('state');
 			var omodel = this.getView().getModel("appView");
 			if(passSwitchState === false){
@@ -283,7 +283,7 @@ sap.ui.define([
 
 		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
 		onAddUserViaAdmin : function(oEvent){
-			debugger;
+			
 			var oModel = this.getView().getModel("appView");
 			var pass = oModel.getProperty("/conPassWord");
 			var Conpass = oModel.getProperty("/NewPassword");
@@ -303,7 +303,7 @@ sap.ui.define([
 
 		// * it make a post call to create the user via admin side.
 		AddCustomers : function(){
-			debugger;
+			
 			var that = this;
 
 			var payload =  this.oFormData;
@@ -322,7 +322,7 @@ sap.ui.define([
 
 		// * this funciton handle the validation on the add user and open the password fragment to make call.
 		openPassdialog : function(){
-			debugger;
+			
 			var oModel = this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
 
@@ -335,7 +335,7 @@ sap.ui.define([
 		},
 
 		userPassDialogValidation: function(){
-			debugger;
+			
 			var oView = this.getView();
             var that = this;
 			var oModel = this.getView().getModel('appView');
@@ -447,7 +447,7 @@ sap.ui.define([
 
 		// * this fucntion will get the entity data and bind the data into the edit user fragment.
 		rowItemsPressUser :function(oEvent){
-			// debugger;
+			
 			var oParameter = oEvent.getParameter('listItem');
 			var omodel = this.getView().getModel("appView");
 			var sData =oParameter.getBindingContext('appView').getObject();
@@ -473,7 +473,7 @@ sap.ui.define([
 		},
 
 		SendEmailExistUser : function(oEvent){
-				debugger;
+				
 				var that= this;
 				var oRow = oEvent.getSource().getBindingContext('appView').getObject();
 				var Email = oRow.EmailId;

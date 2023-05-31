@@ -1,10 +1,11 @@
 sap.ui.define([
-	"./BaseController", "sap/m/MessageBox","sap/ui/core/Fragment", 'sap/m/MessageToast',
+	"./BaseController", "sap/m/MessageBox","sap/ui/core/Fragment", 'sap/m/MessageToast','sap/m/MessageStrip'
 ], function (
 	BaseController,
 	MessageBox,
 	Fragment,
-	MessageToast
+	MessageToast,
+	MessageStrip
 ) {
 	"use strict";
 	// try {
@@ -25,10 +26,20 @@ sap.ui.define([
 			oModel.setProperty("/hamburgerVisibility", false);
 			oModel.setProperty("/logoutVisibility", false);
 			oModel.setProperty("/ResendStatusSignup",false);
+			oModel.setProperty("/showError",false);
 		},
 
 		Login: function () {
-			debugger;
+			
+			// * for cookie session expire.
+			var allCookies = document.cookie.split(';');
+			// The "expire" attribute of every cookie is
+			// Set to "Thu, 01 Jan 1970 00:00:00 GMT"
+			for (var i = 0; i < allCookies.length; i++) {
+				document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+				document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString()+";path=/api";
+			}
+
 			var that = this;
 			var userName = this.getView().byId("userid").getValue();
 			var password = this.getView().byId("pwd").getValue();
@@ -41,7 +52,7 @@ sap.ui.define([
 			};
 			this.middleWare.callMiddleWare("login", "POST", payload)
 				.then( function (data, status, xhr) {
-					debugger;					// MessageToast.show("Login Success");
+										// MessageToast.show("Login Success");
 					that.UserRole = data.Role
 					if(data.Blocked=="Yes"){
 						MessageBox.information("Your Account has been blocked by Administrator, For Further Details Contact Admin");
@@ -79,6 +90,8 @@ sap.ui.define([
 						that.getModel("appView").updateBindings();
 						that.getRouter().navTo("Carborator");
 					}
+					
+					
 					uId = data.userId;
 
 				})
@@ -90,7 +103,7 @@ sap.ui.define([
 				
 			// this.middleWare.callMiddleWare("api/Users/login", "POST", payload)
 			// 	.then( function (data, status, xhr) {
-			// 		debugger;
+			// 		
 			// 		MessageToast.show("Login Success");
 			// 		that.getModel("appView").setProperty("/visibleHeader", true);
 			// 		that.getView().byId("userid").setValueState('None');
@@ -109,7 +122,7 @@ sap.ui.define([
 		
 
 		openUpdateDialog : function(){
-			debugger
+			// debugger
 			var oView = this.getView();
             var that = this;
 			
@@ -158,7 +171,7 @@ sap.ui.define([
 	
 			this.middleWare.callMiddleWare("updatePassword", "POST", payload)
 				.then( function (data, status, xhr) {
-					debugger;
+					
 					MessageToast.show(" Success");
 
 				})
@@ -190,6 +203,9 @@ sap.ui.define([
             this.openDialog().then(function (oDialog) {
 				oDialog.close();
 				oModel.setProperty("/Email","");
+				oModel.setProperty("/showError",false);
+				// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
+				oModel.setProperty("/submitEnable",true);
 			})
         },
 
@@ -218,6 +234,8 @@ sap.ui.define([
 			var that = this; 
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
 			var oModel = that.getView().getModel('appView');
+			oModel.setProperty("/showError",false);
+			oModel.setProperty("/submitEnable",true);
 
 			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if (oEmail && !oEmail.match(emailRegex)) {
@@ -234,14 +252,17 @@ sap.ui.define([
 			}; 	
 			this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
 				.then( function (data, status, xhr) {
-					debugger;
+					
 					MessageToast.show("Verfication Email Sent to Your Mail");
 					oModel.setProperty("/ResendStatusSignup",true);
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
+					
+					// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
+					oModel.setProperty("/submitEnable",false);
 					that.ResendEmailSend();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-					debugger;
+					
 					that.middleWare.errorHandler(jqXhr, that);
 			});
 		},
@@ -249,6 +270,7 @@ sap.ui.define([
 		onForgotPasswordEmailVerfiyCall : function(){
 			var that = this; 
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
+			var oModel = this.getView().getModel('appView')
 
 			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if (oEmail && !oEmail.match(emailRegex)) {
@@ -264,17 +286,21 @@ sap.ui.define([
 			};
 			this.middleWare.callMiddleWare("forgotPasswordEmailVerify", "POST", payload)
 				.then( function (data, status, xhr) {
-					debugger;
+					
 					// MessageToast.show("forgot Password Email Sent to Your Mail");
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
-					MessageBox.information("You will receive a Email to forgot you Password.")
 					oModel.setProperty("/ResendStatusSignup",false);
-					that.onReject();
+					oModel.setProperty("/showError",true);
+					oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
+					oModel.setProperty("/submitEnable",false);
+					
+					// MessageBox.information("You will receive a Email to update your Password.")
+					// that.onReject();
 					// that.OtpSend();
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-					debugger;
+					
 					that.middleWare.errorHandler(jqXhr, that);
 			});
 		},

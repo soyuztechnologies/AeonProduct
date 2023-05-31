@@ -5,12 +5,13 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
     <Dialog contentWidth="100%" contentHeight="100%" title="Upload Documents" id="uploadDoc">
         <content>
-            <!-- <HBox> -->
-                <u:FileUploader visible="{appView>/browseVisArtwork}" width="100%" style="Emphasized" change="onChangeFileUploader" buttonText="Browse"  fileType="docx,jpg,jpeg,xml,xlsx,pdf" multiple="false" />
-            <!-- </HBox> -->
+            <u:FileUploader visible="{appView>/browseVisArtwork}" width="100%" style="Emphasized" change="onChangeFileUploader" buttonText="Browse"  fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="false" />
+            <HBox alignContent="Center" justifyContent="Center">
+                <Button icon="sap-icon://download" visible="{appView>/visibleDownloadButton}" press="downloadAttachments" text="Download"  type="Transparent" />
+            </HBox>
 
             <PDFViewer visible="{appView>/visiblePdfViewer}" source="{path: 'appView>attachmentPdfFiles', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />
-            <Image visible="true" id="image" src="{appView>attachmentPdfFiles}" />
+            <Image visible="{appView>/visibleImageViewer}" id="image" src="{appView>attachmentPdfFiles}" />
             <!-- <Image visible="true" src="{appView>/imageBaseArtwork}" />  -->
         </content>
         <beginButton>

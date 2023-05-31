@@ -43,7 +43,7 @@ sap.ui.define([
     },
 
     onFileUploaddChange: function (oEvent) {
-      debugger;
+      
       var that = this;
       var uploadFileName = oEvent.getParameter("files")[0].name;
       that.getView().getModel("appView").setProperty("/uploadFile",uploadFileName)
@@ -74,7 +74,7 @@ sap.ui.define([
     },
 
     onPopinLayoutChanged: function (oEvent) {
-      debugger;
+      
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
       if (oEvent) {
@@ -116,7 +116,7 @@ sap.ui.define([
 
     // * this fucntion is saving the jobs data into the loopback for this we user server call.
     onSavePayload: function () {
-      debugger;
+      
       var that = this;
       var userValue = this.getModel("appView").getProperty("/customerId");
       var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
@@ -126,7 +126,7 @@ sap.ui.define([
         MessageToast.show("Please Check Your Fields");
       }
       else {
-      //   debugger;
+      //   
 
         var payload = JSON.parse(oJsonInpValue);
         payload.CustomerId = userValue;
@@ -134,13 +134,13 @@ sap.ui.define([
         var id = payload.jobCardNo;
         this.middleWare.callMiddleWare("uploadjob", "POST", payload)
           .then(function (data, status, xhr) {
-            debugger;
+            
             MessageBox.confirm("This job is already Exist do you want to replace it?",{
               onClose:function(sAction){
                 if(sAction==="OK"){
                   oModel.update(`/Jobs('${id}')`, payload, {
                     success: function (oUpdatedData) {
-                      debugger;
+                      
                       MessageToast.show("Job created successfully");
                     },
                     error: function (nts) {
@@ -160,7 +160,7 @@ sap.ui.define([
           .catch(function (jqXhr, textStatus, errorMessage, error) {
             oModel.create("/Jobs", payload, {
               success: function (oUpdatedData) {
-                debugger;
+                
                 MessageToast.show("Job created successfully");
               },
               error: function (nts) {
@@ -178,13 +178,13 @@ sap.ui.define([
 
     },
     // onUploadData: function () {
-    //   debugger;
+    //   
     //   var allInfo = this.getView().getModel('appView').getProperty("/customerId");
     //   var deliveryDoc = this.getView().getModel('appView').getProperty("/pdfUrl");
     //   var po = this.getView().getModel('appView').getProperty("/wordContent");
     //   var img = this.getView().getModel('appView').getProperty('/imageContent');
     //   if (allInfo && deliveryDoc) {
-    //     debugger;
+    //     
     //     var payload1 = {
     //       "id": allInfo,
     //       "attachment": deliveryDoc,
@@ -206,7 +206,7 @@ sap.ui.define([
 
     //   }
     //   if (allInfo && po) {
-    //     debugger;
+    //     
     //     var payload1 = {
     //       "id": allInfo,
     //       "po": po
@@ -224,7 +224,7 @@ sap.ui.define([
     //       });
     //   }
     //   if (allInfo && img) {
-    //     debugger;
+    //     
     //     var payload1 = {
     //       "id": allInfo,
     //       "img": img
@@ -244,7 +244,7 @@ sap.ui.define([
 
     // },
     onPressClear: function (oEvent) {
-      debugger;
+      
       this.getView().getModel('appView').setProperty("/jsonData", "");
       this.getView().getModel('appView').updateBindings();
      this.getView().byId("idPopinLayout").setSelectedKey("")
@@ -252,7 +252,7 @@ sap.ui.define([
       
     },
     onUploadId: function () {
-      debugger;
+      
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
       var ids = this.getView().getModel("appView").getProperty("/postId")
@@ -279,7 +279,7 @@ sap.ui.define([
       };
       oModel.create(sEntityPath, oUpdatedData, {
         success: function (oUpdatedData) {
-          debugger;
+          
           MessageToast.show("Successfully Uploaded");
         },
         error: function (error) {
@@ -294,14 +294,14 @@ sap.ui.define([
     extracDbFields: function (data) {
 
       const arrayToJSON = this.arrayToJSON(data);
-      // debugger;
+      
       const dbFieldsJSON = Object.values(this.fieldsJSON);
       const dbFields = {};
       dbFieldsJSON.forEach(item => {
-        // debugger;
+        
         dbFields[item.dbField] = arrayToJSON[item.data];
         if (!dbFields[item.dbField]) {
-          debugger;
+          
         }
       })
 

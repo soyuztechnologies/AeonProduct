@@ -7,6 +7,7 @@
             <VBox >
                 <Label text="Mail Address: " visible="{appView>/emailVisible}" />
                 <Input id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
+                <MessageStrip text="{appView>/errorMessage}" type="Information" showIcon="true" visible="{appView>/showError}" />
             </VBox>
             <ObjectStatus  press="ResendEmailSend" title="{appView>/ResendMsg}" active="{appView>/onResendOTP}" id="countdownT" text="{appView>/timerText}" visible="{appView>/ResendStatusSignup}"/>
         </f:SimpleForm>
@@ -15,7 +16,7 @@
         <Button text="OK" type="Accept" press="onSubmit" enabled="{appView>/submitEnable}"/>
     </beginButton>
     <endButton>
-        <Button text="Cancel" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
+        <Button text="Cancel" type="Reject" press="onReject" enabled="{appView>/RajectEnable}"/>
     </endButton>
 </Dialog>		
 </core:FragmentDefinition>

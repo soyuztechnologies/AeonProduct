@@ -3,8 +3,9 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
-	"sap/ui/core/BusyIndicator"
-], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator) {
+	"sap/ui/core/BusyIndicator",
+	"sap/ui/core/util/File"
+], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator, File) {
 	"use strict";
 	var isPono;
 	return BaseController.extend("ent.ui.ecommerce.controller.printingDetails", {
@@ -15,7 +16,7 @@ sap.ui.define([
 
 		},
 		_matchedHandler: function (oEvent) {
-			debugger;
+			
 			var oModel = this.getModel("appView")
 			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
 			oModel.setProperty("/visibleHeader", true);
@@ -26,11 +27,14 @@ sap.ui.define([
 			oModel.setProperty("/updBtnVisibility", false);
 			oModel.setProperty("/onClickModify", false);
 			oModel.setProperty("/cancleBtnVis", false);
-			oModel.setProperty("/modifybtnvis", true);
+			// oModel.setProperty("/modifybtnvis", true);
+			oModel.setProperty('/visibleImageViewer', false);
+			oModel.setProperty('/visibleDownloadButton', false);
+			oModel.setProperty('/visiblePdfViewer', false);
 			// oModel.setProperty("/visiblePdfViewer", false);
 			oModel.updateBindings();
 			this.getUserRoleData();
-			this.loadForm();
+
 
 			this.oArgs = oEvent.getParameter("arguments").jobId;
 			this.oGetAgru();
@@ -40,16 +44,17 @@ sap.ui.define([
 
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
-			// debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel();
 			oModel.read("/Jobs('" + this.oArgs + "')", {
 				success: function (data) {
-					// debugger;
+					
 					that.getView().getModel("appView").setProperty("/Jobs", data);
+					that.loadForm();
 				},
 				error: function (error) {
-					debugger;
+					
 					that.middleWare.errorHandler(error, that);
 				}
 			});
@@ -66,7 +71,7 @@ sap.ui.define([
 			this.getUserDataLocal = JSON.parse(JSON.stringify(oModel.getProperty("/jobStatusTabData")));
 		},
 		onClickUpdate: function () {
-			debugger;
+			
 			this.getView().getModel("appView").setProperty("/onClickModify", false);
 			this.getView().getModel("appView").setProperty("/modifybtnvis", true);
 			this.getView().getModel("appView").setProperty("/cancleBtnVis", false);
@@ -91,7 +96,7 @@ sap.ui.define([
 			};
 			oModel.update(`/JobStatus('${ids}')`, oUpdatedData, {
 				success: function (data) {
-					// debugger;
+					
 					MessageToast.show("Successfully Uploaded")
 				},
 				error: function (error) {
@@ -104,7 +109,7 @@ sap.ui.define([
 		},
 
 		loadForm: function () {
-			debugger;
+			
 			var oSimpleForm = this.getView().byId('jobDetails')
 			// oSimpleForm.setModel('appView');
 			oSimpleForm.bindElement('appView>/Jobs');
@@ -132,7 +137,7 @@ sap.ui.define([
 
 		//* Opens the PO No. Popup
 		onClickPopup: function (oEvent) {
-			debugger;
+			
 			var oView = this.getView();
 			var that = this;
 			BusyIndicator.show(0);
@@ -155,12 +160,12 @@ sap.ui.define([
 			});
 		},
 		onSelectKeyRawMaterial: function (oEvent) {
-			// debugger;
+			
 			var selectedText = oEvent.getParameter("selectedItem").getText();
 			this.getView().getModel("appView").setProperty("/selectedKey", selectedText);
 		},
 		onSelectKeyStatus: function (oEvent) {
-			// debugger;
+			
 			var selectStatus = oEvent.getParameter("selectedItem").getText();
 			this.getView().getModel("appView").setProperty("/selectStatus", selectStatus);
 		},
@@ -260,7 +265,7 @@ sap.ui.define([
 
 
 		onUploadPoNo: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel(); ///default model get at here
 			var that = this;
 			var ids = this.oArgs
@@ -274,9 +279,11 @@ sap.ui.define([
 				poAttachment: payload,
 				// artworkAttachment:artworkFile
 			};
+			BusyIndicator.show(0);
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
 				success: function (data) {
-					debugger;
+					
+					BusyIndicator.hide();
 					MessageToast.show("Successfully Uploaded")
 				},
 				error: function (error) {
@@ -288,7 +295,7 @@ sap.ui.define([
 		},
 
 		onUploadArtWork: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel(); ///default model get at here
 			var that = this;
 			var ids = this.oArgs
@@ -300,12 +307,14 @@ sap.ui.define([
 			// 	MessageToast.show("Please Upload The Document");
 			// 	return
 			// }
+			BusyIndicator.show(0);
 			var oUpdatedData = {
 				artworkAttachment: payload,
 			};
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
 				success: function (data) {
-					debugger;
+					
+					BusyIndicator.show(0);
 					MessageToast.show("Successfully Uploaded")
 				},
 				error: function (error) {
@@ -317,7 +326,7 @@ sap.ui.define([
 
 
 		onUploadDataPress: function () {
-			debugger;
+			
 			if (isPono == true) {
 				this.onUploadPoNo();
 			}
@@ -327,9 +336,9 @@ sap.ui.define([
 		},
 
 		onSubmitData: function () {
-			debugger;
+			
 			var oNewJobData = this.getModel('appView').getProperty('/newJob');
-			 oNewJobData.rawMaterial = this.getModel('appView').getProperty('/selectedKey');
+			oNewJobData.rawMaterial = this.getModel('appView').getProperty('/selectedKey');
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
 			var ids = this.getView().getModel('appView').getProperty("/jobId");
@@ -337,8 +346,9 @@ sap.ui.define([
 			};
 			oModel.create(`/JobStatus`, oNewJobData, {
 				success: function (data) {
-					debugger;
+					
 					MessageToast.show("Successfully Uploaded");
+					that.onUploadStatus();
 					that.onClose();
 				},
 				error: function (error) {
@@ -352,7 +362,7 @@ sap.ui.define([
 
 		// * this function will read the data of the "PO Attachment's".
 		onReadData: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
@@ -361,7 +371,7 @@ sap.ui.define([
 			// var pdfArtwork
 			oModel.read(`/Jobs('${ids}')`, {
 				success: function (data) {
-					debugger;
+					
 					var oJson = {
 						"attachmentPdfFiles": data.poAttachment
 					}
@@ -370,12 +380,46 @@ sap.ui.define([
 					}
 
 					if (isPono == true) {
+						var type = that.getFileTypes(data.poAttachment);
+						if (type == 'pdf') {
+							appModel.setProperty('/visibleImageViewer', false);
+							appModel.setProperty('/visibleDownloadButton', false);
+							appModel.setProperty('/visiblePdfViewer', true);
+						}
+						else if (type == 'image') {
+							appModel.setProperty('/visiblePdfViewer', false);
+							appModel.setProperty('/visibleImageViewer', true);
+							appModel.setProperty('/visibleDownloadButton', true);
+						}
+						else {
+							appModel.setProperty('/visiblePdfViewer', false);
+							appModel.setProperty('/visibleImageViewer', false);
+							appModel.setProperty('/visibleDownloadButton', true);
+						}
 						appModel.setProperty("/PONo", oJson);
 						that.oDialogOpen().then(function (oDailog) {
 							oDailog.bindElement('appView>/PONo');
 						})
 					}
 					else {
+						var type = that.getFileTypes(data.artworkAttachment);
+						if (type == 'pdf') {
+							appModel.setProperty('/visibleImageViewer', false);
+							appModel.setProperty('/visibleDownloadButton', false);
+							appModel.setProperty('/visiblePdfViewer', true);
+
+						}
+						else if (type == 'image') {
+							appModel.setProperty('/visiblePdfViewer', false);
+							appModel.setProperty('/visibleImageViewer', true);
+							appModel.setProperty('/visibleDownloadButton', true);
+						}
+						else {
+							appModel.setProperty('/visiblePdfViewer', false);
+							appModel.setProperty('/visibleImageViewer', false);
+							appModel.setProperty('/visibleDownloadButton', true);
+						}
+						// that.getFileTypes(oJson2.attachmentPdfFiles);
 						appModel.setProperty("/ArtWork", oJson2);
 						that.oDialogOpen().then(function (oDailog) {
 							oDailog.bindElement('appView>/ArtWork');
@@ -393,16 +437,64 @@ sap.ui.define([
 			});
 
 		},
+		downloadAttachments: function () {
+			var oModel = this.getView().getModel("appView");
+			if ((isPono == true)) {
+				var filesartwork = oModel.getProperty("/ArtWork").attachmentPdfFiles;
+				var mimeType = filesartwork.split(';')[0].split(':')[1];
+				var fileExtension = mimeType.split('/')[1];
+				var ponofiles = oModel.getProperty("/PONo").attachmentPdfFiles;	// Convert base64 to a Blob object
+				var byteCharacters = atob(ponofiles.split(',')[1]);
+				var byteNumbers = new Array(byteCharacters.length);
+				for (var i = 0; i < byteCharacters.length; i++) {
+					byteNumbers[i] = byteCharacters.charCodeAt(i);
+				}
+				var byteArray = new Uint8Array(byteNumbers);
+				var blob = new Blob([byteArray], { type: "application/octet-stream" });
 
+				fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
+				File.save(blob, 'NewFile', fileExtension);
+			}
+			else {
+				var filesartwork = oModel.getProperty("/ArtWork").attachmentPdfFiles;
+				var mimeType = filesartwork.split(';')[0].split(':')[1];
+				var fileExtension = mimeType.split('/')[1];
+				var byteCharacters = atob(filesartwork.split(',')[1]);
+				var byteNumbers = new Array(byteCharacters.length);
+				for (var i = 0; i < byteCharacters.length; i++) {
+					byteNumbers[i] = byteCharacters.charCodeAt(i);
+				}
+				var byteArray = new Uint8Array(byteNumbers);
+				var blob = new Blob([byteArray], { type: "application/octet-stream" });
+
+
+				fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
+				File.save(blob, 'NewFile', fileExtension);
+			}
+		},
+
+		getFileTypes: function (base64Url) {
+			var mimeType = base64Url.split(';')[0].split(':')[1];
+			var fileExtension = mimeType.split('/')[1];
+			var oModel = this.getView().getModel("appView");
+
+			if (fileExtension === 'pdf') {
+				return 'pdf';
+			} else if (mimeType.startsWith('image')) {
+				return 'image';
+			} else {
+				return 'other';
+			}
+		},
 		// * this function will read the data of the "Artwork Attachment's".
 		// onReadDataArt: function () {
-		// 	debugger;
+		// 	
 		// 	var oModel = this.getView().getModel();  //default model get at here
 		// 	var that = this;
 		// 	var ids = this.oArgs;
 		// 	oModel.read(`/Jobs('${ids}')`, {
 		// 		success: function (data) {
-		// 			debugger;
+		// 			
 		// 			var isImgArtwork = data.artworkAttachment.startsWith("data:image/jpeg;base64,");
 		// 			if (isImgArtwork) {
 		// 				that.getView().getModel("appView").setProperty("/imageBaseArtwork", data.artworkAttachment)
@@ -425,7 +517,7 @@ sap.ui.define([
 		// },
 		// * this funciton will upload the data, of the job status.
 		onUploadData: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
@@ -468,7 +560,7 @@ sap.ui.define([
 			};
 			oModel.update(sEntityPath, oUpdatedData, {
 				success: function (oUpdatedData) {
-					debugger;
+					
 					MessageToast.show("Successfully Uploaded")
 					// console.log("Data updated successfully:", oUpdatedData);
 					// this.onReadJobStatus();
@@ -484,7 +576,7 @@ sap.ui.define([
 
 		// * this fucntion will read the data for job status and shows into the table.
 		onReadJobStatus: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
@@ -496,11 +588,11 @@ sap.ui.define([
 			this.middleWare.callMiddleWare("jobStatusData", "POST", payload)
 				.then(function (data) {
 					that.getView().getModel("appView").setProperty("/jobStatusTabData", data);
-					debugger
+					// debugger
 					// MessageToast.show("Success")
 				})
 				.catch(function (jqXhr, textStatus, errorMessage, error) {
-					debugger;
+					
 					MessageToast.show("Error");
 				});
 		},
@@ -509,7 +601,7 @@ sap.ui.define([
 		// * this fucntion will trigerr the onChange event for the fileuploader.
 		onChangeFileUploader: function (oEvent) {
 			var files = oEvent.getParameter("files");
-			debugger;
+			
 			if (isPono == true) {
 				this.onFileUploaderPoNoField(files);
 			}
@@ -521,7 +613,7 @@ sap.ui.define([
 
 		onFileUploaderArtWork: function (files) {
 			var that = this;
-
+			var oModel = this.getView().getModel('appView');
 			var ojson = {
 				"attachmentPdfFiles": ""
 			};
@@ -534,6 +626,21 @@ sap.ui.define([
 				try {
 					var vContent = e.currentTarget.result;
 					var fileType = files[0].type;
+
+					if (fileType.startsWith('image/')) {
+						oModel.setProperty('/visiblePdfViewer', false);
+						oModel.setProperty('/visibleDownloadButton', true);
+						oModel.setProperty('/visibleImageViewer', true);
+					}
+					else if (fileType === 'application/pdf') {
+						oModel.setProperty('/visiblePdfViewer', true);
+					}
+					else {
+						oModel.setProperty('/visiblePdfViewer', false);
+						oModel.setProperty('/visibleImageViewer', false);
+						oModel.setProperty('/visibleDownloadButton', true);
+
+					}
 
 					ojson.attachmentPdfFiles = vContent;
 					that.getView().getModel('appView').setProperty('/ArtWork', ojson);
@@ -549,11 +656,29 @@ sap.ui.define([
 			reader.readAsDataURL(files[0]);
 		},
 
+		handleFileType: function (fileType, vContent) {
+			if (fileType.startsWith('image/')) {
+				// File type is an image
+				this.getModel("appView").setProperty("/imageContent", vContent);
+				this.getModel("appView").setProperty("/visiblePdfViewer", false);
+			} else if (fileType === 'application/pdf') {
+				// File type is a PDF
+				this.getModel("appView").setProperty("/attachmentPdfFiles", vContent);
+				this.getModel("appView").setProperty("/visiblePdfViewer", true);
+			} else {
+				// File type is neither image nor PDF
+				this.getModel("appView").setProperty("/attachmentFiles", vContent);
+				this.getModel("appView").setProperty("/visiblePdfViewer", false);
+			}
+			return fileType;
+		},
+
 		// * this fucntion will use to browse the files for the pono filed in the dialog.
 		onFileUploaderPoNoField: function (files) {
-			debugger;
+			
 			// var files = oEvent.getParameter("files");
 			var that = this;
+			var oModel = this.getView().getModel('appView');
 
 			var ojson = {
 				"attachmentPdfFiles": ""
@@ -573,13 +698,18 @@ sap.ui.define([
 						that.getView().getModel('appView').setProperty('/PONo', ojson);
 						that.oDialogOpen().then(function (oDialog) {
 							if (fileType.startsWith('image/')) {
-
+								oModel.setProperty('/visiblePdfViewer', false);
+								oModel.setProperty('/visibleDownloadButton', true);
+								oModel.setProperty('/visibleImageViewer', true);
 							}
 							else if (fileType === 'application/pdf') {
-
+								oModel.setProperty('/visiblePdfViewer', true);
+								oModel.setProperty('/visibleDownloadButton', false);
 							}
 							else {
-
+								oModel.setProperty('/visiblePdfViewer', false);
+								oModel.setProperty('/visibleImageViewer', false);
+								oModel.setProperty('/visibleDownloadButton', true);
 							}
 							oDialog.bindElement("appView>/PONo");
 						});
@@ -591,6 +721,87 @@ sap.ui.define([
 				};
 				reader.readAsDataURL(files[0]);
 			}
+		},
+
+		onUploadStatus: function () {
+			
+			var oModel = this.getView().getModel();
+			var that = this;
+			var ids = this.oArgs;
+			const sEntityPath = `/Jobs('${ids}')`;
+			var selectedStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+			// var date = new Date()
+			// this.getView().getModel('appView').setProperty("/latestDate",date)
+			// Perform the read operation
+			const oUpdatedData = {
+				status: selectedStatus
+			};
+			oModel.update(sEntityPath, oUpdatedData, {
+				success: function (oUpdatedData) {
+					
+					MessageToast.show("Successfully Uploaded Status")
+					// conole.log("Data updated successfully:", oUpdatedData);
+					// thisonReadJobStatus();
+				},
+				error: function (error) {
+					// Error callback
+					// that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading Status");
+				}
+			});
+		},
+
+		// Start Production Button Pressed
+
+		whenProductionStart: function () {
+			
+			
+			var oModel = this.getView().getModel();
+			var that = this;
+			var ids = this.oArgs;
+			const sEntityPath = `/Jobs('${ids}')`;
+			const oUpdatedData = {
+				status: "In-Progress"
+			};
+			oModel.update(sEntityPath, oUpdatedData, {
+				success: function (oUpdatedData) {
+					
+					MessageToast.show("Job Production Started")
+					// that.getView().getModel("appView").setProperty("/addJobStatusVis",false)
+					// that.getView().getModel("appView").setProperty("/modifybtnvis",false)
+					that.getJobsData();
+				},
+
+				error: function (error) {
+					// Error callback
+					// that.middleWare.errorHandler(error, that);
+					MessageToast.show("Something is Wrong");
+				}
+			});
+		},
+
+
+
+
+		getJobsData: function () {
+			
+			BusyIndicator.show(0);
+			var oModel = this.getView().getModel();  //default model get at here
+			var that = this;
+			// Perform the read operation
+			oModel.read("/Jobs", {
+				urlParameters: {
+					"$expand": 'appUser'
+				},
+				success: function (data) {
+					that.getView().getModel("appView").setProperty("/jobsData", data.results);
+					BusyIndicator.hide();
+				},
+				error: function (error) {
+					MessageToast.show("Error reading data");
+					BusyIndicator.hide();
+				}
+			});
 		},
 
 
@@ -613,7 +824,7 @@ sap.ui.define([
 		// if (oFile.type === 'image/jpeg') {
 		// 	var oReader = new FileReader();
 		// 	oReader.onload = function (e) {
-		// 		// debugger;
+		// 		
 		// 		var sUploadedFileContent = e.target.result;
 		// 		var sEncodedContent = btoa(sUploadedFileContent);
 		// 		var sImageContent = "data:image/jpeg;base64," + sEncodedContent; // Update the MIME type accordingly if your image is of a different format
@@ -659,7 +870,7 @@ sap.ui.define([
 		//   }
 
 		// if (oFile.type.includes("xlxs")) {
-		// 	debugger;
+		// 	
 		// 	var oReader = new FileReader();
 		// 	oReader.onload = function (e) {
 		// 		var sFileContent = e.target.result;
@@ -674,7 +885,7 @@ sap.ui.define([
 		// 		that.getModel("appView").setProperty("/uploadButtonVisibility", false);
 		// 		that.getModel("appView").setProperty("/imgVisibility", false);
 
-		// 		// debugger;
+		// 		
 		// 		// Do something with the parsed data
 		// 		// console.log(aData);
 		// 	};

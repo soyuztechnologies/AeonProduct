@@ -32,7 +32,7 @@ sap.ui.define([
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
-			debugger;
+			
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			// if(datassss.status==="In-Progress"){
@@ -43,20 +43,20 @@ sap.ui.define([
 			// 	this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
 			// 	this.getView().getModel("appView").setProperty('/modifybtnvis', false);
 			// }
-			debugger;
+			
 			this.getView().getModel("appView").setProperty('/datas', datassss);
 			this.getView().getModel("appView").setProperty('/jobId', datassss.jobCardNo);
 			this.getModel("appView").updateBindings();
 			this.getRouter().navTo("printingDetails", {
 				jobId: datassss.jobCardNo
 			});
-			debugger;
+			
 		},
 
 
 		// * this fucntion will get the list of the all jobs in the allPrinters screen.
 		getJobsData: function () {
-			debugger;
+			
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var that = this;
@@ -74,7 +74,7 @@ sap.ui.define([
 					BusyIndicator.hide();
 				}
 			});
-			// debugger;
+			
 			// BusyIndicator.show(0);
 			// var oModel = this.getView().getModel();  //default model get at here
 			// var that = this;
@@ -102,12 +102,12 @@ sap.ui.define([
 		},
 
 		onFilterPressJobStatus: function () {
-			// debugger;
+			
 			this.oViewSettingsDialog.open();
 		},
 
 		onViewSettingsConfirm: function (oEvent) {
-			// debugger;
+			
 			var aFilterItems = oEvent.getParameter("filterItems");
 			if (aFilterItems.length > 0) {
 				var oTable = this.getView().byId("idListAllPrinters");
@@ -132,7 +132,7 @@ sap.ui.define([
 
 		//* this function is getting the userName into the Select dialog box.
 		getUserName: function(oEvent){
-        // debugger;
+        
 		var oModel = this.getView().getModel("appView");
           var oSelectedItem = oEvent.getParameter("value");
            oModel.setProperty("/Username",oSelectedItem);

@@ -32,11 +32,11 @@ sap.ui.define([
 
 		},
 		getUserRoleData: function () {
-			// debugger;
+			
 			var that = this;
 			this.middleWare.callMiddleWare("getUserRole", "get")
 			  .then(function (data, status, xhr) {
-				debugger;
+				
 				var role = data.role.Role
 				  that.getView().getModel('appView').setProperty('/UserRole',role);
 				  that.getView().getModel('appView').setProperty('/UserEmail',data.role.EmailId);
@@ -44,13 +44,13 @@ sap.ui.define([
 				// };
 			  })
 			  .catch(function (jqXhr, textStatus, errorMessage) {
-				debugger;
+				
 				that.middleWare.errorHandler(jqXhr, that);
 			  });
 		  },
 
 		userRole: function(){
-			// debugger;
+			
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if(sUserRole === "Admin"){
 				this.getView().getModel("appView").setProperty('/asUrgentVis',false);

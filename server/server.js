@@ -35,7 +35,7 @@ app.use(fileUpload());
 
 function myMiddleware(options) {
 	return function (req, res, next) {
-		// debugger;
+		
 
 		// Save the original send function
 		if (req.url.includes("/api/Users/login") || req.url.includes("/login")) {
@@ -115,7 +115,7 @@ app.start = function () {
 
 		// * this function is send the email to the user in secenerio like signup,forgot password,admin add user etc.
 		async function sendEmail(email, token, replacements, templateFileName, emailSubject) {
-			debugger;
+			
 			var nodemailer = require('nodemailer');
 			var smtpTransport = require('nodemailer-smtp-transport');
 			this.Param = app.models.Param;
@@ -388,7 +388,7 @@ app.start = function () {
 			// 	this.User = app.models.User;
 			// 	this.Param = app.models.Param;
 			// 	this.AppUser = app.models.AppUser;
-			// 	debugger;
+			// 	
 			// 	var nodemailer = require('nodemailer');
 			// 	var smtpTransport = require('nodemailer-smtp-transport');
 			// 	const xoauth2 = require('xoauth2');
@@ -602,7 +602,7 @@ app.start = function () {
 		// * this post call is responsble for login the registered user into the portal.
 
 		app.post('/login', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -675,7 +675,7 @@ app.start = function () {
 		// * this post call is use to create the new user via the admin side in the portal.
 
 		app.post('/addUserAdmin', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -782,7 +782,7 @@ app.start = function () {
 
 		// * this post call is use to hanlde the uploaded attachments in loopback.
 		app.post('/UploadAttachment', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -814,7 +814,7 @@ app.start = function () {
 
 		});
 		app.post('/uploadjob', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -857,7 +857,7 @@ app.start = function () {
 			const sessionCookie = cookies.soyuz_session;
 
 			try {
-				debugger;
+				
 				// Retrieve the access token based on the session cookie
 				const accessToken = await this.AccessToken.findOne({ where: { id: sessionCookie } });
 
@@ -944,7 +944,7 @@ app.start = function () {
 
 		// * this call is gettting the jobstatus data.
 		app.post('/jobStatusData', async (req, res) => {
-			debugger;
+			
 			const JobStatus = app.models.JobStatus;
 			const { jobId } = req.body;
 			try {
@@ -960,7 +960,7 @@ app.start = function () {
 		});
 
 		app.get('/getJobsData', async (req, res) => {
-			debugger;
+			
 			const Job = app.models.Job;
 			const AppUser = app.models.AppUser;
 			var data = await Job.find({ where: { jobCardNo: '9' }, include: 'appUser' });
@@ -979,7 +979,7 @@ app.start = function () {
 		// * this call is sending the emol to the existing user that admin create.
 		// todo need this to optimize 
 		app.post('/sendEmailExistUser', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -1022,7 +1022,7 @@ app.start = function () {
 
 		// ! right now this call is not useful bus may be in future.
 		// app.post('/uploadJobData', async (req, res) => {
-		// 	debugger;
+		// 	
 		// 	 this.User = app.models.User;
 		// 	this.Param = app.models.Param;
 		// 	this.AppUser = app.models.AppUser;
@@ -1062,7 +1062,7 @@ app.start = function () {
 		//   });
 	
 		// app.post('/uploadJobData', async (req, res) => {
-		// 	debugger;
+		// 	
 		// 	this.User = app.models.User;
 		// 	this.Param = app.models.Param;
 		// 	this.AppUser = app.models.AppUser;
@@ -1227,7 +1227,7 @@ app.start = function () {
 					]
 				}
 			}).then(function (data) {
-				debugger;
+				
 				var tempRep = [];
 				for (var i = 0; i < data.length; i++) {
 					var record = data[i];
@@ -1431,7 +1431,7 @@ app.start = function () {
 		});
 
 		app.post('/getLeaveValidator', function (req, res) {
-			debugger;
+			
 			var date = req.body.date;
 			var selectedDay = new Date(date).getDate();
 			var selectedMonth = new Date(date).getMonth();
@@ -1546,7 +1546,7 @@ app.start = function () {
 
 					}
 
-					debugger;
+					
 					//	var holidayCal = [];
 					for (var l = 0; l < holidayLeaveCal.length; l++) {
 						var oDate = holidayLeaveCal[l].Date;
@@ -1639,7 +1639,7 @@ app.start = function () {
 			this.empId = req.body.EmpId;
 			var today = new Date();
 
-			debugger;
+			
 
 
 			var oArrTime = [];
@@ -2298,7 +2298,7 @@ app.start = function () {
 
 						}
 
-						debugger;
+						
 						res.send(idCardData);
 					} catch (e) {
 
@@ -2440,16 +2440,16 @@ app.start = function () {
 						}
 						// });
 
-						debugger;
+						
 						// var loginPayload = {
 						// 	"email": this.loginEmail,
 						// 	"password": this.loginPassword
 						// };
 
 						// var Otp = app.models.Otp;
-						debugger;
+						
 						await Otp.deleteById(oNumber);
-						debugger;
+						
 
 						var User = app.models.User;
 						var d = await User.login(loginPayload);
@@ -2564,7 +2564,7 @@ app.start = function () {
 				}
 			], function (err, accountRecords, accountBalances, Records) {
 				// result now equals 'done'
-				debugger;
+				
 				try {
 					var responseData = [];
 					for (var i = 0; i < accountRecords.length; i++) {
@@ -2660,7 +2660,7 @@ app.start = function () {
 			);
 		});
 		app.post('/sendPaymentVerificationEmail', async function (req, res) {
-			debugger;
+			
 			var nodemailer = require('nodemailer');
 			var smtpTransport = require('nodemailer-smtp-transport');
 			var xoauth2 = require('xoauth2');
@@ -2747,7 +2747,7 @@ app.start = function () {
 
 		app.post('/sendOtpViaEmail',
 			async function (req, res) {
-				debugger;
+				
 				var nodemailer = require('nodemailer');
 				var smtpTransport = require('nodemailer-smtp-transport');
 				const xoauth2 = require('xoauth2');
@@ -2835,7 +2835,7 @@ app.start = function () {
 				};
 
 				transporter.sendMail(emailContent, function (error, info) {
-					debugger;
+					
 					if (error) {
 						console.log(error);
 						if (error.code === "EAUTH") {
@@ -3137,7 +3137,7 @@ app.start = function () {
 			var Students = app.models.Student;
 			var Courses = app.models.Course;
 			var async = require('async');
-			debugger;
+			
 			async.waterfall([
 				function (callback) {
 					Students.find().then(function (students) {
@@ -3202,7 +3202,7 @@ app.start = function () {
 			], function (err, Records) {
 				// result now equals 'done'
 				try {
-					debugger;
+					
 					var excel = require('exceljs');
 					var workbook = new excel.Workbook(); //creating workbook
 					var sheet = workbook.addWorksheet('MySheet'); //creating worksheet
@@ -3238,7 +3238,7 @@ app.start = function () {
 			var Students = app.models.Student;
 			var Courses = app.models.Course;
 			var async = require('async');
-			debugger;
+			
 			async.waterfall([
 				function (callback) {
 					Students.find().then(function (students) {
@@ -3292,7 +3292,7 @@ app.start = function () {
 			], function (err, Records) {
 				// result now equals 'done'
 				try {
-					debugger;
+					
 					var excel = require('exceljs');
 					var workbook = new excel.Workbook(); //creating workbook
 					var sheet = workbook.addWorksheet('MySheet'); //creating worksheet
@@ -3877,7 +3877,7 @@ app.start = function () {
 							auth: sampleClient.oAuth2Client,
 						});
 
-						debugger;
+						
 						if (that2.isCalRequire === true &&
 							(courseStr.CalendarId != "null" && courseStr.CalendarId != "" &&
 								courseStr.EventId != "null" && courseStr.EventId != "")
@@ -4069,7 +4069,7 @@ app.start = function () {
 				}
 			})
 				.then(function (record) {
-					debugger;
+					
 					var app = require('../server/server');
 					var AccountBalance = app.models.AccountBalance;
 					if (record) {
@@ -4094,7 +4094,7 @@ app.start = function () {
 							}
 						}, newRec)
 							.then(function (inq) {
-								debugger;
+								
 								console.log("created successfully");
 							})
 							.catch(function (err) {
@@ -4195,7 +4195,7 @@ app.start = function () {
 											})
 												.then(function (stu) {
 													if (stu.length > 0) {
-														debugger;
+														
 														console.log(stu[0].GmailId + " found");
 													}
 												});
@@ -4213,7 +4213,7 @@ app.start = function () {
 														var Student = app.models.Student;
 														var Server = app.models.Server;
 														var newRecord = {};
-														debugger;
+														
 														newRecord.CreatedOn = getMyDate("20180101");
 														newRecord.CreatedBy = "5c187035dba2681834ffe301";
 														newRecord.ChangedOn = getMyDate("20180101");
@@ -4266,7 +4266,7 @@ app.start = function () {
 											})
 												.then(function (stu) {
 													if (stu) {
-														debugger;
+														
 														var app = require('../server/server');
 														var Student = app.models.Student;
 														var id = stu.id;
@@ -4311,7 +4311,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													debugger;
+													
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4345,7 +4345,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													debugger;
+													
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4382,7 +4382,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													debugger;
+													
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4409,7 +4409,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													debugger;
+													
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4445,7 +4445,7 @@ app.start = function () {
 													}
 												}, studentRec)
 													.then(function (inq) {
-														debugger;
+														
 														console.log("Student also created successfully");
 													})
 													.catch(function (err) {
@@ -4536,7 +4536,7 @@ app.start = function () {
 														}
 													}, studentRec)
 														.then(function (inq) {
-															debugger;
+															
 															console.log("Student also created successfully");
 														})
 														.catch(function (err) {
@@ -4650,7 +4650,7 @@ app.start = function () {
 																'studentid', studentsx);
 															newRec.StudentId = studentsx;
 															newRec.CourseId = batchid;
-															debugger;
+															
 															Sub.findOrCreate({
 																"where": {
 																	"and": [{

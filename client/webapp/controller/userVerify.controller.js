@@ -13,7 +13,7 @@ sap.ui.define([
             this.getRouter().getRoute("userVerify").attachPatternMatched(this._matchedHandler, this);
         },
         _matchedHandler: function () {
-            // debugger;
+            
             this.getModel("appView").setProperty("/layout", "OneColumn");
             this.getModel("appView").setProperty("/visibility", false);
             this.getModel("appView").setProperty("/logoutVisibility", false);
@@ -36,18 +36,18 @@ sap.ui.define([
             var payload = {
                 "token": oParams
             };
-            // debugger;
+            
             var oModel = this.getView("appView").getModel("appView"); 
             this.middleWare.callMiddleWare("signup/verifyToken", "POST", payload)
                 .then(function (data, status, xhr) {
-                    // debugger;
+                    
                     that.email = data.email;
                     that.loadFragment();
                     that.getModel("appView").setProperty("/userEmail", data.email);
 
                 })
                 .catch(function (jqXhr, textStatus, errorMessage) {
-                    debugger;
+                    
                     that.middleWare.errorHandler(jqXhr, that);
                     oModel.setProperty("/messagePageText","Error....");
                     oModel.setProperty("/timerText","");
@@ -98,7 +98,7 @@ sap.ui.define([
                 };
                 this.middleWare.callMiddleWare("signup/createUser", "POST", payload)
                     .then(function (data, status, xhr) {
-                        debugger;
+                        
                         MessageToast.show("User Register Successful");
                         that.onReject();
                         that.timerText();
@@ -108,7 +108,7 @@ sap.ui.define([
 
                     })
                     .catch(function (jqXhr, textStatus, errorMessage) {
-                        debugger;
+                        
                         oModel.setProperty("/messagePageText","Error....");
                         oModel.setProperty("/timerText","R");
                         oModel.setProperty("/verifyIcon",'sap-icon://error');

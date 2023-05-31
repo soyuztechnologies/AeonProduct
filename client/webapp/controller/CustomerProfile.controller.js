@@ -15,7 +15,7 @@ sap.ui.define([
 		},
 
 		_matchedHandler: function (oEvent) {
-			debugger;
+			
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader", true);
 			this.getModel("appView").updateBindings();
@@ -36,7 +36,7 @@ sap.ui.define([
 			var that = this;
 			this.middleWare.callMiddleWare("getUserRole", "get")
 				.then(function (data, status, xhr) {
-					debugger;
+					
 					// MessageToast.show("Data Reading......."+ data.role);
 					var omodel =  that.getView().getModel('appView');
 					 omodel.setProperty("/CustomerData", data.role);
@@ -51,12 +51,12 @@ sap.ui.define([
 					omodel.updateBindings();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-					debugger;
+					
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
 		handleUploadPress: function (oEvent) {
-			debugger;
+			
 			var files = oEvent.getParameter("files");
 			var that = this;
 			if (!files.length) {
@@ -79,7 +79,7 @@ sap.ui.define([
 			}
 		},
 		onLogo: function () {
-			debugger;
+			
 			var oLogo = this.getModel("appView").getProperty("/LogoAvonProfile");
 			var stream = this.formatter.getImageUrlFromContent(oLogo);
 			if (!this.lightBox) {
@@ -113,7 +113,7 @@ sap.ui.define([
 		},
 
 		updateCustomerData: function () {
-			debugger;
+			
 			var that = this;
 			const oModel = this.getView().getModel();
 			var appmodel = this.getView().getModel("appView");
@@ -145,7 +145,7 @@ sap.ui.define([
 		},
 
 		onCancelProfile: function () {
-			debugger;
+			
 			var oModel  = this.getView().getModel('appView');
 		    oModel.setProperty("/CustomerData",this.globaData );
 				oModel.setProperty('/editableFields', false);
