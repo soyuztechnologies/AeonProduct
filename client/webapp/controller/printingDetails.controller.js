@@ -134,10 +134,10 @@ sap.ui.define([
 			}
 			return this.oUploadDialog;
 		},
-
+		clickedLink:null,
 		//* Opens the PO No. Popup
 		onClickPopup: function (oEvent) {
-			
+			this.clickedLink=oEvent.getSource().getBinding("text").getPath();
 			var oView = this.getView();
 			var that = this;
 			BusyIndicator.show(0);
