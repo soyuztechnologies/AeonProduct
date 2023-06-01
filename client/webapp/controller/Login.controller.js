@@ -90,7 +90,9 @@ sap.ui.define([
 						that.getModel("appView").updateBindings();
 						that.getRouter().navTo("Carborator");
 					}
-					
+					this.getModel().setHeaders({
+						"Authorization": data.id
+					});
 					
 					uId = data.userId;
 
