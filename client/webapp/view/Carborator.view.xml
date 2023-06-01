@@ -25,7 +25,7 @@
                     change="onFileUploaddChange"
                     icon="sap-icon://browse-folder"
                     buttonText="Browse"
-                    fileType="docx,jpg,jpeg,xml,xlsx,pdf"
+                    fileType="xml,xlsx"
                     multiple="false" />  
                 </HBox>
                 <MessageStrip
@@ -73,7 +73,7 @@
                                 <Input value = "{appView>color}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Size (L x W x H)"/>
-                                <Input value="{path: 'appView>sizeL'} x {path: 'appView>sizeW'} x {path: 'appView>sizeH'}" editable="{appView>/editableFields}"/>
+                                <Input value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
                                
                                 <Label text="Var. Lmt."/>
                                 <Input value = "{appView>varLmt}" editable="{appView>/editableFields}"/>
@@ -108,7 +108,8 @@
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
                                 <Label text="No of Ups"/>
-                                <Input value="{path: 'appView>noOfUps-1'} x {path: 'appView>noOfUps-2'} = {path: 'appView>noOfUps-3'}" editable="{appView>/editableFields}"/>
+                                <!-- ="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
+                                <Input value="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="No of Sheets"/>
                                 <Input value = "{appView>noOfSheets-1}" editable="{appView>/editableFields}"/>

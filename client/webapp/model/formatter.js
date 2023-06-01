@@ -774,6 +774,42 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         default:
           break;
       }
-    }
+    },
+    sizeFormatter: function(sizeL, sizeW, sizeH) {
+      var parts = [];
+      
+      if (sizeL !== null) {
+        parts.push(sizeL);
+      }
+  
+      if (sizeW !== null) {
+        parts.push(sizeW);
+      }
+  
+      if (sizeH !== null) {
+        parts.push(sizeH);
+      }
+      
+      return parts.join('x');
+    },
+
+    // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
+    //   var parts = [];
+  
+    //   if (sizeL !== null) {
+    //     parts.push(sizeL);
+    //   }
+  
+    //   if (sizeW !== null) {
+    //     parts.push(sizeW);
+    //   }
+  
+    //   if (sizeH !== null) {
+    //     parts.push('=' + sizeH);
+    //   }
+  
+    //   return parts.join('x');
+    // }
+  
   };
 });
