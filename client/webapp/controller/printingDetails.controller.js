@@ -15,32 +15,42 @@ sap.ui.define([
 			this.getRouter().getRoute("printingDetails").attachPatternMatched(this._matchedHandler, this);
 
 		},
-		_matchedHandler: function (oEvent) {
-			
-			var oModel = this.getModel("appView")
-			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
-			oModel.setProperty("/visibleHeader", true);
-			oModel.setProperty("/visibility", true);
-			oModel.setProperty("/logoutVisibility", true);
-			oModel.setProperty("/inputEditable", true);
-			oModel.setProperty("/imgVisibility", false);
-			oModel.setProperty("/updBtnVisibility", false);
-			oModel.setProperty("/onClickModify", false);
-			oModel.setProperty("/cancleBtnVis", false);
-			// oModel.setProperty("/modifybtnvis", true);
-			oModel.setProperty('/visibleImageViewer', false);
-			oModel.setProperty('/visibleDownloadButton', false);
-			oModel.setProperty('/visiblePdfViewer', false);
-			// oModel.setProperty("/visiblePdfViewer", false);
-			oModel.updateBindings();
-			this.getUserRoleData();
-
-
-			this.oArgs = oEvent.getParameter("arguments").jobId;
-			this.oGetAgru();
-			this.onReadJobStatus();
-
-		},
+		_matchedHandler: async function (oEvent) {
+            this.oArgs = oEvent.getParameter("arguments").jobId;
+            var that = this;
+            await this.getUserRoleData().then(
+                function (data){
+                    var role = data.role.Role
+                    that.getView().getModel('appView').setProperty('/UserRole', role);
+                    that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+                    that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+                    that.userRole();
+                    that.getJobsData();
+                },
+                function (oErr){
+                    that.middleWare.errorHandler(jqXhr, that);
+                }
+            );
+            var oModel = this.getModel("appView")
+            oModel.setProperty("/layout", "TwoColumnsMidExpanded");
+            oModel.setProperty("/visibleHeader", true);
+            oModel.setProperty("/visibility", true);
+            oModel.setProperty("/logoutVisibility", true);
+            oModel.setProperty("/inputEditable", true);
+            oModel.setProperty("/imgVisibility", false);
+            oModel.setProperty("/updBtnVisibility", false);
+            oModel.setProperty("/onClickModify", false);
+            oModel.setProperty("/cancleBtnVis", false);
+            // oModel.setProperty("/modifybtnvis", true);
+            oModel.setProperty('/visibleImageViewer', false);
+            oModel.setProperty('/visibleDownloadButton', false);
+            oModel.setProperty('/visiblePdfViewer', false);
+            // oModel.setProperty("/visiblePdfViewer", false);
+            oModel.updateBindings();
+            this.getUserRoleData();
+            this.oGetAgru();
+            this.onReadJobStatus();
+        },
 
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
@@ -67,7 +77,9 @@ sap.ui.define([
 			oModel.setProperty("/updBtnVisibility", true)
 			oModel.setProperty("/onClickModify", true)
 			oModel.setProperty("/modifybtnvis", false)
-			oModel.setProperty("/cancleBtnVis", true)
+			oModel.setProperty("/cancleBtnVis", true);
+			oModel.setProperty("/visibleModify", false);
+			oModel.updateBindings();
 			this.getUserDataLocal = JSON.parse(JSON.stringify(oModel.getProperty("/jobStatusTabData")));
 		},
 		onClickUpdate: function () {
@@ -80,6 +92,7 @@ sap.ui.define([
 		},
 		onClickCancle: function () {
 			this.getView().getModel("appView").setProperty("/onClickModify", false);
+			this.getView().getModel("appView").setProperty("/visibleModify", true);
 			this.getView().getModel("appView").setProperty("/modifybtnvis", true);
 			this.getView().getModel("appView").setProperty("/cancleBtnVis", false);
 			this.getView().getModel("appView").setProperty("/updBtnVisibility", false)
@@ -140,9 +153,22 @@ sap.ui.define([
 			this.clickedLink=oEvent.getSource().getBinding("text").getPath();
 			var oView = this.getView();
 			var that = this;
+			var id = this.oArgs;
 			BusyIndicator.show(0);
+
+			if (this.clickedLink == "poNo") {
+				this.onReadDatadd("/Jobs",id,"/PONo","poAttachment")
+			}
+			else if(this.clickedLink == "artworkCode") {
+				this.onReadDatadd("/Jobs",id,"/ArtWork","artworkAttachment");
+			}
+			
+			
+
+			// this.onReadDatadd("/Jobs",id,"/PONo","poAttachment");
+
 			var oModel = this.getView().getModel("appView");
-			this.onReadData();
+			// this.onReadData();
 			this.oDialogOpen().then(function (oDialog) {
 				oDialog.open();
 
@@ -171,20 +197,34 @@ sap.ui.define([
 		},
 
 		// * this fucntion will opens the dialog, on to the Artwork filed in job details screen.
-		onClickPopupArt: function () {
+		jobStatusPath: null,
+		onClickPopupJobStatus: function (oEvent) {
+			debugger;
+			this.jobStatusPath = oEvent.getSource().getBindingContext("appView").sPath;
+			this.clickedLink=oEvent.getSource().getBinding("text").getPath();
 			var oView = this.getView();
 			var that = this;
 			var oModel = this.getView().getModel("appView");
+			var element = oModel.getProperty(this.jobStatusPath);
+			var id = element.id;
+
 			BusyIndicator.show(0);
-			this.onReadData();
+			if(this.clickedLink == "DeliveryNo") {
+				this.onReadDatadd("/JobStatus",id,"/DeliveryNo","deliveryAttachment");
+			}
+			else if(this.clickedLink == "InvNo") {
+				this.onReadDatadd("/JobStatus",id,"/InvNo","incAttachment");
+			}
+			// this.onReadDatadd("/JobStatus",id,"/InvNo","incAttachment");
+
 			this.oDialogOpen().then(function (oDialog) {
 				oDialog.open();
 				BusyIndicator.hide();
-				isPono = false;
+				// isPono = false;
 
 				oModel.setProperty('/viewPo', false);
 				// this.getModel("appView").setProperty("/visiblePdfViewer", false);
-				oModel.setProperty("/visiblePdfViewer", true);
+				// oModel.setProperty("/visiblePdfViewer", true);
 
 				var sUserRole = oModel.getProperty('/UserRole');
 				if (sUserRole === 'Customer') {
@@ -199,6 +239,7 @@ sap.ui.define([
 				oDialog.close();
 				oModel.setProperty("/PONo", "")
 				oModel.setProperty("/ArtWork", "")
+				oModel.setProperty('/visibleDownloadButton', false);
 				oDialog.updateBindings();
 
 			});
@@ -262,59 +303,44 @@ sap.ui.define([
 
 		},
 
+		// * these funciton is handling the upload attachment files in backend.
 
-
-		onUploadPoNo: function () {
-			
-			var oModel = this.getView().getModel(); ///default model get at here
-			var that = this;
-			var ids = this.oArgs
-			var poFile = this.getView().getModel('appView').getProperty("/PONo");
-			var payload = poFile ? poFile.attachmentPdfFiles : "";
-			// if(!poFile){
-			// 	MessageToast.show("Please Upload The Document");
-			// 	return;
-			// };
-			var oUpdatedData = {
-				poAttachment: payload,
-				// artworkAttachment:artworkFile
-			};
-			BusyIndicator.show(0);
-			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
-				success: function (data) {
-					
-					BusyIndicator.hide();
-					MessageToast.show("Successfully Uploaded")
-				},
-				error: function (error) {
-					// Error callback
-					// that.middleWare.errorHandler(error, that);
-					MessageToast.show("Error reading data");
-				}
-			});
+		onUploadDataPress: function () {
+			if (this.clickedLink == "poNo") {
+				this.onUploadAttachmentfiles("/PONo");
+			}
+			else if(this.clickedLink == "artworkCode") {
+				this.onUploadAttachmentfiles("/ArtWork",);
+			}
+			else if(this.clickedLink == "DeliveryNo") {
+				this.onUploadJobStatusAttachmentFiles("/DeliveryNo",);
+			}
+			else if(this.clickedLink == "InvNo") {
+				this.onUploadJobStatusAttachmentFiles("/InvNo",);
+			}
 		},
-
-		onUploadArtWork: function () {
-			
-			var oModel = this.getView().getModel(); ///default model get at here
-			var that = this;
-			var ids = this.oArgs
-			var artworkFile = this.getView().getModel('appView').getProperty("/ArtWork");
-			var payload = artworkFile ? artworkFile.attachmentPdfFiles : "";
-
-
-			// if(!artworkAttachment){
-			// 	MessageToast.show("Please Upload The Document");
-			// 	return
-			// }
+		onUploadJobStatusAttachmentFiles: function (attachmentPath) {
+			var oModel = this.getView().getModel("appView");
+			var oData = this.getView().getModel();
+			var element = oModel.getProperty(this.jobStatusPath)
+			var id = element.id;
+			var file = this.getView().getModel('appView').getProperty(attachmentPath);
+			var payload = file ? file.attachmentPdfFiles : "";
 			BusyIndicator.show(0);
-			var oUpdatedData = {
-				artworkAttachment: payload,
-			};
-			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
+			if(attachmentPath == "/DeliveryNo"){
+				var oUpdatedData = {
+					deliveryAttachment: payload,
+				};
+			}
+			else if(attachmentPath =="/InvNo"){
+				var oUpdatedData = {
+					incAttachment: payload,
+				};
+			}
+
+			oData.update(`/JobStatus('${id}')`, oUpdatedData, {
 				success: function (data) {
-					
-					BusyIndicator.show(0);
+					BusyIndicator.hide();
 					MessageToast.show("Successfully Uploaded")
 				},
 				error: function (error) {
@@ -323,16 +349,32 @@ sap.ui.define([
 			});
 		},
 
-
-
-		onUploadDataPress: function () {
-			
-			if (isPono == true) {
-				this.onUploadPoNo();
+		onUploadAttachmentfiles: function (attachmentPath) {
+			var oModel = this.getView().getModel(); ///default model get at here
+			var that = this;
+			var ids = this.oArgs
+			var artworkFile = this.getView().getModel('appView').getProperty(attachmentPath);
+			var payload = artworkFile ? artworkFile.attachmentPdfFiles : "";
+			BusyIndicator.show(0);
+			if(attachmentPath == "/PONo"){
+				var oUpdatedData = {
+					poAttachment: payload,
+				};
 			}
-			else {
-				this.onUploadArtWork();
+			else if(attachmentPath =="/ArtWork"){
+				var oUpdatedData = {
+					artworkAttachment: payload,
+				};
 			}
+			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
+				success: function (data) {
+					BusyIndicator.hide();
+					MessageToast.show("Successfully Uploaded")
+				},
+				error: function (error) {
+					that.middleWare.errorHandler(error, that);
+				}
+			});
 		},
 
 		onSubmitData: function () {
@@ -360,83 +402,137 @@ sap.ui.define([
 
 		},
 
-		// * this function will read the data of the "PO Attachment's".
-		onReadData: function () {
-			
-			var oModel = this.getView().getModel();  //default model get at here
+		onReadDatadd: function (endpoint,id, jsonPath, attachmentField) {
+			var oModel = this.getView().getModel(); // Default model
+			var appModel = this.getView().getModel('appView')
 			var that = this;
-			var ids = this.oArgs;
 			var appModel = this.getView().getModel("appView");
+			// var ids = this.oArgs;
+			// var element = appModel.getProperty(this.jobStatusPath);
+			// var id = element.id;
 			BusyIndicator.show(0);
-			// var pdfArtwork
-			oModel.read(`/Jobs('${ids}')`, {
+		
+			oModel.read(`${endpoint}('${id}')`, {
 				success: function (data) {
-					
 					var oJson = {
-						"attachmentPdfFiles": data.poAttachment
+						"attachmentPdfFiles" : data[attachmentField]
+					};
+					// oJson[attachmentPdfFiles] = data[attachmentField];
+		
+					var type = that.getFileTypes(oJson.attachmentPdfFiles);
+					if (type === 'pdf') {
+						appModel.setProperty('/visibleImageViewer', false);
+						appModel.setProperty('/visibleDownloadButton', false);
+						appModel.setProperty('/visiblePdfViewer', true);
+					} else if (type === 'image') {
+						appModel.setProperty('/visiblePdfViewer', false);
+						appModel.setProperty('/visibleImageViewer', true);
+						appModel.setProperty('/visibleDownloadButton', true);
+					} else {
+						appModel.setProperty('/visiblePdfViewer', false);
+						appModel.setProperty('/visibleImageViewer', false);
+						appModel.setProperty('/visibleDownloadButton', true);
 					}
-					var oJson2 = {
-						"attachmentPdfFiles": data.artworkAttachment
-					}
-
-					if (isPono == true) {
-						var type = that.getFileTypes(data.poAttachment);
-						if (type == 'pdf') {
-							appModel.setProperty('/visibleImageViewer', false);
-							appModel.setProperty('/visibleDownloadButton', false);
-							appModel.setProperty('/visiblePdfViewer', true);
-						}
-						else if (type == 'image') {
-							appModel.setProperty('/visiblePdfViewer', false);
-							appModel.setProperty('/visibleImageViewer', true);
-							appModel.setProperty('/visibleDownloadButton', true);
-						}
-						else {
-							appModel.setProperty('/visiblePdfViewer', false);
-							appModel.setProperty('/visibleImageViewer', false);
-							appModel.setProperty('/visibleDownloadButton', true);
-						}
-						appModel.setProperty("/PONo", oJson);
-						that.oDialogOpen().then(function (oDailog) {
-							oDailog.bindElement('appView>/PONo');
-						})
-					}
-					else {
-						var type = that.getFileTypes(data.artworkAttachment);
-						if (type == 'pdf') {
-							appModel.setProperty('/visibleImageViewer', false);
-							appModel.setProperty('/visibleDownloadButton', false);
-							appModel.setProperty('/visiblePdfViewer', true);
-
-						}
-						else if (type == 'image') {
-							appModel.setProperty('/visiblePdfViewer', false);
-							appModel.setProperty('/visibleImageViewer', true);
-							appModel.setProperty('/visibleDownloadButton', true);
-						}
-						else {
-							appModel.setProperty('/visiblePdfViewer', false);
-							appModel.setProperty('/visibleImageViewer', false);
-							appModel.setProperty('/visibleDownloadButton', true);
-						}
-						// that.getFileTypes(oJson2.attachmentPdfFiles);
-						appModel.setProperty("/ArtWork", oJson2);
-						that.oDialogOpen().then(function (oDailog) {
-							oDailog.bindElement('appView>/ArtWork');
-						})
-					}
+		
+					appModel.setProperty(jsonPath, oJson);
+					that.oDialogOpen().then(function (oDailog) {
+						oDailog.bindElement(`appView>${jsonPath}`);
+					});
+		
 					appModel.updateBindings();
 					BusyIndicator.hide();
 				},
 				error: function (error) {
-					// Error callback
 					BusyIndicator.hide();
 					that.middleWare.errorHandler(error, that);
-					// MessageToast.show("Error reading data");
 				}
 			});
-
 		},
+		
+
+		// * this function will read the data of the "PO Attachment's".
+		// onReadData: function () {
+			
+		// 	var oModel = this.getView().getModel();  //default model get at here
+		// 	var that = this;
+		// 	var ids = this.oArgs;
+		// 	var appModel = this.getView().getModel("appView");
+		// 	BusyIndicator.show(0);
+		// 	// var pdfArtwork
+		// 	oModel.read(`/Jobs('${ids}')`, {
+		// 		success: function (data) {
+					
+		// 			var oJson = {
+		// 				"attachmentPdfFiles": data.poAttachment
+		// 			}
+		// 			var oJson2 = {
+		// 				"attachmentPdfFiles": data.artworkAttachment
+		// 			}
+		// 			// var oJson3 = {
+		// 			// 	"attachmentPdfFiles": data.deliveryAttachment
+		// 			// }
+		// 			// var oJson4 = {
+		// 			// 	"attachmentPdfFiles": data.incAttachment
+		// 			// }
+
+		// 			if (that.clickedLink == "poNo") {
+		// 				var type = that.getFileTypes(data.poAttachment);
+		// 				if (type == 'pdf') {
+		// 					appModel.setProperty('/visibleImageViewer', false);
+		// 					appModel.setProperty('/visibleDownloadButton', false);
+		// 					appModel.setProperty('/visiblePdfViewer', true);
+		// 				}
+		// 				else if (type == 'image') {
+		// 					appModel.setProperty('/visiblePdfViewer', false);
+		// 					appModel.setProperty('/visibleImageViewer', true);
+		// 					appModel.setProperty('/visibleDownloadButton', true);
+		// 				}
+		// 				else {
+		// 					appModel.setProperty('/visiblePdfViewer', false);
+		// 					appModel.setProperty('/visibleImageViewer', false);
+		// 					appModel.setProperty('/visibleDownloadButton', true);
+		// 				}
+		// 				appModel.setProperty("/PONo", oJson);
+		// 				that.oDialogOpen().then(function (oDailog) {
+		// 					oDailog.bindElement('appView>/PONo');
+		// 				})
+		// 			}
+		// 			else if(that.clickedLink == "artworkCode") {
+		// 				var type = that.getFileTypes(data.artworkAttachment);
+		// 				if (type == 'pdf') {
+		// 					appModel.setProperty('/visibleImageViewer', false);
+		// 					appModel.setProperty('/visibleDownloadButton', false);
+		// 					appModel.setProperty('/visiblePdfViewer', true);
+
+		// 				}
+		// 				else if (type == 'image') {
+		// 					appModel.setProperty('/visiblePdfViewer', false);
+		// 					appModel.setProperty('/visibleImageViewer', true);
+		// 					appModel.setProperty('/visibleDownloadButton', true);
+		// 				}
+		// 				else {
+		// 					appModel.setProperty('/visiblePdfViewer', false);
+		// 					appModel.setProperty('/visibleImageViewer', false);
+		// 					appModel.setProperty('/visibleDownloadButton', true);
+		// 				}
+		// 				// that.getFileTypes(oJson2.attachmentPdfFiles);
+		// 				appModel.setProperty("/ArtWork", oJson2);
+		// 				that.oDialogOpen().then(function (oDailog) {
+		// 					oDailog.bindElement('appView>/ArtWork');
+		// 				})
+		// 			}
+		// 			appModel.updateBindings();
+		// 			BusyIndicator.hide();
+		// 		},
+		// 		error: function (error) {
+		// 			// Error callback
+		// 			BusyIndicator.hide();
+		// 			that.middleWare.errorHandler(error, that);
+		// 			// MessageToast.show("Error reading data");
+		// 		}
+		// 	});
+
+		// },
 		downloadAttachments: function () {
 			var oModel = this.getView().getModel("appView");
 			if ((isPono == true)) {
@@ -597,131 +693,79 @@ sap.ui.define([
 				});
 		},
 
-
 		// * this fucntion will trigerr the onChange event for the fileuploader.
 		onChangeFileUploader: function (oEvent) {
 			var files = oEvent.getParameter("files");
 			
-			if (isPono == true) {
-				this.onFileUploaderPoNoField(files);
+			if (this.clickedLink == "poNo") {
+				this.onFileUploader(files,'/PONo');
 			}
-			else {
+			else if(this.clickedLink == "artworkCode") {
 
-				this.onFileUploaderArtWork(files);
+				this.onFileUploader(files,"/ArtWork");
+			}
+			else if(this.clickedLink == "InvNo") {
+
+				this.onFileUploader(files,"/InvNo");
+			}
+			else if(this.clickedLink == "DeliveryNo") {
+
+				this.onFileUploader(files,"/DeliveryNo");
 			}
 		},
 
-		onFileUploaderArtWork: function (files) {
+		// * this will handling the fileupload on different phase like pono, artwork,incno,delvieryno.
+		onFileUploader: function (files, bindingPath) {
 			var that = this;
 			var oModel = this.getView().getModel('appView');
 			var ojson = {
 				"attachmentPdfFiles": ""
 			};
-
+		
 			if (!files.length) {
 				// No files selected
+				return;
 			}
+		
 			var reader = new FileReader();
 			reader.onload = function (e) {
 				try {
 					var vContent = e.currentTarget.result;
 					var fileType = files[0].type;
-
+		
 					if (fileType.startsWith('image/')) {
+
 						oModel.setProperty('/visiblePdfViewer', false);
 						oModel.setProperty('/visibleDownloadButton', true);
 						oModel.setProperty('/visibleImageViewer', true);
-					}
-					else if (fileType === 'application/pdf') {
+
+					} else if (fileType === 'application/pdf') {
 						oModel.setProperty('/visiblePdfViewer', true);
-					}
-					else {
+						oModel.setProperty('/visibleDownloadButton', false);
+					} else {
 						oModel.setProperty('/visiblePdfViewer', false);
 						oModel.setProperty('/visibleImageViewer', false);
 						oModel.setProperty('/visibleDownloadButton', true);
-
 					}
-
+		
 					ojson.attachmentPdfFiles = vContent;
-					that.getView().getModel('appView').setProperty('/ArtWork', ojson);
+					that.getView().getModel('appView').setProperty(bindingPath, ojson);
 					that.oDialogOpen().then(function (oDialog) {
-						oDialog.bindElement("appView>/ArtWork");
+						oDialog.bindElement("appView>" + bindingPath);
 					});
-					//   oUploadDoc.getModel().updateBindings();
 					that.getModel("appView").updateBindings();
 				} catch (jqXhr) {
 					that.middleWare.errorHandler(jqXhr, that);
 				}
 			};
+		
 			reader.readAsDataURL(files[0]);
 		},
 
-		handleFileType: function (fileType, vContent) {
-			if (fileType.startsWith('image/')) {
-				// File type is an image
-				this.getModel("appView").setProperty("/imageContent", vContent);
-				this.getModel("appView").setProperty("/visiblePdfViewer", false);
-			} else if (fileType === 'application/pdf') {
-				// File type is a PDF
-				this.getModel("appView").setProperty("/attachmentPdfFiles", vContent);
-				this.getModel("appView").setProperty("/visiblePdfViewer", true);
-			} else {
-				// File type is neither image nor PDF
-				this.getModel("appView").setProperty("/attachmentFiles", vContent);
-				this.getModel("appView").setProperty("/visiblePdfViewer", false);
-			}
-			return fileType;
-		},
 
-		// * this fucntion will use to browse the files for the pono filed in the dialog.
-		onFileUploaderPoNoField: function (files) {
-			
-			// var files = oEvent.getParameter("files");
-			var that = this;
-			var oModel = this.getView().getModel('appView');
+		
 
-			var ojson = {
-				"attachmentPdfFiles": ""
-			};
-
-			if (!files.length) {
-				// No files selected
-			} else {
-				var reader = new FileReader();
-				reader.onload = function (e) {
-					try {
-						var vContent = e.currentTarget.result;
-						var fileType = files[0].type;
-
-
-						ojson.attachmentPdfFiles = vContent;
-						that.getView().getModel('appView').setProperty('/PONo', ojson);
-						that.oDialogOpen().then(function (oDialog) {
-							if (fileType.startsWith('image/')) {
-								oModel.setProperty('/visiblePdfViewer', false);
-								oModel.setProperty('/visibleDownloadButton', true);
-								oModel.setProperty('/visibleImageViewer', true);
-							}
-							else if (fileType === 'application/pdf') {
-								oModel.setProperty('/visiblePdfViewer', true);
-								oModel.setProperty('/visibleDownloadButton', false);
-							}
-							else {
-								oModel.setProperty('/visiblePdfViewer', false);
-								oModel.setProperty('/visibleImageViewer', false);
-								oModel.setProperty('/visibleDownloadButton', true);
-							}
-							oDialog.bindElement("appView>/PONo");
-						});
-						//   oUploadDoc.getModel().updateBindings();
-						that.getModel("appView").updateBindings();
-					} catch (jqXhr) {
-						that.middleWare.errorHandler(jqXhr, that);
-					}
-				};
-				reader.readAsDataURL(files[0]);
-			}
-		},
+		
 
 		onUploadStatus: function () {
 			
@@ -783,26 +827,28 @@ sap.ui.define([
 
 
 
-		getJobsData: function () {
-			
-			BusyIndicator.show(0);
-			var oModel = this.getView().getModel();  //default model get at here
-			var that = this;
-			// Perform the read operation
-			oModel.read("/Jobs", {
-				urlParameters: {
-					"$expand": 'appUser'
-				},
-				success: function (data) {
-					that.getView().getModel("appView").setProperty("/jobsData", data.results);
-					BusyIndicator.hide();
-				},
-				error: function (error) {
-					MessageToast.show("Error reading data");
-					BusyIndicator.hide();
-				}
-			});
-		},
+		getJobsData:function(){
+            var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
+            if(sUserRole ==="Customer"){
+                var id =this.getView().getModel('appView').getProperty('/appUserId');
+                sPath = `/AppUsers('${id}')/job`;
+            }else{
+                var sPath = `/Jobs`
+            }
+            // debugger;
+            var that = this;
+            var oModel = this.getView().getModel();
+            oModel.read(sPath, {
+                success: function (data) {
+                    that.getView().getModel("appView").setProperty("/jobsData", data.results);
+                },
+                error: function (error) {
+                  // Error callback
+                //   that.middleWare.errorHandler(error, that);
+                  MessageToast.show("Error reading data");
+                }
+              });
+        },
 
 
 
