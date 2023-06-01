@@ -26,6 +26,8 @@ sap.ui.define([
       oModel.setProperty("/uploadButtonVisibility", true);
       oModel.setProperty("/imgVisibility", false);
       oModel.setProperty("/editableFields", false);
+      oModel.setProperty("/messageStripVis",false)
+      oModel.setProperty("/onUpdateJobVis",false)
 
       var bSystemType = this.getModel("device").getData().system.desktop;
       if(bSystemType){
@@ -126,38 +128,10 @@ sap.ui.define([
         MessageToast.show("Please Check Your Fields");
       }
       else {
-      //   
-
         var payload = JSON.parse(oJsonInpValue);
         payload.CustomerId = userValue;
         payload.fileName = getUploadFile;
         var id = payload.jobCardNo;
-        this.middleWare.callMiddleWare("uploadjob", "POST", payload)
-          .then(function (data, status, xhr) {
-            
-            MessageBox.confirm("This job is already Exist do you want to replace it?",{
-              onClose:function(sAction){
-                if(sAction==="OK"){
-                  oModel.update(`/Jobs('${id}')`, payload, {
-                    success: function (oUpdatedData) {
-                      
-                      MessageToast.show("Job created successfully");
-                    },
-                    error: function (nts) {
-                      // Error callback
-                      // if(nts.responseText.includes("duplicate key")){
-                        MessageToast.show("Something Went Wrong")
-                      // }
-                      // that.middleWare.errorHandler(error, that);
-                      // MessageToast.show("Error While Post the data");
-                    }
-                  });
-                }
-              }
-            })
-            // MessageToast.show("Same Job Available");
-          })
-          .catch(function (jqXhr, textStatus, errorMessage, error) {
             oModel.create("/Jobs", payload, {
               success: function (oUpdatedData) {
                 
@@ -173,9 +147,37 @@ sap.ui.define([
               }
             });
             // MessageToast.show("Not Available Want to Upload New");
-          });
+          }
+    },
+    onUpdateJob:function(){
+      var that = this;
+      var userValue = this.getModel("appView").getProperty("/customerId");
+      var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
+      var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
+      var oModel = this.getView().getModel();
+      if (!userValue || !oJsonInpValue) {
+        MessageToast.show("Please Check Your Fields");
       }
-
+      else {
+        var payload = JSON.parse(oJsonInpValue);
+        payload.CustomerId = userValue;
+        payload.fileName = getUploadFile;
+        var id = payload.jobCardNo;
+        oModel.update(`/Jobs('${id}')`, payload, {
+          success: function (oUpdatedData) {
+            
+            MessageToast.show("Job Updated successfully");
+          },
+          error: function (nts) {
+            // Error callback
+            // if(nts.responseText.includes("duplicate key")){
+              MessageToast.show("Something Went Wrong")
+            // }
+            // that.middleWare.errorHandler(error, that);
+            // MessageToast.show("Error While Post the data");
+          }
+        });
+      }
     },
     // onUploadData: function () {
     //   
@@ -293,6 +295,7 @@ sap.ui.define([
 
     extracDbFields: function (data) {
 
+      var that = this;
       const arrayToJSON = this.arrayToJSON(data);
       
       const dbFieldsJSON = Object.values(this.fieldsJSON);
@@ -310,6 +313,21 @@ sap.ui.define([
 
       //for simple form data binding
       this.getView().getModel('appView').setProperty("/jsonData", dbFields);
+
+      this.middleWare.callMiddleWare("uploadjob", "POST", dbFields)
+          .then(function (data, status, xhr) {
+          that.getView().getModel("appView").setProperty("/messageStripVis",true)
+          that.getView().getModel("appView").setProperty("/onUpdateJobVis",true)
+          that.getView().getModel("appView").setProperty("/onSavePayloadVis",false)
+          })
+          .catch(function (jqXhr, textStatus, errorMessage) {
+            that.getView().getModel("appView").setProperty("/onUpdateJobVis",false)
+          that.getView().getModel("appView").setProperty("/onSavePayloadVis",true)
+          that.getView().getModel("appView").setProperty("/messageStripVis",false)
+          });
+      
+
+
       this.getView().byId('SimpleForm-1').bindElement('appView>/jsonData');
       this.getView().getModel('appView').updateBindings();
 

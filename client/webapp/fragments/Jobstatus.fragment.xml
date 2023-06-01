@@ -1,54 +1,52 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
     <Table items="{appView>/jobStatusTabData}"  autoPopinMode="true">
         <headerToolbar>
-           <Toolbar>
-               <Title text="Job Status" />
-               <ToolbarSpacer/>
-               <Button
+            <Toolbar>
+                <Title text="Job Status" />
+                <ToolbarSpacer/>
+                <Button
                    visible="{=${appView>/Jobs/status} !== 'New' ? true : false }"
                    icon="sap-icon://add"
                    press="onPressAdd"
                >   
                </Button>
-
-           </Toolbar>
+            </Toolbar>
         </headerToolbar>
         <!-- visibleRowCount="4" selectionMode="Single" -->
         <columns>
-           <Column> 
-                 <Label text="Raw Material" />
-           </Column>
-           <Column>
-                 <Label text="Coating" />
-
-           </Column>
-           <Column>
-               <Label text="Spot UV" />
-           </Column>
-           <Column>
-               <Label text="Punching" />
-           </Column>
-           <Column>
-               <Label text="Packing" />
-           </Column>
-           <Column>
-               <Label text="Printing" />
-           </Column>
-           <Column>
-               <Label text="Foiling" />
-           </Column>
-           <Column>
-               <Label text="Embossing" />
-           </Column>
-           <Column>
-               <Label text="Pasting" />
-           </Column>
-           <Column>
-               <Label text="Inc. No." />
-           </Column>		
-           <Column>
-               <Label text="Delivery No." />
-           </Column>				
+            <Column>
+                <Label text="Raw Material" />
+            </Column>
+            <Column>
+                <Label text="Coating" />
+            </Column>
+            <Column>
+                <Label text="Spot UV" />
+            </Column>
+            <Column>
+                <Label text="Punching" />
+            </Column>
+            <Column>
+                <Label text="Packing" />
+            </Column>
+            <Column>
+                <Label text="Printing" />
+            </Column>
+            <Column>
+                <Label text="Foiling" />
+            </Column>
+            <Column>
+                <Label text="Embossing" />
+            </Column>
+            <Column>
+                <Label text="Pasting" />
+            </Column>
+            <Column>
+                <Label text="Inc. No." />
+            </Column>
+            <Column>
+                <Label text="Delivery No." />
+            </Column>
         </columns>
            <items>
                <ColumnListItem >

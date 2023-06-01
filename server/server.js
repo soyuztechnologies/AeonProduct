@@ -865,7 +865,7 @@ app.start = function () {
 					// Handle case when access token is not found
 					return res.status(404).json({ error: 'Session not found' });
 				}
-				const { id, ttl, created, userId } = accessToken;
+				const {  ttl, created, userId } = accessToken;
 
 				let userID = accessToken.userId;
 
@@ -884,9 +884,9 @@ app.start = function () {
 				}
 
 				// Retrieve the user's role or any other relevant data
-				const {Status,TechnicalId,Role,EmailId} = Appuser;
+				const {Status,TechnicalId,Role,EmailId,id} = Appuser;
 				const responseData = {
-					role: {Status,TechnicalId,Role,EmailId},
+					role: {Status,TechnicalId,Role,EmailId,id},
 					// Include other relevant data if needed
 				};
 

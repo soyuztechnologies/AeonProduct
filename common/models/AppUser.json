@@ -142,7 +142,13 @@
   }
   },
   "validations": [],
-  "relations":{},
+  "relations":{
+    "job": {
+      "type": "hasMany",
+      "model": "Job",
+      "foreignKey": "CustomerId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",

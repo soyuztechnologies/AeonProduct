@@ -2,14 +2,14 @@
 	"name": "Job",
 	"plural": "Jobs",
 	"base": "PersistedModel",
-	"idInjection": true,
+	"idInjection": false,
 	"options": {
 		"validateUpsert": true
 	},
 	"properties": {
+		
 		"jobCardNo": {
 			"type": "string",
-			"default": null,
 			"required": true,
 			"id": true
 		},
@@ -357,7 +357,7 @@
 	"validations": [],
 	"relations": {
 		"appUser": {
-			"type": "hasOne",
+			"type": "belongsTo",
 			"model": "AppUser",
 			"foreignKey": "CustomerId"
 		}

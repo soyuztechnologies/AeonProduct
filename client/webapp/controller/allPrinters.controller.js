@@ -19,20 +19,33 @@ sap.ui.define([
 		},
 
 		// * root match handler function.
-		_matchedHandler: function (oEvent) {
+		_matchedHandler: async function (oEvent) {
+			
+			var that = this;
+			await this.getUserRoleData().then(
+				function (data){
+					var role = data.role.Role
+					that.getView().getModel('appView').setProperty('/UserRole', role);
+					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+					that.userRole();
+					that.getJobsData();
+				},
+				function (oErr){
+					that.middleWare.errorHandler(jqXhr, that);
+				}
+			);
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader", true);
 			this.getModel("appView").setProperty("/visibility", true);
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
-			this.getUserRoleData();
-			this.getJobsData();
+			// this.getJobsData();
 			// this.getUserName();
 		},
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
-			
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			// if(datassss.status==="In-Progress"){
@@ -55,25 +68,24 @@ sap.ui.define([
 
 
 		// * this fucntion will get the list of the all jobs in the allPrinters screen.
-		getJobsData: function () {
-			
-			BusyIndicator.show(0);
-			var oModel = this.getView().getModel();  //default model get at here
-			var that = this;
-			// Perform the read operation
-			oModel.read("/Jobs", {
-				urlParameters: {
-					"$expand" : 'appUser'
-				},
-				success: function (data) {
-					that.getView().getModel("appView").setProperty("/jobsData", data.results);
-					BusyIndicator.hide();
-				},
-				error: function (error) {
-					MessageToast.show("Error reading data");
-					BusyIndicator.hide();
-				}
-			});
+		// getJobsData: function () {
+		// 	BusyIndicator.show(0);
+		// 	var oModel = this.getView().getModel();  //default model get at here
+		// 	var that = this;
+		// 	// Perform the read operation
+		// 	oModel.read("/Jobs", {
+		// 		urlParameters: {
+		// 			"$expand" : 'appUser'
+		// 		},
+		// 		success: function (data) {
+		// 			that.getView().getModel("appView").setProperty("/jobsData", data.results);
+		// 			BusyIndicator.hide();
+		// 		},
+		// 		error: function (error) {
+		// 			MessageToast.show("Error reading data");
+		// 			BusyIndicator.hide();
+		// 		}
+		// 	});
 			
 			// BusyIndicator.show(0);
 			// var oModel = this.getView().getModel();  //default model get at here
@@ -95,10 +107,10 @@ sap.ui.define([
 			// 	}
 			// });
 
-		},
+		// },
 
 		onAfterRendering: function () {
-			this.getJobsData();
+			// this.getJobsData();
 		},
 
 		onFilterPressJobStatus: function () {
@@ -122,6 +134,31 @@ sap.ui.define([
 			}else{
 				this.onViewSettingsCancel();
 			}
+		},
+
+
+		getJobsData:function(){
+			var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
+			if(sUserRole ==="Admin"){
+				var sPath = `/Jobs`
+			}else{
+
+				var id =this.getView().getModel('appView').getProperty('/appUserId');
+				sPath = `/AppUsers('${id}')/job`;
+			}
+			debugger;
+			var that = this;
+			var oModel = this.getView().getModel();
+			oModel.read(sPath, {
+				success: function (data) {
+					that.getView().getModel("appView").setProperty("/jobsData", data.results);
+				},
+				error: function (error) {
+				  // Error callback
+				//   that.middleWare.errorHandler(error, that);
+				  MessageToast.show("Error reading data");
+				}
+			  });
 		},
 		
 		onViewSettingsCancel: function () {
