@@ -42,7 +42,7 @@
 			<ToolbarSpacer/>
 				<Button visible="{appView>/updBtnVisibility}"  icon="sap-icon://save" type="Emphasized" text="Save" press="onClickUpdate"></Button>
 				<Button visible="{appView>/asUrgentVis}"  icon="sap-icon://save" type="Emphasized" text="Make As Urgent" press="onClickUrgent"></Button>
-				<Button  visible="{=${appView>/Jobs/status} !== 'New' ? true : false }" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button>
+				<Button visible="{=${appView>/Jobs/status} !== 'New' ? ${appView>/visibleModify} : false }" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button>
 				<Button visible="{appView>/cancleBtnVis}" icon="sap-icon://cancel" text="Cancel"  type="Emphasized" press="onClickCancle"></Button>
 			</Toolbar>
 		</footer>
