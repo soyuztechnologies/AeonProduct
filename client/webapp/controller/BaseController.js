@@ -10,7 +10,7 @@ sap.ui.define([
 	"sap/ui/model/FilterOperator",
 	"sap/m/MessageBox",
 	"sap/ui/Device"
-], function (Controller, History, dbapi, Fragment, JSONModel, MessageToast, formatter, Filter, FilterOperator, MessageBox,Device) {
+], function (Controller, History, dbapi, Fragment, JSONModel, MessageToast, formatter, Filter, FilterOperator, MessageBox, Device) {
 	"use strict";
 
 	return Controller.extend("ent.ui.ecommerce.controller.BaseController", {
@@ -32,50 +32,51 @@ sap.ui.define([
 
 		},
 		getUserRoleData: function () {
-			
+			debugger;
 			var that = this;
-			this.middleWare.callMiddleWare("getUserRole", "get")
-			  .then(function (data, status, xhr) {
-				
-				var role = data.role.Role
-				  that.getView().getModel('appView').setProperty('/UserRole',role);
-				  that.getView().getModel('appView').setProperty('/UserEmail',data.role.EmailId);
-				  that.userRole();
-				// };
-			  })
-			  .catch(function (jqXhr, textStatus, errorMessage) {
-				
-				that.middleWare.errorHandler(jqXhr, that);
-			  });
-		  },
+			return new Promise(function (myResolve, myReject) {
+				that.middleWare.callMiddleWare("getUserRole", "get")
+					.then(function (data, status, xhr) {
 
-		userRole: function(){
-			
-			var sUserRole = this.getModel('appView').getProperty('/UserRole');
-			if(sUserRole === "Admin"){
-				this.getView().getModel("appView").setProperty('/asUrgentVis',false);
-			}
-			else if(sUserRole === "Customer"){
-				this.getView().getModel("appView").setProperty('/upDocNavVisb',false);
-				this.getView().getModel("appView").setProperty('/asUrgentVis',true);
-				this.getView().getModel("appView").setProperty('/addJobStatusVis',false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb',true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb',false);
-				this.getView().getModel('appView').setProperty('/modifybtnvis', false);
-			}
-			else if (sUserRole === "Factory Manager"){
-				this.getView().getModel("appView").setProperty('/upDocNavVisb',false);
-				this.getView().getModel("appView").setProperty('/asUrgentVis',false);
-				// this.getView().getModel("appView").setProperty('/welPrintNavVisb',false);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb',false);
-				// this.getView().getModel("appView").setProperty('/profilNavVisb',false);
-		    }
+						myResolve(data);
+						// };
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+
+						// that.middleWare.errorHandler(jqXhr, that);
+						myReject();
+					});
+			});
+
 		},
 
-		setAppModel:function(){
-			var oViewModel = 
+		userRole: function () {
+
+			var sUserRole = this.getModel('appView').getProperty('/UserRole');
+			if (sUserRole === "Admin") {
+				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+			}
+			else if (sUserRole === "Customer") {
+				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
+				this.getView().getModel("appView").setProperty('/asUrgentVis', true);
+				this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
+				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
+				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+				this.getView().getModel('appView').setProperty('/modifybtnvis', false);
+			}
+			else if (sUserRole === "Factory Manager") {
+				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
+				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+				// this.getView().getModel("appView").setProperty('/welPrintNavVisb',false);
+				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb',false);
+			}
+		},
+
+		setAppModel: function () {
+			var oViewModel =
 			// new JSONModel(
-				{
+			{
 				busy: false,
 				delay: 0,
 				layout: "OneColumn",
@@ -85,21 +86,21 @@ sap.ui.define([
 						fullScreen: false
 					}
 				},
-				logOut:true,
-				CustomerButton:{
-					Icon:"",
-					Type:"Default",
-					Tooltip:"",
-					Text:""
+				logOut: true,
+				CustomerButton: {
+					Icon: "",
+					Type: "Default",
+					Tooltip: "",
+					Text: ""
 				},
-				VH_salesPerson:[],
-				VH_OHEM:[],
-				VH_Industry:[],
-				VH_Groups:[],
-				VH_PayTermsGrpCode:[],
-				VH_Country:[],
-				VH_State:[],
-				SalesOQDetail:[]
+				VH_salesPerson: [],
+				VH_OHEM: [],
+				VH_Industry: [],
+				VH_Groups: [],
+				VH_PayTermsGrpCode: [],
+				VH_Country: [],
+				VH_State: [],
+				SalesOQDetail: []
 
 			}
 			// );
@@ -190,7 +191,7 @@ sap.ui.define([
 		onDatabasePress: function (oEvent) {
 			var oMessage = this.getModel("appView").getProperty("/loginDatabaseName");
 			MessageToast.show(oMessage);
-			
+
 		},
 		convertFileToUrl: function (vContent) {
 			var regex = /data:(\w.*);base64,/gm;
@@ -213,7 +214,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/customData", data);
 
 					that.getModel("appView").updateBindings();
-					if(callback){
+					if (callback) {
 						callback();
 					}
 				})
@@ -221,40 +222,40 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
-		setGlobalNavItemVisible:function(){
-			var oRole=this.getModel("appView").getProperty("/customData/roles");
-			if(oRole.toString().includes('Customer')){
+		setGlobalNavItemVisible: function () {
+			var oRole = this.getModel("appView").getProperty("/customData/roles");
+			if (oRole.toString().includes('Customer')) {
 				this.getModel("appView").setProperty("/sideNav/customerTabs", true);
 				this.getModel("appView").setProperty("/sideNav/adminTabs", false);
 			}
-			else{
+			else {
 				this.getModel("appView").setProperty("/sideNav/customerTabs", false);
 				this.getModel("appView").setProperty("/sideNav/adminTabs", true);
 			}
 			this.getModel("appView").updateBindings();
 		},
-		getUserData:function(){
-			var oUserId=this.getModel("appView").getProperty("/customData/Code");
+		getUserData: function () {
+			var oUserId = this.getModel("appView").getProperty("/customData/Code");
 			this.middleWare.callMiddleWare("/resource/ENT_UDO_USERS('" + oUserId + "')", "GET", {})
 				.then(function (data, status, xhr) {
-					if(data.U_CompanyLogo){
+					if (data.U_CompanyLogo) {
 						var stream = this.formatter.getImageUrlFromContent(data.U_CompanyLogo);
-						data.url=stream;
+						data.url = stream;
 						// that.getModel("appView").setProperty("/ENT_UDO_USER/url", stream);
-						
+
 					}
-					
+
 					this.getModel("appView").setProperty("/ENT_UDO_USER", data);
-					const email=data.U_Email;
+					const email = data.U_Email;
 					this.getModel("appView").setProperty("/logEmail", email);
 					const oStatus = data.U_Status;
 					this.getModel("appView").setProperty("/userStatus", oStatus);
-					if(oStatus == "N" || oStatus == "D"){
+					if (oStatus == "N" || oStatus == "D") {
 						this.getModel("appView").setProperty("/sideNav/invoiceList", false);
-					}else{
+					} else {
 						this.getModel("appView").setProperty("/sideNav/invoiceList", true);
 					}
-					
+
 					this.loadBankCode(data.U_BankCountr);
 					this.getModel("appView").updateBindings();
 				}.bind(this))
@@ -262,11 +263,11 @@ sap.ui.define([
 					this.middleWare.errorHandler(jqXhr, this);
 				}.bind(this));
 		},
-		getUsersData:function(){
+		getUsersData: function () {
 			// var oUserId=this.getModel("appView").getProperty("/customData/Code");
 			this.middleWare.callMiddleWare("/resource/ENT_UDO_USERS", "GET", {})
 				.then(function (data, status, xhr) {
-					
+
 					this.getModel("appView").setProperty("/USERS", data);
 					this.getModel("appView").updateBindings();
 				}.bind(this))
@@ -508,19 +509,19 @@ sap.ui.define([
 			}.bind(this));
 
 		},
-		loadBankCode: function(countryCode) {
-			return new Promise(function(resolve, reject) {
+		loadBankCode: function (countryCode) {
+			return new Promise(function (resolve, reject) {
 				this.middleWare.callMiddleWare("/resource/Banks?$select=BankCode,BankName&$filter=CountryCode eq '" + countryCode + "'", "GET", {})
-					.then(function(data) {
+					.then(function (data) {
 						this.getModel("appView").setProperty("/VH_BankCode", data);
 						this.getModel("appView").updateBindings();
 						resolve(data);
 					}.bind(this))
-					.catch(function(jqXhr) {
+					.catch(function (jqXhr) {
 						this.middleWare.errorHandler(jqXhr, this);
-						
+
 					}.bind(this));
-			}.bind(this)); 	
+			}.bind(this));
 		},
 		getVH_ContactPerson: function (oQuery, oAddArray) {
 			return new Promise(function (resolve) {
@@ -822,16 +823,16 @@ sap.ui.define([
 		},
 		// getUsersData: function () {
 		// 	var that = this;
-			
+
 		// 	that.getModel("appView").setProperty("/userTileVisibility", true);
 		// 	this.middleWare.callMiddleWare("/users", "GET", {})
 		// 		.then(function (data, status, xhr) {
-					
+
 		// 			that.getModel("appView").setProperty("/users", data);
 		// 			if (data.length === 0) {
 		// 				that.getModel("appView").setProperty("/userTileVisibility", false);
 		// 			}
-					
+
 
 		// 		})
 		// 		.catch(function (jqXhr, textStatus, errorMessage) {
@@ -860,7 +861,7 @@ sap.ui.define([
 				var oItem = this.getModel("appView").getProperty("/CartData");
 				if (oItem) {
 					var oItemCode = oItem.map(({ ItemCode }) => "'" + ItemCode + "'");
-					
+
 					var data = await this.middleWare.callMiddleWare("/getVATRATE?ItemCode=" + oItemCode, "GET", {}).then();
 					// var odec =parseInt(data).toFixed(2);
 					// return data;
@@ -1115,7 +1116,7 @@ sap.ui.define([
 
 			var oViewId = this.getView().getId();
 			var oSelectedItem = oEvent.getSource().getBindingContext("appView").getObject();
-			var oSelectBinding=oEvent.getSource().getBindingContext("appView").getPath();
+			var oSelectBinding = oEvent.getSource().getBindingContext("appView").getPath();
 			// this.getView().byId('idCustomerButton').setText(oSelectedItem.CardName);
 			// this.getView().byId('idCustomerButton').setTooltip(oSelectedItem.CardName);
 			// this.getView().byId('idCustomerButton').setType("Critical");
@@ -1124,18 +1125,18 @@ sap.ui.define([
 			this.getModel("appView").setProperty('/CustomerButton/Tooltip', oSelectedItem.CardName);
 			this.getModel("appView").setProperty('/CustomerButton/Type', "Critical");
 			this.getModel("appView").setProperty('/CustomerButton/Icon', "sap-icon://alert");
-			this.getModel("appView").setProperty("/MasterSelectedCustomer", { "CardCode": oSelectedItem.CardCode, "CardName": oSelectedItem.CardName ,"Path":oSelectBinding});
+			this.getModel("appView").setProperty("/MasterSelectedCustomer", { "CardCode": oSelectedItem.CardCode, "CardName": oSelectedItem.CardName, "Path": oSelectBinding });
 			if (oViewId.includes("SalesQuotation")) {
 				this.getView().byId("idgetSalesQuotationList").firePress();
 			}
 			// if (oViewId.includes("SalesOrderList")) {
-				// this.getView().byId("idgetSalesOrderList").firePress();
-				try {
-					sap.ui.getCore().byId("container-ent_eCom_ui---SalesOrderList--idgetSalesOrderList").firePress();	
-				} catch (error) {
-					
-				}
-				
+			// this.getView().byId("idgetSalesOrderList").firePress();
+			try {
+				sap.ui.getCore().byId("container-ent_eCom_ui---SalesOrderList--idgetSalesOrderList").firePress();
+			} catch (error) {
+
+			}
+
 			// }
 			if (oViewId.includes("Items")) {
 				this.getView().byId("idGetItemData").firePress();
@@ -1178,9 +1179,9 @@ sap.ui.define([
 				// 	this.getView().byId("idgetSalesOrderList").firePress();
 				// }
 				try {
-					sap.ui.getCore().byId("container-ent_eCom_ui---SalesOrderList--idgetSalesOrderList").firePress();	
+					sap.ui.getCore().byId("container-ent_eCom_ui---SalesOrderList--idgetSalesOrderList").firePress();
 				} catch (error) {
-					
+
 				}
 				if (oViewId.includes("Items")) {
 					this.getView().byId("idGetItemData").firePress();
@@ -1265,39 +1266,39 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
-		toolbarButtonVisible:function(){
-			var oViewId=this.getView().getId();
+		toolbarButtonVisible: function () {
+			var oViewId = this.getView().getId();
 			this.getView().byId("idCartButton").setVisible(this.getModel("config").getProperty("/showFeaturesInDevelopment"));
-			if(Device.system.desktop){
-				if(this.getModel("appView").getProperty("/layout")!=="OneColumn"){
-					if(oViewId.includes("SalesDetail")){
-						var oId="container-ent_eCom_ui---SalesOrderList";
+			if (Device.system.desktop) {
+				if (this.getModel("appView").getProperty("/layout") !== "OneColumn") {
+					if (oViewId.includes("SalesDetail")) {
+						var oId = "container-ent_eCom_ui---SalesOrderList";
 					}
-					if(oViewId.includes("ClientListDetail")){
-						var oId="container-ent_eCom_ui---ClientList";
+					if (oViewId.includes("ClientListDetail")) {
+						var oId = "container-ent_eCom_ui---ClientList";
 					}
-					if(oViewId.includes("SalesOQU")){
-						var oId="container-ent_eCom_ui---SalesOrderList";
+					if (oViewId.includes("SalesOQU")) {
+						var oId = "container-ent_eCom_ui---SalesOrderList";
 					}
-					if(oViewId.includes("ActivityDetails")){
-						var oId="container-ent_eCom_ui---Activity";
+					if (oViewId.includes("ActivityDetails")) {
+						var oId = "container-ent_eCom_ui---Activity";
 					}
-					sap.ui.getCore().byId(oId+"--idUserLink").setVisible(false);
-					sap.ui.getCore().byId(oId+"--idCustButton").setVisible(false);
-					if(this.getModel("config").getProperty("/showFeaturesInDevelopment")){
-						sap.ui.getCore().byId(oId+"--idCartButton").setVisible(false);
+					sap.ui.getCore().byId(oId + "--idUserLink").setVisible(false);
+					sap.ui.getCore().byId(oId + "--idCustButton").setVisible(false);
+					if (this.getModel("config").getProperty("/showFeaturesInDevelopment")) {
+						sap.ui.getCore().byId(oId + "--idCartButton").setVisible(false);
 					}
 					// this.getView().byId("idCustButton").setVisible(false);
 					// this.getView().byId("idCartButton").setVisible(false);
 					// this.getView().byId("idUserLink").setVisible(false);
 				}
-				else{
-					if(this.getModel("config").getProperty("/showFeaturesInDevelopment")){
-						sap.ui.getCore().byId(oViewId+"--idCartButton").setVisible(true);
+				else {
+					if (this.getModel("config").getProperty("/showFeaturesInDevelopment")) {
+						sap.ui.getCore().byId(oViewId + "--idCartButton").setVisible(true);
 					}
-					sap.ui.getCore().byId(oViewId+"--idCustButton").setVisible(true);
+					sap.ui.getCore().byId(oViewId + "--idCustButton").setVisible(true);
 					// sap.ui.getCore().byId("container-ent_eCom_ui---SalesOrderList--idCustButton").byId("idCartButton").setVisible(true);
-					sap.ui.getCore().byId(oViewId+"--idCustButton").setVisible(true);
+					sap.ui.getCore().byId(oViewId + "--idCustButton").setVisible(true);
 				}
 			}
 		},
@@ -1332,7 +1333,7 @@ sap.ui.define([
 			// var oData=this.getModel("appView").getProperty("/ENT_UDO_USER");
 			this.middleWare.callMiddleWare("/fieldTable", "GET", {})
 				.then(function (data, status, xhr) {
-					
+
 					var fieldCfg = data;
 					var visible = this.getModel("appView").getProperty("/visible");
 					var required = this.getModel("appView").getProperty("/required");
@@ -1349,8 +1350,8 @@ sap.ui.define([
 					this.middleWare.errorHandler(jqXhr, this);
 				}.bind(this));
 		},
-		formatVisibleBank:function(a,b,c,d,e,f,g,h){
-			if(!a && !b && !c && !d && !e && !f && !g && !h){
+		formatVisibleBank: function (a, b, c, d, e, f, g, h) {
+			if (!a && !b && !c && !d && !e && !f && !g && !h) {
 				return false;
 			}
 			return true;
@@ -1500,10 +1501,10 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
-		onInvoiceNavPress:function(oEvent){
-			var oContext=oEvent.getSource().getBindingContext("appView");
-			var oObject=oContext.getObject();
-			if(oObject && oObject.U_SAP_DocEntry){
+		onInvoiceNavPress: function (oEvent) {
+			var oContext = oEvent.getSource().getBindingContext("appView");
+			var oObject = oContext.getObject();
+			if (oObject && oObject.U_SAP_DocEntry) {
 				this.getRouter().navTo(
 					'InvoiceDetail',
 					{
@@ -1511,22 +1512,22 @@ sap.ui.define([
 					}
 				);
 			}
-			else{
+			else {
 				MessageBox.error(this.getView().getModel("i18n").getProperty("IncorrectInvoice"));
-				
+
 			}
 		},
-		getVHCurrency: function(){
+		getVHCurrency: function () {
 			this.middleWare.callMiddleWare("/VH_Currency", "GET", {})
-			.then(function (data, status, xhr) {
-				this.getModel("appView").setProperty("/VH_Currency", data);
-				// this.getModel("appView").setProperty("/TotalTransData", data.length);
-				this.getModel("appView").updateBindings();
+				.then(function (data, status, xhr) {
+					this.getModel("appView").setProperty("/VH_Currency", data);
+					// this.getModel("appView").setProperty("/TotalTransData", data.length);
+					this.getModel("appView").updateBindings();
 
-			}.bind(this))
-			.catch(function (jqXhr, textStatus, errorMessage) {
-				this.middleWare.errorHandler(jqXhr, this);
-			}.bind(this));
+				}.bind(this))
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					this.middleWare.errorHandler(jqXhr, this);
+				}.bind(this));
 		},
 	});
 });

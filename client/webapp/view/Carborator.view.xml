@@ -28,7 +28,13 @@
                     fileType="docx,jpg,jpeg,xml,xlsx,pdf"
                     multiple="false" />  
                 </HBox>
-            
+                <MessageStrip
+                visible="{appView>/messageStripVis}"
+				text="Same Job is already available"
+				type="Information"
+				showIcon="true"
+				class="sapUiMediumMarginBottom">
+			</MessageStrip>
             <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
                 
         <ux:headerTitle>
@@ -168,7 +174,7 @@
             <ux:subSections>
                 <ux:ObjectPageSubSection>
                     <ux:blocks>
-                        <f:SimpleForm editable="false"    columnsXL="2" singleContainerFullSize="false" >
+                        <f:SimpleForm class="sapUiMediumMarginBottom" editable="false"    columnsXL="2" singleContainerFullSize="false" >
                             <f:content>
                                 <core:Title text="Cost Structure" />
                                     
@@ -406,7 +412,8 @@
                
                     
                     <ToolbarSpacer/>
-                    <Button type="Emphasized" icon="sap-icon://save"  text="Save" press="onSavePayload"></Button>
+                    <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onSavePayloadVis}"  text="Save" press="onSavePayload"></Button>
+                    <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onUpdateJobVis}" text="Update" press="onUpdateJob"></Button>
                     <Button type="Reject" text="Clear"  icon="sap-icon://clear-all" press="onPressClear"></Button>
 
                
