@@ -150,18 +150,26 @@ sap.ui.define([
 		clickedLink:null,
 		//* Opens the PO No. Popup
 		onClickPopup: function (oEvent) {
+			var oData=oEvent.getSource().getBindingContext("appView").getObject();
+			
 			this.clickedLink=oEvent.getSource().getBinding("text").getPath();
-			var oView = this.getView();
-			var that = this;
-			var id = this.oArgs;
-			BusyIndicator.show(0);
-
 			if (this.clickedLink == "poNo") {
-				this.onReadDatadd("/Jobs",id,"/PONo","poAttachment")
+				this.getModel("appView").setProperty("/attachmentFiles",oData.poAttachment)
 			}
 			else if(this.clickedLink == "artworkCode") {
-				this.onReadDatadd("/Jobs",id,"/ArtWork","artworkAttachment");
+				this.getModel("appView").setProperty("/attachmentFiles",oData.artworkAttachment)
 			}
+			var oView = this.getView();
+			var that = this;
+			// var id = this.oArgs;
+			// BusyIndicator.show(0);
+
+			// if (this.clickedLink == "poNo") {
+			// 	this.onReadDatadd("/Jobs",id,"/PONo","poAttachment")
+			// }
+			// else if(this.clickedLink == "artworkCode") {
+			// 	this.onReadDatadd("/Jobs",id,"/ArtWork","artworkAttachment");
+			// }
 			
 			
 
@@ -172,17 +180,17 @@ sap.ui.define([
 			this.oDialogOpen().then(function (oDialog) {
 				oDialog.open();
 
-				BusyIndicator.hide();
-				isPono = true;
+				// BusyIndicator.hide();
+				// isPono = true;
 				// oModel.setProperty('/browseVis', true);
-				oModel.setProperty('/pdfVisibility', false);
-				var sUserRole = oModel.getProperty('/UserRole');
-				if (sUserRole === 'Customer') {
+				// oModel.setProperty('/pdfVisibility', false);
+				// var sUserRole = oModel.getProperty('/UserRole');
+				// if (sUserRole === 'Customer') {
 
-					oModel.setProperty('/btnVisibility', false);
-					// oModel.setProperty('/browseVis', false);
+				// 	oModel.setProperty('/btnVisibility', false);
+				// 	// oModel.setProperty('/browseVis', false);
 
-				}
+				// }
 			});
 		},
 		onSelectKeyRawMaterial: function (oEvent) {
