@@ -67,11 +67,11 @@
 			"default":""
 		},
 		"incAttachment":{
-			"type":"number",
+			"type":"string",
 			"default":null
 		},
 		"deliveryAttachment":{
-			"type":"number",
+			"type":"string",
 			"default":null
 		}
 		

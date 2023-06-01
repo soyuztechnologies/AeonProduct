@@ -62,8 +62,8 @@
                        <Input editable="{appView>/onClickModify}" value="{appView>Foiling}"></Input>
                        <Input editable="{appView>/onClickModify}" value="{appView>Embossing}"></Input>
                        <Input editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
-                       <Link  press="onClickPopup"  text="{appView>InvNo}" ></Link>
-                       <Link  press="onClickPopup"  text="{appView>DeliveryNo}" ></Link>				
+                       <Link  press="onClickPopupJobStatus"  text="{appView>InvNo}" ></Link>
+                       <Link  press="onClickPopupJobStatus"  text="{appView>DeliveryNo}" ></Link>				
                    </cells>
                </ColumnListItem>
            </items>

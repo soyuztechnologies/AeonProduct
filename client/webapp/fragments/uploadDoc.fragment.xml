@@ -5,7 +5,7 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
     <Dialog contentWidth="100%" contentHeight="100%" title="Upload Documents" id="uploadDoc">
         <content>
-            <u:FileUploader visible="{appView>/browseVisArtwork}" width="100%" style="Emphasized" change="onChangeFileUploader" buttonText="Browse"  fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="false" />
+            <u:FileUploader visible="{appView>/browseVisArtwork}" sameFilenameAllowed="true" width="100%" style="Emphasized" change="onChangeFileUploader" buttonText="Browse"  fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="false" />
             <HBox alignContent="Center" justifyContent="Center">
                 <Button icon="sap-icon://download" visible="{appView>/visibleDownloadButton}" press="downloadAttachments" text="Download"  type="Transparent" />
             </HBox>
