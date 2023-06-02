@@ -742,6 +742,22 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         return _pdfurl;
       }
     },
+    // Formatter function for visibility
+    getPdfVisibility: function (attachmentFiles) {
+      return attachmentFiles && attachmentFiles.startsWith('data:application/pdf') ? true : false;
+    },
+    getbuttonVisibility: function (attachmentFiles) {
+      if(!attachmentFiles){
+        return false;
+      }
+      return attachmentFiles && attachmentFiles.startsWith('data:application/pdf') ? false : true;
+    },
+    getImageVisibility: function (attachmentFiles) {
+      return attachmentFiles && attachmentFiles.startsWith('data:image/') ? true : false;
+    },
+    
+    
+
     getStatusColor: function (status) {
       switch (status) {
         case "New":

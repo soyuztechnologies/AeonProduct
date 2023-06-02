@@ -51,7 +51,12 @@
         <items>
             <ColumnListItem >
                 <cells>
-                    <Input editable="{appView>/onClickModify}" value="{appView>rawMaterial}"></Input>
+                    <Select editable="{appView>/onClickModify}" forceSelection="false" selectedKey="{appView>rawMaterial}" change="onSelectKeyRawMaterial">
+                        <items>
+                            <core:Item text="In Stock" key="In Stock" />
+                            <core:Item text="Pending" key="Pending" />
+                        </items>
+                    </Select>
                     <!-- <Input editable="{appView>/onClickModify}" value="{appView>Coating}" /> -->
                     <StepInput  editable="{appView>/onClickModify}" value="{appView>Coating}" min="0" max="100" step="1" validationMode="LiveChange" textAlign="Center"/>
                     <!-- <Input editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input> -->

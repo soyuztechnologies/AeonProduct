@@ -23,7 +23,7 @@ resizable="false" >
 				</Text> -->
 				<DatePicker dateValue="{appView>CreatedOn}"/>
 				<Label required="true" text="Raw Material" />
-				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" text="{appView>rawMaterial}">
+				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" >
 					<items>
 						<core:Item text="In Stock" key="instock" />
 						<core:Item text="Pending" key="pending" />
@@ -45,12 +45,18 @@ resizable="false" >
 				<Input type="Number" value="{appView>Embossing}" />
 				<Label text="Pasting" />
 				<Input type="Number" value="{appView>Pasting}" />
-				<Label text="Inc. No." />
+
+				<Label text="Inv. No." />
 				<Input type="Number" value="{appView>InvNo}" />
+				<Button press="onClickAddStatusAttachment" id="Invstatus" text="Add" type="Emphasized" />
+				
+
 				<Label text="Delivery No." />
 				<Input type="Number" value="{appView>DeliveryNo}" />
+				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" text="Add" type="Emphasized" />
+
 				<Label required="true" text="Status" />
-				<Select id="idStatus" forceSelection="false" selectedKey=""  change="onSelectKeyStatus" text="{appView>rawMaterial}">
+				<Select id="idStatus" forceSelection="false" selectedKey=""  change="onSelectKeyStatus">
 			    	<items>
 						<core:Item text="Partially Completed" key="partiallycompleted" />
 						<!-- <core:Item text="In-Progress" key="inprogress" /> -->

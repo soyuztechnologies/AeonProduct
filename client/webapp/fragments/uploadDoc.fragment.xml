@@ -3,19 +3,19 @@
     xmlns:i="sap.ui.core"
     xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog contentWidth="100%" contentHeight="100%" title="Upload Documents" id="uploadDoc">
+    <Dialog contentWidth="100%" contentHeight="100%" title="{appView>/uploadDocumnetTitle}" id="uploadDoc">
         <content>
             <u:FileUploader visible="{appView>/browseVisArtwork}" sameFilenameAllowed="true" width="100%" style="Emphasized" change="onChangeFileUploader" buttonText="Browse"  fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="false" />
             <HBox alignContent="Center" justifyContent="Center">
-                <Button icon="sap-icon://download" visible="{appView>/visibleDownloadButton}" press="downloadAttachments" text="Download"  type="Transparent" />
+                <Button icon="sap-icon://download" visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getbuttonVisibility'}" press="downloadAttachments" text="Download"  type="Transparent" />
             </HBox>
 
-            <PDFViewer visible="true" source="{path: 'appView>/attachmentFiles', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />
-            <Image visible="true" id="image" src="{appView>/attachmentFiles}" />
+            <PDFViewer visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getPdfVisibility'}" source="{path: 'appView>/attachmentFiles', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />
+            <Image visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getImageVisibility'}" id="image" src="{appView>/attachmentFiles}" />
             <!-- <Image visible="true" src="{appView>/imageBaseArtwork}" />  -->
         </content>
         <beginButton>
-            <Button visible="{appView>/btnVisibility}" text="Upload" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/>
+            <Button visible="{appView>/btnVisibility}" text="{appView>/buttonText}" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/>
         </beginButton>
         <endButton>
             <Button text="Close" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
