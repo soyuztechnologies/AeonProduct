@@ -90,7 +90,7 @@ sap.ui.define([
 						that.getModel("appView").updateBindings();
 						that.getRouter().navTo("Carborator");
 					}
-					this.getModel().setHeaders({
+					that.getModel().setHeaders({
 						"Authorization": data.id
 					});
 					

@@ -13,8 +13,8 @@
           >   
           </Button>
 		  <Button
-
-		  icon="sap-icon://add"
+		  tooltip="Job Details"
+		  icon="sap-icon://form"
 		  press="allJobDialog"
 	  >   
 	  </Button>

@@ -32,9 +32,8 @@
                 <MessageStrip
                 visible="{appView>/messageStripVis}"
 				text="Same Job is already available"
-				type="Information"
-				showIcon="true"
-				class="sapUiMediumMarginBottom">
+				type="Warning"
+				showIcon="true">
 			</MessageStrip>
             <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
                 
@@ -51,50 +50,7 @@
                     <ux:blocks>
                         <f:SimpleForm  layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false">
                             <f:content >
-                                <Label text="Name of the Product"/>
-                                <Input  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Carton Type"/>
-                                <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Quantity (pcs)"/>
-                                <Input value = "{appView>qtyPcs}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Paper GSM"/>
-                                <Input value = "{appView>PaperGSM}" editable="{appView>/editableFields}" />
-                    
-                                
-                                <Label text="Paper Quality"/>
-                                <Input value = "{appView>paperQuality}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Printing"/>
-                                <Input value = "{appView>printing}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Color"/>
-                                <Input value = "{appView>color}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Size (L x W x H)"/>
-                                <Input value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
-                               
-                                <Label text="Var. Lmt."/>
-                                <Input value = "{appView>varLmt}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Effects"/>
-                                <Input value = "{appView>effects}" editable="{appView>/editableFields}"/>
-
-
-                                <Label text="Lock"/>
-                                <Input value = "{appView>lock}" editable="{appView>/editableFields}"/>
-                                <Label text="TF"/>
-                                <Input value = "{appView>tF}" editable="{appView>/editableFields}"/>
-                                <Label text="PF"/>
-                                <Input value = "{appView>pF}" editable="{appView>/editableFields}"/>
-                                <Label text="Double Cut"/>
-                                <Input value = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
-                                <Label text="Trin in TF"/>
-                                <Input value = "{appView>trimTF}" editable="{appView>/editableFields}"/>
-                                
-                                
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.ProductDetails" type="XML"></core:Fragment>
                             </f:content>
                         </f:SimpleForm>
                     </ux:blocks>
@@ -108,27 +64,7 @@
                     <ux:blocks>
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
-                                <Label text="No of Ups"/>
-                                <!-- ="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
-                                <Input value="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="No of Sheets"/>
-                                <Input value = "{appView>noOfSheets-1}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Printing Sheet Size"/>
-                                <Input value = "{appView>printingSheetSizeL1} x {appView>printingSheetSizeW1}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Procured Sheets"/>
-                                <Input value = "{appView>noOfSheets-2}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Procured Sheet Size"/>
-                                <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Wastage"/>
-                                <Input value = "{appView>wastage}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Weight in Kgs"/>
-                                <Input value = "{appView>wtKgs}" editable="{appView>/editableFields}" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PaperAndLayout" type="XML"></core:Fragment>
                     
                             </f:content>
                         </f:SimpleForm>
@@ -143,27 +79,7 @@
                     <ux:blocks>
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
-                                <Label text="Printing Machine"/>
-                                <Input value = "{appView>printingMachine}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punching Machine"/>
-                                <Input value = "{appView>punchingMachine}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Pasting Machine"/>
-                                <Input value = "{appView>pastingMachine}" editable="{appView>/editableFields}"/>
-
-                                <!-- <Label text="Old"/>
-                                <Input value = "{appView>noOfSheets-2}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Ref."/>
-                                <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="None"/>
-                                <Input value = "{appView>wastage}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Weight in Kgs"/>
-                                <Input value = "{appView>wtKgs}" editable="{appView>/editableFields}" /> -->
-                    
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.MachineDetails" type="XML"></core:Fragment>
                             </f:content>
                         </f:SimpleForm>
                     </ux:blocks>
@@ -180,66 +96,11 @@
                             <f:content>
                                 <core:Title text="Cost Structure" />
                                     
-                                <Label text="Paper Cost"/>
-                                <Input value="{path: 'appView>paperCost'}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>paperCost2'}" editable="{appView>/editableFields}"/>
-                                
-                                
-                    
-                                <Label text="Printing Charges"/>
-                                <Input value = "{appView>printingCharges}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Varnish/Lamination"/>
-                                <Input value = "{appView>varnishandLamination}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>foilBlocksPerPs'}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-                                <Input value = "{appView>positivePerPs}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Embossing"/>
-                                <Input value = "{appView>embossing}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punching"/>
-                                <Input value = "{appView>punching}" editable="{appView>/editableFields}" />
-                                <Label text="BSO Pasting"/>
-                                <Input value = "{appView>bSOPasting}" editable="{appView>/editableFields}" />
-                                <Label text="LBTO Pasting"/>
-                                <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
-                                <Label text="Packing"/>
-                                <Input value = "{appView>packing}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
-                                <Label text="Transportation"/>
-                                <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>transportationPerKg}" editable="{appView>/editableFields}" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CostStructure" type="XML"></core:Fragment>
 
                                     <core:Title text="Development Cost" />
 
-                                    <Label text="Plate Charges"/>
-                                <Input value="{path: 'appView>plateCharges'}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Pantone Inks"/>
-                                <Input value = "{appView>pantoneInks}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Blanket Charges"/>
-                                <Input value = "{appView>blanketCharges}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Emboss Block"/>
-                                <Input value = "{appView>embossBlock}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punch"/>
-                                <Input value = "{appView>punch}" editable="{appView>/editableFields}" />
-                                <Label  design="Bold" text="Total" />
-                                <Text text="{appView>total}" />
+                                    <core:Fragment fragmentName="ent.ui.ecommerce.fragments.DevelopmentCost" type="XML"></core:Fragment>
                     
                             </f:content>
                         </f:SimpleForm>

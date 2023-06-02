@@ -1,79 +1,40 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:ux="sap.uxap" xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
     <Dialog id="allJobDetails" contentWidth="100%">
-    <content>
+    <content>               
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Machine Details" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.MachineDetails" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Product Details" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.ProductDetails" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Paper and Layouts" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PaperAndLayout" type="XML"></core:Fragment>
+                    
+                            </f:content>
+                        </f:SimpleForm>
                         <f:SimpleForm editable="false"    columnsXL="2" singleContainerFullSize="false" >
                             <f:content>
                                 <core:Title text="Cost Structure" />
                                     
-                                <Label text="Paper Cost"/>
-                                <Input value="{path: 'appView>paperCost'}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>paperCost2'}" editable="{appView>/editableFields}"/>
-                                
-                                
-                    
-                                <Label text="Printing Charges"/>
-                                <Input value = "{appView>printingCharges}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Varnish/Lamination"/>
-                                <Input value = "{appView>varnishandLamination}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>foilBlocksPerPs'}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-                                <Input value = "{appView>positivePerPs}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Embossing"/>
-                                <Input value = "{appView>embossing}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punching"/>
-                                <Input value = "{appView>punching}" editable="{appView>/editableFields}" />
-                                <Label text="BSO Pasting"/>
-                                <Input value = "{appView>bSOPasting}" editable="{appView>/editableFields}" />
-                                <Label text="LBTO Pasting"/>
-                                <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
-                                <Label text="Packing"/>
-                                <Input value = "{appView>packing}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
-                                <Label text="Transportation"/>
-                                <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>transportationPerKg}" editable="{appView>/editableFields}" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CostStructure" type="XML"></core:Fragment>
 
                                     <core:Title text="Development Cost" />
 
-                                    <Label text="Plate Charges"/>
-                                <Input value="{path: 'appView>plateCharges'}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Pantone Inks"/>
-                                <Input value = "{appView>pantoneInks}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Blanket Charges"/>
-                                <Input value = "{appView>blanketCharges}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Emboss Block"/>
-                                <Input value = "{appView>embossBlock}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punch"/>
-                                <Input value = "{appView>punch}" editable="{appView>/editableFields}" />
-                                <Label  design="Bold" text="Total" />
-                                <Text text="{appView>total}" />
+                                    <core:Fragment fragmentName="ent.ui.ecommerce.fragments.DevelopmentCost" type="XML"></core:Fragment>
                     
                             </f:content>
                         </f:SimpleForm>
     </content>
-    <beginButton>
-        <Button text="OK" type="Accept" press="onSubmit" enabled="{appView>/submitEnable}"/>
-    </beginButton>
     <endButton>
-        <Button text="Cancel" type="Reject" press="onnReject" enabled="{appView>/submitEnable}"/>
+        <Button text="Close" type="Reject" press="onnReject" enabled="{appView>/submitEnable}"/>
     </endButton>
 </Dialog>		
 </core:FragmentDefinition>

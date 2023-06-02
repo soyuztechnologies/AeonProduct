@@ -1,0 +1,31 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+  
+    <Label text="Plate Charges"/>
+    <Input value="{path: 'appView>plateCharges'}" editable="{appView>/editableFields}"/>
+
+    <Label text="Pantone Inks"/>
+    <Input value = "{appView>pantoneInks}" editable="{appView>/editableFields}"/>
+
+    <Label text="Blanket Charges"/>
+    <Input value = "{appView>blanketCharges}" editable="{appView>/editableFields}"/>
+
+    <Label text="Foil Blocks"/>
+    <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
+    
+    <Label text="Positive"/>
+    <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
+
+    <Label text="Emboss Block"/>
+    <Input value = "{appView>embossBlock}" editable="{appView>/editableFields}"/>
+
+    <Label text="Punch"/>
+    <Input value = "{appView>punch}" editable="{appView>/editableFields}" />
+    <Label  design="Bold" text="Total" />
+    <Text text="{appView>total}" />
+   
+</core:FragmentDefinition>

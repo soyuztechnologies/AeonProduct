@@ -1,0 +1,52 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+  
+                                <Label text="Name of the Product"/>
+                                <Input  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Carton Type"/>
+                                <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Quantity (pcs)"/>
+                                <Input value = "{appView>qtyPcs}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Paper GSM"/>
+                                <Input value = "{appView>PaperGSM}" editable="{appView>/editableFields}" />
+                    
+                                
+                                <Label text="Paper Quality"/>
+                                <Input value = "{appView>paperQuality}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Printing"/>
+                                <Input value = "{appView>printing}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Color"/>
+                                <Input value = "{appView>color}" editable="{appView>/editableFields}"/>
+                    
+                                <Label text="Size (L x W x H)"/>
+                                <Input value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
+                               
+                                <Label text="Var. Lmt."/>
+                                <Input value = "{appView>varLmt}" editable="{appView>/editableFields}"/>
+
+                                <Label text="Effects"/>
+                                <Input value = "{appView>effects}" editable="{appView>/editableFields}"/>
+
+
+                                <Label text="Lock"/>
+                                <Input value = "{appView>lock}" editable="{appView>/editableFields}"/>
+                                <Label text="TF"/>
+                                <Input value = "{appView>tF}" editable="{appView>/editableFields}"/>
+                                <Label text="PF"/>
+                                <Input value = "{appView>pF}" editable="{appView>/editableFields}"/>
+                                <Label text="Double Cut"/>
+                                <Input value = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
+                                <Label text="Trin in TF"/>
+                                <Input value = "{appView>trimTF}" editable="{appView>/editableFields}"/>
+                                
+   
+</core:FragmentDefinition>
