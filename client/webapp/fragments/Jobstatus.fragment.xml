@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
-    <Table items="{appView>/jobStatusTabData}"  autoPopinMode="true">
+    <Table items="{appView>/jobStatusTabData}" popinLayout= 'GridSmall'  autoPopinMode="true">
         <headerToolbar>
             <Toolbar>
                 <Title text="Job Status" />
@@ -48,23 +48,32 @@
                 <Label text="Delivery No." />
             </Column>
         </columns>
-           <items>
-               <ColumnListItem >
-                   <cells>
-                       <Input editable="{appView>/onClickModify}" value="{appView>rawMaterial}"></Input> 
-                       <Input editable="{appView>/onClickModify}" value="{appView>Coating}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>Packing}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>Printing}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>Foiling}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>Embossing}"></Input>
-                       <Input editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
-                       <Link  press="onClickPopupJobStatus"  text="{appView>InvNo}" ></Link>
-                       <Link  press="onClickPopupJobStatus"  text="{appView>DeliveryNo}" ></Link>				
-                   </cells>
-               </ColumnListItem>
-           </items>
-         
-   </Table>
+        <items>
+            <ColumnListItem >
+                <cells>
+                    <Input editable="{appView>/onClickModify}" value="{appView>rawMaterial}"></Input>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>Coating}" /> -->
+                    <StepInput  editable="{appView>/onClickModify}" value="{appView>Coating}" min="0" max="100" step="1" validationMode="LiveChange" textAlign="Center"/>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input> -->
+                    <StepInput editable="{appView>/onClickModify}" value="{appView>spotUV}" min="0" max="100" step="2" validationMode="LiveChange" textAlign="Center"/>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>Punching}"></Input> -->
+                    <StepInput editable="{appView>/onClickModify}" value="{appView>Punching}" min="0" max="100" step="3" validationMode="LiveChange" textAlign="Center"/>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>Packing}"></Input> -->
+                    <StepInput editable="{appView>/onClickModify}" value="{appView>Packing}" min="0" max="100" step="4" validationMode="LiveChange" textAlign="Center"/>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>Printing}"></Input> -->
+                    <StepInput editable="{appView>/onClickModify}" value="{appView>Printing}" min="0" max="100" step="5" validationMode="LiveChange" textAlign="Center"/>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>Foiling}"></Input> -->
+                    <StepInput editable="{appView>/onClickModify}" value="{appView>Foiling}" min="0" max="100" step="6" validationMode="LiveChange" textAlign="Center"/>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>Embossing}"></Input> -->
+                    <StepInput editable="{appView>/onClickModify}" value="{appView>Embossing}" min="0" max="100"  step="7" validationMode="LiveChange" textAlign="Center"/>
+                    <!-- <Input editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input> -->
+                    <StepInput editable="{appView>/onClickModify}" value="{appView>Pasting}" min="0" max="100" step="8" validationMode="LiveChange" textAlign="Center"/>
+                    <Link  press="onClickPopup"  text="{appView>InvNo}" ></Link>
+                    <!-- <StepInput value="{appView>InvNo}" min="0" max="100"/> -->
+                    <Link  press="onClickPopup"  text="{appView>DeliveryNo}" ></Link>
+                    <!-- <StepInput value="{appView>DeliveryNo}" min="0" max="100"/> -->
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
 </core:FragmentDefinition>
