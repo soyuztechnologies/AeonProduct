@@ -32,9 +32,8 @@
                 <MessageStrip
                 visible="{appView>/messageStripVis}"
 				text="Same Job is already available"
-				type="Information"
-				showIcon="true"
-				class="sapUiMediumMarginBottom">
+				type="Warning"
+				showIcon="true">
 			</MessageStrip>
             <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
                 
@@ -51,50 +50,7 @@
                     <ux:blocks>
                         <f:SimpleForm  layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false">
                             <f:content >
-                                <Label text="Name of the Product"/>
-                                <Input  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Carton Type"/>
-                                <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Quantity (pcs)"/>
-                                <Input value = "{appView>qtyPcs}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Paper GSM"/>
-                                <Input value = "{appView>PaperGSM}" editable="{appView>/editableFields}" />
-                    
-                                
-                                <Label text="Paper Quality"/>
-                                <Input value = "{appView>paperQuality}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Printing"/>
-                                <Input value = "{appView>printing}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Color"/>
-                                <Input value = "{appView>color}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Size (L x W x H)"/>
-                                <Input value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
-                               
-                                <Label text="Var. Lmt."/>
-                                <Input value = "{appView>varLmt}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Effects"/>
-                                <Input value = "{appView>effects}" editable="{appView>/editableFields}"/>
-
-
-                                <Label text="Lock"/>
-                                <Input value = "{appView>lock}" editable="{appView>/editableFields}"/>
-                                <Label text="TF"/>
-                                <Input value = "{appView>tF}" editable="{appView>/editableFields}"/>
-                                <Label text="PF"/>
-                                <Input value = "{appView>pF}" editable="{appView>/editableFields}"/>
-                                <Label text="Double Cut"/>
-                                <Input value = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
-                                <Label text="Trin in TF"/>
-                                <Input value = "{appView>trimTF}" editable="{appView>/editableFields}"/>
-                                
-                                
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.ProductDetails" type="XML"></core:Fragment>
                             </f:content>
                         </f:SimpleForm>
                     </ux:blocks>
@@ -108,27 +64,7 @@
                     <ux:blocks>
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
-                                <Label text="No of Ups"/>
-                                <!-- ="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
-                                <Input value="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="No of Sheets"/>
-                                <Input value = "{appView>noOfSheets-1}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Printing Sheet Size"/>
-                                <Input value = "{appView>printingSheetSizeL1} x {appView>printingSheetSizeW1}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Procured Sheets"/>
-                                <Input value = "{appView>noOfSheets-2}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Procured Sheet Size"/>
-                                <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Wastage"/>
-                                <Input value = "{appView>wastage}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Weight in Kgs"/>
-                                <Input value = "{appView>wtKgs}" editable="{appView>/editableFields}" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PaperAndLayout" type="XML"></core:Fragment>
                     
                             </f:content>
                         </f:SimpleForm>
@@ -143,27 +79,7 @@
                     <ux:blocks>
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
-                                <Label text="Printing Machine"/>
-                                <Input value = "{appView>printingMachine}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punching Machine"/>
-                                <Input value = "{appView>punchingMachine}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Pasting Machine"/>
-                                <Input value = "{appView>pastingMachine}" editable="{appView>/editableFields}"/>
-
-                                <!-- <Label text="Old"/>
-                                <Input value = "{appView>noOfSheets-2}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Ref."/>
-                                <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="None"/>
-                                <Input value = "{appView>wastage}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Weight in Kgs"/>
-                                <Input value = "{appView>wtKgs}" editable="{appView>/editableFields}" /> -->
-                    
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.MachineDetails" type="XML"></core:Fragment>
                             </f:content>
                         </f:SimpleForm>
                     </ux:blocks>
@@ -180,66 +96,11 @@
                             <f:content>
                                 <core:Title text="Cost Structure" />
                                     
-                                <Label text="Paper Cost"/>
-                                <Input value="{path: 'appView>paperCost'}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>paperCost2'}" editable="{appView>/editableFields}"/>
-                                
-                                
-                    
-                                <Label text="Printing Charges"/>
-                                <Input value = "{appView>printingCharges}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Varnish/Lamination"/>
-                                <Input value = "{appView>varnishandLamination}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>foilBlocksPerPs'}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-                                <Input value = "{appView>positivePerPs}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Embossing"/>
-                                <Input value = "{appView>embossing}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punching"/>
-                                <Input value = "{appView>punching}" editable="{appView>/editableFields}" />
-                                <Label text="BSO Pasting"/>
-                                <Input value = "{appView>bSOPasting}" editable="{appView>/editableFields}" />
-                                <Label text="LBTO Pasting"/>
-                                <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
-                                <Label text="Packing"/>
-                                <Input value = "{appView>packing}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
-                                <Label text="Transportation"/>
-                                <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>transportationPerKg}" editable="{appView>/editableFields}" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CostStructure" type="XML"></core:Fragment>
 
                                     <core:Title text="Development Cost" />
 
-                                    <Label text="Plate Charges"/>
-                                <Input value="{path: 'appView>plateCharges'}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Pantone Inks"/>
-                                <Input value = "{appView>pantoneInks}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Blanket Charges"/>
-                                <Input value = "{appView>blanketCharges}" editable="{appView>/editableFields}"/>
-
-                                <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                
-                                <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Emboss Block"/>
-                                <Input value = "{appView>embossBlock}" editable="{appView>/editableFields}"/>
-                    
-                                <Label text="Punch"/>
-                                <Input value = "{appView>punch}" editable="{appView>/editableFields}" />
-                                <Label  design="Bold" text="Total" />
-                                <Text text="{appView>total}" />
+                                    <core:Fragment fragmentName="ent.ui.ecommerce.fragments.DevelopmentCost" type="XML"></core:Fragment>
                     
                             </f:content>
                         </f:SimpleForm>
@@ -248,166 +109,6 @@
             </ux:subSections>
         </ux:ObjectPageSection>
     </ux:ObjectPageLayout>
-            <!-- <f:SimpleForm visible="{appView>/simpleFormVisibility}" width="100%" editable="true" id="SimpleForm-1" columnsM="2"
-			columnsL="3"
-			columnsXL="4"  layout="ColumnLayout">
-				<f:content>
-						<core:Title></core:Title>
-						<Label design="Bold" text="Job CardNo."></Label>
-						<Text  text="{appView>jobCardNo}"/>
-						<Label design="Bold" text="Po No."></Label>
-						<Text text="{appView>poNo}"/>
-						<Label design="Bold" text="Job Code"></Label>
-						<Text text="{appView>jobCode}"/>
-                        <Label design="Bold" text="Job Code" />
-                        <Text  text="{appView>jobCode}" />
-                        <Label design="Bold" text="Date" />
-                        <Text text="{path:'appView>date', formatter: '.dateFormatter'}" />
-                        <Label design="Bold" text="Artwork Code" />
-                        <Text text="{appView>artworkCode}" />
-                        <Label  design="Bold" text="Client PO No." />
-                        <Text text="{appView>clientPONo}" />
-                        <Label  design="Bold" text="Name of the Product" />
-                        <Text text="{appView>nameOFTheProduct}" />
-                        <Label  design="Bold" text="Industry" />
-                        <Text text="{appView>industry}" />
-                        <Label  design="Bold" text="Carton Type" />
-                        <Text text="{appView>cartonType}" />
-                        <Label  design="Bold" text="Quantity (pcs)" />
-                        <Text text="{appView>qtyPcs}" />
-                        <Label  design="Bold" text="Paper GSM" />
-                        <Text text="{appView>PaperGSM}" />
-                        <Label  design="Bold" text="Paper Quality" />
-                        <Text text="{appView>paperQuality}" />
-                        <Label  design="Bold" text="Printing" />
-                        <Text text="{appView>printing}" />
-                        <Label  design="Bold" text="Color" />
-                        <Text text="{appView>color}" />
-                        <Label  design="Bold" text="Size (L x W x H)" />
-                        <Text text="{path: 'appView>sizeL', formatter: '.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.sizeFormatter'}" />
-                        <Label  design="Bold" text="Varnish/Lamination" />
-                        <Text text="{appView>varLmt}" />
-                        <Label  design="Bold" text="Effects" />
-                        <Text text="{appView>effects}" />
-                        <Label  design="Bold" text="Lock" />
-                        <Text text="{appView>lock}" />
-                        <Label  design="Bold" text="Top Flap (TF)" />
-                        <Text text="{appView>tF}" />
-                        <Label  design="Bold" text="Panel Flap (PF)" />
-                        <Text text="{appView>pF}" />
-                        <Label  design="Bold" text="Double Cut" />
-                        <Text text="{appView>doubleCut}" />
-                        <Label  design="Bold" text="Trim TF" />
-                        <Text text="{appView>trimTF}" />
-                        <Label  design="Bold" text="Trim PF" />
-                        <Text text="{appView>trimPF}" />
-                        <Label  design="Bold" text="No. of Ups-1" />
-                        <Text text="{appView>noOfUps-1}" />
-                        <Label  design="Bold" text="No. of Ups-2" />
-                        <Text text="{appView>noOfUps-2}" />
-                        <Label  design="Bold" text="No. of Ups-3" />
-                        <Text text="{appView>noOfUps-3}" />
-                        <Label  design="Bold" text="No. of Sheets-1" />
-                        <Text text="{appView>noOfSheets-1}" />
-                        <Label  design="Bold" text="No. of Sheets-2" />
-                        <Text text="{appView>noOfSheets-2}" />
-                        <Label  design="Bold" text="Wastage" />
-                        <Text text="{appView>wastage}" />
-                            <Label  design="Bold" text="Weight (in Kgs)" />
-                            <Text text="{appView>wtKgs}" />
-                            <Label  design="Bold" text="Printing Sheet Size (L x W) 1" />
-                            <Text text="{appView>printingSheetSizeL1} x {appView>printingSheetSizeW1}" />
-                            <Label  design="Bold" text="Printing Sheet Size (L x W) 2" />
-                            <Text text="{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" />
-                            <Label  design="Bold" text="Printing Machine" />
-                            <Text text="{appView>printingMachine}" />
-                            <Label  design="Bold" text="Punching Machine" />
-                            <Text text="{appView>punchingMachine}" />
-                            <Label  design="Bold" text="Pasting Machine" />
-                            <Text text="{appView>pastingMachine}" />
-                            <Label  design="Bold" text="Reference" />
-                            <Text text="{appView>ref}" />
-                            <Label  design="Bold" text="Old" />
-                            <Text text="{appView>old}" />
-                            <Label  design="Bold" text="None" />
-                            <Text text="{appView>none}" />
-                            <Label  design="Bold" text="B-2-A" />
-                            <Text text="{appView>b-2-A}" />
-                            <Label  design="Bold" text="None" />
-                            <Text text="{appView>none }" />
-                            <Label  design="Bold" text="127 Level 3" />
-                            <Text text="{appView>127Level3}" />
-                            <Label  design="Bold" text="None 1" />
-                            <Text text="{appView>none1 }" />
-                            <Label  design="Bold" text="None 2" />
-                            <Text text="{appView>none2 }" />
-                            <Label  design="Bold" text="13 Level 2" />
-                            <Text text="{appView>13Level2}" />
-                            <Label  design="Bold" text="Batch No." />
-                            <Text text="{appView>batchNo}" />
-                            <Label  design="Bold" text="Mfg. Date" />
-                            <Text text="{appView>mfgDate}" />
-                            <Label  design="Bold" text="Exp. Date" />
-                            <Text text="{appView>expDate}" />
-                            <Label  design="Bold" text="Corrections in Artwork" />
-                            <Text text="{appView>correctionsInArtwork}" />
-                            <Label  design="Bold" text="Remarks" />
-                            <Text text="{appView>remarks}" />
-                            <Label  design="Bold" text="Total A + B" />
-                            <Text text="{appView>totalA+B}" />
-                            <Label  design="Bold" text="Profit" />
-                            <Text text="{appView>profit}" />
-                            <Label  design="Bold" text="Total Cost of Job" />
-                            <Text text="{appView>totalCostOfJob}" />
-                            <Label  design="Bold" text="Cost Per Piece" />
-                            <Text text="{appView>costPerPc}" />
-                            <Label design="Bold"  text="Plate" />
-                            <Text text="{appView>plate}" />
-                            <Label design="Bold"  text="Pantone Inks" />
-                            <Text text="{appView>pantoneInks}" />
-                            <Label  design="Bold" text="Foil Blocks" />
-                            <Text text="{appView>foilBlocks}" />
-                            <Label  design="Bold" text="Positive" />
-                            <Text text="{appView>positive}" />
-                            <Label  design="Bold" text="Emboss Block" />
-                            <Text text="{appView>embossBlock}" />
-                            <Label  design="Bold" text="Punch" />
-                            <Text text="{appView>punch}" />
-                            <Label design="Bold"  text="Reference" />
-                            <Text text="{appView>reference}" />
-                            <Label  design="Bold" text="Carton Length" />
-                            <Text text="{appView>cartonLength}" />
-                            <Label  design="Bold" text="Carton Width" />
-                            <Text text="{appView>cartonWidth}" />
-                            <Label  design="Bold" text="Paper Cost" />
-                            <Text text="{appView>paperCost}" />
-                            <Label  design="Bold" text="Printing Charges" />
-                            <Text text="{appView>printingCharges}" />
-                            <Label design="Bold"  text="Varnish/Lamination" />
-                            <Text text="{appView>varnish/Lamination}" />
-                            <Label  design="Bold" text="Embossing" />
-                            <Text text="{appView>embossing}" />
-                            <Label  design="Bold" text="Punching" />
-                            <Text text="{appView>punching}" />
-                            <Label  design="Bold" text="B/SO Pasting" />
-                            <Text text="{appView>bSOPasting}" />
-                            <Label  design="Bold" text="LBTO Pasting" />
-                            <Text text="{appView>lBTOPasting}" />
-                            <Label  design="Bold" text="Packing" />
-                            <Text text="{appView>packing}" />
-                            <Label  design="Bold" text="Transportation" />
-                            <Text text="{appView>transportation}" />
-                            <Label  design="Bold" text="Total" />
-                            <Text text="{appView>total}" />
-                            <Label design="Bold"  text="Plate Charges" />
-                            <Text text="{appView>plateCharges}" />
-                            <Label  design="Bold" text="Blanket Charges" />
-                            <Text text="{appView>blanketCharges}" />
-				
-				</f:content>
-			</f:SimpleForm> -->
-            
-        <!-- </VBox> -->
         </content>
         <footer>
             <Toolbar >

@@ -4,7 +4,8 @@ sap.ui.define([
   "sap/m/MessageToast",
   "sap/ui/core/Fragment",
   "sap/m/MessageBox",
-], function (BaseController, JSONModel, MessageToast, Fragment,MessageBox) {
+  "sap/ui/core/BusyIndicator"
+], function (BaseController, JSONModel, MessageToast, Fragment,MessageBox,BusyIndicator) {
   "use strict";
 
   return BaseController.extend("ent.ui.ecommerce.controller.Carborator", {
@@ -28,6 +29,7 @@ sap.ui.define([
       oModel.setProperty("/editableFields", false);
       oModel.setProperty("/messageStripVis",false)
       oModel.setProperty("/onUpdateJobVis",false)
+      this.onPressClear();
 
       var bSystemType = this.getModel("device").getData().system.desktop;
       if(bSystemType){
@@ -45,7 +47,7 @@ sap.ui.define([
     },
 
     onFileUploaddChange: function (oEvent) {
-      
+      debugger;
       var that = this;
       var uploadFileName = oEvent.getParameter("files")[0].name;
       that.getView().getModel("appView").setProperty("/uploadFile",uploadFileName)
@@ -89,6 +91,7 @@ sap.ui.define([
       // Perform the read operation
       oModel.read('/AppUsers', {
         success: function (data) {
+          debugger;
           that.getView().getModel("appView").setProperty("/userDetails", data.results);
         },
         error: function (error) {
@@ -125,7 +128,12 @@ sap.ui.define([
       var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
       var oModel = this.getView().getModel();
       if (!userValue || !oJsonInpValue) {
-        MessageToast.show("Please Check Your Fields");
+        if(!userValue){
+          MessageToast.show("Please Select The User")
+        }
+        else{
+          MessageToast.show("Please Upload The File")
+        }
       }
       else {
         var payload = JSON.parse(oJsonInpValue);
@@ -150,13 +158,19 @@ sap.ui.define([
           }
     },
     onUpdateJob:function(){
+      BusyIndicator.show(0);
       var that = this;
       var userValue = this.getModel("appView").getProperty("/customerId");
       var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
       var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
       var oModel = this.getView().getModel();
       if (!userValue || !oJsonInpValue) {
-        MessageToast.show("Please Check Your Fields");
+        if(!userValue){
+          MessageToast.show("Please Select The User")
+        }
+        else{
+          MessageToast.show("Please Upload The File")
+        }
       }
       else {
         var payload = JSON.parse(oJsonInpValue);
@@ -178,6 +192,7 @@ sap.ui.define([
           }
         });
       }
+      BusyIndicator.hide();
     },
     // onUploadData: function () {
     //   
@@ -248,6 +263,14 @@ sap.ui.define([
     onPressClear: function (oEvent) {
       
       this.getView().getModel('appView').setProperty("/jsonData", "");
+      this.getView().getModel('appView').setProperty("/jsonValue", "");
+      this.getView().getModel('appView').setProperty("/customerId", "");
+
+      this.getView().getModel('appView').setProperty("/Jobs", "");
+      this.getView().getModel('appView').setProperty("/onUpdateJobVis", false);
+      this.getView().getModel('appView').setProperty("/onSavePayloadVis", true);
+      this.getView().getModel('appView').setProperty("/messageStripVis", false);
+      // oModel.setProperty("/messageStripVis",false)
       this.getView().getModel('appView').updateBindings();
      this.getView().byId("idPopinLayout").setSelectedKey("")
      this.getView().byId("fileUploader").setValue("")
@@ -294,7 +317,7 @@ sap.ui.define([
     },
 
     extracDbFields: function (data) {
-
+      BusyIndicator.show(0);
       var that = this;
       const arrayToJSON = this.arrayToJSON(data);
       
@@ -328,8 +351,9 @@ sap.ui.define([
       
 
 
-      this.getView().byId('SimpleForm-1').bindElement('appView>/jsonData');
+      this.getView().bindElement('appView>/jsonData');
       this.getView().getModel('appView').updateBindings();
+      BusyIndicator.hide();
 
     },
     fieldsJSON: {

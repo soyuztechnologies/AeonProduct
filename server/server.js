@@ -958,6 +958,48 @@ app.start = function () {
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+		app.post('/getSumOfJobStatus', async (req, res) => {
+			debugger;
+			const JobStatus = app.models.JobStatus;
+			const { jobId } = req.body;
+			var oSumOfData = {
+				"Coating":0,
+				"Printing":0,
+				"Punching":0,
+				"Foiling":0,
+				"Embossing":0,
+				"Pasting":0,
+				"spotUV":0,
+				"Packing":0,
+				"rawMaterial":"",
+				"InvNo":"",
+				"DeliveryNo":""
+			}
+			try {
+				const jobStatusData = await JobStatus.find({ where: { JobStatusId: jobId } }); // Retrieve job status data
+
+				for (let i = 0; i < jobStatusData.length; i++) { //5
+					oSumOfData.Coating += jobStatusData[i].Coating;
+					oSumOfData.Printing += jobStatusData[i].Printing;
+					oSumOfData.Punching += jobStatusData[i].Punching;
+					oSumOfData.Foiling += jobStatusData[i].Foiling;
+					oSumOfData.Embossing += jobStatusData[i].Embossing;
+					oSumOfData.Pasting += jobStatusData[i].Pasting;
+					oSumOfData.spotUV += jobStatusData[i].spotUV;
+					oSumOfData.Packing += jobStatusData[i].Packing;
+					oSumOfData.rawMaterial = jobStatusData[0].rawMaterial;
+					oSumOfData.InvNo = jobStatusData[0].InvNo;
+					oSumOfData.DeliveryNo = jobStatusData[0].DeliveryNo;
+				}
+				
+				var array = array=[oSumOfData]
+			
+				res.status(200).json(array);
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
 
 		app.get('/getJobsData', async (req, res) => {
 			
@@ -975,6 +1017,7 @@ app.start = function () {
 			return res.status(200).json(jobs);
 
 		});
+		
 
 		// * this call is sending the emol to the existing user that admin create.
 		// todo need this to optimize 

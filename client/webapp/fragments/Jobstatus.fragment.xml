@@ -58,7 +58,7 @@
                         </items>
                     </Select>
                     <!-- <Input editable="{appView>/onClickModify}" value="{appView>Coating}" /> -->
-                    <StepInput  editable="{appView>/onClickModify}" value="{appView>Coating}" min="0" max="100" step="1" validationMode="LiveChange" textAlign="Center"/>
+                    <StepInput  editable="{appView>/onClickModify}" value="path: 'appView>Coating',formatter:''" min="0" max="100" step="1" validationMode="LiveChange" textAlign="Center"/>
                     <!-- <Input editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input> -->
                     <StepInput editable="{appView>/onClickModify}" value="{appView>spotUV}" min="0" max="100" step="2" validationMode="LiveChange" textAlign="Center"/>
                     <!-- <Input editable="{appView>/onClickModify}" value="{appView>Punching}"></Input> -->
