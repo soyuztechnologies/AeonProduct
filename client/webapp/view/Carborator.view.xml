@@ -21,6 +21,7 @@
                 </ComboBox>
                     <u:FileUploader
                     id="fileUploader"
+                    sameFilenameAllowed="true"
                     class="sapUiTinyMarginBegin"
                     change="onFileUploaddChange"
                     icon="sap-icon://browse-folder"

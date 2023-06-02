@@ -185,6 +185,44 @@ sap.ui.define([
 				}
 			});
 		},
+		allJobDialog:function(){
+			debugger;
+			this.allJob();
+		},
+		allJob:function(){
+			var oView = this.getView();
+            var that = this;
+			
+            if (!this.oJobDialog) {
+                this.oJobDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "ent.ui.ecommerce.fragments.AllJobs",
+                    controller: this
+                }).then(function (oDialog) {    
+                    // Add dialog to view hierarchy
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+               
+            }
+            this.oJobDialog.then(function (oDialog) {
+                oDialog.open();
+				that.getDialogData();
+            });
+		},
+		
+		onnReject: function () {
+            this.oJobDialog.then(function (oDialog) {
+				oDialog.close();
+				
+				
+			})
+        },
+
+		getDialogData:function(oEvent){
+			debugger
+		},
+
 		onSelectKeyRawMaterial: function (oEvent) {
 			
 			var selectedText = oEvent.getParameter("selectedItem").getText();
