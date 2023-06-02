@@ -4,14 +4,14 @@
         <Toolbar>
           <Title text="Job Details" />
           <ToolbarSpacer/>
-          <Button
+          <!-- <Button
 		  	id=""
 		    visible="{=${appView>/Jobs/status} === 'New' ? true : false }"
             text="Start Production"
 			type="Emphasized"
             press="whenProductionStart"
           >   
-          </Button>
+          </Button> -->
 
         </Toolbar>
 		<f:SimpleForm title="{appView>nameOFTheProduct}" id="jobDetails" editable="true" layout="ColumnLayout"  columnsM="2" >
@@ -27,7 +27,8 @@
 						<Label text="Size in mm"></Label>
 						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->
 						<Input editable="false" value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}"></Input>
-	
+	                    <Label text="Total No. of Sheets"></Label>
+						<Input editable="false" value = "{path: 'appView>noOfSheets-1' ,formatter:'.formatter.decimalFormatter'}"></Input>
 						<Label text="Artwork"></Label>
 						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 						<Label text="Paper Board"></Label>
@@ -44,7 +45,7 @@
 			<ToolbarSpacer/>
 				<Button visible="{appView>/updBtnVisibility}"  icon="sap-icon://save" type="Emphasized" text="Save" press="onClickUpdate"></Button>
 				<Button visible="{appView>/asUrgentVis}"  icon="sap-icon://save" type="Emphasized" text="Make As Urgent" press="onClickUrgent"></Button>
-				<Button visible="{=${appView>/Jobs/status} !== 'New' ? ${appView>/visibleModify} : false }" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button>
+				<Button visible="{appView>/visibleModify}" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button>
 				<Button visible="{appView>/cancleBtnVis}" icon="sap-icon://cancel" text="Cancel"  type="Emphasized" press="onClickCancle"></Button>
 			</Toolbar>
 		</footer>

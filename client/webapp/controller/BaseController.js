@@ -39,6 +39,8 @@ sap.ui.define([
 					.then(function (data, status, xhr) {
 
 						myResolve(data);
+						that.getModel('appView').setProperty('/UserRole', data.role.Role);
+						that.userRole();
 						// };
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
@@ -54,6 +56,8 @@ sap.ui.define([
 
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if (sUserRole === "Admin") {
+				this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
+				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 			}
 			else if (sUserRole === "Customer") {
@@ -71,6 +75,7 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
 				// this.getView().getModel("appView").setProperty('/profilNavVisb',false);
 			}
+			this.getModel("appView").updateBindings();
 		},
 
 		setAppModel: function () {

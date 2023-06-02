@@ -180,65 +180,63 @@
                                 <core:Title text="Cost Structure" />
                                     
                                 <Label text="Paper Cost"/>
-                                <Input value="{path: 'appView>paperCost'}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>paperCost2'}" editable="{appView>/editableFields}"/>
+                                <Input value="{path: 'appView>paperCost' ,formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
+                                <Input value="{path: 'appView>paperCost2',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                                 
                                 
                     
                                 <Label text="Printing Charges"/>
-                                <Input value = "{appView>printingCharges}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>printingCharges',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
 
                                 <Label text="Varnish/Lamination"/>
-                                <Input value = "{appView>varnishandLamination}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>varnishandLamination',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
 
                                 <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                <Input value="{path: 'appView>foilBlocksPerPs'}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>foilBlocks',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
+                                <Input value="{path: 'appView>foilBlocksPerPs',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                                 
                                 <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-                                <Input value = "{appView>positivePerPs}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>positive',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>positivePerPs',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Embossing"/>
-                                <Input value = "{appView>embossing}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>embossing',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Punching"/>
-                                <Input value = "{appView>punching}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>punching',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
                                 <Label text="BSO Pasting"/>
-                                <Input value = "{appView>bSOPasting}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>bSOPasting',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
                                 <Label text="LBTO Pasting"/>
-                                <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>lBTOPasting',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
                                 <Label text="Packing"/>
-                                <Input value = "{appView>packing}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>packing',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>packingPerKg',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
                                 <Label text="Transportation"/>
-                                <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />
-                                <Input value = "{appView>transportationPerKg}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>transportation',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>transportationPerKg',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
 
                                     <core:Title text="Development Cost" />
 
                                     <Label text="Plate Charges"/>
-                                <Input value="{path: 'appView>plateCharges'}" editable="{appView>/editableFields}"/>
+                                <Input value="{path: 'appView>plateCharges',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Pantone Inks"/>
-                                <Input value = "{appView>pantoneInks}" editable="{appView>/editableFields}"/>
-
+                                <Input value = "{path: 'appView>pantoneInks',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                                 <Label text="Blanket Charges"/>
-                                <Input value = "{appView>blanketCharges}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>blanketCharges',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
 
                                 <Label text="Foil Blocks"/>
-                                <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-                                
+                                <Input value = "{path: 'appView>foilBlocks',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                                 <Label text="Positive"/>
-                                <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>positive',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Emboss Block"/>
-                                <Input value = "{appView>embossBlock}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path: 'appView>embossBlock',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Punch"/>
-                                <Input value = "{appView>punch}" editable="{appView>/editableFields}" />
+                                <Input value = "{path: 'appView>punch',formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
                                 <Label  design="Bold" text="Total" />
-                                <Text text="{appView>total}" />
+                                <Text text="{path: 'appView>total',formatter:'.formatter.decimalFormatter'}" />
                     
                             </f:content>
                         </f:SimpleForm>
