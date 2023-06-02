@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:ux="sap.uxap" xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog id="allJobDetails" contentWidth="100%">
+    <Dialog title="{appView>nameOFTheProduct}" id="allJobDetails" contentWidth="100%">
     <content>               
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
