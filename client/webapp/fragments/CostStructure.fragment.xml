@@ -1,0 +1,45 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+  
+    <Label text="Paper Cost"/>
+    <Input value="{path: 'appView>paperCost'}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>paperCost2'}" editable="{appView>/editableFields}"/>
+    
+    
+
+    <Label text="Printing Charges"/>
+    <Input value = "{appView>printingCharges}" editable="{appView>/editableFields}"/>
+
+    <Label text="Varnish/Lamination"/>
+    <Input value = "{appView>varnishandLamination}" editable="{appView>/editableFields}"/>
+
+    <Label text="Foil Blocks"/>
+    <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>foilBlocksPerPs'}" editable="{appView>/editableFields}"/>
+    
+    <Label text="Positive"/>
+    <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
+    <Input value = "{appView>positivePerPs}" editable="{appView>/editableFields}"/>
+
+    <Label text="Embossing"/>
+    <Input value = "{appView>embossing}" editable="{appView>/editableFields}"/>
+
+    <Label text="Punching"/>
+    <Input value = "{appView>punching}" editable="{appView>/editableFields}" />
+    <Label text="BSO Pasting"/>
+    <Input value = "{appView>bSOPasting}" editable="{appView>/editableFields}" />
+    <Label text="LBTO Pasting"/>
+    <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
+    <Label text="Packing"/>
+    <Input value = "{appView>packing}" editable="{appView>/editableFields}" />
+    <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
+    <Label text="Transportation"/>
+    <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />
+    <Input value = "{appView>transportationPerKg}" editable="{appView>/editableFields}" />
+                                
+   
+</core:FragmentDefinition>

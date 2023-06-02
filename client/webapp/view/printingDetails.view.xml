@@ -12,6 +12,12 @@
             press="whenProductionStart"
           >   
           </Button> -->
+		  <Button
+		  tooltip="Job Details"
+		  icon="sap-icon://form"
+		  press="allJobDialog"
+	  >   
+	  </Button>
 
         </Toolbar>
 		<f:SimpleForm title="{appView>nameOFTheProduct}" id="jobDetails" editable="true" layout="ColumnLayout"  columnsM="2" >

@@ -1,0 +1,40 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:ux="sap.uxap" xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
+    <Dialog id="allJobDetails" contentWidth="100%">
+    <content>               
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Machine Details" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.MachineDetails" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Product Details" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.ProductDetails" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Paper and Layouts" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PaperAndLayout" type="XML"></core:Fragment>
+                    
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm editable="false"    columnsXL="2" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Cost Structure" />
+                                    
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CostStructure" type="XML"></core:Fragment>
+
+                                    <core:Title text="Development Cost" />
+
+                                    <core:Fragment fragmentName="ent.ui.ecommerce.fragments.DevelopmentCost" type="XML"></core:Fragment>
+                    
+                            </f:content>
+                        </f:SimpleForm>
+    </content>
+    <endButton>
+        <Button text="Close" type="Reject" press="onnReject" enabled="{appView>/submitEnable}"/>
+    </endButton>
+</Dialog>		
+</core:FragmentDefinition>

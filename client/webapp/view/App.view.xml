@@ -9,19 +9,36 @@
         
         <tnt:header >
             <tnt:ToolHeader  visible="true">
-                   <Button visible="{appView>/hamburgerVisibility}"
+                   <Button   visible="{appView>/hamburgerVisibility}"
                     press="onClickMenuButton"
                    icon="sap-icon://menu2">
+                   <layoutData>
 
+                    <OverflowToolbarLayoutData priority="Low" />
+    
+                </layoutData>
                    </Button>
                    <Image src="logo/logo.png" width="4%"/>
                    <Title text="Aeon Products"></Title>
                    <ToolbarSpacer/> 
                    <FlexBox visible="{appView>/visibility}" alignItems="Center">
+                    
                         <core:Icon src="sap-icon://person-placeholder"  class="sapUiTinyMargin"/>
-                        <Text text="{appView>/UserEmail}({appView>/userRole})" />
+                        <Text text="{appView>/UserEmail}({appView>/userRole})" >
+                            <layoutData>
+
+                                <OverflowToolbarLayoutData priority="High" />
+                
+                            </layoutData>
+                        </Text>
                     </FlexBox>
-                   <Button press="onPressLogout" icon="sap-icon://log" class="sapUiSmallMarginEnd"  visible="{appView>/logoutVisibility}"/>
+                   <Button press="onPressLogout" icon="sap-icon://log" class="sapUiSmallMarginEnd"  visible="{appView>/logoutVisibility}">
+                    <layoutData>
+
+                        <OverflowToolbarLayoutData priority="Low" />
+        
+                    </layoutData>
+                </Button>
             </tnt:ToolHeader>
         </tnt:header>
 
