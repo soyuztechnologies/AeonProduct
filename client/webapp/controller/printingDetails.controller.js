@@ -215,7 +215,9 @@ sap.ui.define([
             }
             this.oJobDialog.then(function (oDialog) {
                 oDialog.open();
-				that.getDialogData();
+				var oSimpleForm = that.getView().byId('allJobDetails')
+				oSimpleForm.bindElement('appView>/Jobs');
+				debugger;
             });
 		},
 		
