@@ -5,6 +5,7 @@
           <Title text="Job Details" />
           <ToolbarSpacer/>
           <Button
+		  	id=""
 		    visible="{=${appView>/Jobs/status} === 'New' ? true : false }"
             text="Start Production"
 			type="Emphasized"
@@ -24,10 +25,11 @@
 						<Input editable="false" value="{appView>qtyPcs}"></Input>
 
 						<Label text="Size in mm"></Label>
-						<Input editable="false" value="{path: 'appView>sizeL', formatter: '.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.sizeFormatter'}"></Input>
+						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->
+						<Input editable="false" value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}"></Input>
 	
 						<Label text="Artwork"></Label>
-						<Link press="onClickPopupArt" text="{appView>artworkCode}"></Link>
+						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 						<Label text="Paper Board"></Label>
 						<Input editable="false" value="{appView>artworkCode} + {appView>color}"></Input>
 
