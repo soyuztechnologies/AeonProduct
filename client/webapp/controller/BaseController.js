@@ -32,7 +32,6 @@ sap.ui.define([
 
 		},
 		getUserRoleData: function () {
-			debugger;
 			var that = this;
 			return new Promise(function (myResolve, myReject) {
 				that.middleWare.callMiddleWare("getUserRole", "get")
@@ -55,7 +54,6 @@ sap.ui.define([
 		},
 
 		userRole: function () {
-			debugger;
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if (sUserRole === "Admin") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', true);

@@ -146,7 +146,6 @@ sap.ui.define([
 				var id =this.getView().getModel('appView').getProperty('/appUserId');
 				sPath = `/AppUsers('${id}')/job`;
 			}
-			debugger;
 			var that = this;
 			var oModel = this.getView().getModel();
 			oModel.read(sPath, {

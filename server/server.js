@@ -945,9 +945,9 @@ app.start = function () {
 			
 			const appUsers = app.models.AppUser;
 			try {
-				const customerData = await appUsers.find({ where: { Role: "Admin" } }); // Retrieve job status data
-				var data = JSON.stringify(customerData);
-				res.status(200).json(data);
+				const customerData = await appUsers.find({ where: { Role: "Customer" } }); // Retrieve job status data
+				// var data = JSON.stringify(customerData);
+				res.status(200).json(customerData);
 			} catch (error) {
 				console.error(error);
 				res.status(500).json({ error: 'Internal server error' });

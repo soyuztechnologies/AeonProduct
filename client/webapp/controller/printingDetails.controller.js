@@ -160,7 +160,6 @@ sap.ui.define([
 		clickedLink:null,
 		jobStatusPath: null,
 		onClickPopup: function (oEvent) {
-			debugger
 			var that = this;
 			var oData=oEvent.getSource().getBindingContext("appView").getObject();
 			this.clickedLink=oEvent.getSource().getBinding("text").getPath();
@@ -226,7 +225,6 @@ sap.ui.define([
 		},
 
 		onClickAddStatusAttachment : function (oEvent){
-			debugger
 			var that = this;
 			var oData=oEvent.getSource().getBindingContext("appView").getObject();
 			// this.clickedLink=oEvent.getSource().getBinding("text").getPath();

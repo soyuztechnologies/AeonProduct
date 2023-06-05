@@ -47,7 +47,6 @@ sap.ui.define([
     },
 
     onFileUploaddChange: function (oEvent) {
-      debugger;
       var that = this;
       var uploadFileName = oEvent.getParameter("files")[0].name;
       that.getView().getModel("appView").setProperty("/uploadFile", uploadFileName)
@@ -82,7 +81,6 @@ sap.ui.define([
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
       if (oEvent) {
-        debugger
         var oSelectedItem = oEvent.getSource().getSelectedKey();
         that.getView().getModel("appView").setProperty("/customerId", oSelectedItem);
         console.log("Selected User ID:", oSelectedItem);
@@ -90,10 +88,11 @@ sap.ui.define([
       }
       this.middleWare.callMiddleWare("customerNames", "get")
         .then(function (data, status, xhr) {
-
+          debugger;
+          that.getView().getModel("appView").setProperty("/customerUser",data);
         })
         .catch(function (jqXhr, textStatus, errorMessage) {
-
+          debugger;
           that.middleWare.errorHandler(jqXhr, that);
         });
       // Perform the read operation

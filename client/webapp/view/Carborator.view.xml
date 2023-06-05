@@ -10,7 +10,7 @@
 
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
             <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop">
-                <ComboBox   items="{appView>/userDetails}" id="idPopinLayout"
+                <ComboBox   items="{appView>/customerUser}" id="idPopinLayout"
                     placeholder="Select User"
                     change="onPopinLayoutChanged"
                     class="sapUiTinyMarginEnd">
