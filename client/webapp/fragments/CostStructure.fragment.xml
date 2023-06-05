@@ -6,8 +6,8 @@
    
   
     <Label text="Paper Cost"/>
-    <Input value="{path: 'appView>paperCost'}" editable="{appView>/editableFields}"/>
-    <Input value="{path: 'appView>paperCost2'}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>paperCost' ,formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>paperCost2' ,formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
     
     
 
@@ -35,7 +35,7 @@
     <Label text="LBTO Pasting"/>
     <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
     <Label text="Packing"/>
-    <Input value = "{appView>packing}" editable="{appView>/editableFields}" />
+    <Input value = "{path: 'appView>packing' ,formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
     <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
     <Label text="Transportation"/>
     <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />

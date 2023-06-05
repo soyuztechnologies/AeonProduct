@@ -752,6 +752,32 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
       return attachmentFiles && attachmentFiles.startsWith('data:application/pdf') ? false : true;
     },
+    getTextVisibility: function (attachmentFiles) {
+      if(!attachmentFiles){
+        return false;
+      }
+     // Check if the file is a CSV
+    if (attachmentFiles.startsWith('data:text/csv')) {
+      return true;
+ 
+    };
+    if (attachmentFiles.startsWith('data:application/vnd.ms-excel')) {
+      return true;
+ 
+    };
+    if (attachmentFiles.startsWith('data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+      return true;
+ 
+    };
+    if (attachmentFiles.startsWith('data:application/msword')) {
+      return true;
+    };
+    if (attachmentFiles.startsWith('data:application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+      return true;
+    };
+
+      return false;
+    },
     getImageVisibility: function (attachmentFiles) {
       return attachmentFiles && attachmentFiles.startsWith('data:image/') ? true : false;
     },

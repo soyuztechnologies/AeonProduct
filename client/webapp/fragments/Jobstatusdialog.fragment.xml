@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
 
-<Dialog contentWidth="auto" contentHeight="auto" title="Job Status"
+<Dialog contentWidth="auto" contentHeight="auto" title="{appView>/addJobStatusdialogTitle}"
   
 resizable="false" >
 <content>
@@ -73,7 +73,7 @@ resizable="false" >
 		</f:SimpleForm>
 </content>
 <beginButton>
-    <Button text="Save" type="Accept" press="onSubmitData" enabled="{appView>/submitEnable}"/>
+    <Button text="{appView>/addJobStatusSave}" type="Accept" press="onSubmitData" enabled="{appView>/submitEnable}"/>
 </beginButton>
 <endButton>
     <Button text="Cancel" type="Reject" press="onClose" enabled="{appView>/submitEnable}"/>

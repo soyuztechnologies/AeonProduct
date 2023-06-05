@@ -11,7 +11,8 @@
             <tnt:ToolHeader  visible="true">
                    <Button   visible="{appView>/hamburgerVisibility}"
                     press="onClickMenuButton"
-                   icon="sap-icon://menu2">
+                    class="sapUiTinyMarginEnd"
+                   icon="sap-icon://menu2" >
                    <layoutData>
 
                     <OverflowToolbarLayoutData priority="Low" />
@@ -21,24 +22,26 @@
                    <Image src="logo/logo.png" width="4%"/>
                    <Title text="Aeon Products"></Title>
                    <ToolbarSpacer/> 
-                   <FlexBox visible="{appView>/visibility}" alignItems="Center">
+                   <FlexBox visible="{appView>/visibility}" alignItems="center">
                     
-                        <core:Icon src="sap-icon://person-placeholder"  class="sapUiTinyMargin"/>
+                        <core:Icon src="sap-icon://person-placeholder"  class="sapUiTinyMarginEnd"/>
                         <Text text="{appView>/UserEmail}({appView>/userRole})" >
                             <layoutData>
 
-                                <OverflowToolbarLayoutData priority="High" />
+                                <OverflowToolbarLayoutData priority="Low" />
                 
                             </layoutData>
                         </Text>
-                    </FlexBox>
-                   <Button press="onPressLogout" icon="sap-icon://log" class="sapUiSmallMarginEnd"  visible="{appView>/logoutVisibility}">
+                </FlexBox>
+                  <FlexBox visible="{appView>/visibility}">
+                   <Button press="onPressLogout" icon="sap-icon://log" class="sapUiTinyMarginEnd"  visible="{appView>/logoutVisibility}">
                     <layoutData>
 
                         <OverflowToolbarLayoutData priority="Low" />
         
                     </layoutData>
-                </Button>
+                  </Button>
+                </FlexBox>
             </tnt:ToolHeader>
         </tnt:header>
 
