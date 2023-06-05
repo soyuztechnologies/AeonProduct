@@ -27,6 +27,7 @@ sap.ui.define([
 			oModel.setProperty("/logoutVisibility", false);
 			oModel.setProperty("/ResendStatusSignup",false);
 			oModel.setProperty("/showError",false);
+			this.getUserRoleData();
 		},
 
 		Login: function () {

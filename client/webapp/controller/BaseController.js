@@ -39,6 +39,8 @@ sap.ui.define([
 					.then(function (data, status, xhr) {
 
 						myResolve(data);
+
+						that.getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 						that.getModel('appView').setProperty('/UserRole', data.role.Role);
 						that.userRole();
 						// };
@@ -53,7 +55,7 @@ sap.ui.define([
 		},
 
 		userRole: function () {
-
+			debugger;
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if (sUserRole === "Admin") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', true);

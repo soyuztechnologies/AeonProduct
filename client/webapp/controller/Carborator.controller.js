@@ -5,7 +5,7 @@ sap.ui.define([
   "sap/ui/core/Fragment",
   "sap/m/MessageBox",
   "sap/ui/core/BusyIndicator"
-], function (BaseController, JSONModel, MessageToast, Fragment,MessageBox,BusyIndicator) {
+], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator) {
   "use strict";
 
   return BaseController.extend("ent.ui.ecommerce.controller.Carborator", {
@@ -27,14 +27,14 @@ sap.ui.define([
       oModel.setProperty("/uploadButtonVisibility", true);
       oModel.setProperty("/imgVisibility", false);
       oModel.setProperty("/editableFields", false);
-      oModel.setProperty("/messageStripVis",false)
-      oModel.setProperty("/onUpdateJobVis",false)
+      oModel.setProperty("/messageStripVis", false)
+      oModel.setProperty("/onUpdateJobVis", false)
       this.onPressClear();
 
       var bSystemType = this.getModel("device").getData().system.desktop;
-      if(bSystemType){
+      if (bSystemType) {
         oModel.setProperty('/desktop', true);
-      }else{
+      } else {
         oModel.setProperty('/desktop', false);
       }
       oModel.updateBindings();
@@ -50,7 +50,7 @@ sap.ui.define([
       debugger;
       var that = this;
       var uploadFileName = oEvent.getParameter("files")[0].name;
-      that.getView().getModel("appView").setProperty("/uploadFile",uploadFileName)
+      that.getView().getModel("appView").setProperty("/uploadFile", uploadFileName)
       var oFileUploader = oEvent.getSource();
       var oFile = oEvent.getParameter("files")[0];
       var oReader = new FileReader();
@@ -78,7 +78,7 @@ sap.ui.define([
     },
 
     onPopinLayoutChanged: function (oEvent) {
-      
+      debugger;
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
       if (oEvent) {
@@ -88,18 +88,26 @@ sap.ui.define([
         console.log("Selected User ID:", oSelectedItem);
 
       }
+      this.middleWare.callMiddleWare("customerNames", "get")
+        .then(function (data, status, xhr) {
+
+        })
+        .catch(function (jqXhr, textStatus, errorMessage) {
+
+          that.middleWare.errorHandler(jqXhr, that);
+        });
       // Perform the read operation
-      oModel.read('/AppUsers', {
-        success: function (data) {
-          debugger;
-          that.getView().getModel("appView").setProperty("/userDetails", data.results);
-        },
-        error: function (error) {
-          // Error callback
-          that.middleWare.errorHandler(error, that);
-          MessageToast.show("Error reading data");
-        }
-      });
+      // oModel.read('/AppUsers', {
+      //   success: function (data) {
+      //     debugger;
+      //     that.getView().getModel("appView").setProperty("/userDetails", data.results);
+      //   },
+      //   error: function (error) {
+      //     // Error callback
+      //     that.middleWare.errorHandler(error, that);
+      //     MessageToast.show("Error reading data");
+      //   }
+      // });
     },
 
 
@@ -121,17 +129,17 @@ sap.ui.define([
 
     // * this fucntion is saving the jobs data into the loopback for this we user server call.
     onSavePayload: function () {
-      
+
       var that = this;
       var userValue = this.getModel("appView").getProperty("/customerId");
       var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
       var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
       var oModel = this.getView().getModel();
       if (!userValue || !oJsonInpValue) {
-        if(!userValue){
+        if (!userValue) {
           MessageToast.show("Please Select The User")
         }
-        else{
+        else {
           MessageToast.show("Please Upload The File")
         }
       }
@@ -140,24 +148,24 @@ sap.ui.define([
         payload.CustomerId = userValue;
         payload.fileName = getUploadFile;
         var id = payload.jobCardNo;
-            oModel.create("/Jobs", payload, {
-              success: function (oUpdatedData) {
-                
-                MessageToast.show("Job created successfully");
-              },
-              error: function (nts) {
-                // Error callback
-                // if(nts.responseText.includes("duplicate key")){
-                  MessageToast.show("Something Went Wrong")
-                // }
-                // that.middleWare.errorHandler(error, that);
-                // MessageToast.show("Error While Post the data");
-              }
-            });
-            // MessageToast.show("Not Available Want to Upload New");
+        oModel.create("/Jobs", payload, {
+          success: function (oUpdatedData) {
+
+            MessageToast.show("Job created successfully");
+          },
+          error: function (nts) {
+            // Error callback
+            // if(nts.responseText.includes("duplicate key")){
+            MessageToast.show("Something Went Wrong")
+            // }
+            // that.middleWare.errorHandler(error, that);
+            // MessageToast.show("Error While Post the data");
           }
+        });
+        // MessageToast.show("Not Available Want to Upload New");
+      }
     },
-    onUpdateJob:function(){
+    onUpdateJob: function () {
       BusyIndicator.show(0);
       var that = this;
       var userValue = this.getModel("appView").getProperty("/customerId");
@@ -165,10 +173,10 @@ sap.ui.define([
       var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
       var oModel = this.getView().getModel();
       if (!userValue || !oJsonInpValue) {
-        if(!userValue){
+        if (!userValue) {
           MessageToast.show("Please Select The User")
         }
-        else{
+        else {
           MessageToast.show("Please Upload The File")
         }
       }
@@ -179,13 +187,13 @@ sap.ui.define([
         var id = payload.jobCardNo;
         oModel.update(`/Jobs('${id}')`, payload, {
           success: function (oUpdatedData) {
-            
+
             MessageToast.show("Job Updated successfully");
           },
           error: function (nts) {
             // Error callback
             // if(nts.responseText.includes("duplicate key")){
-              MessageToast.show("Something Went Wrong")
+            MessageToast.show("Something Went Wrong")
             // }
             // that.middleWare.errorHandler(error, that);
             // MessageToast.show("Error While Post the data");
@@ -261,7 +269,7 @@ sap.ui.define([
 
     // },
     onPressClear: function (oEvent) {
-      
+
       this.getView().getModel('appView').setProperty("/jsonData", "");
       this.getView().getModel('appView').setProperty("/jsonValue", "");
       this.getView().getModel('appView').setProperty("/customerId", "");
@@ -272,12 +280,12 @@ sap.ui.define([
       this.getView().getModel('appView').setProperty("/messageStripVis", false);
       // oModel.setProperty("/messageStripVis",false)
       this.getView().getModel('appView').updateBindings();
-     this.getView().byId("idPopinLayout").setSelectedKey("")
-     this.getView().byId("fileUploader").setValue("")
-      
+      this.getView().byId("idPopinLayout").setSelectedKey("")
+      this.getView().byId("fileUploader").setValue("")
+
     },
     onUploadId: function () {
-      
+
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
       var ids = this.getView().getModel("appView").getProperty("/postId")
@@ -304,7 +312,7 @@ sap.ui.define([
       };
       oModel.create(sEntityPath, oUpdatedData, {
         success: function (oUpdatedData) {
-          
+
           MessageToast.show("Successfully Uploaded");
         },
         error: function (error) {
@@ -320,14 +328,14 @@ sap.ui.define([
       BusyIndicator.show(0);
       var that = this;
       const arrayToJSON = this.arrayToJSON(data);
-      
+
       const dbFieldsJSON = Object.values(this.fieldsJSON);
       const dbFields = {};
       dbFieldsJSON.forEach(item => {
-        
+
         dbFields[item.dbField] = arrayToJSON[item.data];
         if (!dbFields[item.dbField]) {
-          
+
         }
       })
 
@@ -338,17 +346,17 @@ sap.ui.define([
       this.getView().getModel('appView').setProperty("/jsonData", dbFields);
 
       this.middleWare.callMiddleWare("uploadjob", "POST", dbFields)
-          .then(function (data, status, xhr) {
-          that.getView().getModel("appView").setProperty("/messageStripVis",true)
-          that.getView().getModel("appView").setProperty("/onUpdateJobVis",true)
-          that.getView().getModel("appView").setProperty("/onSavePayloadVis",false)
-          })
-          .catch(function (jqXhr, textStatus, errorMessage) {
-            that.getView().getModel("appView").setProperty("/onUpdateJobVis",false)
-          that.getView().getModel("appView").setProperty("/onSavePayloadVis",true)
-          that.getView().getModel("appView").setProperty("/messageStripVis",false)
-          });
-      
+        .then(function (data, status, xhr) {
+          that.getView().getModel("appView").setProperty("/messageStripVis", true)
+          that.getView().getModel("appView").setProperty("/onUpdateJobVis", true)
+          that.getView().getModel("appView").setProperty("/onSavePayloadVis", false)
+        })
+        .catch(function (jqXhr, textStatus, errorMessage) {
+          that.getView().getModel("appView").setProperty("/onUpdateJobVis", false)
+          that.getView().getModel("appView").setProperty("/onSavePayloadVis", true)
+          that.getView().getModel("appView").setProperty("/messageStripVis", false)
+        });
+
 
 
       this.getView().bindElement('appView>/jsonData');
@@ -1032,7 +1040,7 @@ sap.ui.define([
         "group": "A) Cost Structure :",
         "groupCell": "P20"
       },
-      
+
       "P22": {
         "data": "Q22",
         "value": "₹ 5,850.00",
