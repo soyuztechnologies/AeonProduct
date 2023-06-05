@@ -87,6 +87,20 @@
             </ux:subSections>
         </ux:ObjectPageSection>
 
+        <ux:ObjectPageSection title="Ancillary Parts">
+            <ux:subSections>
+                <ux:ObjectPageSubSection>
+                    <ux:blocks>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.AncillaryParts" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                    </ux:blocks>
+                </ux:ObjectPageSubSection>
+            </ux:subSections>
+        </ux:ObjectPageSection>
+
 
         <ux:ObjectPageSection title="Cost">
             <ux:subSections>

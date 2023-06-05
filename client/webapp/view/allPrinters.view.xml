@@ -19,7 +19,7 @@
 					<ObjectListItem
 							type="Navigation"
 							title="{appView>nameOFTheProduct}"
-							intro="{appView>Appuser/FirstName}"
+							intro="{appView>CustomerId/expandTo/appUser}"
 							number="{appView>jobCardNo}"
 							>
 							<firstStatus>

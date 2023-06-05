@@ -5,6 +5,8 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
    
   
+                                <Label text="Job Card No."/>
+                                <Input  value = "{appView>jobCardNo}" editable="{appView>/editableFields}"/>
                                 <Label text="Name of the Product"/>
                                 <Input  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
                     

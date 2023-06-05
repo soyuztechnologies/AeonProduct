@@ -342,6 +342,7 @@ sap.ui.define([
       this.getView().byId("_IDGenTextArea1").setValue(JSON.stringify(dbFields, null, 4));
 
       //for simple form data binding
+      debugger;
       this.getView().getModel('appView').setProperty("/jsonData", dbFields);
 
       this.middleWare.callMiddleWare("uploadjob", "POST", dbFields)
@@ -568,7 +569,7 @@ sap.ui.define([
         "data": "A22",
         "value": "4 ups",
         "label": "No of ups",
-        "dbField": "noOfUps-1",
+        "dbField": "noOfUps1",
         "group": "Paper & LAYOUT Details",
         "groupCell": "A20"
       },
@@ -576,7 +577,7 @@ sap.ui.define([
         "data": "C22",
         "value": "2 ups",
         "label": "No of ups",
-        "dbField": "noOfUps-2",
+        "dbField": "noOfUps2",
         "group": "Paper & LAYOUT Details",
         "groupCell": "A20"
       },
@@ -584,7 +585,7 @@ sap.ui.define([
         "data": "A23",
         "value": "8 ups",
         "label": "No of ups",
-        "dbField": "noOfUps-3",
+        "dbField": "noOfUps3",
         "group": "Paper & LAYOUT Details",
         "groupCell": "A20"
       },
@@ -592,7 +593,7 @@ sap.ui.define([
         "data": "D22",
         "value": "5,200 Sheets",
         "label": "No. Of Sheets",
-        "dbField": "noOfSheets-1",
+        "dbField": "noOfSheets1",
         "group": "Paper & LAYOUT Details",
         "groupCell": "A20"
       },
@@ -600,7 +601,7 @@ sap.ui.define([
         "data": "E23",
         "value": "200 Sheets",
         "label": "No. Of Sheets",
-        "dbField": "noOfSheets-2",
+        "dbField": "noOfSheets2",
         "group": "Paper & LAYOUT Details",
         "groupCell": "A20"
       },
@@ -608,7 +609,7 @@ sap.ui.define([
         "data": "I21",
         "value": "2,600 Sheets",
         "label": "No. Of Sheets",
-        "dbField": "noOfSheets-2",
+        "dbField": "noOfSheets3",
         "group": "Paper & LAYOUT Details",
         "groupCell": "A20"
       },
@@ -959,6 +960,22 @@ sap.ui.define([
         "group": "Ancillary Parts",
         "groupCell": "P7"
       },
+      "P8-1": {
+        "data": "R8",
+        "value": "B-3-C",
+        "label": "Plate :",
+        "dbField": "plate1",
+        "group": "Ancillary Parts",
+        "groupCell": "P7"
+      },
+      "P8-2": {
+        "data": "S8",
+        "value": "098_CTP_23.05_TRAY_Geltron Jumbo 3X Gelpen 1Pc",
+        "label": "Plate :",
+        "dbField": "plate2",
+        "group": "Ancillary Parts",
+        "groupCell": "P7"
+      },
       "P9": {
         "data": "Q9",
         "value": "None :",
@@ -996,6 +1013,22 @@ sap.ui.define([
         "value": "Old :",
         "label": "Punch :",
         "dbField": "punch",
+        "group": "Ancillary Parts",
+        "groupCell": "P7"
+      },
+      "P13-1": {
+        "data": "R13",
+        "value": "62 Level 1",
+        "label": "Punch :",
+        "dbField": "punch1",
+        "group": "Ancillary Parts",
+        "groupCell": "P7"
+      },
+      "P13-2": {
+        "data": "S13",
+        "value": "PAPERGLIDE 1PC TRAY",
+        "label": "Punch :",
+        "dbField": "punch2",
         "group": "Ancillary Parts",
         "groupCell": "P7"
       },

@@ -9,6 +9,12 @@
                         </f:SimpleForm>
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
+                                <core:Title text="Ancillary Parts" />
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.AncillaryParts" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
                                 <core:Title text="Product Details" />
                                 <core:Fragment fragmentName="ent.ui.ecommerce.fragments.ProductDetails" type="XML"></core:Fragment>
                             </f:content>

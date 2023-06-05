@@ -139,23 +139,23 @@
 			"type": "string",
 			"default": null
 		},
-		"noOfUps-1": {
+		"noOfUps1": {
 			"type": "string",
 			"default": null
 		},
-		"noOfUps-2": {
+		"noOfUps2": {
 			"type": "string",
 			"default": null
 		},
-		"noOfUps-3": {
+		"noOfUps3": {
 			"type": "string",
 			"default": null
 		},
-		"noOfSheets-1": {
+		"noOfSheets1": {
 			"type": "string",
 			"default": null
 		},
-		"noOfSheets-2": {
+		"noOfSheets2": {
 			"type": "string",
 			"default": null
 		},
@@ -263,6 +263,14 @@
 			"type": "string",
 			"default": null
 		},
+		"plate1": {
+			"type": "string",
+			"default": null
+		},
+		"plate2": {
+			"type": "string",
+			"default": null
+		},
 		"pantoneInks": {
 			"type": "string",
 			"default": null
@@ -280,6 +288,14 @@
 			"default": null
 		},
 		"punch": {
+			"type": "string",
+			"default": null
+		},
+		"punch1": {
+			"type": "string",
+			"default": null
+		},
+		"punch2": {
 			"type": "string",
 			"default": null
 		},

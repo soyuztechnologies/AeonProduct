@@ -20,10 +20,10 @@ sap.ui.define([
 
 		// * root match handler function.
 		_matchedHandler: async function (oEvent) {
-			
+
 			var that = this;
 			await this.getUserRoleData().then(
-				function (data){
+				function (data) {
 					var role = data.role.Role
 					that.getView().getModel('appView').setProperty('/UserRole', role);
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
@@ -31,7 +31,7 @@ sap.ui.define([
 					that.userRole();
 					that.getJobsData();
 				},
-				function (oErr){
+				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
 				}
 			);
@@ -40,7 +40,6 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/visibility", true);
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
-			// this.getJobsData();
 			// this.getUserName();
 		},
 
@@ -56,14 +55,16 @@ sap.ui.define([
 			// 	this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
 			// 	this.getView().getModel("appView").setProperty('/modifybtnvis', false);
 			// }
-			
+
 			this.getView().getModel("appView").setProperty('/datas', datassss);
 			this.getView().getModel("appView").setProperty('/jobId', datassss.jobCardNo);
+			debugger;
 			this.getModel("appView").updateBindings();
 			this.getRouter().navTo("printingDetails", {
 				jobId: datassss.jobCardNo
+
 			});
-			
+
 		},
 
 
@@ -86,26 +87,26 @@ sap.ui.define([
 		// 			BusyIndicator.hide();
 		// 		}
 		// 	});
-			
-			// BusyIndicator.show(0);
-			// var oModel = this.getView().getModel();  //default model get at here
-			// var that = this;
-			// var sEntitySet = "/Jobs";
-			// var sProperties = "JobId, Title, Description, appUser/Name";
 
-            // var sExpand = "appUser";
-            // var sUrl = sEntitySet + "?$select=" + sProperties + "&$expand=" + sExpand;
-			
-			// oModel.read(sUrl, {
-			// 	success: function (data) {
-			// 		that.getView().getModel("appView").setProperty("/jobsData", data.results);
-			// 		BusyIndicator.hide();
-			// 	},
-			// 	error: function (error) {
-			// 		MessageToast.show("Error reading data");
-			// 		BusyIndicator.hide();
-			// 	}
-			// });
+		// BusyIndicator.show(0);
+		// var oModel = this.getView().getModel();  //default model get at here
+		// var that = this;
+		// var sEntitySet = "/Jobs";
+		// var sProperties = "JobId, Title, Description, appUser/Name";
+
+		// var sExpand = "appUser";
+		// var sUrl = sEntitySet + "?$select=" + sProperties + "&$expand=" + sExpand;
+
+		// oModel.read(sUrl, {
+		// 	success: function (data) {
+		// 		that.getView().getModel("appView").setProperty("/jobsData", data.results);
+		// 		BusyIndicator.hide();
+		// 	},
+		// 	error: function (error) {
+		// 		MessageToast.show("Error reading data");
+		// 		BusyIndicator.hide();
+		// 	}
+		// });
 
 		// },
 
@@ -114,12 +115,12 @@ sap.ui.define([
 		},
 
 		onFilterPressJobStatus: function () {
-			
+
 			this.oViewSettingsDialog.open();
 		},
 
 		onViewSettingsConfirm: function (oEvent) {
-			
+
 			var aFilterItems = oEvent.getParameter("filterItems");
 			if (aFilterItems.length > 0) {
 				var oTable = this.getView().byId("idListAllPrinters");
@@ -131,35 +132,38 @@ sap.ui.define([
 					aFilters.push(oFilter);
 				});
 				oBinding.filter(aFilters);
-			}else{
+			} else {
 				this.onViewSettingsCancel();
 			}
 		},
 
 
-		getJobsData:function(){
+		getJobsData: function () {
 			var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
-			if(sUserRole ==="Admin"){
+			if (sUserRole === "Admin") {
 				var sPath = `/Jobs`
-			}else{
+			} else {
 
-				var id =this.getView().getModel('appView').getProperty('/appUserId');
+				var id = this.getView().getModel('appView').getProperty('/appUserId');
 				sPath = `/AppUsers('${id}')/job`;
 			}
 			var that = this;
 			var oModel = this.getView().getModel();
 			oModel.read(sPath, {
+				// urlParameters: {
+				// 	"$expand": "appUser"
+				// },
 				success: function (data) {
 					that.getView().getModel("appView").setProperty("/jobsData", data.results);
 				},
 				error: function (error) {
-				  // Error callback
-				//   that.middleWare.errorHandler(error, that);
-				  MessageToast.show("Error reading data");
+					// Error callback
+					//   that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
 				}
-			  });
+			});
 		},
-		
+
 		onViewSettingsCancel: function () {
 			var oTable = this.getView().byId("idListAllPrinters");
 			var oBinding = oTable.getBinding("items");
@@ -167,27 +171,27 @@ sap.ui.define([
 		},
 
 		//* this function is getting the userName into the Select dialog box.
-		getUserName: function(oEvent){
-        
-		var oModel = this.getView().getModel("appView");
-          var oSelectedItem = oEvent.getParameter("value");
-           oModel.setProperty("/Username",oSelectedItem);
-            // console.log("Selected User ID:", oSelectedItem);
-	    },
+		getUserName: function (oEvent) {
+
+			var oModel = this.getView().getModel("appView");
+			var oSelectedItem = oEvent.getParameter("value");
+			oModel.setProperty("/Username", oSelectedItem);
+			// console.log("Selected User ID:", oSelectedItem);
+		},
 
 		// * this fcuntion is working to search the data into the allPrinters screen.
 		onSearchJob: function (oEvent) {
 			var sValue = oEvent.getParameter("query");
 			if (!sValue) {
-			    var sValue = oEvent.getParameter("newValue")
+				var sValue = oEvent.getParameter("newValue")
 			}
-			var oFilter1= new Filter("jobCardNo", FilterOperator.Contains, sValue);
-			var oFilter2= new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
-			var oFilter3= new Filter("UserName", FilterOperator.Contains, sValue);
+			var oFilter1 = new Filter("jobCardNo", FilterOperator.Contains, sValue);
+			var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
+			var oFilter3 = new Filter("UserName", FilterOperator.Contains, sValue);
 			var aFilter = [oFilter1, oFilter2, oFilter3];
 			var oFilter = new Filter({
-			    filters: aFilter,
-			    and: false
+				filters: aFilter,
+				and: false
 			});
 			this.getView().byId("idListAllPrinters").getBinding("items").filter(oFilter);
 		},

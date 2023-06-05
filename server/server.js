@@ -945,7 +945,7 @@ app.start = function () {
 			
 			const appUsers = app.models.AppUser;
 			try {
-				const customerData = await appUsers.find({ where: { Role: "Customer" } }); // Retrieve job status data
+				const customerData = await appUsers.find({ where: { Role: "Customer", Status : "Approved" } }); // Retrieve job status data
 				// var data = JSON.stringify(customerData);
 				res.status(200).json(customerData);
 			} catch (error) {
@@ -973,6 +973,7 @@ app.start = function () {
 		app.post('/getSumOfJobStatus', async (req, res) => {
 			debugger;
 			const JobStatus = app.models.JobStatus;
+			const Job = app.models.Job;
 			const { jobId } = req.body;
 			var oSumOfData = {
 				"Coating":0,
@@ -1012,6 +1013,59 @@ app.start = function () {
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+
+		app.post('/getRemJobStatus', async (req, res) => {
+			debugger;
+			const JobStatus = app.models.JobStatus;
+			const Job = app.models.Job;
+			const { jobId } = req.body;
+			var oSumOfData = {
+				"Coating":0,
+				"Printing":0,
+				"Punching":0,
+				"Foiling":0,
+				"Embossing":0,
+				"Pasting":0,
+				"spotUV":0,
+				"Packing":0,
+				"rawMaterial":"",
+				"InvNo":"",
+				"DeliveryNo":""
+			}
+			try {
+				const jobStatusData = await JobStatus.find({ where: { JobStatusId: jobId } }); // Retrieve job status data
+
+				for (let i = 0; i < jobStatusData.length; i++) { //5
+					oSumOfData.Coating += jobStatusData[i].Coating;
+					oSumOfData.Printing += jobStatusData[i].Printing;
+					oSumOfData.Punching += jobStatusData[i].Punching;
+					oSumOfData.Foiling += jobStatusData[i].Foiling;
+					oSumOfData.Embossing += jobStatusData[i].Embossing;
+					oSumOfData.Pasting += jobStatusData[i].Pasting;
+					oSumOfData.spotUV += jobStatusData[i].spotUV;
+					oSumOfData.Packing += jobStatusData[i].Packing;
+					oSumOfData.rawMaterial = jobStatusData[0].rawMaterial;
+					oSumOfData.InvNo = jobStatusData[0].InvNo;
+					oSumOfData.DeliveryNo = jobStatusData[0].DeliveryNo;
+				}
+				const totalJobDetails = await Job.findOne({where:{jobCardNo:jobId}})
+				debugger;
+				var remainingData = {
+					"RemainingCoating": totalJobDetails.__data.noOfSheets1 - oSumOfData.Printing,
+					
+				  };
+				
+				var array = array=[remainingData]
+			
+				res.status(200).json(array);
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
+
+
+
 
 		app.get('/getJobsData', async (req, res) => {
 			

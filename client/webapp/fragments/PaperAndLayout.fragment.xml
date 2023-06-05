@@ -6,26 +6,26 @@
    
   
     <Label text="No of Ups"/>
-    <!-- ="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
-    <Input value="{parts:[ {path:'appView>noOfUps-1'}, { path: 'appView>noOfUps-2'}, {path: 'appView>noOfUps-3'} ] ,formatter:'.formatter.sizeFormatter'}" editable="false"/>
+    <!-- ="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
+    <Input value="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.multiply'}" editable="false"/>
 
     <Label text="No of Sheets"/>
-    <Input value = "{appView>noOfSheets-1}" editable="false"/>
+    <Input value = "{appView>noOfSheets1}" editable="false"/>
 
     <Label text="Printing Sheet Size"/>
     <Input value = "{appView>printingSheetSizeL1} x {appView>printingSheetSizeW1}" editable="false"/>
 
     <Label text="Procured Sheets"/>
-    <Input value = "{appView>noOfSheets-2}" editable="false"/>
+    <Input value = "{appView>noOfSheets2}" editable="false"/>
     
     <Label text="Procured Sheet Size"/>
-    <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW1}" editable="false"/>
+    <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="false"/>
 
     <Label text="Wastage"/>
     <Input value = "{appView>wastage}" editable="false"/>
 
     <Label text="Weight in Kgs"/>
-    <Input value = "{appView>wtKgs}" editable="false" />
+    <Input value = "{path: 'appView>wtKgs' ,formatter:'.formatter.decimalFormatter'}" editable="false" />
                                 
    
 </core:FragmentDefinition>

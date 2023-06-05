@@ -1,0 +1,31 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+
+    <Label text="Plate"/>
+    <Input value = "{appView>plate}" editable="false"/>
+
+    <Input value = "{appView>plate1}" editable="false"/>
+    <Input value = "{appView>plate2}" editable="false"/>
+
+    <Label text="Pantone Inks"/>
+    <Input value = "{appView>pantoneInks}"  editable="false"/>
+
+    <Label text="Foil Blocks"/>
+    <Input value = "{appView>foilBlocks}" editable="false"/>
+    <Label text="Positive"/>
+    <Input value = "{appView>positive}" editable="false"/>
+    <Label text="Emboss Block"/>
+    <Input value = "{appView>embossBlock}" editable="false"/>
+    <Label text="Punch"/>
+    <Input value = "{appView>punch}" editable="false"/>
+    <Input value = "{appView>punch1}" editable="false"/>
+    <Input value = "{appView>punch2}" editable="false"/>
+    <Label text="Reference"/>
+    <Input value = "{appView>reference}" editable="false"/>
+                                
+   
+</core:FragmentDefinition>
