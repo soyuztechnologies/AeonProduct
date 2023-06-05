@@ -34,7 +34,7 @@
 						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->
 						<Input editable="false" value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}"></Input>
 	                    <Label text="Total No. of Sheets"></Label>
-						<Input editable="false" value = "{path: 'appView>noOfSheets-1' ,formatter:'.formatter.decimalFormatter'}"></Input>
+						<Input editable="false" value = "{appView>noOfSheets1}"></Input>
 						<Label text="Artwork"></Label>
 						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 						<Label text="Paper Board"></Label>
@@ -49,10 +49,10 @@
 		<footer>
 			<Toolbar>
 			<ToolbarSpacer/>
-				<Button visible="{appView>/updBtnVisibility}"  icon="sap-icon://save" type="Emphasized" text="Save" press="onClickUpdate"></Button>
-				<Button visible="{appView>/asUrgentVis}"  icon="sap-icon://save" type="Emphasized" text="Make As Urgent" press="onClickUrgent"></Button>
-				<Button visible="{appView>/visibleModify}" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button>
-				<Button visible="{appView>/cancleBtnVis}" icon="sap-icon://cancel" text="Cancel"  type="Emphasized" press="onClickCancle"></Button>
+				<Button enabled="{appView>/saveEnabled}" visible="{appView>/updBtnVisibility}"  icon="sap-icon://save" type="Emphasized" text="Save" press="onSaveJobStatus"></Button>
+				<Button visible="{appView>/asUrgentVis}"  icon="sap-icon://accelerated" type="Emphasized" text="Make As Urgent" press="onClickUrgent"></Button>
+				<!-- <Button visible="{appView>/visibleModify}" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button> -->
+				<Button visible="{appView>/cancleBtnVis}" icon="sap-icon://cancel" text="Cancel"  type="Emphasized" press="onClickCancel"></Button>
 			</Toolbar>
 		</footer>
 		<!-- </VBox> -->
