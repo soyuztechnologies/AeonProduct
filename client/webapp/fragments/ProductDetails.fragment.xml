@@ -14,20 +14,20 @@
                                 <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Quantity (pcs)"/>
-                                <Input value = "{appView>qtyPcs}" editable="{appView>/editableFields}"/>
+                                <Input value = "{path:'appView>qtyPcs' , formatter: '.formatter.showPcs'}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Paper GSM"/>
-                                <Input value = "{appView>PaperGSM}" editable="{appView>/editableFields}" />
+                                <Input value = "{path:'appView>PaperGSM' , formatter: '.formatter.showGsm'}" editable="{appView>/editableFields}" />
                     
                                 
                                 <Label text="Paper Quality"/>
                                 <Input value = "{appView>paperQuality}" editable="{appView>/editableFields}"/>
                     
-                                <Label text="Printing"/>
-                                <Input value = "{appView>printing}" editable="{appView>/editableFields}"/>
+                                <Label text="Printing/Color"/>
+                                <Input value = "{appView>color} {appView>printing}" editable="{appView>/editableFields}"/>
 
-                                <Label text="Color"/>
-                                <Input value = "{appView>color}" editable="{appView>/editableFields}"/>
+                                <!-- <Label text="Color"/>
+                                <Input value = "{appView>color}" editable="{appView>/editableFields}"/> -->
                     
                                 <Label text="Size (L x W x H)"/>
                                 <Input value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
@@ -35,20 +35,16 @@
                                 <Label text="Var. Lmt."/>
                                 <Input value = "{appView>varLmt}" editable="{appView>/editableFields}"/>
 
-                                <Label text="Effects"/>
+                                <Label text="Value Addition"/>
                                 <Input value = "{appView>effects}" editable="{appView>/editableFields}"/>
 
 
-                                <Label text="Lock"/>
-                                <Input value = "{appView>lock}" editable="{appView>/editableFields}"/>
-                                <Label text="TF"/>
+                               
+                                <Label text="TUCK IN FLAP"/>
                                 <Input value = "{appView>tF}" editable="{appView>/editableFields}"/>
-                                <Label text="PF"/>
+                                <Label text="PASTING FLAP"/>
                                 <Input value = "{appView>pF}" editable="{appView>/editableFields}"/>
-                                <Label text="Double Cut"/>
-                                <Input value = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
-                                <Label text="Trin in TF"/>
-                                <Input value = "{appView>trimTF}" editable="{appView>/editableFields}"/>
+                                
                                 
    
 </core:FragmentDefinition>

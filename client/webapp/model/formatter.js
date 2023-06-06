@@ -662,7 +662,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return oCol;
     },
     transColumnVisible: function (oStatus) {
-      
+
       if (oStatus) {
         if (oStatus.includes('OK') || oStatus.includes('IGNORE_NOT_SETTLED') || oStatus.includes('IGNORE_DUPLICATE') || oStatus.includes('Object')) {
           return false;
@@ -728,7 +728,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return Code;
     },
     getBase64ToPdf: function (sBase64String) {
-      
+
       if (sBase64String) {
         // var decodedPdfContent = atob(sBase64String);
         var decodedPdfContent = atob(sBase64String.split(',')[1]);
@@ -747,42 +747,42 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return attachmentFiles && attachmentFiles.startsWith('data:application/pdf') ? true : false;
     },
     getbuttonVisibility: function (attachmentFiles) {
-      if(!attachmentFiles){
+      if (!attachmentFiles) {
         return false;
       }
       return attachmentFiles && attachmentFiles.startsWith('data:application/pdf') ? false : true;
     },
     getTextVisibility: function (attachmentFiles) {
-      if(!attachmentFiles){
+      if (!attachmentFiles) {
         return false;
       }
-     // Check if the file is a CSV
-    if (attachmentFiles.startsWith('data:text/csv')) {
-      return true;
- 
-    };
-    if (attachmentFiles.startsWith('data:application/vnd.ms-excel')) {
-      return true;
- 
-    };
-    if (attachmentFiles.startsWith('data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-      return true;
- 
-    };
-    if (attachmentFiles.startsWith('data:application/msword')) {
-      return true;
-    };
-    if (attachmentFiles.startsWith('data:application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-      return true;
-    };
+      // Check if the file is a CSV
+      if (attachmentFiles.startsWith('data:text/csv')) {
+        return true;
+
+      };
+      if (attachmentFiles.startsWith('data:application/vnd.ms-excel')) {
+        return true;
+
+      };
+      if (attachmentFiles.startsWith('data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+        return true;
+
+      };
+      if (attachmentFiles.startsWith('data:application/msword')) {
+        return true;
+      };
+      if (attachmentFiles.startsWith('data:application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+        return true;
+      };
 
       return false;
     },
     getImageVisibility: function (attachmentFiles) {
       return attachmentFiles && attachmentFiles.startsWith('data:image/') ? true : false;
     },
-    
-    
+
+
 
     getStatusColor: function (status) {
       switch (status) {
@@ -817,41 +817,182 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
           break;
       }
     },
-    sizeFormatter: function(sizeL, sizeW, sizeH) {
+    sizeFormatter: function (sizeL, sizeW, sizeH) {
       var parts = [];
-      
+
       if (sizeL !== null) {
-        parts.push(sizeL);
+        parts.push(sizeL + "mm");
       }
-  
+
       if (sizeW !== null) {
-        parts.push(sizeW);
+        parts.push(sizeW + "mm");
       }
-  
+
       if (sizeH !== null) {
-        parts.push(sizeH);
+        parts.push(sizeH + "mm");
       }
-      
-      return parts.join('x');
+
+      return parts.join(' x ');
     },
+
+    showPcs: function (qtyPcs) {
+      if (qtyPcs === null) {
+        return " ";
+      }
+      return qtyPcs + " Pcs";
+
+    },
+    showEqmm: function (x, y) {
+      if (x === null) {
+        return " ";
+      }
+      return x + " x " + y + " mm";
+
+    },
+    showGsm: function (PaperGSM) {
+      if (PaperGSM === null) {
+        return " ";
+      }
+      return PaperGSM + " Gsm";
+
+    },
+    showSheets: function (PaperGSM) {
+      if (PaperGSM === null) {
+        return " ";
+      }
+      return PaperGSM + " Sheets";
+
+    },
+    equal: function (x, y, z) {
+      if (x === null) {
+        return " ";
+      }
+      return x + ' x ' + y + ' = ' + z;
+
+    },
+    showmm: function (showmm) {
+      if (showmm === null) {
+        return " ";
+      }
+      return showmm + " mm";
+
+    },
+    showPercent: function (x) {
+      if (x === null) {
+        return " ";
+      }
+      return x + " %";
+
+    },
+    showKg: function (x) {
+      if (x === null) {
+        return " ";
+      }
+      return x + " Kg";
+
+    },
+
+    formatInvNo: function (InvNo) {
+
+      var oModel = this.getView().getModel("appView");
+
+      var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
+
+      if (userName === "Customer") {
+
+        if (Array.isArray(InvNo) && InvNo.length > 0) {
+
+          var invNoValues = InvNo.map(function (obj) {
+
+            return obj.invNo;
+
+          });
+
+
+
+          return invNoValues.join(", ");
+
+        }
+
+      }
+
+
+
+
+      return InvNo;
+
+    },
+
+
+
+
+    formatDelNo: function (DeliveryNo) {
+
+      var oModel = this.getView().getModel("appView");
+
+      var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
+
+      if (userName === "Customer") {
+
+        if (Array.isArray(DeliveryNo) && DeliveryNo.length > 0) {
+
+          var invNoValues = DeliveryNo.map(function (obj) {
+
+            return obj.DeliveryNo;
+
+          });
+
+
+
+          return invNoValues.join(", ");
+
+        }
+
+      }
+
+
+
+
+      return DeliveryNo;
+
+    },
+    formatFullName: function(userName , firstName, lastName) {
+
+      // var firstName = appUser.FirstName;
+
+      // var lastName = appUser.LastName;
+
+      // var userName = appUser.UserName;
+
+      if (firstName && lastName) {
+
+        return firstName + ' ' + lastName;
+
+      } else {
+
+        return userName;
+
+      }
+
+    }
 
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];
-  
+
     //   if (sizeL !== null) {
     //     parts.push(sizeL);
     //   }
-  
+
     //   if (sizeW !== null) {
     //     parts.push(sizeW);
     //   }
-  
+
     //   if (sizeH !== null) {
     //     parts.push('=' + sizeH);
     //   }
-  
+
     //   return parts.join('x');
     // }
-  
+
   };
 });
