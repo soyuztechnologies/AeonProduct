@@ -714,16 +714,21 @@ sap.ui.define([
 				try {
 					var vContent = e.currentTarget.result;
 					// var fileType = files[0].type;
+					
+					oModel.setProperty("/attachmentFiles", vContent);
+					oModel.updateBindings();
+
 					var idbtn = that.jobAttachmentId;
-					if (idbtn.includes("DeliveryStatus")) {
+					if (!idbtn) {
+						return;
+					}
+					else if (idbtn.includes("DeliveryStatus")) {
 						oModel.setProperty("/statusDeliveryAttachment", vContent);
 					}
 					else if (idbtn.includes("Invstatus")) {
 						oModel.setProperty("/statusInvAttachment", vContent);
 
 					}
-
-					oModel.setProperty("/attachmentFiles", vContent);
 					oModel.updateBindings();
 				} catch (jqXhr) {
 					that.middleWare.errorHandler(jqXhr, that);
