@@ -59,7 +59,6 @@ sap.ui.define([
 			this.oGetAgru();
 			this.onReadJobStatus();
 		},
-
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
 
