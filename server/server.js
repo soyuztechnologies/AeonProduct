@@ -985,8 +985,8 @@ app.start = function () {
 				"spotUV":0,
 				"Packing":0,
 				"rawMaterial":"",
-				"InvNo":"",
-				"DeliveryNo":""
+				"InvNo":[],
+				"DeliveryNo": []
 			}
 			try {
 				const jobStatusData = await JobStatus.find({ where: { JobStatusId: jobId } }); // Retrieve job status data
@@ -1000,12 +1000,22 @@ app.start = function () {
 					oSumOfData.Pasting += jobStatusData[i].Pasting;
 					oSumOfData.spotUV += jobStatusData[i].spotUV;
 					oSumOfData.Packing += jobStatusData[i].Packing;
-					oSumOfData.rawMaterial = jobStatusData[0].rawMaterial;
-					oSumOfData.InvNo = jobStatusData[0].InvNo;
-					oSumOfData.DeliveryNo = jobStatusData[0].DeliveryNo;
+					oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
+					if(jobStatusData[i].InvNo){
+						oSumOfData.InvNo.push({
+							InvNo : jobStatusData[i].InvNo,
+							attachment : jobStatusData[i].incAttachment
+						})
+					}
+					if(jobStatusData[i].DeliveryNo){
+						oSumOfData.DeliveryNo.push({
+							DeliveryNo : jobStatusData[i].DeliveryNo,
+							attachment : jobStatusData[i].deliveryAttachment
+						})
+					}
 				}
 				
-				var array = array=[oSumOfData]
+				var array =[oSumOfData]
 			
 				res.status(200).json(array);
 			} catch (error) {
@@ -1029,8 +1039,8 @@ app.start = function () {
 				"spotUV":0,
 				"Packing":0,
 				"rawMaterial":"",
-				"InvNo":"",
-				"DeliveryNo":""
+				"InvNo":[],
+				"DeliveryNo": []
 			}
 			try {
 				const jobStatusData = await JobStatus.find({ where: { JobStatusId: jobId } }); // Retrieve job status data
@@ -1044,9 +1054,20 @@ app.start = function () {
 					oSumOfData.Pasting += jobStatusData[i].Pasting;
 					oSumOfData.spotUV += jobStatusData[i].spotUV;
 					oSumOfData.Packing += jobStatusData[i].Packing;
-					oSumOfData.rawMaterial = jobStatusData[0].rawMaterial;
-					oSumOfData.InvNo = jobStatusData[0].InvNo;
-					oSumOfData.DeliveryNo = jobStatusData[0].DeliveryNo;
+					oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
+					if(jobStatusData[i].InvNo){
+						oSumOfData.InvNo.push({
+							invNo : jobStatusData[i].InvNo,
+							attachment : jobStatusData[i].incAttachment
+						})
+					}
+					if(jobStatusData[i].DeliveryNo){
+						oSumOfData.DeliveryNo.push({
+							DeliveryNo : jobStatusData[i].DeliveryNo,
+							attachment : jobStatusData[i].deliveryAttachment
+						})
+					}
+					
 				}
 				const totalJobDetails = await Job.findOne({where:{jobCardNo:jobId}})
 				debugger;
@@ -1068,20 +1089,26 @@ app.start = function () {
 
 
 		app.get('/getJobsData', async (req, res) => {
-			
-			const Job = app.models.Job;
-			const AppUser = app.models.AppUser;
-			var data = await Job.find({ where: { jobCardNo: '9' }, include: 'appUser' });
-			var jobs = data[0].__data;
-			var custId = jobs.CustomerId;
+			try {
+				const Job = app.models.Job;
+				const AppUser = app.models.AppUser;
+				// Fetch jobs data with associated appUser
+				const jobs = await Job.find({ include: 'appUser' })
+				const jobsWithData = jobs.map(job => {
 
-			const customer = await AppUser.findById(custId);
-			var CustomerData = customer.__data;
-			var FullName = CustomerData.FirstName + " " + CustomerData.LastName;
-			jobs.CustomerId = FullName;
-			// res.send(jobs);
-			return res.status(200).json(jobs);
-
+				  const fullName = `${job.appUser.FirstName} ${job.appUser.LastName}`;
+				  return {
+					...job.toJSON(),
+					appUserFullName: fullName
+				  };
+  
+				});
+				return res.status(200).json(jobsWithData);
+			  } catch (error) {
+				console.error(error);
+				return res.status(500).json({ error: 'An error occurred' });
+  
+			  }
 		});
 		
 

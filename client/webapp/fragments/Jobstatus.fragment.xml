@@ -47,7 +47,7 @@
             <Column>
                 <Label text="Delivery No." />
             </Column>
-            <Column>
+            <Column visible="{appView>/editColumnVisible}">
                 <Label text="Edit Entry" />
             </Column>
         </columns>
@@ -76,10 +76,10 @@
                     <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Embossing}" min="0" max="100"  step="7" validationMode="LiveChange" textAlign="Center"/> -->
                     <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
                     <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Pasting}" min="0" max="100" step="8" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Link  press="onClickPopup"  text="{appView>InvNo}" ></Link>
+                    <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
                     <!-- <StepInput value="{appView>InvNo}" min="0" max="100"/> -->
-                    <Link  press="onClickPopup"  text="{appView>DeliveryNo}" ></Link>
-                    <Button press="editJobstatusEntry" type="Emphasized" text="Edit"/>
+                    <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
+                    <Button  press="editJobstatusEntry" type="Emphasized" icon="sap-icon://edit"/>
                     <!-- <StepInput value="{appView>DeliveryNo}" min="0" max="100"/> -->
                 </cells>
             </ColumnListItem>
