@@ -38,7 +38,7 @@ resizable="false" >
 				<Label text="Packing" />
 				<Input type="Number" value="{appView>Packing}" />
 				<Label text="Printing" />
-				<Input type="Number" value="{appView>Printing}" />
+				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" />
 				<Label text="Foiling" />
 				<Input type="Number" value="{appView>Foiling}" />
 				<Label text="Embossing" />

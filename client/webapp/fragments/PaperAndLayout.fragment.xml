@@ -7,25 +7,35 @@
   
     <Label text="No of Ups"/>
     <!-- ="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
-    <Input value="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.multiply'}" editable="false"/>
+    <Input value="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.equal'}" editable="false"/>
 
     <Label text="No of Sheets"/>
-    <Input value = "{appView>noOfSheets1}" editable="false"/>
+    <Input value = "{path: 'appView>noOfSheets1' ,formatter:'.formatter.showSheets'}" editable="false"/>
 
     <Label text="Printing Sheet Size"/>
-    <Input value = "{appView>printingSheetSizeL1} x {appView>printingSheetSizeW1}" editable="false"/>
+    <Input value = "{parts:[ {path:'appView>printingSheetSizeL1'}, { path: 'appView>printingSheetSizeW1'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
 
     <Label text="Procured Sheets"/>
-    <Input value = "{appView>noOfSheets2}" editable="false"/>
+    <Input value = "{path: 'appView>noOfSheets2' ,formatter:'.formatter.decimalFormatter'}" editable="false"/>
     
     <Label text="Procured Sheet Size"/>
-    <Input value = "{appView>printingSheetSizeL2} x {appView>printingSheetSizeW2}" editable="false"/>
+    <Input value = "{parts:[ {path:'appView>printingSheetSizeL2'}, { path: 'appView>printingSheetSizeW2'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
 
     <Label text="Wastage"/>
-    <Input value = "{appView>wastage}" editable="false"/>
+    <Input value = "{path: 'appView>wastage' ,formatter:'.formatter.showPercent'}" editable="false"/>
 
     <Label text="Weight in Kgs"/>
-    <Input value = "{path: 'appView>wtKgs' ,formatter:'.formatter.decimalFormatter'}" editable="false" />
+    <Input value = "{path: 'appView>wtKgs' ,formatter:'.formatter.showKg'}" editable="false" />
+
+    <Label text="Lock"/>
+    <Input value = "{appView>lock}" editable="{appView>/editableFields}"/>
+
+    <Label text="Double Cut"/>
+    <Input value = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
+    <Label text="Trin in TF"/>
+    <Input value = "{path: 'appView>trimTF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
+    <Label text="Trin in PF"/>
+    <Input value = "{path: 'appView>trimPF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
                                 
    
 </core:FragmentDefinition>
