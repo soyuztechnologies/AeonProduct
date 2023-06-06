@@ -174,30 +174,16 @@ sap.ui.define([
 			var oFilter1 = new Filter("jobCardNo", FilterOperator.Contains, sValue);
 			var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
 			var oFilter3 = new Filter("status", FilterOperator.Contains, sValue);
-			var oUserNameFilter = new Filter({
-				path: "UserName",
-				operator: sap.ui.model.FilterOperator.Contains,
-				value1: sValue
-			  });
-			
-			  var oFullNameFilter = new Filter({
-				filters: [
-				  new Filter("FirstName", FilterOperator.Contains, sValue),
-				  new Filter("LastName", FilterOperator.Contains, sValue)
-				],
-				and: false
-			  });
 			// var oFilter4 = new Filter("userName", FilterOperator.Contains, sValue);
 			// var oFilter5 = new Filter("LastName", FilterOperator.Contains, sValue);
-			var aFilters = [oFilter1, oFilter2, oFilter3, oUserNameFilter, oFullNameFilter];
-			// var oFilter = new Filter({
-			// 	filters: aFilter,
-			// 	and: false
-			// });
-			var oCombinedFilter = Filter(aFilters, false);
+			var aFilters = [oFilter1, oFilter2, oFilter3];
+			var oFilter = new Filter({
+				filters: aFilters,
+				and: false
+			});
 			var oList = this.getView().byId("idListAllPrinters");
 			var oBinding = oList.getBinding("items");
-			oBinding.filter(oCombinedFilter);
+			oBinding.filter(oFilter);
 		},
 
 
