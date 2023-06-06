@@ -5,7 +5,8 @@ sap.ui.define([
 	"sap/ui/core/BusyIndicator",
 	'sap/ui/model/Filter',
 	'sap/ui/model/FilterOperator',
-	"sap/ui/core/Fragment"
+	"sap/ui/core/Fragment",
+
 ], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment) {
 	"use strict";
 
@@ -47,15 +48,6 @@ sap.ui.define([
 		onListItemPress: function (oEvent) {
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
-			// if(datassss.status==="In-Progress"){
-			// 	this.getView().getModel("appView").setProperty('/addJobStatusVis', true);
-			// 	this.getView().getModel("appView").setProperty('/modifybtnvis', true);
-			// }
-			// else{
-			// 	this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
-			// 	this.getView().getModel("appView").setProperty('/modifybtnvis', false);
-			// }
-
 			this.getView().getModel("appView").setProperty('/datas', datassss);
 			this.getView().getModel("appView").setProperty('/jobId', datassss.jobCardNo);
 			debugger;
@@ -149,18 +141,11 @@ sap.ui.define([
 			}
 			var that = this;
 			var oModel = this.getView().getModel();
-			oModel.read(sPath, {
-				// urlParameters: {
-				// 	"$expand": "appUser"
-				// },
-				success: function (data) {
-					that.getView().getModel("appView").setProperty("/jobsData", data.results);
-				},
-				error: function (error) {
-					// Error callback
-					//   that.middleWare.errorHandler(error, that);
-					MessageToast.show("Error reading data");
-				}
+			this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
+				that.getView().getModel("appView").setProperty("/jobsData", data);
+			})
+			.catch(function (jqXhr, textStatus, errorMessage) {
+			  that.middleWare.errorHandler(jqXhr, that);
 			});
 		},
 
@@ -172,28 +157,47 @@ sap.ui.define([
 
 		//* this function is getting the userName into the Select dialog box.
 		getUserName: function (oEvent) {
-
+            debugger;
 			var oModel = this.getView().getModel("appView");
 			var oSelectedItem = oEvent.getParameter("value");
 			oModel.setProperty("/Username", oSelectedItem);
-			// console.log("Selected User ID:", oSelectedItem);
+			console.log("Selected User ID:", oSelectedItem);
 		},
 
 		// * this fcuntion is working to search the data into the allPrinters screen.
 		onSearchJob: function (oEvent) {
+			debugger;
 			var sValue = oEvent.getParameter("query");
 			if (!sValue) {
 				var sValue = oEvent.getParameter("newValue")
 			}
 			var oFilter1 = new Filter("jobCardNo", FilterOperator.Contains, sValue);
 			var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
-			var oFilter3 = new Filter("UserName", FilterOperator.Contains, sValue);
-			var aFilter = [oFilter1, oFilter2, oFilter3];
-			var oFilter = new Filter({
-				filters: aFilter,
+			var oFilter3 = new Filter("status", FilterOperator.Contains, sValue);
+			var oUserNameFilter = new Filter({
+				path: "UserName",
+				operator: sap.ui.model.FilterOperator.Contains,
+				value1: sValue
+			  });
+			
+			  var oFullNameFilter = new Filter({
+				filters: [
+				  new Filter("FirstName", FilterOperator.Contains, sValue),
+				  new Filter("LastName", FilterOperator.Contains, sValue)
+				],
 				and: false
-			});
-			this.getView().byId("idListAllPrinters").getBinding("items").filter(oFilter);
+			  });
+			// var oFilter4 = new Filter("userName", FilterOperator.Contains, sValue);
+			// var oFilter5 = new Filter("LastName", FilterOperator.Contains, sValue);
+			var aFilters = [oFilter1, oFilter2, oFilter3, oUserNameFilter, oFullNameFilter];
+			// var oFilter = new Filter({
+			// 	filters: aFilter,
+			// 	and: false
+			// });
+			var oCombinedFilter = Filter(aFilters, false);
+			var oList = this.getView().byId("idListAllPrinters");
+			var oBinding = oList.getBinding("items");
+			oBinding.filter(oCombinedFilter);
 		},
 
 
