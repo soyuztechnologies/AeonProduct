@@ -18,14 +18,14 @@
 			<items>
 					<ObjectListItem
 							type="Navigation"
-							title="{appView>nameOFTheProduct}"
-						    intro="{parts:[{path: 'appView>appUser/UserName'},{path: 'appView>appUser/FirstName'},{path: 'appView>appUser/LastName'}], formatter: '.formatter.formatFullName'}"
-							number="{appView>jobCardNo}"
+							title="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"
 							>
+						    <!-- intro="{parts:[{path: 'appView>appUser/UserName'},{path: 'appView>appUser/FirstName'},{path: 'appView>appUser/LastName'}], formatter: '.formatter.formatFullName'}" -->
+							<!-- number="{appView>jobCardNo}" -->
 							<!-- intro="{path: 'appView>appUser', formatter: '.formatter.formatFullName'}" + -->
-							<firstStatus>
+							<!-- <firstStatus>
 							    <ObjectStatus text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
-							</firstStatus>
+							</firstStatus> -->
 					</ObjectListItem>
 			</items>	
 	  </List>

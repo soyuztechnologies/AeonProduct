@@ -27,7 +27,7 @@
                     icon="sap-icon://browse-folder"
                     buttonText="Browse"
                     fileType="xml,xlsx"
-                    multiple="false" />  
+                    multiple="true" />  
                 </HBox>
                 <MessageStrip
                 visible="{appView>/messageStripVis}"
@@ -35,7 +35,7 @@
 				type="Warning"
 				showIcon="true">
 			</MessageStrip>
-            <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
+            <!-- <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
                 
         <ux:headerTitle>
             
@@ -122,7 +122,31 @@
                 </ux:ObjectPageSubSection>
             </ux:subSections>
         </ux:ObjectPageSection>
-    </ux:ObjectPageLayout>
+        <ux:ObjectPageSection title="Remarks">
+            <ux:subSections>
+                <ux:ObjectPageSubSection>
+                    <ux:blocks>
+                        <f:SimpleForm layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Remark" />
+                                    
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Remarks" type="XML"></core:Fragment>
+
+                                <core:Title text="Correction (if any)" />
+
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Correction" type="XML"></core:Fragment>
+
+                                <core:Title text="Batch Details" />
+
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.BatchDetails" type="XML"></core:Fragment>
+                    
+                            </f:content>
+                        </f:SimpleForm>
+                    </ux:blocks>
+                </ux:ObjectPageSubSection>
+            </ux:subSections>
+        </ux:ObjectPageSection>
+    </ux:ObjectPageLayout> -->
         </content>
         <footer>
             <Toolbar >

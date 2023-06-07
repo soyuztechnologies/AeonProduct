@@ -362,6 +362,21 @@
 		"userName": {
 			"type": "string"
 		},
+		"remarks1": {
+			"type": "string"
+		},
+		"remarks2": {
+			"type": "string"
+		},
+		"corrections1": {
+			"type": "string"
+		},
+		"corrections2": {
+			"type": "string"
+		},
+		"corrections3": {
+			"type": "string"
+		},
 		"status": {
 			"type": "string",
 			"default": "New"

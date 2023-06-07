@@ -173,7 +173,7 @@ sap.ui.define([
 			}
 			var oFilter1 = new Filter("jobCardNo", FilterOperator.Contains, sValue);
 			var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
-			var oFilter3 = new Filter("status", FilterOperator.Contains, sValue);
+			var oFilter3 = new Filter("jobCode", FilterOperator.Contains, sValue);
 			// var oFilter4 = new Filter("userName", FilterOperator.Contains, sValue);
 			// var oFilter5 = new Filter("LastName", FilterOperator.Contains, sValue);
 			var aFilters = [oFilter1, oFilter2, oFilter3];
