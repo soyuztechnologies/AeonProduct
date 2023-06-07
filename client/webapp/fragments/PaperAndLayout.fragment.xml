@@ -4,25 +4,28 @@
     xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
    
+    <Label text="Procured No. Of Sheets"/>
+    <Input value = "{path: 'appView>noOfSheets3',formatter:'.formatter.showSheets'}" editable="false"/>
   
+    <Label text="Procured Sheet Size"/>
+    <Input value = "{parts:[ {path:'appView>printingSheetSizeL2'}, { path: 'appView>printingSheetSizeW2'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
+        
+    <Label text="Printing Sheet Size"/>
+    <Input value = "{parts:[ {path:'appView>printingSheetSizeL1'}, { path: 'appView>printingSheetSizeW1'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
+
+    <Label text="No of Sheets To Be Printed"/>
+    <Input value = "{path: 'appView>noOfSheets1' ,formatter:'.formatter.showSheets'}" editable="false"/>
+
     <Label text="No of Ups"/>
     <!-- ="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
     <Input value="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.equal'}" editable="false"/>
 
-    <Label text="No of Sheets"/>
-    <Input value = "{path: 'appView>noOfSheets1' ,formatter:'.formatter.showSheets'}" editable="false"/>
 
-    <Label text="Printing Sheet Size"/>
-    <Input value = "{parts:[ {path:'appView>printingSheetSizeL1'}, { path: 'appView>printingSheetSizeW1'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
-
-    <Label text="Procured Sheets"/>
-    <Input value = "{path: 'appView>noOfSheets2' ,formatter:'.formatter.decimalFormatter'}" editable="false"/>
     
-    <Label text="Procured Sheet Size"/>
-    <Input value = "{parts:[ {path:'appView>printingSheetSizeL2'}, { path: 'appView>printingSheetSizeW2'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
 
-    <Label text="Wastage"/>
-    <Input value = "{path: 'appView>wastage' ,formatter:'.formatter.showPercent'}" editable="false"/>
+    <Label text="Wastage Sheet Available"/>
+    <Input value = "{path: 'appView>noOfSheets2',formatter:'.formatter.decimalFormatterWithSheets'}" editable="false"/>
+    <Input value = "{path: 'appView>wastage',formatter:'.formatter.showPercent'}" editable="false"/>
 
     <Label text="Weight in Kgs"/>
     <Input value = "{path: 'appView>wtKgs' ,formatter:'.formatter.showKg'}" editable="false" />

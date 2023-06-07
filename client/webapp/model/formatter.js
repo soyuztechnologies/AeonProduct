@@ -426,6 +426,40 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
       return data;
     },
+    decimalFormatterWithSheets: function (data) {
+      if (data) {
+        data = parseFloat(data);
+        // if (data.toString().includes(".") || data.toString().includes(",")) {
+        var oCurrencyFormat = NumberFormat.getCurrencyInstance({
+          currencyCode: false,
+          decimals: 2,
+        });
+        var Value = oCurrencyFormat.format(data.toFixed(2));
+        return Value + " Sheets"
+        // return data.toFixed(1);
+        // }
+
+
+      }
+      return data;
+    },
+    decimalFormatterWithRupee: function (data) {
+      if (data) {
+        data = parseFloat(data);
+        // if (data.toString().includes(".") || data.toString().includes(",")) {
+        var oCurrencyFormat = NumberFormat.getCurrencyInstance({
+          currencyCode: false,
+          decimals: 2,
+        });
+        var Value = oCurrencyFormat.format(data.toFixed(2));
+        return Value + " ₹"
+        // return data.toFixed(1);
+        // }
+
+
+      }
+      return data;
+    },
     formatYN: function (oValue) {
       if (oValue) {
         if (oValue.includes("Y")) {
@@ -853,7 +887,22 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       if (PaperGSM === null) {
         return " ";
       }
-      return PaperGSM + " Gsm";
+      return PaperGSM + " GSM";
+
+    },
+    tableEntryVisible : function(Data) {
+
+      if(Data){
+
+        return true;
+
+      }
+
+      else{
+
+        return false;
+
+      }
 
     },
     showSheets: function (PaperGSM) {
@@ -867,9 +916,10 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       if (x === null) {
         return " ";
       }
-      return x + ' x ' + y + ' = ' + z;
+      return x + ' x ' + y + ' = ' + z + " UPS";
 
     },
+    
     showmm: function (showmm) {
       if (showmm === null) {
         return " ";
