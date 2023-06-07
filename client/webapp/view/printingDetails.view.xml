@@ -20,12 +20,18 @@
 	  </Button>
 
         </Toolbar>
-		<f:SimpleForm title="{appView>nameOFTheProduct}" id="jobDetails" editable="true" layout="ColumnLayout"  columnsM="2" >
+		<f:SimpleForm title="{appView>nameOFTheProduct}" id="jobDetails" editable="true" layout="ColumnLayout"  columnsM="2"  columnsL="2">
 				<f:content>
 					
 
-						<Label text="PO NO"></Label>
-						<Link  press="onClickPopup"  text="{appView>poNo}" ></Link>
+						<Label text="Client PO Number"></Label>
+						<Link  press="onClickPopup"  text="{appView>clientPONo}" ></Link>
+
+						<Label text="Reference Number"></Label>
+						<Text text="{appView>poNo}" ></Text>
+
+						<Label text="Job Card Number + Job Code"></Label>
+						<Text text="{appView>jobCardNo} + {appView>jobCode}"></Text>
 
 						<Label text="Quantity"></Label>
 						<Input editable="false" value="{appView>qtyPcs}"></Input>
@@ -34,7 +40,7 @@
 						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->
 						<Input editable="false" value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}"></Input>
 	                    <Label text="Total No. of Sheets"></Label>
-						<Input editable="false" value = "{appView>noOfSheets-1}"></Input>
+						<Input editable="false" value = "{appView>noOfSheets1}"></Input>
 						<Label text="Artwork"></Label>
 						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 						<Label text="Paper Board"></Label>
