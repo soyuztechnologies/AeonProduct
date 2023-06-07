@@ -19,6 +19,7 @@ sap.ui.define([
 		_matchedHandler: async function (oEvent) {
 			this.oArgs = oEvent.getParameter("arguments").jobId;
 			var that = this;
+			
 			await this.getUserRoleData().then(
 				function (data) {
 					var role = data.role.Role
@@ -58,7 +59,37 @@ sap.ui.define([
 			this.getUserRoleData();
 			this.oGetAgru();
 			this.onReadJobStatus();
+			
+			
 		},
+		showAddedFields: function() {
+			var oTable = this.getView().byId("jobStatusTable");
+			var aColumns = oTable.getColumns();
+			var aItems = oTable.getItems();
+			var oLastItem = aItems[aItems.length - 1];
+		  
+			// Hide all columns except the last column (header)
+			for (var i = 0; i < aColumns.length - 1; i++) {
+			  var oColumn = aColumns[i];
+			  oColumn.setVisible(false);
+			}
+		  
+			// Show the added column (last column)
+			aColumns[aColumns.length - 1].setVisible(true);
+		  
+			// Show the added item (last item) and check cell values
+			var oItemCells = oLastItem.getCells();
+			Object.keys(oItemCells).forEach(function(sKey) {
+			  var oCell = oItemCells[sKey];
+			  var sCellValue = oCell.getText();
+		  
+			  if (typeof sCellValue === 'undefined' || sCellValue === null) {
+				oCell.setVisible(false);
+			  }
+			});
+		  },
+		  
+		  
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
 
@@ -137,9 +168,12 @@ sap.ui.define([
 		onClickCancel: function () {
 			debugger;
 			var oModel = this.getView().getModel("appView");
+			var oldData = oModel.getProperty("/newJobStatus");
 			oModel.setProperty("/statusInvAttachment", "");
 			oModel.setProperty("/statusDeliveryAttachment", "");
-			oModel.setProperty("/newJobStatus",this.jobStatusData);
+			var data = oModel.getProperty("/readedJobdata");
+			
+			// oModel.setProperty("/newJobStatus",this.jobStatusData);
 			oModel.updateBindings();
 		},
 
@@ -199,7 +233,7 @@ sap.ui.define([
 			this.clickedLink = oEvent.getSource().getBinding("text").getPath();
 			this.jobStatusPath = oEvent.getSource().getBindingContext("appView").sPath;
 			var oModel = this.getView().getModel("appView");
-			if (this.clickedLink == "poNo") {
+			if (this.clickedLink == "clientPONo") {
 				this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
 				oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 				var pofile = oData.poAttachment;
@@ -312,7 +346,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel("appView");
 			this.oUploadDialog.then(function (oDialog) {
 				oDialog.close();
-				oModel.setProperty("/PONo", "")
+				oModel.setProperty("/clientPONo", "")
 				oModel.setProperty("/ArtWork", "")
 				oModel.setProperty('/visibleDownloadButton', false);
 				oDialog.updateBindings();
@@ -510,8 +544,8 @@ sap.ui.define([
 		onUploadDataPress: function () {
 			var idbtn = this.jobAttachmentId;
 			var oModel = this.getView().getModel("appView");
-			if (this.clickedLink == "poNo") {
-				this.onUploadAttachmentfiles("/PONo");
+			if (this.clickedLink == "clientPONo") {
+				this.onUploadAttachmentfiles("/clientPONo");
 			}
 			else if (this.clickedLink == "artworkCode") {
 				this.onUploadAttachmentfiles("/ArtWork",);
@@ -569,7 +603,7 @@ sap.ui.define([
 			var artworkFile = this.getView().getModel('appView').getProperty("/attachmentFiles");
 			var payload = artworkFile ? artworkFile : "";
 			BusyIndicator.show(0);
-			if (attachmentPath == "/PONo") {
+			if (attachmentPath == "/clientPONo") {
 				this.getModel("appView").setProperty("/Jobs/poAttachment", payload);
 				var oUpdatedData = {
 
@@ -599,7 +633,7 @@ sap.ui.define([
 			var files = '';
 
 			var mapping = {
-				"poNo": "/PONo",
+				"clientpoNo": "/clientPONo",
 				"artworkCode": "/ArtWork",
 				"InvNo": "/InvNo",
 				"DeliveryNo": "/DeliveryNo"
@@ -607,7 +641,7 @@ sap.ui.define([
 
 			if (this.clickedLink && mapping.hasOwnProperty(this.clickedLink)) {
 				jsonPath = mapping[this.clickedLink];
-				files = oModel.getProperty(jsonPath).attachmentPdfFiles;
+				files = oModel.getProperty("/attachmentFiles");
 
 				var mimeType = files.split(';')[0].split(':')[1];
 				var fileExtension = mimeType.split('/')[1];
@@ -665,8 +699,9 @@ sap.ui.define([
 					data.forEach(item => {
 						item.TobeUpdated = false;
 					});
+					oModel.setProperty("/readedJobdata", data);
 					oModel.setProperty("/newJobStatus", data);
-					// oModel.setProperty("/readedJobdata", data);
+					// that.showAddedFields();
 					// that.jobStatusData = oModel.getProperty("/readedJobdata");
 				})
 				.catch(function (jqXhr, textStatus, errorMessage, error) {
@@ -679,7 +714,7 @@ sap.ui.define([
 		onChangeFileUploader: function (oEvent) {
 			var files = oEvent.getParameter("files");
 
-			if (this.clickedLink == "poNo") {
+			if (this.clickedLink == "clientPONo") {
 				this.onFileUploader(files);
 			}
 			else if (this.clickedLink == "artworkCode") {
@@ -714,16 +749,21 @@ sap.ui.define([
 				try {
 					var vContent = e.currentTarget.result;
 					// var fileType = files[0].type;
+					
+					oModel.setProperty("/attachmentFiles", vContent);
+					oModel.updateBindings();
+
 					var idbtn = that.jobAttachmentId;
-					if (idbtn.includes("DeliveryStatus")) {
+					if (!idbtn) {
+						return;
+					}
+					else if (idbtn.includes("DeliveryStatus")) {
 						oModel.setProperty("/statusDeliveryAttachment", vContent);
 					}
 					else if (idbtn.includes("Invstatus")) {
 						oModel.setProperty("/statusInvAttachment", vContent);
 
 					}
-
-					oModel.setProperty("/attachmentFiles", vContent);
 					oModel.updateBindings();
 				} catch (jqXhr) {
 					that.middleWare.errorHandler(jqXhr, that);

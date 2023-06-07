@@ -1,0 +1,19 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+    <Label text="Batch NO."/>
+    <Input value = "{appView>batchNo}" editable="{appView>/editableFields}"/>
+
+    <Label text="MFG No."/>
+    <Input value = "{appView>mfgDate}" editable="{appView>/editableFields}"/>
+
+    <Label text="EXP No."/>
+    <Input value = "{appView>expDate}" editable="{appView>/editableFields}"/>
+    
+    <Label text="Code No."/>
+    <Input value = "{appView>codeNo}" editable="{appView>/editableFields}"/>
+                                
+</core:FragmentDefinition>

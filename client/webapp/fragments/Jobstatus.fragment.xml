@@ -1,88 +1,83 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
-    <Table items="{path: 'appView>/newJobStatus'}" popinLayout= 'GridSmall'  autoPopinMode="true">
-        <headerToolbar>
-            <Toolbar>
-                <Title text="Job Status" />
-                <ToolbarSpacer/>
+    <OverflowToolbar>
+        <!-- <Toolbar> -->
+            <Title text="Job Status" />
+            <ToolbarSpacer/>
                 <Button
                    visible="{=${appView>/Jobs/status}  ? ${appView>/addBtnVisible} : false }"
                    icon="sap-icon://add"
-                   press="onPressAdd"
-               >   
-               </Button>
-            </Toolbar>
-        </headerToolbar>
-        <!-- visibleRowCount="4" selectionMode="Single" -->
-        <columns>
-            <Column>
-                <Label text="Raw Material" />
-            </Column>
-            <Column>
-                <Label text="Coating" />
-            </Column>
-            <Column>
-                <Label text="Spot UV" />
-            </Column>
-            <Column>
-                <Label text="Punching" />
-            </Column>
-            <Column>
-                <Label text="Packing" />
-            </Column>
-            <Column>
-                <Label text="Printing" />
-            </Column>
-            <Column>
-                <Label text="Foiling" />
-            </Column>
-            <Column>
-                <Label text="Embossing" />
-            </Column>
-            <Column>
-                <Label text="Pasting" />
-            </Column>
-            <Column>
-                <Label text="Inc. No." />
-            </Column>
-            <Column>
-                <Label text="Delivery No." />
-            </Column>
-            <Column visible="{appView>/editColumnVisible}">
-                <Label text="Edit Entry" />
-            </Column>
-        </columns>
+                   press="onPressAdd"/>
+    </OverflowToolbar>
+    <VBox items="{path: 'appView>/newJobStatus'}">
         <items>
-            <ColumnListItem >
-                <cells>
-                    <Select editable="{appView>/onClickModify}" forceSelection="false" selectedKey="{appView>rawMaterial}" change="onSelectKeyRawMaterial">
-                        <items>
-                            <core:Item text="In Stock" key="In Stock" />
-                            <core:Item text="Pending" key="Pending" />
-                        </items>
-                    </Select>
-                    <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Coating}" />
-                    <!-- <StepInput  editable="{appView>/onClickModify}" value="path: 'appView>Coating',formatter:''" min="0" max="100" step="1" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Input type="Number" editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input>
-                    <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>spotUV}" min="0" max="100" step="2" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
-                    <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Punching}" min="0" max="100" step="3" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input>
-                    <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Packing}" min="0" max="100" step="4" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Input type="Number" liveChange="onLiveChange" editable="{appView>/onClickModify}" value="{appView>Printing}"></Input>
-                    <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Printing}" min="0" max="100" step="5" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Foiling}"></Input>
-                    <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Foiling}" min="0" max="100" step="6" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Embossing}"></Input>
-                    <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Embossing}" min="0" max="100"  step="7" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
-                    <!-- <StepInput editable="{appView>/onClickModify}" value="{appView>Pasting}" min="0" max="100" step="8" validationMode="LiveChange" textAlign="Center"/> -->
-                    <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
-                    <!-- <StepInput value="{appView>InvNo}" min="0" max="100"/> -->
-                    <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
-                    <Button  press="editJobstatusEntry" type="Emphasized" icon="sap-icon://edit"/>
-                    <!-- <StepInput value="{appView>DeliveryNo}" min="0" max="100"/> -->
-                </cells>
-            </ColumnListItem>
+            <CustomListItem >
+                <Table  popinLayout= 'GridSmall'  autoPopinMode="true" id="jobStatusTable">
+                    <!-- <VBox > -->
+                    <!-- visibleRowCount="4" selectionMode="Single" -->
+                    <columns>
+                        <Column visible="{path: 'appView>rawMaterial', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Raw Material" />
+                        </Column>
+                        <Column  visible="{path: 'appView>Coating', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Coating" />
+                        </Column>
+                        <Column visible="{path: 'appView>spotUV', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Spot UV" />
+                        </Column>
+                        <Column visible="{path: 'appView>Punching', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Punching" />
+                        </Column>
+                        <Column visible="{path: 'appView>Packing', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Packing" />
+                        </Column>
+                        <Column visible="{path: 'appView>Printing', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Printing" />
+                        </Column>
+                        <Column visible="{path: 'appView>Foiling', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Foiling" />
+                        </Column>
+                        <Column visible="{path: 'appView>Embossing', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Embossing" />
+                        </Column>
+                        <Column visible="{path: 'appView>Pasting', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Pasting" />
+                        </Column>
+                        <Column visible="{path: 'appView>InvNo', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Inc. No." />
+                        </Column>
+                        <Column visible="{path: 'appView>DeliveryNo', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Delivery No." />
+                        </Column>
+                        <Column visible="{appView>/editColumnVisible}">
+                            <Label text="Edit Entry" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem >
+                            <cells>
+                                <Select editable="{appView>/onClickModify}" forceSelection="false" selectedKey="{appView>rawMaterial}" change="onSelectKeyRawMaterial">
+                                    <items>
+                                        <core:Item text="In Stock" key="In Stock" />
+                                        <core:Item text="Pending" key="Pending" />
+                                    </items>
+                                </Select>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Coating}" />
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input>
+                                <Input type="Number" liveChange="onLiveChange" editable="{appView>/onClickModify}" value="{appView>Printing}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Foiling}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Embossing}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
+                                <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
+                                <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
+                                <Button  press="editJobstatusEntry" type="Emphasized" icon="sap-icon://edit"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                <!-- </VBox> -->
+                </Table>
+            </CustomListItem>
         </items>
-    </Table>
+    </VBox>
 </core:FragmentDefinition>
