@@ -7,34 +7,54 @@
     xmlns:ux="sap.uxap">
     <Page enableScrolling="false"  showHeader="{appView>/visibleHeader}" id="SimpleForm-1">
         <content>
-
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
-            <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop">
-                <ComboBox   items="{appView>/customerUser}" id="idPopinLayout"
-                    placeholder="Select User"
-                    change="onPopinLayoutChanged"
-                    class="sapUiTinyMarginEnd">
-                    <items>
-                        <core:Item enabled="true"  text="{appView>UserName}"
-                            key="{appView>id}"/>
-                    </items>
-                </ComboBox>
-                    <u:FileUploader
+            <!-- <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop"> -->
+                
+                <u:FileUploader
+                    width="97%"
+                    style="Emphasized"
                     id="fileUploader"
                     sameFilenameAllowed="true"
-                    class="sapUiTinyMarginBegin"
+                    class="sapUiTinyMargin"
                     change="onFileUploaddChange"
                     icon="sap-icon://browse-folder"
                     buttonText="Browse"
                     fileType="xml,xlsx"
-                    multiple="true" />  
-                </HBox>
-                <MessageStrip
+                    multiple="true" />
+            <!-- </HBox> -->
+            <MessageStrip
                 visible="{appView>/messageStripVis}"
 				text="Same Job is already available"
 				type="Warning"
 				showIcon="true">
 			</MessageStrip>
+            <Table items="{appView>/excelValues}">
+                <columns>
+                    <Column >
+                        <Label text="File Name" />
+                    </Column>
+                    <Column hAlign="End" >
+                        <Label text="Select User" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem type="DetailAndActive">
+                        <cells>
+                            <Text text="{appView>fileName}">
+                            </Text>
+                            <ComboBox   items="{appView>/customerUser}" id="idPopinLayout"
+                                placeholder="Select User"
+                                change="onPopinLayoutChanged"
+                                class="sapUiTinyMarginEnd">
+                                <items>
+                                    <core:Item enabled="true"  text="{appView>UserName}"
+                                        key="{appView>id}"/>
+                                </items>
+                            </ComboBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
             <!-- <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
                 
         <ux:headerTitle>
@@ -150,14 +170,10 @@
         </content>
         <footer>
             <Toolbar >
-               
-                    
-                    <ToolbarSpacer/>
-                    <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onSavePayloadVis}"  text="Save" press="onSavePayload"></Button>
-                    <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onUpdateJobVis}" text="Update" press="onUpdateJob"></Button>
-                    <Button type="Reject" text="Clear"  icon="sap-icon://clear-all" press="onPressClear"></Button>
-
-               
+                <ToolbarSpacer/>
+                <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onSavePayloadVis}"  text="Save" press="onSavePayload"></Button>
+                <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onUpdateJobVis}" text="Update" press="onUpdateJob"></Button>
+                <Button type="Reject" text="Clear"  icon="sap-icon://clear-all" press="onPressClear"></Button>
             </Toolbar>
         </footer>
     </Page>
