@@ -72,5 +72,9 @@
   "Customer": {
     "dataSource": "mongoatlas",
     "public": true
+  },
+  "Company": {
+    "dataSource": "mongoatlas",
+    "public": true
   }
 }

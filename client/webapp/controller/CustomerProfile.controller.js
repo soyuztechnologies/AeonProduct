@@ -34,17 +34,17 @@ sap.ui.define([
 
 		getUserData: function () {
 			var that = this;
-			this.middleWare.callMiddleWare("getUserRole", "get")
+			this.middleWare.callMiddleWare("getUserProfileData", "get")
 				.then(function (data, status, xhr) {
 					
 					// MessageToast.show("Data Reading......."+ data.role);
 					var omodel =  that.getView().getModel('appView');
-					 omodel.setProperty("/CustomerData", data.role);
+					 omodel.setProperty("/CustomerData", data.Appuser);
 					var osimples = that.getView().byId("profile_Id");
 					osimples.bindElement("appView>/CustomerData");
 					that.getModel('appView').setProperty('/editableFields', false);
-						userId = data.role.id;
-						userRole = data.role.Role;
+						userId = data.Appuser.id;
+						userRole = data.Appuser.Role;
 					if (userRole == "Admin") {
 						that.getModel('appView').setProperty('/Passwordfield', false);
 					};

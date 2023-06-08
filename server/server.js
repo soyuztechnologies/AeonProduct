@@ -898,6 +898,60 @@ app.start = function () {
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+		app.get('/getUserProfileData', async (req, res) => {
+			// models data
+			this.User = app.models.User;
+			this.Param = app.models.Param;
+			this.AppUser = app.models.AppUser;
+			this.AccessToken = app.models.AccessToken;
+
+			const cookieHeader = req.headers.cookie;
+			// Parse the cookie string and extract the value of 'soyuz_session'
+			const cookies = cookie.parse(cookieHeader);
+			const sessionCookie = cookies.soyuz_session;
+
+			try {
+				
+				// Retrieve the access token based on the session cookie
+				const accessToken = await this.AccessToken.findOne({ where: { id: sessionCookie } });
+
+				if (!accessToken) {
+					// Handle case when access token is not found
+					return res.status(404).json({ error: 'Session not found' });
+				}
+				const {  ttl, created, userId } = accessToken;
+
+				let userID = accessToken.userId;
+
+				// Retrieve the user based on the access token user ID
+				const user = await this.User.findOne({ where: { id: userID } });
+				if (!user) {
+					// Handle case when user is not found
+					return res.status(404).json({ error: 'User not found' });
+				}
+				//   const ID = user.id;
+
+				const Appuser = await this.AppUser.findOne({ where: { EmailId: user.email } });
+				if (!Appuser) {
+					// Handle case when user is not found
+					return res.status(404).json({ error: 'User not found' });
+				}
+
+				// Retrieve the user's role or any other relevant data
+				// const {appUser} = Appuser;
+				const responseData = {
+					Appuser
+					// Include other relevant data if needed
+				};
+
+				// Send the response
+				res.status(200).json(responseData);
+			} catch (error) {
+				// Handle any errors that occur during the process
+				console.error('Error fetching user role:', error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
 
 
 
@@ -1246,44 +1300,48 @@ app.start = function () {
 		app.post('/usersRemove', (req, res) => {
 			const userEmail = "dheeraj@soyuztechnologies.com";
 		  
-			// Assuming you are using a database library or ORM, such as Sequelize or Mongoose
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
 		  
-			// Find the user by email
 			User.findOne({ email: userEmail })
 			  .then((user) => {
 				if (!user) {
 				  return res.status(404).send('User not found');
 				}
 		  
-				// Delete the user
-				user.remove()
-				  .then(() => {
-					// Find the appUser by email
-					AppUser.findOne({ email: userEmail })
-					  .then((appUser) => {
-						if (!appUser) {
-						  return res.status(404).send('AppUser not found');
-						}
-		  
-						// Delete the appUser
-						appUser.remove()
-						  .then(() => {
-							return res.status(200).send('User and AppUser deleted successfully');
-						  })
-						  .catch((error) => {
-							console.error('Error deleting appUser:', error);
-							return res.status(500).send('Internal server error');
-						  });
-					  })
-					  .catch((error) => {
-						console.error('Error finding appUser:', error);
-						return res.status(500).send('Internal server error');
-					  });
+				AppUser.findOne({ email: userEmail,Role:'Customer' })
+				  .then((appUser) => {
+					if (!appUser) {
+					  // Delete the user only if the appUser is not found
+					  user.remove()
+						.then(() => {
+						  return res.status(200).send('User deleted successfully');
+						})
+						.catch((error) => {
+						  console.error('Error deleting user:', error);
+						  return res.status(500).send('Internal server error');
+						});
+					} else {
+					  // Delete both the user and appUser
+					  user.remove()
+						.then(() => {
+						  appUser.remove()
+							.then(() => {
+							  return res.status(200).send('User and AppUser deleted successfully');
+							})
+							.catch((error) => {
+							  console.error('Error deleting appUser:', error);
+							  return res.status(500).send('Internal server error');
+							});
+						})
+						.catch((error) => {
+						  console.error('Error deleting user:', error);
+						  return res.status(500).send('Internal server error');
+						});
+					}
 				  })
 				  .catch((error) => {
-					console.error('Error deleting user:', error);
+					console.error('Error finding appUser:', error);
 					return res.status(500).send('Internal server error');
 				  });
 			  })
@@ -1292,6 +1350,7 @@ app.start = function () {
 				return res.status(500).send('Internal server error');
 			  });
 		  });
+		  
 		  
 
 

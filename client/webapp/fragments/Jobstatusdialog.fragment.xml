@@ -14,14 +14,10 @@ resizable="false" >
 			<f:content>
 				<Label text="JobStatusId" />
 				<Text  text="{appView>JobStatusId}" />
+			
 				<Label text="CreatedOn" />
-				<!-- <Text
-					text="{appView>/jobStatusTabData/CreatedOn}"
-					
-				>
-					
-				</Text> -->
 				<DatePicker dateValue="{appView>CreatedOn}"/>
+
 				<Label required="true" text="Raw Material" />
 				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" >
 					<items>
@@ -29,31 +25,34 @@ resizable="false" >
 						<core:Item text="Pending" key="pending" />
 					</items>
 				</Select>
-				<Label text="Coating" />
-				<Input type="Number" value="{appView>Coating}" />
-				<Label text="Spot UV" />
-				<Input type="Number" value="{appView>spotUV}" />
-				<Label text="Punching" />
-				<Input type="Number" value="{appView>Punching}" />
-				<Label text="Packing" />
-				<Input type="Number" value="{appView>Packing}" />
 				<Label text="Printing" />
 				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" />
+
+				<Label text="Coating" />
+				<Input type="Number" value="{appView>Coating}" />
+					
 				<Label text="Foiling" />
 				<Input type="Number" value="{appView>Foiling}" />
+				<Label text="Spot UV" />
+				<Input type="Number" value="{appView>spotUV}" />
 				<Label text="Embossing" />
 				<Input type="Number" value="{appView>Embossing}" />
+
+				<Label text="Punching" />
+				<Input type="Number" value="{appView>Punching}" />
 				<Label text="Pasting" />
 				<Input type="Number" value="{appView>Pasting}" />
 
+				<Label text="Packing" />
+				<Input type="Number" value="{appView>Packing}" />
+
 				<Label text="Inv. No." />
 				<Input type="Number" value="{appView>InvNo}" />
-				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" />
-				
+				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%"/>
 
 				<Label text="Delivery No." />
 				<Input type="Number" value="{appView>DeliveryNo}" />
-				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" />
+				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%"/>
 
 				<Label required="true" text="Status" />
 				<Select id="idStatus" forceSelection="false" selectedKey=""  change="onSelectKeyStatus">
@@ -68,7 +67,6 @@ resizable="false" >
 						<!-- <core:Item text="Cancelled" key="cancelled" /> -->
 					</items>
 				</Select>
-
 			</f:content>
 		</f:SimpleForm>
 </content>
