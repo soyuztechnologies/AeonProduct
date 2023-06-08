@@ -134,18 +134,30 @@ sap.ui.define([
 			var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
 			if (sUserRole === "Admin") {
 				var sPath = `/Jobs`
-			} else {
+			}
+			else{
 
+				var id =this.getView().getModel('appView').getProperty('/appUserId');
 				var id = this.getView().getModel('appView').getProperty('/appUserId');
 				sPath = `/AppUsers('${id}')/job`;
 			}
 			var that = this;
 			var oModel = this.getView().getModel();
-			this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
-				that.getView().getModel("appView").setProperty("/jobsData", data);
-			})
-			.catch(function (jqXhr, textStatus, errorMessage) {
-			  that.middleWare.errorHandler(jqXhr, that);
+			oModel.read(sPath, {
+				// urlParameters: {
+				// 	"$expand": "appUser"
+				// },
+				success: function (data) {
+					that.getView().getModel("appView").setProperty("/jobsData", data.results);
+				},
+				error: function (error) {
+				  // Error callback
+				//   that.middleWare.errorHandler(error, that);
+				  MessageToast.show("Error reading data");
+					// Error callback
+					//   that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
+				}
 			});
 		},
 

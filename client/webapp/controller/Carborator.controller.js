@@ -30,6 +30,7 @@ sap.ui.define([
       oModel.setProperty("/messageStripVis", false)
       oModel.setProperty("/onUpdateJobVis", false)
       this.onPressClear();
+      this.getJobsData();
 
       var bSystemType = this.getModel("device").getData().system.desktop;
       if (bSystemType) {
@@ -122,6 +123,29 @@ sap.ui.define([
       
 
     },
+    getJobsData: function () {
+			var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
+			
+				var sPath = `/Jobs`
+			var oModel = this.getView().getModel();
+      var that = this;
+			oModel.read(sPath, {
+				// urlParameters: {
+				// 	"$expand": "appUser"
+				// },
+				success: function (data) {
+					that.getView().getModel("appView").setProperty("/excelValues", data.results);
+				},
+				error: function (error) {
+				  // Error callback
+				//   that.middleWare.errorHandler(error, that);
+				  MessageToast.show("Error reading data");
+					// Error callback
+					//   that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
+				}
+			});
+		},
     onViewPdf: function () {
       var viewPdf = this.getView().getModel("appView").getProperty("/pdfUrl")
       window.open(viewPdf, '_blank', 'width=600,height=800')
@@ -188,39 +212,43 @@ sap.ui.define([
     onSavePayload: function () {
       debugger;
       var that = this;
-      var userValue = this.getModel("appView").getProperty("/customerId");
-      var oJsonInpValue = this.getView().getModel('appView').getProperty("/jsonValue");
-      var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
       var oModel = this.getView().getModel();
-      if (!userValue || !oJsonInpValue) {
-        if (!userValue) {
-          MessageToast.show("Please Select The User")
-        }
-        else {
-          MessageToast.show("Please Upload The File")
-        }
-      }
-      else {
-        var payload = JSON.parse(oJsonInpValue);
-        payload.CustomerId = userValue;
-        payload.fileName = getUploadFile;
-        var id = payload.jobCardNo;
-        oModel.create("/Jobs", payload, {
-          success: function (oUpdatedData) {
 
-            MessageToast.show("Job created successfully");
-          },
-          error: function (nts) {
-            // Error callback
-            // if(nts.responseText.includes("duplicate key")){
-            MessageToast.show("Something Went Wrong")
-            // }
-            // that.middleWare.errorHandler(error, that);
-            // MessageToast.show("Error While Post the data");
-          }
-        });
+      var userValue = this.getModel("appView").getProperty("/customerId");
+      var oJsonInpValue = this.getView().getModel('appView').getProperty("/excelValues");
+      var arr=[];
+      for (let i = 0; i < oJsonInpValue.length; i++) {
+      // const element = oJsonInpValue[i];
+      var filename = oJsonInpValue[i].fileName;
+      oJsonInpValue[i].fileContent.fileName = filename;
+      // arr.push(element.fileContent)
+      oModel.create("/Jobs", oJsonInpValue[i].fileContent, {
+        success: function (oUpdatedData) {
+
+          MessageToast.show("Job created successfully");
+        },
+        error: function (nts) {
+          // Error callback
+          // if(nts.responseText.includes("duplicate key")){
+          MessageToast.show("Something Went Wrong")
+          // }
+          // that.middleWare.errorHandler(error, that);
+          // MessageToast.show("Error While Post the data");
+        }
+      });
+      
+    }
+      // var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
+      
+        // var payload = JSON.parse(oJsonInpValue);
+        // payload.CustomerId = userValue;
+        // payload.fileName = getUploadFile;
+        
         // MessageToast.show("Not Available Want to Upload New");
-      }
+      
+    },
+    onPressDetails:function(oEvent){
+      debugger;
     },
     onUpdateJob: function () {
       BusyIndicator.show(0);
@@ -330,6 +358,7 @@ sap.ui.define([
       this.getView().getModel('appView').setProperty("/jsonData", "");
       this.getView().getModel('appView').setProperty("/jsonValue", "");
       this.getView().getModel('appView').setProperty("/customerId", "");
+      this.getView().getModel('appView').setProperty("/excelValues", "");
 
       this.getView().getModel('appView').setProperty("/Jobs", "");
       this.getView().getModel('appView').setProperty("/onUpdateJobVis", false);
@@ -341,6 +370,181 @@ sap.ui.define([
       this.getView().byId("fileUploader").setValue("")
 
     },
+
+     // onClickFileName: function(){
+
+    //   debugger;
+
+    // },
+
+  //   oDialogOpen:function(){
+
+
+
+
+  //     var oView = this.getView();
+
+  //     var that = this;
+
+  //     if (!this.oUploadDialog) {
+
+  //         this.oUploadDialog = Fragment.load({
+
+  //             id: oView.getId(),
+
+  //             name: "ent.ui.ecommerce.fragments.uploadDoc",
+
+  //             controller: this
+
+  //         }).then(function (oDialog) {
+
+  //             // Add dialog to view hierarchy
+
+  //             oView.addDependent(oDialog);
+
+  //             return oDialog;
+
+  //         }.bind(this));
+
+  //     }
+
+  //     return this.oUploadDialog;
+
+  // },
+
+  oUploadDialogFragment:function(){
+
+    var oView = this.getView();
+
+    var that = this;
+
+    if (!this.jobdialog) {
+
+        this.jobdialog = Fragment.load({
+
+            id: oView.getId(),
+
+            name: "ent.ui.ecommerce.fragments.AllJobs",
+
+            controller: this
+
+        }).then(function (oDialog) {
+
+            // Add dialog to view hierarchy
+
+            oView.addDependent(oDialog);
+
+            return oDialog;
+
+        }.bind(this));
+
+    }
+
+    return this.jobdialog;
+
+},
+
+onGetDialog : function(oEvent){
+
+  var excelData = oEvent.getSource().getBindingContext("appView").getObject().fileContent;
+
+  this.getView().getModel("appView").setProperty("/excelDataUplode",excelData);
+
+  var that = this;
+
+  that.oUploadDialogFragment().then(function(oDialog){
+
+  oDialog.open();
+
+//  var trvbyu= that.getView().getModel("appView").getProperty("/excelDataUplode");
+
+  debugger;
+
+ 
+
+  var oSimpleForm = that.getView().byId("allJobDetails")
+
+  oSimpleForm.bindElement('appView>/excelDataUplode');
+
+  });
+
+},
+
+    onnReject: function () {
+
+      this.oUploadDialogFragment().then(function(oDialog){
+
+        oDialog.close();
+
+      })
+
+    },
+
+// onClickDetailActiveUpDoc: function () {
+
+//      debugger;
+
+//      this.allJob();
+
+//    },
+
+//    allJob: function () {
+
+//      var oView = this.getView();
+
+//      var that = this;
+
+
+
+
+//      if (!this.oJobDialog) {
+
+//        this.oJobDialog = Fragment.load({
+
+//          id: oView.getId(),
+
+//          name: "ent.ui.ecommerce.fragments.AllJobs",
+
+//          controller: this
+
+//        }).then(function (oDialog) {
+
+//          // Add dialog to view hierarchy
+
+//          oView.addDependent(oDialog);
+
+//          return oDialog;
+
+//        }.bind(this));
+
+
+
+
+//      }
+
+//      this.oJobDialog.then(function (oDialog) {
+
+//        oDialog.open();;
+
+//      });
+
+//    },
+
+//     onnReject: function () {
+
+//      this.oJobDialog.then(function (oDialog) {
+
+//        oDialog.close();
+
+//      })
+
+//    },
+
+
+
+
+
+
     onUploadId: function () {
 
       var oModel = this.getView().getModel();  //default model get at here
