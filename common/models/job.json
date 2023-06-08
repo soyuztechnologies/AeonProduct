@@ -27,7 +27,7 @@
 			"default": null,
 			"required": false
 		},
-		"CustomerId": {
+		"CompanyId": {
 			"type": "string",
 			"default": null
 		},
@@ -387,11 +387,6 @@
 	},
 	"validations": [],
 	"relations": {
-		"appUser": {
-			"type": "belongsTo",
-			"model": "AppUser",
-			"foreignKey": "CustomerId"
-		},
 		"Company": {
 			"type": "belongsTo",
 			"model": "Company",

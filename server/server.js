@@ -1182,26 +1182,48 @@ app.start = function () {
 
 			var EmailId = newCustomer.EmailId;
 			var id = newCustomer.TechnicalId;
-
+			if(!newCustomer.password){
+				var password = generateRandomPassword();
+			}else{
+				var password =	newCustomer.password;
+			}
 			try {
 				let userTableUser = await this.User.findOne({ where: { email: EmailId, id: id } });
-				let TempPassW = userTableUser.TempPass;
-				if (!TempPassW) {
-					res.status(404).json("this user doesn't exist with the temporary password");
-					return;
-				}
-				const { email, TempPass } = userTableUser;
+				let AppUser = await this.AppUser.findOne({ where: {  EmailId, TechnicalId: id } });
+				// let TempPassW = userTableUser.TempPass;
+				if (userTableUser) {
+					// Update the password in both tables
+					userTableUser.updateAttributes({ password: password,TempPass:password }, (err, updatedUser) => {
+						if (err) {
+							console.error('Error updating password:', err);
+							return res.status(500).send('Internal server error');
+						}
+					});
+
+						// // Update the password in the AppUser table
+						// AppUser.updateAttributes({ TechnicalId: user.id }, { password: password,TempPass:password }, (err) => {
+						//   if (err) {
+						// 	console.error('Error updating password in AppUser table:', err);
+						// 	return res.status(500).send('Internal server error');
+						//   }
+						// });
+				};
+				// if (!TempPassW) {
+				// 	res.status(404).json("this user doesn't exist with the temporary password");
+				// 	return;
+				// }
+				// const { email, TempPass } = userTableUser;
 				const token = "";
 				const replacements = {
-					// verify : `${req.headers.referer}#/updatePassword/${token}`,
+				// 	// verify : `${req.headers.referer}#/updatePassword/${token}`,
 					email: "noreply@aeonproducts.com",
-					user: email,
-					password: TempPass,
+				 	user: EmailId,
+					password: password,
 				};
 				const templateFileName = "NewUser.html"
 				const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
 				// Send verification email
-				await sendEmail(email, token, replacements, templateFileName, emailSubject);
+				await sendEmail(EmailId, token, replacements, templateFileName, emailSubject);
 
 				return res.status(200).json('Email send successfully');
 			} catch (error) {

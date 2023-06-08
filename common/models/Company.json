@@ -28,9 +28,9 @@
             "model": "Job",
             "foreignKey": "CompanyId"
           },
-          "appUser":{
+        "appUser":{
             "type": "hasMany",
-            "model": "Job",
+            "model": "AppUser",
             "foreignKey": "CompanyId"
           }
     },

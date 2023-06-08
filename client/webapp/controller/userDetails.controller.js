@@ -122,9 +122,10 @@ sap.ui.define([
 
 		// * this function is close the dialog which ask for the passwprd when user add.
 		onRejectPass : function(){
-			this.passDialog.then(function (oPassDialog) {
-				oPassDialog.close();
-		});
+			this.openDialog().then(function(oDialog){
+				// 
+				oDialog.close();
+			});
 		},
 		
 		// * this function is read the all appUsers data.
@@ -172,7 +173,7 @@ sap.ui.define([
 
 		// * this function is make the update call for block and unblock the customer.
 		onBlockCustomer:function(oEvent){
-			
+			debugger;
 			var state = oEvent.getParameter('state');
 			state = state === true ? 'Yes' : 'No';
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
@@ -281,45 +282,6 @@ sap.ui.define([
 			}
 		},
 
-		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
-		onAddUserViaAdmin : function(oEvent){
-			
-			var oModel = this.getView().getModel("appView");
-			var pass = oModel.getProperty("/conPassWord");
-			var Conpass = oModel.getProperty("/NewPassword");
-			this.oFormData.PassWord = Conpass;
-			 if(!pass && !Conpass) {
-				MessageToast.show("Please Enter the Password");
-			 }
-			 else if (pass !== Conpass ){
-				MessageToast.show("Passwords doesn't Match");
-			 }
-			 else if (pass === Conpass) {
-				MessageToast.show("Matched Password");
-			 }
-
-			 this.AddCustomers();
-		},
-
-		// * it make a post call to create the user via admin side.
-		AddCustomers : function(){
-			
-			var that = this;
-
-			var payload =  this.oFormData;
-
-			this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
-				.then( function (data, status, xhr) {
-					// debugger
-					MessageToast.show("User Created Successfully");
-					that.onReject();
-					that.onRejectPass();
-				})
-				.catch(function (jqXhr, textStatus, errorMessage) {
-					that.middleWare.errorHandler(jqXhr, that);
-				});
-		},
-
 		// * this funciton handle the validation on the add user and open the password fragment to make call.
 		openPassdialog : function(){
 			
@@ -377,7 +339,9 @@ sap.ui.define([
 				return;
 			  }
 		
-			this.openDialog();
+			this.openDialog().then(function(oDialog){
+				oDialog.open();
+			});
 		},
 
 		// * this fucntion will do a update call when admin edit the user data.
@@ -427,9 +391,10 @@ sap.ui.define([
                     return oPassDialog;
                 }.bind(this));
             }
-            this.passDialog.then(function (oPassDialog) {
-					oPassDialog.open();
-            });
+            // this.passDialog.then(function (oPassDialog) {
+			// 		oPassDialog.open();
+            // });
+			return this.passDialog;
 		},
 
 		onUserEdit: function(){
@@ -471,28 +436,96 @@ sap.ui.define([
 			});
 
 		},
+		
+		// * it make a post call to create the user via admin side.
+		AddCustomers : function(){
+			
+			var that = this;
 
-		SendEmailExistUser : function(oEvent){
-				
-				var that= this;
-				var oRow = oEvent.getSource().getBindingContext('appView').getObject();
-				var Email = oRow.EmailId;
-				var id = oRow.TechnicalId;
-				var payload = {
-					EmailId : Email,
-					TechnicalId : id
-				}
+			var payload =  this.oFormData;
 
-				this.middleWare.callMiddleWare("sendEmailExistUser", "POST", payload)
+			this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
 				.then( function (data, status, xhr) {
 					// debugger
-					MessageToast.show("Mail Sent Succefully");
-					// that.onReject();
-					// that.onRejectPass();
+					MessageToast.show("User Created Successfully");
+					that.onReject();
+					that.onRejectPass();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
+		},
+
+		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
+		onAddUserViaAdmin : function(oEvent){
+			var oModel = this.getView().getModel("appView");
+			var pass = oModel.getProperty("/conPassWord");
+			var Conpass = oModel.getProperty("/NewPassword");
+			if(!pass && !Conpass) {
+				MessageToast.show("Please Enter the Password");
+			}
+			else if (pass !== Conpass ){
+				MessageToast.show("Passwords doesn't Match");
+			}
+			// else if (pass === Conpass) {
+			// 	// MessageToast.show("Matched Password");
+			// }
+			if(this.isResetPassword==true){
+			   this.resetPassExistingUser(Conpass);
+			}
+			else{
+				this.oFormData.PassWord = Conpass;
+			    this.AddCustomers();
+			}
+
+		},
+
+		resetPassExistingUser : function(pass){
+			debugger
+			var that= this;
+			var password = pass;
+			this.payload.password = password;
+			this.middleWare.callMiddleWare("sendEmailExistUser", "POST", this.payload)
+				.then( function (data, status, xhr) {
+					// debugger
+					MessageToast.show("Mail Sent Succefully");
+					that.onRejectPass();
+
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+
+		},
+		
+		isResetPassword : null,
+		SendEmailExistUser : function(oEvent){
+			debugger;
+			var that= this;
+			var oRow = oEvent.getSource().getBindingContext('appView').getObject();
+			var Email = oRow.EmailId;
+			var id = oRow.TechnicalId;
+			this.payload = {
+				EmailId : Email,
+				TechnicalId : id,
+				password: ""
+			};
+			this.openDialog().then(function(oDialog){
+				that.isResetPassword = true;
+				oDialog.open();
+			});
+
+
+				// this.middleWare.callMiddleWare("sendEmailExistUser", "POST", payload)
+				// .then( function (data, status, xhr) {
+				// 	// debugger
+				// 	MessageToast.show("Mail Sent Succefully");
+				// 	// that.onReject();
+				// 	// that.onRejectPass();
+				// })
+				// .catch(function (jqXhr, textStatus, errorMessage) {
+				// 	that.middleWare.errorHandler(jqXhr, that);
+				// });
 		},
 		
 	});

@@ -79,6 +79,10 @@
       "type":"string",
       "default":null
   },
+  "CompanyId": {
+      "type":"string",
+      "default":null
+  },
   "CompanyAddress": {
       "type":"string",
       "default":null
@@ -143,11 +147,6 @@
   },
   "validations": [],
   "relations":{
-    "job": {
-      "type": "hasMany",
-      "model": "Job",
-      "foreignKey": "CustomerId"
-    },
 		"Company": {
 			"type": "belongsTo",
 			"model": "Company",

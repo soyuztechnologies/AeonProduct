@@ -32,7 +32,7 @@
 					<Text text="Approval" />
 				</Column>
 				<Column hAlign="End">
-					<Text text="Send Email with Temporary Password" />
+					<Text text="Reset Password" />
 				</Column>
 			</columns>
 			<items>
