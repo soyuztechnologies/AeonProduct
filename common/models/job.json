@@ -391,6 +391,11 @@
 			"type": "belongsTo",
 			"model": "AppUser",
 			"foreignKey": "CustomerId"
+		},
+		"Company": {
+			"type": "belongsTo",
+			"model": "Company",
+			"foreignKey": "CompanyId"
 		}
 	},
 	"acls": [

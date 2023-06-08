@@ -147,7 +147,12 @@
       "type": "hasMany",
       "model": "Job",
       "foreignKey": "CustomerId"
-    }
+    },
+		"Company": {
+			"type": "belongsTo",
+			"model": "Company",
+			"foreignKey": "CompanyId"
+		}
   },
   "acls": [
     {

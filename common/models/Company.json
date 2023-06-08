@@ -1,0 +1,44 @@
+{
+	"name": "Company",
+	"plural": "Company",
+	"base": "PersistedModel",
+	"idInjection": true,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"CompanyId": {
+			"type": "string",
+			"default": "",
+			"required": false
+		},
+		"CompanyName": {
+            "type":"string",
+			"default":""
+        }
+		
+	},
+	"scope": {
+		"order": "CreatedOn DESC"
+	},
+	"validations": [],
+  	"relations": {
+        "job": {
+            "type": "hasMany",
+            "model": "Job",
+            "foreignKey": "CompanyId"
+          },
+          "appUser":{
+            "type": "hasMany",
+            "model": "Job",
+            "foreignKey": "CompanyId"
+          }
+    },
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}
