@@ -93,6 +93,7 @@ sap.ui.define([
         this.files.push({ "fileName": oFile.name })
         // Process the file
         console.log(oFile);
+        that.getView().getModel("appView").setProperty("/fileNames", oFile);
         var oReader = new FileReader();
         oReader.onload = function (e) {
           var sFileContent = e.target.result;
@@ -105,6 +106,8 @@ sap.ui.define([
           //that.extracDbFields(aData);
           that.files[that.count].fileContent = that.extracDbFields(aData);
           that.count++;
+
+          
           that.getModel("appView").setProperty("/excelValues", that.files);
           that.getModel("appView").setProperty("/pdfVisibility", false);
           that.getModel("appView").setProperty("/simpleFormVisibility", true);
@@ -114,23 +117,23 @@ sap.ui.define([
 
         oReader.readAsBinaryString(oFile);
         // Perform other operations with the file
-        that.onGetExcelValues();
+        
       }
-
+      
 
     },
     onViewPdf: function () {
       var viewPdf = this.getView().getModel("appView").getProperty("/pdfUrl")
       window.open(viewPdf, '_blank', 'width=600,height=800')
     },
-    onGetExcelValues: function () {
-      var allExcel = this.getModel("appView").getProperty("/excelValues");
-      var data;
-      for (var i = 0; i < allExcel.length; i++) {
-        debugger;
-        data[i];
-      }
-    },
+    // onGetExcelValues: function () {
+    //   var allExcel = this.getModel("appView").getProperty("/excelValues");
+    //   var data;
+    //   for (var i = 0; i < allExcel.length; i++) {
+    //     debugger;
+    //     data[i];
+    //   }
+    // },
     onPopinLayoutChanged: function (oEvent) {
       debugger;
       var oModel = this.getView().getModel();  //default model get at here
@@ -383,9 +386,8 @@ sap.ui.define([
       const arrayToJSON = this.arrayToJSON(data);
 
       const dbFieldsJSON = Object.values(this.fieldsJSON);
-      var array = []
+      
       const dbFields = {};
-      array.push(dbFields);
       dbFieldsJSON.forEach(item => {
 
         dbFields[item.dbField] = arrayToJSON[item.data];
