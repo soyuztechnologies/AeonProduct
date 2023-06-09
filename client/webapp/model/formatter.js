@@ -890,7 +890,11 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return PaperGSM + " GSM";
 
     },
-    tableEntryVisible : function(Data) {
+    // showPcs: function (Quantity) {
+    //   var formattedValue = Quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    //   return formattedValue + " pcs";
+    // },
+    tableEntryVisible: function (Data) {
 
       if(Data){
 

@@ -31,6 +31,9 @@
 				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
 					<Text text="Approval" />
 				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
+					<Text text="Company" />
+				</Column>
 				<Column hAlign="End">
 					<Text text="Reset Password" />
 				</Column>
@@ -48,6 +51,11 @@
 						</Switch>
 						<Select selectedKey="{appView>Status}"  forceSelection="false" change="onApproveCustomer">
 							<core:Item text="Pending" key="Pending" />
+							<core:Item text="Reject" key="Reject" />
+							<core:Item text="Approved" key="Approved" />
+						</Select>
+						<Select selectedKey="{appView>/SelectCompany}"  forceSelection="false"    change="onSelectComPany">
+							<core:Item text="Select Company" key="Pending" />
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />
 						</Select>

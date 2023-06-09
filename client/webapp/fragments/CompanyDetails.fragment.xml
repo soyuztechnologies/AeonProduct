@@ -11,6 +11,12 @@
                 <core:Item key="Customer" text="Customer" />
                 <core:Item key="Admin" text="Admin" />
                 <core:Item key="Factory Manager" text="Factory Manager" />
+                <core:Item key="Raw Material Head" text="Raw Material Head" />
+                <core:Item key="Printing Head" text="Printing Head" />
+                <core:Item key="Post Press Head" text="Post Press Head" />
+                <core:Item key="Dispatch Head" text="Dispatch Head" />
+                <core:Item key="Accounts Head" text="Accounts Head" />
+                <core:Item key="Artwork Head" text="Artwork Head" />
             </Select>
 
 
