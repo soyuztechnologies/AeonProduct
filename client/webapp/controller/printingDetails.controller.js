@@ -422,12 +422,67 @@ sap.ui.define([
 			}
 
 			this.getModel('appView').setProperty('/newJob', oNewJob);
-
+			// debugger;
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oModel.setProperty("/addJobStatusdialogTitle", "Add Job Status ");
 				oModel.setProperty("/addJobStatusSave", "Add");
 				that.isEditStatus = false;
 				oDialog.open();
+				//Editability for Admin
+				if (sUserRole === 'Admin') {
+					oModel.setProperty("/rawMaterialHeadVis", true);
+					oModel.setProperty("/printingHeadVis", true);
+					oModel.setProperty("/postPressHeadVis", true);
+					oModel.setProperty("/dispatchHeadVis", true);
+					oModel.setProperty("/accountHeadVis", true);
+					oModel.setProperty("/jobStatusVis", true);
+				}
+				//Editability for Ram Material Head
+				if (sUserRole === 'Raw Material Head') {
+					oModel.setProperty("/rawMaterialHeadVis", true);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+				}
+				//Editability for Printing Head
+				if (sUserRole === 'Printing Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", true);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", false);
+				    oModel.setProperty("/jobStatusVis", false);
+				}
+				//Editability for Post Press Head
+				if (sUserRole === 'Post Press Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", true);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", false);
+				    oModel.setProperty("/jobStatusVis", false);
+				}
+				//Editability for Dispatch Head
+				if (sUserRole === 'Dispatch Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", true);
+					oModel.setProperty("/accountHeadVis", false);
+				    oModel.setProperty("/jobStatusVis", false);
+				}
+				//Editability for Accounts Head
+				if (sUserRole === 'Accounts Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", true);
+				    oModel.setProperty("/jobStatusVis", false);
+				}
 				// that.loadForm2();
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
@@ -696,6 +751,9 @@ sap.ui.define([
 			}
 			this.middleWare.callMiddleWare(endPoint, "POST", payload)
 				.then(function (data) {
+					if(!data){
+						return
+					}
 					data.forEach(item => {
 						item.TobeUpdated = false;
 					});
@@ -840,16 +898,24 @@ sap.ui.define([
 			}
 			// debugger;
 			var that = this;
-			// var oModel = this.getView().getModel();
-            this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
-                that.getView().getModel("appView").setProperty("/jobsData", data);
-            })
-            .catch(function (jqXhr, textStatus, errorMessage) {
-              that.middleWare.errorHandler(jqXhr, that);
+			var oModel = this.getView().getModel();
+			oModel.read(sPath, {
+				success: function(data){
+					that.getView().getModel("appView").setProperty("/jobsData", data.results);
+				},
+				error: function(error){
+					that.middleWare.errorHandler(error, that);
+					MessageToast.show("Something is Wrong");
+				}
 			});
+            // this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
+            //     that.getView().getModel("appView").setProperty("/jobsData", data);
+            // })
+            // .catch(function (jqXhr, textStatus, errorMessage) {
+            //   that.middleWare.errorHandler(jqXhr, that);
+			// });
 		
 		},
-
 		onLiveChange: function (event) {
 			var newValue = event.getParameter("value");
             var value = this.getView().getModel("appView").getProperty("/allRemainingDatas");

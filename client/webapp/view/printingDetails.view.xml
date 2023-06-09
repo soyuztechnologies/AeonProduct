@@ -34,7 +34,7 @@
 						<Text text="{appView>jobCardNo} + {appView>jobCode}"></Text>
 
 						<Label text="Quantity"></Label>
-						<Input editable="false" value="{appView>qtyPcs}"></Input>
+						<Input editable="false" value="{path: 'appView>qtyPcs',formatter:'.formatter.showPcs'}"></Input>
 
 						<Label text="Size in mm"></Label>
 						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->
@@ -47,7 +47,7 @@
 						<Input editable="false" value="{appView>artworkCode} + {appView>color}"></Input>
 
 						<Label text="Coating"></Label>
-						<Input editable="false" value="{appView>PaperGSM}"></Input>
+						<Input editable="false" value="{path: 'appView>PaperGSM' ,formatter:'.formatter.showGsm'}"></Input>
 					<!-- </VBox> -->
 				</f:content>
 		</f:SimpleForm>
