@@ -296,6 +296,23 @@ sap.ui.define([
 			  }
 		},
 
+		// * At here we are getting  the companies al all the app.  
+		onSelectComPany : function(oEvent){
+			debugger;
+			var selectedItem = oEvent.getParameter("selectedItem").getKey();
+			debugger
+
+            // var oModel = this.getView().getModel();
+            // oModel.read({
+            //     success: function(data) {
+            //       MessageToast.show("Company data success");
+            //     },
+            //     error: function(error) {
+            //       MessageToast.show("Something is Wrong");
+            //     }
+            //   });
+		},
+
 		userPassDialogValidation: function(){
 			
 			var oView = this.getView();

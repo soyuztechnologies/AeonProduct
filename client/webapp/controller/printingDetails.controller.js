@@ -225,6 +225,49 @@ sap.ui.define([
 			return this.oUploadDialog;
 		},
 
+		openCustomerAttachmentDialog: function (oEvent) {
+			debugger;
+			var data = oEvent.getSource().getBindingContext("appView").getObject();
+			var clickedrow = oEvent.getSource().getBinding("text").getPath();
+			var invoice = data.InvNo;
+			var Delivery = data.InvNo;
+
+			var oView = this.getView();
+			var that = this;
+			if (!this.CustomerAttachment) {
+				this.CustomerAttachment = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.CustomerAttachment",
+					controller: this
+				}).then(function (oDialog) {
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+
+			this.CustomerAttachment.then(function (oDialog) {
+				oDialog.open();
+				if(clickedrow == "DeliveryNo"){
+					that.getModel("appView").setProperty("/CustomerAttachment",invoice);
+				}
+				else if(clickedrow == "InvNo"){			
+					that.getModel("appView").setProperty("/CustomerAttachment",Delivery);
+				}
+				// var oSimpleForm = that.getView().byId('allJobDetails')
+				// oSimpleForm.bindElement('appView>/Jobs');
+				// debugger;
+			});
+			},
+
+			onRejectCustomerDialog : function(){
+				this.CustomerAttachment.then(function (oDialog) {
+					oDialog.close();
+				});
+			},
+
+
+	
+
 		clickedLink: null,
 		jobStatusPath: null,
 		onClickPopup: function (oEvent) {
@@ -233,6 +276,12 @@ sap.ui.define([
 			this.clickedLink = oEvent.getSource().getBinding("text").getPath();
 			this.jobStatusPath = oEvent.getSource().getBindingContext("appView").sPath;
 			var oModel = this.getView().getModel("appView");
+			var sUserRole = oModel.getProperty('/UserRole');
+			if (sUserRole === 'Customer') {
+				this.openCustomerAttachmentDialog(oEvent);
+				return;
+			};
+
 			if (this.clickedLink == "clientPONo") {
 				this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
 				oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
@@ -681,6 +730,7 @@ sap.ui.define([
 
 		// * this fucntion will read the data for job status and shows into the table.
 		onReadJobStatus: function () {
+			debugger;
 			var oModel = this.getView().getModel("appView");  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
