@@ -132,15 +132,15 @@ sap.ui.define([
 
 		getJobsData: function () {
 			var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
-			if (sUserRole === "Admin") {
+			// if (sUserRole === "Admin") {
 				var sPath = `/Jobs`
-			}
-			else{
+			// }
+			// else{
 
-				var id =this.getView().getModel('appView').getProperty('/appUserId');
-				var id = this.getView().getModel('appView').getProperty('/appUserId');
-				sPath = `/AppUsers('${id}')/job`;
-			}
+			// 	var id =this.getView().getModel('appView').getProperty('/appUserId');
+			// 	// var id = this.getView().getModel('appView').getProperty('/appUserId');
+			// 	sPath = `/AppUsers('${id}')/job`;
+			// }
 			var that = this;
 			var oModel = this.getView().getModel();
 			oModel.read(sPath, {
@@ -149,6 +149,7 @@ sap.ui.define([
 				// },
 				success: function (data) {
 					that.getView().getModel("appView").setProperty("/jobsData", data.results);
+					MessageToast.show("aagai jobs");
 				},
 				error: function (error) {
 				  // Error callback
@@ -156,7 +157,7 @@ sap.ui.define([
 				  MessageToast.show("Error reading data");
 					// Error callback
 					//   that.middleWare.errorHandler(error, that);
-					MessageToast.show("Error reading data");
+					// MessageToast.show("Error reading data");
 				}
 			});
 		},

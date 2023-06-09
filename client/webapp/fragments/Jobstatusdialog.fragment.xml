@@ -18,44 +18,44 @@ resizable="false" >
 				<Label text="CreatedOn" />
 				<DatePicker dateValue="{appView>CreatedOn}"/>
 
-				<Label required="true" text="Raw Material" />
-				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" >
+				<Label required="true" text="Raw Material" visible="{appView>/rawMaterialHeadVis}"/>
+				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" visible="{appView>/rawMaterialHeadVis}" >
 					<items>
 						<core:Item text="In Stock" key="instock" />
 						<core:Item text="Pending" key="pending" />
 					</items>
 				</Select>
-				<Label text="Printing" />
-				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" />
+				<Label text="Printing" visible="{appView>/printingHeadVis}"/>
+				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" visible="{appView>/printingHeadVis}"/>
 
-				<Label text="Coating" />
-				<Input type="Number" value="{appView>Coating}" />
+				<Label text="Coating" visible="{appView>/printingHeadVis}"/>
+				<Input type="Number" value="{appView>Coating}" visible="{appView>/printingHeadVis}"/>
 					
-				<Label text="Foiling" />
-				<Input type="Number" value="{appView>Foiling}" />
-				<Label text="Spot UV" />
-				<Input type="Number" value="{appView>spotUV}" />
-				<Label text="Embossing" />
-				<Input type="Number" value="{appView>Embossing}" />
+				<Label text="Foiling" visible="{appView>/postPressHeadVis}"/>
+				<Input type="Number" value="{appView>Foiling}" visible="{appView>/postPressHeadVis}"/>
+				<Label text="Spot UV" visible="{appView>/postPressHeadVis}"/>
+				<Input type="Number" value="{appView>spotUV}" visible="{appView>/postPressHeadVis}"/>
+				<Label text="Embossing" visible="{appView>/postPressHeadVis}"/>
+				<Input type="Number" value="{appView>Embossing}" visible="{appView>/postPressHeadVis}"/>
 
-				<Label text="Punching" />
-				<Input type="Number" value="{appView>Punching}" />
-				<Label text="Pasting" />
-				<Input type="Number" value="{appView>Pasting}" />
+				<Label text="Punching" visible="{appView>/postPressHeadVis}"/>
+				<Input type="Number" value="{appView>Punching}" visible="{appView>/postPressHeadVis}"/>
+				<Label text="Pasting" visible="{appView>/dispatchHeadVis}"/>
+				<Input type="Number" value="{appView>Pasting}" visible="{appView>/dispatchHeadVis}"/>
 
-				<Label text="Packing" />
-				<Input type="Number" value="{appView>Packing}" />
+				<Label text="Packing" visible="{appView>/dispatchHeadVis}" />
+				<Input type="Number" value="{appView>Packing}" visible="{appView>/dispatchHeadVis}"/>
 
-				<Label text="Inv. No." />
-				<Input type="Number" value="{appView>InvNo}" />
-				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%"/>
+				<Label text="Inv. No." visible="{appView>/accountHeadVis}"/>
+				<Input type="Number" value="{appView>InvNo}" visible="{appView>/accountHeadVis}" />
+				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{appView>/accountHeadVis}"/>
 
-				<Label text="Delivery No." />
-				<Input type="Number" value="{appView>DeliveryNo}" />
-				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%"/>
+				<Label text="Delivery No." visible="{appView>/accountHeadVis}"/>
+				<Input type="Number" value="{appView>DeliveryNo}" visible="{appView>/accountHeadVis}"/>
+				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{appView>/accountHeadVis}"/>
 
-				<Label required="true" text="Status" />
-				<Select id="idStatus" forceSelection="false" selectedKey=""  change="onSelectKeyStatus">
+				<Label required="true" text="Status" visible="{appView>/jobStatusVis}"/>
+				<Select id="idStatus" forceSelection="false" selectedKey=""  change="onSelectKeyStatus" visible="{appView>/jobStatusVis}">
 			    	<items>
 						<core:Item text="Partially Completed" key="partiallycompleted" />
 						<!-- <core:Item text="In-Progress" key="inprogress" /> -->

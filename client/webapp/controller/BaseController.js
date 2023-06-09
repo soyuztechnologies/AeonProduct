@@ -75,6 +75,14 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
 				// this.getView().getModel("appView").setProperty('/profilNavVisb',false);
 			}
+			// else if (sUserRole === "Raw Material Head") {
+			// 	this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
+			// 	this.getView().getModel("appView").setProperty('/asUrgentVis', true);
+			// 	this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
+			// 	this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
+			// 	this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+			// 	this.getView().getModel('appView').setProperty('/modifybtnvis', false);
+			// }
 			this.getModel("appView").updateBindings();
 		},
 
