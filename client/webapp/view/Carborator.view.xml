@@ -30,15 +30,15 @@
 			</MessageStrip>
             <Table items="{appView>/excelValues}">
                 <columns>
-                    <Column >
+                    <Column>
                         <Label text="File Name" />
                     </Column>
                     <Column hAlign="End" >
-                        <Label text="Company        " />
+                        <Label text="Company" />
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem detailPress="onGetDialog" type="DetailAndActive">
+                    <ColumnListItem highlight="{= ${appView>operation} === 'N' ? 'Information' : ${appView>operation} === 'U' ? 'Warning' :${appView>operation} === 'R' ? 'Success' : 'Information'}" detailPress="onGetDialog" type="DetailAndActive">
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>

@@ -828,7 +828,8 @@ app.start = function () {
 			// }
 			var value = await this.Job.findOne({ where: { jobCardNo: key } });
 			if (value) {
-				return res.status(200).json({ success: 'Same Job Available' });
+				let  msg = "Job is already exist."
+				return res.status(200).json({ success:msg,value });
 			}else{
 				return res.status(500).json({ error: 'Not Available' });
 			}
