@@ -42,7 +42,7 @@
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>
-                            <ComboBox   items="{appView>/customerUser}" id="idPopinLayout"
+                            <ComboBox items="{appView>/customerUser}" id="idPopinLayout"
                                 placeholder="Company Name"
                                 change="onPopinLayoutChanged"
                                 class="sapUiTinyMarginEnd">
