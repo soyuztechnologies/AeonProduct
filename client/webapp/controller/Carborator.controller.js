@@ -4,8 +4,9 @@ sap.ui.define([
   "sap/m/MessageToast",
   "sap/ui/core/Fragment",
   "sap/m/MessageBox",
-  "sap/ui/core/BusyIndicator"
-], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator) {
+  "sap/ui/core/BusyIndicator",
+  "sap/ui/model/Filter"
+], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator,Filter) {
   "use strict";
 
   return BaseController.extend("ent.ui.ecommerce.controller.Carborator", {
@@ -189,6 +190,7 @@ sap.ui.define([
         }
       });
     },
+
     onViewPdf: function () {
       var viewPdf = this.getView().getModel("appView").getProperty("/pdfUrl")
       window.open(viewPdf, '_blank', 'width=600,height=800')
@@ -266,26 +268,26 @@ sap.ui.define([
         var filename = oJsonInpValue[i].fileName;
         // oJsonInpValue[i].fileContent.fileName = filename;
         // arr.push(element.fileContent)
-        var excelFile = oJsonInpValue[i].fileContent
-
+        var excelFile = oJsonInpValue[i]
+        oModel.create("/Jobs", excelFile, {
+          success: function (oUpdatedData) {
+  
+  
+            MessageToast.show("Job created successfully");
+          },
+          error: function (nts) {
+            // Error callback
+            // if(nts.responseText.includes("duplicate key")){
+            MessageToast.show("Something Went Wrong")
+            // }
+            // that.middleWare.errorHandler(error, that);
+            // MessageToast.show("Error While Post the data");
+          }
+        });
 
       }
 
-      oModel.create("/Jobs", excelFile, {
-        success: function (oUpdatedData) {
-
-
-          MessageToast.show("Job created successfully");
-        },
-        error: function (nts) {
-          // Error callback
-          // if(nts.responseText.includes("duplicate key")){
-          MessageToast.show("Something Went Wrong")
-          // }
-          // that.middleWare.errorHandler(error, that);
-          // MessageToast.show("Error While Post the data");
-        }
-      });
+     
       // var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
 
       // var payload = JSON.parse(oJsonInpValue);
@@ -655,46 +657,113 @@ sap.ui.define([
 
       debugger;
       var preData = that.getView().getModel("appView").getProperty("/excelValues");
+      var array=[];
+
+      for (let i = 0; i < preData.length; i++) {
+        const element = preData[i].jobCardNo;
+        array.push(element)
+      }
       // this.getView().getModel('appView').setProperty("/jsonData", array);
+      var sPath = `/Jobs`
+      var oModel = this.getView().getModel();
+      var that = this;
+      var oFilter = new Filter ("jobCardNo", "EQ", dbFields.jobCardNo)
+      
+      preData.forEach(item=>{
+        if(item.jobCardNo === (dbFields.jobCardNo).toString() ){
+          item.operation = "U";
+        }
+      });
+      
+      // preData.push(dbFields);
+      // if(!preData.operation){
+        
+        // }
+      preData.push(dbFields)
+      return dbFields;
+      // preData.push(dbFields) 
+      // // var oFilter = new Filter (preData[0].jobCardNo ,'In', "jobCardNo")
+      // oModel.read(sPath, {
+      //   urlParameters: {
+      //   	"$select": "jobCardNo,CompanyId"
+      //   },
+      //   filters:[oFilter],
+      //   success: function (data) {
+      //     preData.forEach(item => {
+      //       item.operation = "U";
+      //     });
+      //     // preData[0].operation = "U"
+      //     dbFields.operation = "U";
+      //     that.getView().getModel('appView').updateBindings();
+          
+         
 
-      this.middleWare.callMiddleWare("uploadjob", "POST", dbFields)
-        .then(function (data, status, xhr) {
-          //   data.results.forEach(item => {
-          //     item.operation = "U";
-          // });
+      //     // that.getView().getModel("appView").setProperty("/excelValues", data.results);
+      //   },
+      //   error: function (error) {
+      //     // Error callback
+      //     //   that.middleWare.errorHandler(error, that);
+      //     MessageToast.show("Error reading data");
+      //     // Error callback
+      //     //   that.middleWare.errorHandler(error, that);
+      //     MessageToast.show("Error reading data");
+      //   }
+      // });
+      // getJobsData: function () {
+    //   var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
 
-          // data.value.operation = "U";
+  
+    // },
 
-          for (let i = 0; i < preData.length; i++) {
-            const element = preData[i];
-
-            if (element.jobCardNo === data.value.jobCardNo) {
-              element.operation = 'U'
-            }
-          }
-
+      // this.middleWare.callMiddleWare("uploadjob", "POST", dbFields)
+      //   .then(function (data, status, xhr) {
+      //     //   data.results.forEach(item => {
+      //     //     item.operation = "U";
+      //     // });
+      //     // data.value.operation = "U";
 
 
-          // data.fileContent.operation= 'U'
 
-          that.getView().getModel("appView").setProperty("/messageStripVis", true)
-          that.getView().getModel("appView").setProperty("/onUpdateJobVis", true)
-          that.getView().getModel("appView").setProperty("/onSavePayloadVis", false)
-        })
-        .catch(function (jqXhr, textStatus, errorMessage) {
-          debugger;
-          that.getView().getModel("appView").setProperty("/onUpdateJobVis", false)
-          that.getView().getModel("appView").setProperty("/onSavePayloadVis", true)
-          that.getView().getModel("appView").setProperty("/messageStripVis", false)
-          preData.push(dbFields);
-          that.getView().getModel('appView').updateBindings();
-        });
+      //     /*
+      //     jobs>>>> R
+      //   onUplaud>>>>5 excel>>>jobCardno.>>>>>get odata $select=jobCardNo with fiter IN alll JobCaedNumber>>2 jobCard output>>U
+      //   companny change=>>>> status N>>>N else U
+
+      //   onSave
+      //   filter U Update  Call
+      //   N: Create
+      //     */
+
+      //     for (let i = 0; i < preData.length; i++) {
+      //       const element = preData[i];
+
+      //       if (element.jobCardNo === data.value.jobCardNo) {
+      //         element.operation = 'U'
+      //       }
+      //     }
+
+
+
+      //     // data.fileContent.operation= 'U'
+
+      //     that.getView().getModel("appView").setProperty("/messageStripVis", true)
+      //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", true)
+      //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", false)
+      //   })
+      //   .catch(function (jqXhr, textStatus, errorMessage) {
+      //     debugger;
+      //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", false)
+      //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", true)
+      //     that.getView().getModel("appView").setProperty("/messageStripVis", false)
+          
+      //     that.getView().getModel('appView').updateBindings();
+      //   });
 
 
 
       this.getView().bindElement('appView>/jsonData');
       this.getView().getModel('appView').updateBindings();
-      return dbFields;
+     
 
 
     },
