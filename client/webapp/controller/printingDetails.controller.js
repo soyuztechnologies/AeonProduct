@@ -19,7 +19,7 @@ sap.ui.define([
 		_matchedHandler: async function (oEvent) {
 			this.oArgs = oEvent.getParameter("arguments").jobId;
 			var that = this;
-			
+
 			await this.getUserRoleData().then(
 				function (data) {
 					var role = data.role.Role
@@ -59,37 +59,37 @@ sap.ui.define([
 			this.getUserRoleData();
 			this.oGetAgru();
 			this.onReadJobStatus();
-			
-			
+
+
 		},
-		showAddedFields: function() {
+		showAddedFields: function () {
 			var oTable = this.getView().byId("jobStatusTable");
 			var aColumns = oTable.getColumns();
 			var aItems = oTable.getItems();
 			var oLastItem = aItems[aItems.length - 1];
-		  
+
 			// Hide all columns except the last column (header)
 			for (var i = 0; i < aColumns.length - 1; i++) {
-			  var oColumn = aColumns[i];
-			  oColumn.setVisible(false);
+				var oColumn = aColumns[i];
+				oColumn.setVisible(false);
 			}
-		  
+
 			// Show the added column (last column)
 			aColumns[aColumns.length - 1].setVisible(true);
-		  
+
 			// Show the added item (last item) and check cell values
 			var oItemCells = oLastItem.getCells();
-			Object.keys(oItemCells).forEach(function(sKey) {
-			  var oCell = oItemCells[sKey];
-			  var sCellValue = oCell.getText();
-		  
-			  if (typeof sCellValue === 'undefined' || sCellValue === null) {
-				oCell.setVisible(false);
-			  }
+			Object.keys(oItemCells).forEach(function (sKey) {
+				var oCell = oItemCells[sKey];
+				var sCellValue = oCell.getText();
+
+				if (typeof sCellValue === 'undefined' || sCellValue === null) {
+					oCell.setVisible(false);
+				}
 			});
-		  },
-		  
-		  
+		},
+
+
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
 
@@ -97,9 +97,20 @@ sap.ui.define([
 			var oModel = this.getView().getModel();
 			oModel.read("/Jobs('" + this.oArgs + "')", {
 				success: function (data) {
-
+                    debugger;
 					that.getView().getModel("appView").setProperty("/Jobs", data);
+					that.getView().getModel("appView").setProperty("/status", data.status);
+					if(!data.status){
+						if (sUserRole == "Admin" || sUserRole == "Raw material head"){
+							that.getView().getModel("appView").setProperty("/addBtnVisible", true);
+						}else{
+							that.getView().getModel("appView").setProperty("/addBtnVisible", false);
+						}
+					}else{
+						return;
+					}
 					that.loadForm();
+					
 				},
 				error: function (error) {
 
@@ -123,48 +134,49 @@ sap.ui.define([
 			// this.whenProductionStart();
 		},
 
-		onSaveJobStatus: function() {
+		onSaveJobStatus: function () {
 			debugger;
 			var oModel = this.getView().getModel("appView"); // Default model get at here
 			var that = this;
 			var data = oModel.getProperty("/newJobStatus");
 			var oData = this.getView().getModel();
-		  
+
 			for (var i = 0; i < data.length; i++) {
-			  var jobStatus = data[i];
-			  var id = jobStatus.id;
-			  const sEntityPath = `/JobStatus('${id}')`;
-		  
-			  if (jobStatus.TobeUpdated == "X") {
-				delete jobStatus.TobeUpdated;
-				oData.create("/JobStatus", jobStatus, {
-				  success: function(data) {
-					MessageToast.show("Successfully Uploaded");
-					// that.onUploadStatus();
-					oModel.updateBindings();
-				  },
-				  error: function(error) {
-					// Error callback
-					that.middleWare.errorHandler(error, that);
-					// MessageToast.show("Error reading data");
-				  }
-				});
-			  } else if (jobStatus.TobeUpdated == true) {
-				delete jobStatus.TobeUpdated;
-				oData.update(sEntityPath, jobStatus, {
-				  success: function(Data) {
-					MessageToast.show("Successfully Update the Entry");
-				  },
-				  error: function(error) {
-					MessageToast.show("Error reading data");
-					// Error callback
-					that.middleWare.errorHandler(error, that);
-				  }
-				});
-			  }
+				var jobStatus = data[i];
+				var id = jobStatus.id;
+				const sEntityPath = `/JobStatus('${id}')`;
+
+				if (jobStatus.TobeUpdated == "X") {
+					delete jobStatus.TobeUpdated;
+					oData.create("/JobStatus", jobStatus, {
+						success: function (data) {
+							MessageToast.show("Successfully Uploaded");
+							// that.onUploadStatus();
+							oModel.updateBindings();
+						},
+						error: function (error) {
+							// Error callback
+							that.middleWare.errorHandler(error, that);
+							// MessageToast.show("Error reading data");
+						}
+					});
+				} else if (jobStatus.TobeUpdated == true) {
+					delete jobStatus.TobeUpdated;
+					oData.update(sEntityPath, jobStatus, {
+						success: function (Data) {
+							MessageToast.show("Successfully Update the Entry");
+						},
+						error: function (error) {
+							MessageToast.show("Error reading data");
+							// Error callback
+							that.middleWare.errorHandler(error, that);
+						}
+					});
+				}
 			}
-		  },
-		  
+			this.whenProductionStart();
+		},
+
 		onClickCancel: function () {
 			debugger;
 			var oModel = this.getView().getModel("appView");
@@ -172,7 +184,7 @@ sap.ui.define([
 			oModel.setProperty("/statusInvAttachment", "");
 			oModel.setProperty("/statusDeliveryAttachment", "");
 			var data = oModel.getProperty("/readedJobdata");
-			
+
 			// oModel.setProperty("/newJobStatus",this.jobStatusData);
 			oModel.updateBindings();
 		},
@@ -247,26 +259,26 @@ sap.ui.define([
 
 			this.CustomerAttachment.then(function (oDialog) {
 				oDialog.open();
-				if(clickedrow == "DeliveryNo"){
-					that.getModel("appView").setProperty("/CustomerAttachment",invoice);
+				if (clickedrow == "DeliveryNo") {
+					that.getModel("appView").setProperty("/CustomerAttachment", invoice);
 				}
-				else if(clickedrow == "InvNo"){			
-					that.getModel("appView").setProperty("/CustomerAttachment",Delivery);
+				else if (clickedrow == "InvNo") {
+					that.getModel("appView").setProperty("/CustomerAttachment", Delivery);
 				}
 				// var oSimpleForm = that.getView().byId('allJobDetails')
 				// oSimpleForm.bindElement('appView>/Jobs');
 				// debugger;
 			});
-			},
+		},
 
-			onRejectCustomerDialog : function(){
-				this.CustomerAttachment.then(function (oDialog) {
-					oDialog.close();
-				});
-			},
+		onRejectCustomerDialog: function () {
+			this.CustomerAttachment.then(function (oDialog) {
+				oDialog.close();
+			});
+		},
 
 
-	
+
 
 		clickedLink: null,
 		jobStatusPath: null,
@@ -450,7 +462,6 @@ sap.ui.define([
 			var that = this;
 			this.getRemJobsStatus();
 			var oModel = this.getView().getModel("appView");
-
 			var oNewJob = {
 				"JobStatusId": this.oArgs,
 				"Coating": "",
@@ -467,11 +478,12 @@ sap.ui.define([
 				"deliveryAttachment": "",
 				"incAttachment": "",
 				"rawMaterial": "",
-				"spotUV": ""
+				"spotUV": "",
+				"status": ""
 			}
 
 			this.getModel('appView').setProperty('/newJob', oNewJob);
-			// debugger;
+			debugger;
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oModel.setProperty("/addJobStatusdialogTitle", "Add Job Status ");
@@ -486,6 +498,8 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", true);
 					oModel.setProperty("/accountHeadVis", true);
 					oModel.setProperty("/jobStatusVis", true);
+					oModel.setProperty("/falseforallhead", true);
+					// oModel.setProperty("/addBtnVisible", true);
 				}
 				//Editability for Ram Material Head
 				if (sUserRole === 'Raw Material Head') {
@@ -495,6 +509,8 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
+					// oModel.setProperty("/addBtnVisible", false);
 				}
 				//Editability for Printing Head
 				if (sUserRole === 'Printing Head') {
@@ -503,7 +519,8 @@ sap.ui.define([
 					oModel.setProperty("/postPressHeadVis", false);
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
-				    oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
 				}
 				//Editability for Post Press Head
 				if (sUserRole === 'Post Press Head') {
@@ -512,7 +529,8 @@ sap.ui.define([
 					oModel.setProperty("/postPressHeadVis", true);
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
-				    oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
 				}
 				//Editability for Dispatch Head
 				if (sUserRole === 'Dispatch Head') {
@@ -521,7 +539,8 @@ sap.ui.define([
 					oModel.setProperty("/postPressHeadVis", false);
 					oModel.setProperty("/dispatchHeadVis", true);
 					oModel.setProperty("/accountHeadVis", false);
-				    oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
 				}
 				//Editability for Accounts Head
 				if (sUserRole === 'Accounts Head') {
@@ -530,12 +549,14 @@ sap.ui.define([
 					oModel.setProperty("/postPressHeadVis", false);
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", true);
-				    oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
 				}
 				// that.loadForm2();
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
 			});
+			
 		},
 
 		// * this fucntion will close the dialog of the "onPressAdd" or Add button dialog on status.
@@ -548,51 +569,55 @@ sap.ui.define([
 
 		// * this fucntion is triger when user click on save in fragment.
 		onSubmitData: function () {
-			// debugger;
-			var oModel = this.getView().getModel("appView");  //default model get at here
-
+			debugger;
+			var oModel = this.getView().getModel("appView");
+			oModel.updateBindings();
+			// var rawMaterialSelect = this.getView().getModel("appView").getProperty("/rawMaterialSelected");
 			var oldData = oModel.getProperty("/newJobStatus");
-
 			var oNewJobData = oModel.getProperty('/newJob');
 			oNewJobData.rawMaterial = oModel.getProperty('/selectedKey');
 			// this for the attachments files in jobstatus.
 			oNewJobData.incAttachment = oModel.getProperty("/statusInvAttachment");
 			oNewJobData.deliveryAttachment = oModel.getProperty("/statusDeliveryAttachment");
-			
-
 
 			if (!this.isEditStatus) {
 				oNewJobData.TobeUpdated = "X";
 				oldData.push(oNewJobData);
 
 			}
-			// oNewJobData.TobeUpdated = true;
 			oModel.setProperty("/newJobStatus", oldData);
-
-			// oModel.setProperty("/newJobStatus", oldData);
-
-			// var data = oModel.getProperty('/newJobStatus');
-			// var id = oldData[0].id;
-			// const sEntityPath = `/JobStatus('${id}')`;
-			// var oData = this.getView().getModel();
-
-			// if (this.isEditStatus == true) {
-			// 	oData.update(sEntityPath, oldData[0], {
-			// 		success: function (Data) {
-			// 			MessageToast.show("Successfully Update the Entry");
-			// 		},
-			// 		error: function (error) {
-			// 			// Error callback
-			// 			that.middleWare.errorHandler(error, that);
-			// 		}
-			// 	});
-			// }
 			oModel.updateBindings();
 			oModel.refresh();
+			// this.rawMaterialGet();
+			// this.whenProductionStart();		
 			this.onClose();
 
 		},
-
+		// rawMaterialGet: function () {
+		// 	debugger;
+		// 	var oModel = this.getView().getModel("appView");
+		// 	var sUserRole = this.getView().getModel("appView").getProperty("/UserRole");
+		// 	var oNewJobData = oModel.getProperty('/newJob');
+		// 	oNewJobData.rawMaterial = oModel.getProperty('/selectedKey');
+		// 	var ids = this.oArgs;
+		// 	var sEntityPath = "/Jobs('" + ids + "')";
+        //     var oData = this.getView().getModel();
+		// 	oData.read(sEntityPath, {
+		// 		success: function (data) {
+		// 			if(oNewJobData.rawMaterial !== "In Stock"){
+		// 				if (sUserRole === 'Printing Head') {
+		// 					oModel.setProperty("/printingHeadEdit", false);
+		// 				}
+		// 					MessageToast.show("Raw material is Out of Stock");
+		// 				}else{
+		// 					oModel.setProperty("/printingHeadEdit", true);
+		// 				}
+		// 		},
+		// 		error: function (oError) {
+		// 			that.middleWare.errorHandler(oError, that);
+		// 		}
+		// 	});
+		// },
 		// * this funciton will upload the data, of the job status.
 		onUploadData: function () {
 			var that = this;
@@ -801,7 +826,7 @@ sap.ui.define([
 			}
 			this.middleWare.callMiddleWare(endPoint, "POST", payload)
 				.then(function (data) {
-					if(!data){
+					if (!data) {
 						return
 					}
 					data.forEach(item => {
@@ -857,7 +882,7 @@ sap.ui.define([
 				try {
 					var vContent = e.currentTarget.result;
 					// var fileType = files[0].type;
-					
+
 					oModel.setProperty("/attachmentFiles", vContent);
 					oModel.updateBindings();
 
@@ -908,9 +933,8 @@ sap.ui.define([
 
 		// Start Production Button Pressed
 
-		whenProductionStart: function () {
-
-
+		whenProductionStart: function() {
+			debugger;
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
@@ -919,21 +943,19 @@ sap.ui.define([
 				status: "In-Progress"
 			};
 			oModel.update(sEntityPath, oUpdatedData, {
-				success: function (oUpdatedData) {
-
-					MessageToast.show("Job Production Started")
-					// that.getView().getModel("appView").setProperty("/addJobStatusVis",false)
-					// that.getView().getModel("appView").setProperty("/modifybtnvis",false)
+				success: function(data) {
+		        	MessageToast.show("Job Production Started")
 					that.getJobsData();
 				},
-
-				error: function (error) {
+		
+				error: function(error) {
 					// Error callback
-					// that.middleWare.errorHandler(error, that);
-					MessageToast.show("Something is Wrong");
+					that.middleWare.errorHandler(error, that);
+					// MessageToast.show("Something is Wrong");
 				}
 			});
 		},
+			
 
 
 
@@ -950,204 +972,204 @@ sap.ui.define([
 			var that = this;
 			var oModel = this.getView().getModel();
 			oModel.read(sPath, {
-				success: function(data){
+				success: function (data) {
 					that.getView().getModel("appView").setProperty("/jobsData", data.results);
 				},
-				error: function(error){
+				error: function (error) {
 					that.middleWare.errorHandler(error, that);
 					MessageToast.show("Something is Wrong");
 				}
 			});
-            // this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
-            //     that.getView().getModel("appView").setProperty("/jobsData", data);
-            // })
-            // .catch(function (jqXhr, textStatus, errorMessage) {
-            //   that.middleWare.errorHandler(jqXhr, that);
+			// this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
+			//     that.getView().getModel("appView").setProperty("/jobsData", data);
+			// })
+			// .catch(function (jqXhr, textStatus, errorMessage) {
+			//   that.middleWare.errorHandler(jqXhr, that);
 			// });
-		
+
 		},
 		onLiveChange: function (event) {
 			var newValue = event.getParameter("value");
-            var value = this.getView().getModel("appView").getProperty("/allRemainingDatas");
-            var maxValue = value.Printing;
-            var maxLength = 4;
-            var isValid = this.isValueValid(newValue, maxValue);
-            var inputControl = event.getSource();
-            if (!isValid) {
-                inputControl.setValueState("Error");
-                //   if (parseInt(event.getParameter('value')) > maxValue) {
-                //  // event.getSource().setValue(event.getParameter('value').substring(0, maxLength))
-                //   }
-                inputControl.setValueStateText("Value cannot exceed more than:" + maxValue);
+			var value = this.getView().getModel("appView").getProperty("/allRemainingDatas");
+			var maxValue = value.Printing;
+			var maxLength = 4;
+			var isValid = this.isValueValid(newValue, maxValue);
+			var inputControl = event.getSource();
+			if (!isValid) {
+				inputControl.setValueState("Error");
+				//   if (parseInt(event.getParameter('value')) > maxValue) {
+				//  // event.getSource().setValue(event.getParameter('value').substring(0, maxLength))
+				//   }
+				inputControl.setValueStateText("Value cannot exceed more than:" + maxValue);
 
-                this.getView().getModel("appView").setProperty("/saveEnabled", false)
+				this.getView().getModel("appView").setProperty("/saveEnabled", false)
 
-            } else {
+			} else {
 
-                inputControl.setValueState("None");
+				inputControl.setValueState("None");
 
-                this.getView().getModel("appView").setProperty("/saveEnabled", true)
+				this.getView().getModel("appView").setProperty("/saveEnabled", true)
 
-            }
+			}
 
-        },
+		},
 
-        isValueValid: function (value, maxValue) {
+		isValueValid: function (value, maxValue) {
 
-            return value <= maxValue;
+			return value <= maxValue;
 
 
 
 
-        },
+		},
 
 
 
 
-        // getremainingJobData: function () {
+		// getremainingJobData: function () {
 
 
 
 
-        //  var oModel = this.getView().getModel();  //default model get at here
+		//  var oModel = this.getView().getModel();  //default model get at here
 
 
 
 
-        //  var that = this;
+		//  var that = this;
 
 
 
 
-        //  var ids = this.oArgs;
+		//  var ids = this.oArgs;
 
 
 
 
-        //  var jobId = this.getView().getModel("appView").getProperty("/postId")
+		//  var jobId = this.getView().getModel("appView").getProperty("/postId")
 
 
 
 
-        //  var payload = {
+		//  var payload = {
 
 
 
 
-        //      "jobId": ids
+		//      "jobId": ids
 
 
 
 
-        //  }
+		//  }
 
 
 
 
-        //  this.middleWare.callMiddleWare("getRemJobStatus", "POST", payload)
+		//  this.middleWare.callMiddleWare("getRemJobStatus", "POST", payload)
 
 
 
 
-        //      .then(function (data) {
+		//      .then(function (data) {
 
 
 
 
-        //          debugger;
+		//          debugger;
 
 
 
 
-        //          that.getView().getModel("appView").setProperty("/remJobData", data);
+		//          that.getView().getModel("appView").setProperty("/remJobData", data);
 
 
 
 
-        //      })
+		//      })
 
 
 
 
-        //      .catch(function (jqXhr, textStatus, errorMessage, error) {
+		//      .catch(function (jqXhr, textStatus, errorMessage, error) {
 
 
 
 
-                   
 
 
 
 
-        //          MessageToast.show("Error");
 
+		//          MessageToast.show("Error");
 
 
 
-        //      });
 
+		//      });
 
 
 
-        // },
 
-        getRemJobsStatus: function(){
+		// },
 
-            debugger;
+		getRemJobsStatus: function () {
 
-            var oModel = this.getView().getModel("appView");
+			debugger;
 
-            var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
+			var oModel = this.getView().getModel("appView");
 
-            var totalprintingsheets = allJobs.noOfSheets1;
+			var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
 
-            var oSumOfData = {
+			var totalprintingsheets = allJobs.noOfSheets1;
 
-                "Coating":0,
+			var oSumOfData = {
 
-                "Printing":0,
+				"Coating": 0,
 
-                "Punching":0,
+				"Printing": 0,
 
-                "Foiling":0,
+				"Punching": 0,
 
-                "Embossing":0,
+				"Foiling": 0,
 
-                "Pasting":0,
+				"Embossing": 0,
 
-                "spotUV":0,
+				"Pasting": 0,
 
-                "Packing":0,
+				"spotUV": 0,
 
-                "rawMaterial":"",
+				"Packing": 0,
 
-                "InvNo":"",
+				"rawMaterial": "",
 
-                "DeliveryNo":""
+				"InvNo": "",
 
-            }
+				"DeliveryNo": ""
 
-            var printingsheet = oModel.getProperty("/newJobStatus");
+			}
 
-            for (let i = 0; i < printingsheet.length; i++) {
+			var printingsheet = oModel.getProperty("/newJobStatus");
 
-                var stringNum = printingsheet[i].Printing;
+			for (let i = 0; i < printingsheet.length; i++) {
 
-                var integerNumber = parseInt(stringNum);
+				var stringNum = printingsheet[i].Printing;
 
-                oSumOfData.Printing += integerNumber;
+				var integerNumber = parseInt(stringNum);
 
-            }
+				oSumOfData.Printing += integerNumber;
 
-            var remData = {
+			}
 
-                "Printing": totalprintingsheets - oSumOfData.Printing
+			var remData = {
 
-            }
+				"Printing": totalprintingsheets - oSumOfData.Printing
 
-            oModel.setProperty("/allRemainingDatas",remData)
+			}
 
-        }
+			oModel.setProperty("/allRemainingDatas", remData)
+
+		}
 
 
 	});

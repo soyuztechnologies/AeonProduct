@@ -12,11 +12,11 @@ resizable="false" >
 			class="sapUiNoMargin sapUiNoPadding"
 			singleContainerFullSize="false" >
 			<f:content>
-				<Label text="JobStatusId" />
+				<Label text="JobStatusId"/>
 				<Text  text="{appView>JobStatusId}" />
 			
-				<Label text="CreatedOn" />
-				<DatePicker dateValue="{appView>CreatedOn}"/>
+				<Label text="CreatedOn" visible="{appView>/falseforallhead}"/>
+				<DatePicker dateValue="{appView>CreatedOn}" visible="{appView>/falseforallhead}"/>
 
 				<Label required="true" text="Raw Material" visible="{appView>/rawMaterialHeadVis}"/>
 				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" visible="{appView>/rawMaterialHeadVis}" >
@@ -26,10 +26,10 @@ resizable="false" >
 					</items>
 				</Select>
 				<Label text="Printing" visible="{appView>/printingHeadVis}"/>
-				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" visible="{appView>/printingHeadVis}"/>
+				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}"/>
 
 				<Label text="Coating" visible="{appView>/printingHeadVis}"/>
-				<Input type="Number" value="{appView>Coating}" visible="{appView>/printingHeadVis}"/>
+				<Input type="Number" value="{appView>Coating}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}"/>
 					
 				<Label text="Foiling" visible="{appView>/postPressHeadVis}"/>
 				<Input type="Number" value="{appView>Foiling}" visible="{appView>/postPressHeadVis}"/>
@@ -55,15 +55,15 @@ resizable="false" >
 				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{appView>/accountHeadVis}"/>
 
 				<Label required="true" text="Status" visible="{appView>/jobStatusVis}"/>
-				<Select id="idStatus" forceSelection="false" selectedKey=""  change="onSelectKeyStatus" visible="{appView>/jobStatusVis}">
+				<Select id="idStatus" forceSelection="false" selectedKey="{appView>status}"  change="onSelectKeyStatus" visible="{appView>/jobStatusVis}">
 			    	<items>
-						<core:Item text="Partially Completed" key="partiallycompleted" />
+						<core:Item text="Partially Completed" key="Partially Completed" />
 						<!-- <core:Item text="In-Progress" key="inprogress" /> -->
-						<core:Item text="Completed" key="completed" />
-						<core:Item text="Packing" key="packing" />
-						<core:Item text="Partially Dispatched" key="partiallydispatched" />
-						<core:Item text="In-Transit" key="intransit" />
-						<core:Item text="Delivered" key="delivered" />
+						<core:Item text="Completed" key="Completed" />
+						<core:Item text="Packing" key="Packing" />
+						<core:Item text="Partially Dispatched" key="Partially Dispatched" />
+						<core:Item text="In-Transit" key="In-Transit" />
+						<core:Item text="Delivered" key="Delivered" />
 						<!-- <core:Item text="Cancelled" key="cancelled" /> -->
 					</items>
 				</Select>

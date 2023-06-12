@@ -379,7 +379,7 @@
 		},
 		"status": {
 			"type": "string",
-			"default": "New"
+			"default": null
 		}
 	},
 	"scope": {

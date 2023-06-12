@@ -23,9 +23,9 @@
 						    <!-- intro="{parts:[{path: 'appView>appUser/UserName'},{path: 'appView>appUser/FirstName'},{path: 'appView>appUser/LastName'}], formatter: '.formatter.formatFullName'}" -->
 							<!-- number="{appView>jobCardNo}" -->
 							<!-- intro="{path: 'appView>appUser', formatter: '.formatter.formatFullName'}" + -->
-							<!-- <firstStatus>
-							    <ObjectStatus text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
-							</firstStatus> -->
+								<firstStatus>
+									<ObjectStatus text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
+								</firstStatus>
 					</ObjectListItem>
 			</items>	
 	  </List>

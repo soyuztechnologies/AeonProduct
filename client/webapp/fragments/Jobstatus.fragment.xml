@@ -4,7 +4,7 @@
             <Title text="Job Status" />
             <ToolbarSpacer/>
                 <Button
-                   visible="{=${appView>/Jobs/status}  ? ${appView>/addBtnVisible} : false }"
+                   visible="{appView>/addBtnVisible}"
                    icon="sap-icon://add"
                    press="onPressAdd"/>
     </OverflowToolbar>
