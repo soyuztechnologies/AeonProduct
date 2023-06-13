@@ -83,6 +83,10 @@
 			"type": "string",
 			"default": null
 		},
+		"paperPoNo": {
+			"type": "string",
+			"default": null
+		},
 		"paperQuality": {
 			"type": "string",
 			"default": null

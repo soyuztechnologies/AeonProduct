@@ -869,13 +869,12 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return parts.join(' x ');
     },
 
-    showPcs: function (qtyPcs) {
-      if (qtyPcs === null) {
-        return " ";
-      }
-      return qtyPcs + " Pcs";
-
-    },
+    // showPcs: function (qtyPcs) {
+    //   if (qtyPcs || qtyPcs === null) {
+    //     return qtyPcs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    //   }
+    //   return qtyPcs + " Pcs";
+    // },
     showEqmm: function (x, y) {
       if (x === null) {
         return " ";

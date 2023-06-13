@@ -15,8 +15,8 @@ resizable="false" >
 				<Label text="JobStatusId"/>
 				<Text  text="{appView>JobStatusId}" />
 			
-				<Label text="CreatedOn" visible="{appView>/falseforallhead}"/>
-				<DatePicker dateValue="{appView>CreatedOn}" visible="{appView>/falseforallhead}"/>
+				<Label text="CreatedOn" visible="{appView>/dateFalseforallhead}"/>
+				<DatePicker dateValue="{appView>CreatedOn}" visible="{appView>/dateFalseforallhead}"/>
 
 				<Label required="true" text="Raw Material" visible="{appView>/rawMaterialHeadVis}"/>
 				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" visible="{appView>/rawMaterialHeadVis}" >
@@ -27,10 +27,8 @@ resizable="false" >
 				</Select>
 				<Label text="Printing" visible="{appView>/printingHeadVis}"/>
 				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}"/>
-
 				<Label text="Coating" visible="{appView>/printingHeadVis}"/>
-				<Input type="Number" value="{appView>Coating}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}"/>
-					
+				<Input type="Number" value="{appView>Coating}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}" />					
 				<Label text="Foiling" visible="{appView>/postPressHeadVis}"/>
 				<Input type="Number" value="{appView>Foiling}" visible="{appView>/postPressHeadVis}"/>
 				<Label text="Spot UV" visible="{appView>/postPressHeadVis}"/>
@@ -42,9 +40,10 @@ resizable="false" >
 				<Input type="Number" value="{appView>Punching}" visible="{appView>/postPressHeadVis}"/>
 				<Label text="Pasting" visible="{appView>/dispatchHeadVis}"/>
 				<Input type="Number" value="{appView>Pasting}" visible="{appView>/dispatchHeadVis}"/>
-
 				<Label text="Packing" visible="{appView>/dispatchHeadVis}" />
-				<Input type="Number" value="{appView>Packing}" visible="{appView>/dispatchHeadVis}"/>
+				<Input type="Number" value="{appView>/totalShippers}" visible="{appView>/dispatchHeadVis}"  placeholder="No. Of Shippers"/>
+				<Input liveChange="onLiveChnageValuePacking" type="Number" visible="{appView>/dispatchHeadVis}" placeholder="No. Of Piece Per Box"/>
+
 
 				<Label text="Inv. No." visible="{appView>/accountHeadVis}"/>
 				<Input type="Number" value="{appView>InvNo}" visible="{appView>/accountHeadVis}" />
