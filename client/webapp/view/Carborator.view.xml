@@ -38,17 +38,17 @@
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem highlight="{= ${appView>operation} === 'N' ? 'Information' : ${appView>operation} === 'U' ? 'Warning' :${appView>operation} === 'R' ? 'Success' : 'Information'}" detailPress="onGetDialog" type="DetailAndActive">
+                    <ColumnListItem highlight="{= ${appView>operation} === 'N' ? 'Information' : ${appView>operation} === 'U' ? 'Warning' :${appView>operation} === 'R' ? 'Success' : ${appView>operation} === 'RU' ? 'Indication08':'Information'}" detailPress="onGetDialog" type="DetailAndActive">
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>
-                            <ComboBox items="{appView>/customerUser}" id="idPopinLayout"
+                            <ComboBox items="{appView>/companyDetails}" id="idPopinLayout"
                                 placeholder="Company Name"
                                 change="onPopinLayoutChanged"
                                 class="sapUiTinyMarginEnd">
                                 <items>
-                                    <core:Item enabled="true"  text="{appView>UserName}"
-                                        key="{appView>id}"/>
+                                    <core:Item enabled="true"  text="{appView>CompanyName}"
+                                        key="{appView>CompanyId}"/>
                                 </items>
                             </ComboBox>
                         </cells>
