@@ -4,6 +4,9 @@
     xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
    
+    <Label text="Paper PO NO"/>
+    <Input value = "{appView>paperPoNo}" editable="false"/>
+    
     <Label text="Procured No. Of Sheets"/>
     <Input value = "{path: 'appView>noOfSheets3',formatter:'.formatter.showSheets'}" editable="false"/>
   

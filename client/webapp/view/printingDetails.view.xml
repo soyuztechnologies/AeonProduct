@@ -34,7 +34,7 @@
 						<Text text="{appView>jobCardNo} + {appView>jobCode}"></Text>
 
 						<Label text="Quantity"></Label>
-						<Input editable="false" value="{path: 'appView>qtyPcs',formatter:'.formatter.showPcs'}"></Input>
+						<Input editable="false" value="{path: 'appView>qtyPcs',type: 'sap.ui.model.type.Float', formatOptions: {groupingEnabled: true, groupingSeparator: ','}} pcs"></Input>
 
 						<Label text="Size in mm"></Label>
 						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->

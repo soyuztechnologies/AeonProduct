@@ -62,6 +62,7 @@ sap.ui.define([
 
 
 		},
+
 		showAddedFields: function () {
 			var oTable = this.getView().byId("jobStatusTable");
 			var aColumns = oTable.getColumns();
@@ -92,25 +93,26 @@ sap.ui.define([
 
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
-
+			debugger;
 			var that = this;
 			var oModel = this.getView().getModel();
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			oModel.read("/Jobs('" + this.oArgs + "')", {
 				success: function (data) {
-                    debugger;
+					debugger;
 					that.getView().getModel("appView").setProperty("/Jobs", data);
+					that.loadForm();
 					that.getView().getModel("appView").setProperty("/status", data.status);
-					if(!data.status){
-						if (sUserRole == "Admin" || sUserRole == "Raw material head"){
+					if (!data.status) {
+						if (sUserRole == "Admin" || sUserRole == "Raw Material Head") {
 							that.getView().getModel("appView").setProperty("/addBtnVisible", true);
-						}else{
+						} else {
 							that.getView().getModel("appView").setProperty("/addBtnVisible", false);
 						}
-					}else{
+					} else {
 						return;
 					}
-					that.loadForm();
-					
+
 				},
 				error: function (error) {
 
@@ -498,7 +500,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", true);
 					oModel.setProperty("/accountHeadVis", true);
 					oModel.setProperty("/jobStatusVis", true);
-					oModel.setProperty("/falseforallhead", true);
+					oModel.setProperty("/dateFalseforallhead", true);
 					// oModel.setProperty("/addBtnVisible", true);
 				}
 				//Editability for Ram Material Head
@@ -509,7 +511,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 					// oModel.setProperty("/addBtnVisible", false);
 				}
 				//Editability for Printing Head
@@ -520,7 +522,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				//Editability for Post Press Head
 				if (sUserRole === 'Post Press Head') {
@@ -530,7 +532,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				//Editability for Dispatch Head
 				if (sUserRole === 'Dispatch Head') {
@@ -540,7 +542,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", true);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				//Editability for Accounts Head
 				if (sUserRole === 'Accounts Head') {
@@ -550,13 +552,13 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", true);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				// that.loadForm2();
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
 			});
-			
+
 		},
 
 		// * this fucntion will close the dialog of the "onPressAdd" or Add button dialog on status.
@@ -601,7 +603,7 @@ sap.ui.define([
 		// 	oNewJobData.rawMaterial = oModel.getProperty('/selectedKey');
 		// 	var ids = this.oArgs;
 		// 	var sEntityPath = "/Jobs('" + ids + "')";
-        //     var oData = this.getView().getModel();
+		//     var oData = this.getView().getModel();
 		// 	oData.read(sEntityPath, {
 		// 		success: function (data) {
 		// 			if(oNewJobData.rawMaterial !== "In Stock"){
@@ -656,11 +658,73 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
-
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oModel.setProperty("/addJobStatusdialogTitle", "Edit Job Status ");
 				oModel.setProperty("/addJobStatusSave", "Update");
 				oDialog.open();
+				//Editability for Admin
+				if (sUserRole === 'Admin') {
+					oModel.setProperty("/rawMaterialHeadVis", true);
+					oModel.setProperty("/printingHeadVis", true);
+					oModel.setProperty("/postPressHeadVis", true);
+					oModel.setProperty("/dispatchHeadVis", true);
+					oModel.setProperty("/accountHeadVis", true);
+					oModel.setProperty("/jobStatusVis", true);
+					oModel.setProperty("/falseforallhead", true);
+					// oModel.setProperty("/addBtnVisible", true);
+				}
+				//Editability for Ram Material Head
+				if (sUserRole === 'Raw Material Head') {
+					oModel.setProperty("/rawMaterialHeadVis", true);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
+					// oModel.setProperty("/addBtnVisible", false);
+				}
+				//Editability for Printing Head
+				if (sUserRole === 'Printing Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", true);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
+				}
+				//Editability for Post Press Head
+				if (sUserRole === 'Post Press Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", true);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
+				}
+				//Editability for Dispatch Head
+				if (sUserRole === 'Dispatch Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", true);
+					oModel.setProperty("/accountHeadVis", false);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
+				}
+				//Editability for Accounts Head
+				if (sUserRole === 'Accounts Head') {
+					oModel.setProperty("/rawMaterialHeadVis", false);
+					oModel.setProperty("/printingHeadVis", false);
+					oModel.setProperty("/postPressHeadVis", false);
+					oModel.setProperty("/dispatchHeadVis", false);
+					oModel.setProperty("/accountHeadVis", true);
+					oModel.setProperty("/jobStatusVis", false);
+					oModel.setProperty("/falseforallhead", false);
+				}
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
 			});
@@ -1013,6 +1077,29 @@ sap.ui.define([
 			}
 
 		},
+		onLiveChnageValuePacking: function (oEvent) {
+			debugger;
+			// var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
+			var totalPrinted = 100000;
+			var newValue = oEvent.getParameter("newValue");
+			if (newValue > totalPrinted) {
+				
+			} else {
+				var totalBox = totalPrinted / parseInt(newValue);
+				var value = this.getView().getModel("appView").setProperty("/totalShippers", totalBox);
+			}
+			var maxValue = totalPrinted;
+			var isValid = this.isValueValid(newValue, maxValue);
+			var inputControl = oEvent.getSource();
+			if (!isValid) {
+				inputControl.setValueState("Error");
+				inputControl.setValueStateText("Value cannot exceed more than:" + maxValue);
+			} else {
+				inputControl.setValueState("None");
+			}
+
+
+		},
 
 		isValueValid: function (value, maxValue) {
 
@@ -1114,15 +1201,10 @@ sap.ui.define([
 		// },
 
 		getRemJobsStatus: function () {
-
 			debugger;
-
 			var oModel = this.getView().getModel("appView");
-
 			var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
-
 			var totalprintingsheets = allJobs.noOfSheets1;
-
 			var oSumOfData = {
 
 				"Coating": 0,
@@ -1150,25 +1232,15 @@ sap.ui.define([
 			}
 
 			var printingsheet = oModel.getProperty("/newJobStatus");
-
 			for (let i = 0; i < printingsheet.length; i++) {
-
 				var stringNum = printingsheet[i].Printing;
-
 				var integerNumber = parseInt(stringNum);
-
 				oSumOfData.Printing += integerNumber;
-
 			}
-
 			var remData = {
-
 				"Printing": totalprintingsheets - oSumOfData.Printing
-
 			}
-
 			oModel.setProperty("/allRemainingDatas", remData)
-
 		}
 
 
