@@ -207,7 +207,7 @@ sap.ui.define([
       if (oEvent) {
         var oSelectedItem = oEvent.getSource().getSelectedKey();
         var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
-        if (change.operation === 'R' && change.operation ==="N") {
+        if (change.operation === 'R' || change.operation ==="N") {
           change.operation = 'RU'
         }
         that.getView().getModel('appView').updateBindings();
