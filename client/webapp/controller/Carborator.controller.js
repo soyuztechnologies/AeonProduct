@@ -6,7 +6,7 @@ sap.ui.define([
   "sap/m/MessageBox",
   "sap/ui/core/BusyIndicator",
   "sap/ui/model/Filter"
-], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator,Filter) {
+], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator, Filter) {
   "use strict";
 
   return BaseController.extend("ent.ui.ecommerce.controller.Carborator", {
@@ -30,7 +30,7 @@ sap.ui.define([
       oModel.setProperty("/editableFields", false);
       oModel.setProperty("/messageStripVis", false)
       oModel.setProperty("/onUpdateJobVis", false)
-      this.onPressClear();
+      // this.onPressClear();
       this.getJobsData();
 
       var bSystemType = this.getModel("device").getData().system.desktop;
@@ -47,42 +47,9 @@ sap.ui.define([
     onPressNavigate: function () {
       this.getRouter().navTo("allPrinters");
     },
-    // onFileUploaddChange: function (oEvent) {
-    //   debugger;
-    //   var that = this;
-    //   var files = oEvent.getParameter("files");
-    //   var fileCount = files.length;
-
-    //   for (var i = 0; i < fileCount; i++) {
-    //     var uploadFileName = files[i].name;
-    //     that.getView().getModel("appView").setProperty("/uploadFile", uploadFileName);
-
-    //     var oFileUploader = oEvent.getSource();
-    //     var oFile = files[i];
-    //     var oReader = new FileReader();
-
-    //     oReader.onload = (function (file) {
-    //       return function (e) {
-    //         var sFileContent = e.target.result;
-
-    //         // Parse the Excel file
-    //         var oWorkbook = XLSX.read(sFileContent, { type: "binary" });
-    //         var oWorksheet = oWorkbook.Sheets[oWorkbook.SheetNames[0]];
-    //         var aData = XLSX.utils.sheet_to_json(oWorksheet, { header: 1 });
-    //         that.extracDbFields(aData);
-    //         that.getModel("appView").setProperty("/pdfVisibility", false);
-    //         that.getModel("appView").setProperty("/simpleFormVisibility", true);
-    //         that.getModel("appView").setProperty("/uploadButtonVisibility", false);
-    //         that.getModel("appView").setProperty("/imgVisibility", false);
-    //       };
-    //     })(oFile);
-
-    //     oReader.readAsBinaryString(oFile);
-    //   }
-    // },
-
     onFileUploaddChange: function (oEvent) {
       var that = this;
+      that.getView().getModel("appView").setProperty("/newData", "");
       var oFileUploader = oEvent.getSource();
       var files = oEvent.getParameter("files");
       this.files = [];
@@ -95,23 +62,12 @@ sap.ui.define([
         var oReader = new FileReader();
         oReader.onload = function (e) {
           var sFileContent = e.target.result;
-
-          // Parse the Excel file
           var oWorkbook = XLSX.read(sFileContent, { type: "binary" });
           var oWorksheet = oWorkbook.Sheets[oWorkbook.SheetNames[0]];
           var aData = XLSX.utils.sheet_to_json(oWorksheet, { header: 1 });
-
-          // Append data to the excelValues property
           var excelValues = that.getModel("appView").getProperty("/excelValues") || [];
           this.oFileContentJson = that.extracDbFields(aData);
           this.oFileContentJson.fileName = that.files[that.count].fileName;
-
-          // if (this.oFileContentJson.operation = "N") {
-          //   this.oFileContentJson.operation = "N"
-          // }
-          // else (
-          //   this.oFileContentJson.operation = "U"
-          // )
           that.files[that.count].fileContent = this.oFileContentJson;
           that.count++;
           that.getModel("appView").setProperty("/pdfVisibility", false);
@@ -119,84 +75,48 @@ sap.ui.define([
           that.getModel("appView").setProperty("/uploadButtonVisibility", false);
           that.getModel("appView").setProperty("/imgVisibility", false);
           if (that.count === files.length) {
-            // Execute getJobs() when all files are processed
             that.getStringValue();
             that.getJobs();
           }
         };
         oReader.readAsBinaryString(oFile);
       }
-      
+
 
     },
     getJobsData: function () {
-      // var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
       var oFilter = encodeURIComponent('{"where":{"CompanyId": null}}');
-      // var sPath = '/Jobs?filter={"where":{"CompanyId" : null }}'
-      var url = 'api/Jobs?filter='+oFilter
-      // var oModel = this.getView().getModel();
+      var url = 'api/Jobs?filter=' + oFilter
       var that = this;
-      // oModel.read(sPath, {
-      //   // urlParameters: {
-      //   // 	"$expand": "appUser"
-      //   // },
-      //   // filter:{"where":{"CompanyId" : null }},
-      //   success: function (data) {
-      //     data.results.forEach(item => {
-      //       item.operation = "R";
-      //     });
-      //     that.getView().getModel("appView").setProperty("/excelValues", data.results);
-      //     var newData=[];
-      //     that.getView().getModel("appView").setProperty("/newData",newData);
-          
-      //   },
-      //   error: function (error) {
-      //     // Error callback
-      //     //   that.middleWare.errorHandler(error, that);
-      //     MessageToast.show("Error reading data");
-      //     // Error callback
-      //     //   that.middleWare.errorHandler(error, that);
-      //     MessageToast.show("Error reading data");
-      //   }
-      // });
       this.middleWare.callMiddleWare(url, "get")
-          .then(function (data, status, xhr) {
-            data.forEach(item => {
-                    item.operation = "R";
-                  });
-            that.getView().getModel("appView").setProperty("/excelValues", data);
-          //   var newData=[];
-          // that.getView().getModel("appView").setProperty("/newData",newData);
-          })
-          .catch(function (jqXhr, textStatus, errorMessage) {
-            that.middleWare.errorHandler(jqXhr, that);
+        .then(function (data, status, xhr) {
+          data.forEach(item => {
+            item.operation = "R";
           });
+          that.getView().getModel("appView").setProperty("/storeDBJobs", data);
+          that.getView().getModel("appView").setProperty("/excelValues", data);
+        })
+        .catch(function (jqXhr, textStatus, errorMessage) {
+          that.middleWare.errorHandler(jqXhr, that);
+        });
     },
-    getStringValue: function(){
+    getStringValue: function () {
       var preData = this.getView().getModel("appView").getProperty("/newData");
-      var array=[];
+      var array = [];
       for (let i = 0; i < preData.length; i++) {
         const element = preData[i].jobCardNo;
         array.push(element)
       }
-      this.getView().getModel("appView").setProperty("/stringData",array)
+      this.getView().getModel("appView").setProperty("/stringData", array)
     },
     onViewPdf: function () {
       var viewPdf = this.getView().getModel("appView").getProperty("/pdfUrl")
       window.open(viewPdf, '_blank', 'width=600,height=800')
     },
-    // onGetExcelValues: function () {
-    //   var allExcel = this.getModel("appView").getProperty("/excelValues");
-    //   var data;
-    //   for (var i = 0; i < allExcel.length; i++) {
-    //     debugger;
-    //     data[i];
-    //   }
-    // },
 
-    getCompanyName:function(){
+    getCompanyName: function () {
       var oModel = this.getView().getModel();
-      var that= this;
+      var that = this;
       oModel.read('/Company', {
         success: function (data) {
           debugger;
@@ -214,72 +134,71 @@ sap.ui.define([
     getJobs: function () {
       debugger;
       var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
-      var jobCardNos =  this.getView().getModel("appView").getProperty("/stringData");
+      var jobCardNos = this.getView().getModel("appView").getProperty("/stringData");
 
       var aExcelFiles = this.getView().getModel("appView").getProperty("/excelValues");
-      var oNewData=this.getView().getModel("appView").getProperty("/newData");
+      var oNewData = this.getView().getModel("appView").getProperty("/newData");
       // aExcelFiles = aExcelFiles.concat(oNewData);
       var sPath = `/Jobs`
       var oModel = this.getView().getModel();
-      oJobsData=aExcelFiles;
-      oUploadJobs=oNewData;
+      var oJobsData = aExcelFiles;
+      var oUploadJobs = oNewData;
       var that = this;
-      var filters = jobCardNos.map(function(jobCardNo) {
+      var filters = jobCardNos.map(function (jobCardNo) {
         return '{"jobCardNo": "' + jobCardNo + '"}';
       });
 
       var filter = encodeURIComponent('{"where": {"or": [' + filters.join(',') + ']}}');
-      var url = 'api/Jobs?filter='+filter
+      var url = 'api/Jobs?filter=' + filter
       this.middleWare.callMiddleWare(url, "GET")
-      .then(function (data, status, xhr) {
-
-        // for (let i = 0; i < aExcelFiles.length; i++) {
-        //   const element = aExcelFiles[i];
-
-        //   for(let j = 0; j < data.length ; j ++){
-        //     var oElement = data[j]
-
-        //     if(oElement.jobCardNo === element.jobCardNo){
-        //       element.operation = "U";
-        //       break;
-        //     }
-        //   }
-        //   // element.operation = "U"
-        // }
-        for (let index = 0; index < data.length; index++) {
-          const element = data[index];
-          var oIndex=oJobsData.findIndex((ele) => {
-            return ele.jobCardNo===element.jobCardNo
-          });
-          if(oIndex !== -1){
-            let index=oUploadJobs.findIndex((ele) => {
-              return ele.jobCardNo===element.jobCardNo
+        .then(function (data, status, xhr) {
+          for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            var oIndex = oJobsData.findIndex((ele) => {
+              return ele.jobCardNo === element.jobCardNo
             });
-            oJobsData[oIndex]=oUploadJobs[index];
-            oJobsData[oIndex].operation='RU';// CompanyId===null
-            oUploadJobs.splice(index,1);
-          }
-          else{
-            let index=oUploadJobs.findIndex((ele) => {
-              return ele.jobCardNo===element.jobCardNo
-            });
-            oUploadJobs[index].operation='RU';
-            oJobsData.push(oUploadJobs[index]);//CompanyId!==null
-            oUploadJobs.splice(index,1);
-          }
-          
-        }
-        oJobsData.concat(oUploadJobs);
-        
-        that.getView().getModel("appView").setProperty("/excelValues",oJobsData)
-        that.getView().getModel('appView').updateBindings();
+            if (oIndex !== -1) {
+              let jobIndex = oUploadJobs.findIndex((ele) => {
+                return ele.jobCardNo === element.jobCardNo
+              });
+              oJobsData[oIndex] = oUploadJobs[jobIndex];
+              oJobsData[oIndex].operation = 'RU';// CompanyId===null
+              oUploadJobs.splice(jobIndex, 1);
+            }
+            else {
+              let jobIndex = oUploadJobs.findIndex((ele) => {
+                return ele.jobCardNo === element.jobCardNo
+              });
+              oUploadJobs[jobIndex].operation = 'RU';
+              oUploadJobs[jobIndex].CompanyId = element.CompanyId;
+              oJobsData.push(oUploadJobs[jobIndex]);//CompanyId!==null
+              oUploadJobs.splice(jobIndex, 1);
 
-      })
-      .catch(function (jqXhr, textStatus, errorMessage) {
-        debugger;
-        that.middleWare.errorHandler(jqXhr, that);
-      });
-     
+            }
+
+          }
+          for (let i = 0; i < oJobsData.length; i++) {
+            const element = oJobsData[i];
+            let listIndex = oUploadJobs.findIndex((ele) => {
+              return ele.jobCardNo === element.jobCardNo
+            });
+            if (listIndex != -1) {
+              oJobsData[i] = oUploadJobs[listIndex];
+              // oJobsData[oIndex].operation = 'N';// CompanyId===null
+              oUploadJobs.splice(listIndex, 1);
+            }
+          }
+          oJobsData = oJobsData.concat(oUploadJobs);
+          console.log(oJobsData);
+          that.getView().getModel("appView").setProperty("/excelValues", oJobsData)
+          that.getView().getModel('appView').updateBindings();
+
+        })
+        .catch(function (jqXhr, textStatus, errorMessage) {
+          debugger;
+          that.middleWare.errorHandler(jqXhr, that);
+        });
+
     },
     onPopinLayoutChanged: function (oEvent) {
       debugger;
@@ -287,11 +206,11 @@ sap.ui.define([
       var that = this;
       if (oEvent) {
         var oSelectedItem = oEvent.getSource().getSelectedKey();
-       var change=  oEvent.getSource().getParent().getBindingContext("appView").getObject()
-       if(change.operation==='R'){
-        change.operation='U'
-       }
-       that.getView().getModel('appView').updateBindings();
+        var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
+        if (change.operation === 'R' && change.operation ==="N") {
+          change.operation = 'RU'
+        }
+        that.getView().getModel('appView').updateBindings();
         that.getView().getModel("appView").setProperty("/customerId", oSelectedItem);
         console.log("Selected User ID:", oSelectedItem);
 
@@ -305,18 +224,6 @@ sap.ui.define([
           debugger;
           that.middleWare.errorHandler(jqXhr, that);
         });
-      // Perform the read operation
-      // oModel.read('/AppUsers', {
-      //   success: function (data) {
-      //     debugger;
-      //     that.getView().getModel("appView").setProperty("/userDetails", data.results);
-      //   },
-      //   error: function (error) {
-      //     // Error callback
-      //     that.middleWare.errorHandler(error, that);
-      //     MessageToast.show("Error reading data");
-      //   }
-      // });
     },
 
 
@@ -336,55 +243,59 @@ sap.ui.define([
 
 
 
-    // * this fucntion is saving the jobs data into the loopback for this we user server call.
+    // * This fucntion is saving the jobs data into the backend for both new and updated jobs!
     onSavePayload: function () {
-    
+      debugger;
       var that = this;
       var oModel = this.getView().getModel();
-
-      var userValue = this.getModel("appView").getProperty("/customerId");
-      var arr = [];
-      var oJsonInpValue = this.getView().getModel('appView').getProperty("/excelValues");
-      for (let i = 0; i < oJsonInpValue.length; i++) {
-        const element = oJsonInpValue[i];
-        if(element.operation==="R"){
-          arr.push(element)
+      var aAllExcelFiles = this.getView().getModel('appView').getProperty("/excelValues");
+      var aNewFetchedExcel = [];
+      var aExcelToBeUploaded = [];
+      for (let i = 0; i < aAllExcelFiles.length; i++) {
+        const element = aAllExcelFiles[i];
+        if (element.operation === "N") {
+          // element.jobCardNo.toString();
+          aNewFetchedExcel.push(element)
         }
-        
+        if (element.operation === "RU") {
+          aExcelToBeUploaded.push(element)
+        }
       }
-      // delete oJsonInpValue.operation;
-      
-      for (let i = 0; i < oJsonInpValue.length; i++) {
-        // const element = oJsonInpValue[i];
-        var filename = oJsonInpValue[i].fileName;
-        // oJsonInpValue[i].fileContent.fileName = filename;
-        // arr.push(element.fileContent)
-        var excelFile = oJsonInpValue[i]
-        oModel.create("/Jobs", excelFile, {
-          success: function (oUpdatedData) {
-            MessageToast.show("Job created successfully");
-          },
-          error: function (nts) {
-            // Error callback
-            // if(nts.responseText.includes("duplicate key")){
-            MessageToast.show("Something Went Wrong")
-            // }
-            // that.middleWare.errorHandler(error, that);
-            // MessageToast.show("Error While Post the data");
-          }
+
+      //*This call is used to Upload the data that was not already present on the backend!
+      if(aNewFetchedExcel.length>0){
+        this.middleWare.callMiddleWare("api/Jobs", "post",aNewFetchedExcel)
+        .then(function (data, status, xhr) {
+          debugger;
+          MessageToast.show("Successfully Uploaded")
+          // that.getView().getModel("appView").setProperty("/customerUser", data);
+        })
+        .catch(function (jqXhr, textStatus, errorMessage) {
+          debugger;
+          that.middleWare.errorHandler(jqXhr, that);
         });
-
       }
 
-     
-      // var getUploadFile = this.getView().getModel('appView').getProperty("/uploadFile");
+      //*This call is used to RE-upload the data that is already present on the backend!
 
-      // var payload = JSON.parse(oJsonInpValue);
-      // payload.CustomerId = userValue;
-      // payload.fileName = getUploadFile;
-
-      // MessageToast.show("Not Available Want to Upload New");
-
+        if(aExcelToBeUploaded.length> 0){
+          for (let i = 0; i < aExcelToBeUploaded.length; i++) {
+            const element = aExcelToBeUploaded[i];
+            
+            this.middleWare.callMiddleWare("api/Jobs", "PUT", element)
+            .then(function (data, status, xhr) {
+              debugger;
+              MessageToast.show("Successfully Uploaded")
+              // that.getView().getModel("appView").setProperty("/customerUser", data);
+            })
+            .catch(function (jqXhr, textStatus, errorMessage) {
+              debugger;
+              that.middleWare.errorHandler(jqXhr, that);
+            });
+          }
+        }
+        //*This will get the All the jobs that is already present on the backend!
+        that.getJobsData();
     },
     onPressDetails: function (oEvent) {
       debugger;
@@ -427,130 +338,29 @@ sap.ui.define([
       }
       BusyIndicator.hide();
     },
-    // onUploadData: function () {
-    //   
-    //   var allInfo = this.getView().getModel('appView').getProperty("/customerId");
-    //   var deliveryDoc = this.getView().getModel('appView').getProperty("/pdfUrl");
-    //   var po = this.getView().getModel('appView').getProperty("/wordContent");
-    //   var img = this.getView().getModel('appView').getProperty('/imageContent');
-    //   if (allInfo && deliveryDoc) {
-    //     
-    //     var payload1 = {
-    //       "id": allInfo,
-    //       "attachment": deliveryDoc,
-
-    //     }
-
-
-    //     this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-    //       then(function () {
-    //         MessageToast.show("Document Uploaded Successfully")
-    //       })
-    //       .catch(function (error) {
-    //         that.middleWare.errorHandler(error, that);
-    //         MessageToast.show("Error:");
-    //       });
-
-    //   } else {
-    //     MessageToast.show("Please Check Your Fields");
-
-    //   }
-    //   if (allInfo && po) {
-    //     
-    //     var payload1 = {
-    //       "id": allInfo,
-    //       "po": po
-
-    //     }
-
-
-    //     this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-    //       then(function () {
-    //         MessageToast.show("Document Uploaded Successfully")
-    //       })
-    //       .catch(function (error) {
-    //         that.middleWare.errorHandler(error, that);
-    //         MessageToast.show("Error:");
-    //       });
-    //   }
-    //   if (allInfo && img) {
-    //     
-    //     var payload1 = {
-    //       "id": allInfo,
-    //       "img": img
-
-    //     }
-
-
-    //     this.middleWare.callMiddleWare("UploadAttachment", "POST", payload1).
-    //       then(function () {
-    //         MessageToast.show("Document Uploaded Successfully")
-    //       })
-    //       .catch(function (error) {
-    //         that.middleWare.errorHandler(error, that);
-    //         MessageToast.show("Error:");
-    //       });
-    //   }
-
-    // },
     onPressClear: function (oEvent) {
-
-      this.getView().getModel('appView').setProperty("/jsonData", "");
-      this.getView().getModel('appView').setProperty("/jsonValue", "");
-      this.getView().getModel('appView').setProperty("/customerId", "");
-      this.getView().getModel('appView').setProperty("/excelValues", "");
-
-      this.getView().getModel('appView').setProperty("/Jobs", "");
-      this.getView().getModel('appView').setProperty("/onUpdateJobVis", false);
-      this.getView().getModel('appView').setProperty("/onSavePayloadVis", true);
-      this.getView().getModel('appView').setProperty("/messageStripVis", false);
+      var that = this;
+      debugger;
+      MessageToast.show("This function is on Process...")
+      // this.getView().getModel('appView').setProperty("/jsonData", "");
+      // this.getView().getModel('appView').setProperty("/jsonValue", "");
+      // this.getView().getModel('appView').setProperty("/customerId", "");
+      // this.getView().getModel('appView').setProperty("/excelValues", "");
+      // this.getView().getModel('appView').setProperty("/Jobs", "");
+      // this.getView().getModel('appView').setProperty("/onUpdateJobVis", false);
+      // this.getView().getModel('appView').setProperty("/onSavePayloadVis", true);
+      // this.getView().getModel('appView').setProperty("/messageStripVis", false);
       // oModel.setProperty("/messageStripVis",false)
-      this.getView().getModel('appView').updateBindings();
-      this.getView().byId("idPopinLayout").setSelectedKey("")
-      this.getView().byId("fileUploader").setValue("")
-
+      
+      // this.getView().byId("idPopinLayout").setSelectedKey("")
+      
+      //! I want to edit these to get things work..!
+      // this.getView().byId("fileUploader").setValue("")
+      // var dbJobs = this.getView().getModel("appView").getProperty("/storeDBJobs");
+      // this.getView().getModel("appView").setProperty("/excelValues", dbJobs);
+      // this.getView().getModel('appView').updateBindings();
     },
 
-    // onClickFileName: function(){
-
-    //   debugger;
-
-    // },
-
-    //   oDialogOpen:function(){
-
-
-
-
-    //     var oView = this.getView();
-
-    //     var that = this;
-
-    //     if (!this.oUploadDialog) {
-
-    //         this.oUploadDialog = Fragment.load({
-
-    //             id: oView.getId(),
-
-    //             name: "ent.ui.ecommerce.fragments.uploadDoc",
-
-    //             controller: this
-
-    //         }).then(function (oDialog) {
-
-    //             // Add dialog to view hierarchy
-
-    //             oView.addDependent(oDialog);
-
-    //             return oDialog;
-
-    //         }.bind(this));
-
-    //     }
-
-    //     return this.oUploadDialog;
-
-    // },
 
     oUploadDialogFragment: function () {
 
@@ -620,69 +430,6 @@ sap.ui.define([
 
     },
 
-    // onClickDetailActiveUpDoc: function () {
-
-    //      debugger;
-
-    //      this.allJob();
-
-    //    },
-
-    //    allJob: function () {
-
-    //      var oView = this.getView();
-
-    //      var that = this;
-
-
-
-
-    //      if (!this.oJobDialog) {
-
-    //        this.oJobDialog = Fragment.load({
-
-    //          id: oView.getId(),
-
-    //          name: "ent.ui.ecommerce.fragments.AllJobs",
-
-    //          controller: this
-
-    //        }).then(function (oDialog) {
-
-    //          // Add dialog to view hierarchy
-
-    //          oView.addDependent(oDialog);
-
-    //          return oDialog;
-
-    //        }.bind(this));
-
-
-
-
-    //      }
-
-    //      this.oJobDialog.then(function (oDialog) {
-
-    //        oDialog.open();;
-
-    //      });
-
-    //    },
-
-    //     onnReject: function () {
-
-    //      this.oJobDialog.then(function (oDialog) {
-
-    //        oDialog.close();
-
-    //      })
-
-    //    },
-
-
-
-
 
 
     onUploadId: function () {
@@ -733,9 +480,11 @@ sap.ui.define([
 
       const dbFields = {};
       dbFieldsJSON.forEach(item => {
-
+        
+        dbFields.operation = "N"
         dbFields[item.dbField] = arrayToJSON[item.data];
         if (!dbFields[item.dbField]) {
+
 
         }
       })
@@ -743,130 +492,134 @@ sap.ui.define([
 
       this.getView().byId("_IDGenTextArea1").setValue(JSON.stringify(dbFields, null, 4));
       //for simple form data binding
-      debugger;
+    
       var preData = this.getView().getModel("appView").getProperty("/excelValues");
-      var avalData =  that.getView().getModel("appView").getProperty("/newData");   
+      var avalData = that.getView().getModel("appView").getProperty("/newData");
+      avalData = avalData ? avalData : [];
+      debugger;
+      dbFields.jobCardNo = dbFields.jobCardNo.toString()
       avalData.push(dbFields)
+      that.getView().getModel("appView").setProperty("/newData", avalData)
       return dbFields;
-      
-      this.getView().bindElement('appView>/jsonData');
-      this.getView().getModel('appView').updateBindings();
-     
+
+      // this.getView().bindElement('appView>/jsonData');
+      // this.getView().getModel('appView').updateBindings();
+
 
 
     },
 
 
-      //*May be I will use it in future!
-      // var sPath = `/Jobs`
-      // var oModel = this.getView().getModel();
-      // var that = this;
-      // // var oFilter = new Filter ("jobCardNo", "EQ", dbFields.jobCardNo)
-      // this.ifTrue = false;
-      // preData.forEach(item=>{
-      //   if(item.jobCardNo === (dbFields.jobCardNo).toString() ){
-      //     // if(item.operation==="N"){
-      //     //   this.ifTrue = false;
-      //     // }
-      //     // else{
+    //*May be I will use it in future!
+    // var sPath = `/Jobs`
+    // var oModel = this.getView().getModel();
+    // var that = this;
+    // // var oFilter = new Filter ("jobCardNo", "EQ", dbFields.jobCardNo)
+    // this.ifTrue = false;
+    // preData.forEach(item=>{
+    //   if(item.jobCardNo === (dbFields.jobCardNo).toString() ){
+    //     // if(item.operation==="N"){
+    //     //   this.ifTrue = false;
+    //     // }
+    //     // else{
 
-      //       item.operation = "U";
-      //       this.ifTrue = true;
-      //     // }
-      //   }
-      // });
-      // if(!this.ifTrue){
-      //   preData.push(dbFields)
-      // }
-      // return dbFields;
-
-     
+    //       item.operation = "U";
+    //       this.ifTrue = true;
+    //     // }
+    //   }
+    // });
+    // if(!this.ifTrue){
+    //   preData.push(dbFields)
+    // }
+    // return dbFields;
 
 
 
 
 
-      // 
-      
-      // // var oFilter = new Filter (preData[0].jobCardNo ,'In', "jobCardNo")
-      // oModel.read(sPath, {
-      //   urlParameters: {
-      //   	"$select": "jobCardNo,CompanyId"
-      //   },
-      //   filters:[oFilter],
-      //   success: function (data) {
-      //     preData.forEach(item => {
-      //       item.operation = "U";
-      //     });
-      //     // preData[0].operation = "U"
-      //     dbFields.operation = "U";
-      //     that.getView().getModel('appView').updateBindings();
-          
-         
 
-      //     // that.getView().getModel("appView").setProperty("/excelValues", data.results);
-      //   },
-      //   error: function (error) {
-      //     // Error callback
-      //     //   that.middleWare.errorHandler(error, that);
-      //     MessageToast.show("Error reading data");
-      //     // Error callback
-      //     //   that.middleWare.errorHandler(error, that);
-      //     MessageToast.show("Error reading data");
-      //   }
-      // });
-      // getJobsData: function () {
+
+    // 
+
+    // // var oFilter = new Filter (preData[0].jobCardNo ,'In', "jobCardNo")
+    // oModel.read(sPath, {
+    //   urlParameters: {
+    //   	"$select": "jobCardNo,CompanyId"
+    //   },
+    //   filters:[oFilter],
+    //   success: function (data) {
+    //     preData.forEach(item => {
+    //       item.operation = "U";
+    //     });
+    //     // preData[0].operation = "U"
+    //     dbFields.operation = "U";
+    //     that.getView().getModel('appView').updateBindings();
+
+
+
+    //     // that.getView().getModel("appView").setProperty("/excelValues", data.results);
+    //   },
+    //   error: function (error) {
+    //     // Error callback
+    //     //   that.middleWare.errorHandler(error, that);
+    //     MessageToast.show("Error reading data");
+    //     // Error callback
+    //     //   that.middleWare.errorHandler(error, that);
+    //     MessageToast.show("Error reading data");
+    //   }
+    // });
+    // getJobsData: function () {
     //   var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
 
-  
+
     // },
 
-      // this.middleWare.callMiddleWare("uploadjob", "POST", dbFields)
-      //   .then(function (data, status, xhr) {
-      //     //   data.results.forEach(item => {
-      //     //     item.operation = "U";
-      //     // });
-      //     // data.value.operation = "U";
+    // this.middleWare.callMiddleWare("uploadjob", "POST", dbFields)
+    //   .then(function (data, status, xhr) {
+    //     //   data.results.forEach(item => {
+    //     //     item.operation = "U";
+    //     // });
+    //     // data.value.operation = "U";
 
 
-      //   jobs>>>> R
-      // onUplaud>>>>5 excel>>>jobCardno.>>>>>get odata $select=jobCardNo with fiter IN alll JobCaedNumber>>2 jobCard output>>U
-      // companny change=>>>> status N>>>N else U
+    //   jobs>>>> R
+    // onUplaud>>>>5 excel>>>jobCardno.>>>>>get odata $select=jobCardNo with fiter IN alll JobCaedNumber>>2 jobCard output>>U
+    // companny change=>>>> status N>>>N else U
 
-      // onSave
-      // filter U Update  Call
-      // N: Create
+    // onSave
+    // filter U Update  Call
+    // N: Create
 
-      //     /*
+    //     /*
 
-      //     for (let i = 0; i < preData.length; i++) {
-      //       const element = preData[i];
+    //     for (let i = 0; i < preData.length; i++) {
+    //       const element = preData[i];
 
-      //       if (element.jobCardNo === data.value.jobCardNo) {
-      //         element.operation = 'U'
-      //       }
-      //     }
-
-
-
-      //     // data.fileContent.operation= 'U'
-
-      //     that.getView().getModel("appView").setProperty("/messageStripVis", true)
-      //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", true)
-      //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", false)
-      //   })
-      //   .catch(function (jqXhr, textStatus, errorMessage) {
-      //     debugger;
-      //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", false)
-      //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", true)
-      //     that.getView().getModel("appView").setProperty("/messageStripVis", false)
-          
-      //     that.getView().getModel('appView').updateBindings();
-      //   });
+    //       if (element.jobCardNo === data.value.jobCardNo) {
+    //         element.operation = 'U'
+    //       }
+    //     }
 
 
 
-     
+    //     // data.fileContent.operation= 'U'
+
+    //     that.getView().getModel("appView").setProperty("/messageStripVis", true)
+    //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", true)
+    //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", false)
+    //   })
+    //   .catch(function (jqXhr, textStatus, errorMessage) {
+    //     debugger;
+    //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", false)
+    //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", true)
+    //     that.getView().getModel("appView").setProperty("/messageStripVis", false)
+
+    //     that.getView().getModel('appView').updateBindings();
+    //   });
+
+
+
+
     fieldsJSON: {
 
       "A2": {

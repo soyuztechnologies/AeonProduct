@@ -22,12 +22,12 @@
                     fileType="xml,xlsx"
                     multiple="true" />
             <!-- </HBox> -->
-            <MessageStrip
+            <!-- <MessageStrip
                 visible="{appView>/messageStripVis}"
 				text="Same Job is already available"
 				type="Warning"
 				showIcon="true">
-			</MessageStrip>
+			</MessageStrip> -->
             <Table items="{appView>/excelValues}">
                 <columns>
                     <Column>
@@ -38,16 +38,16 @@
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem highlight="{= ${appView>operation} === 'N' ? 'Information' : ${appView>operation} === 'U' ? 'Warning' :${appView>operation} === 'R' ? 'Success' : ${appView>operation} === 'RU' ? 'Indication08':'Information'}" detailPress="onGetDialog" type="DetailAndActive">
+                    <ColumnListItem  highlight="{path: 'appView>operation', formatter: '.formatter.highlightFormatter'}" detailPress="onGetDialog" type="DetailAndActive">
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>
-                            <ComboBox items="{appView>/companyDetails}" id="idPopinLayout"
+                            <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}" 
                                 placeholder="Company Name"
                                 change="onPopinLayoutChanged"
                                 class="sapUiTinyMarginEnd">
                                 <items>
-                                    <core:Item enabled="true"  text="{appView>CompanyName}"
+                                    <core:Item enabled="true"  text="{appView>CompanyName}" 
                                         key="{appView>CompanyId}"/>
                                 </items>
                             </ComboBox>

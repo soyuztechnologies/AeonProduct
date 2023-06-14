@@ -1027,6 +1027,32 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
       }
 
+    },
+    highlightFormatter: function(sOperation) {
+      debugger;
+      if(sOperation === "RU")
+      {
+        var aCheckCompany =  this.getView().getModel("appView").getProperty("/excelValues")
+        for (let i = 0; i < aCheckCompany.length; i++) {
+          const element = aCheckCompany[i];
+          if(element.CompanyId !=null && element.operation ==="RU"){
+            return "Error"
+          }
+          if(!element.CompanyId && element.operation ==="RU"){
+            return "Warning"
+          }
+        }
+        
+      }
+      if (sOperation === 'N') {
+        return 'Indication08';
+      } else if (sOperation === 'U') {
+        return 'Warning';
+      } else if (sOperation === 'R') {
+        return 'Information';
+      } else {
+        return 'Indication02';
+      }
     }
 
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
