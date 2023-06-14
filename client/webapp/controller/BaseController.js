@@ -32,6 +32,7 @@ sap.ui.define([
 
 		},
 		getUserRoleData: function () {
+			debugger;
 			var that = this;
 			return new Promise(function (myResolve, myReject) {
 				that.middleWare.callMiddleWare("getUserRole", "get")
@@ -41,6 +42,7 @@ sap.ui.define([
 
 						that.getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 						that.getModel('appView').setProperty('/UserRole', data.role.Role);
+						that.getModel('appView').setProperty('/UserId', data.role.id);
 						that.userRole();
 						// };
 					})
@@ -57,18 +59,19 @@ sap.ui.define([
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if (sUserRole === "Admin") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
+				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 			}
 			else if (sUserRole === "Customer") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				this.getView().getModel("appView").setProperty('/asUrgentVis', true);
-				this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
 				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
-				this.getView().getModel('appView').setProperty('/modifybtnvis', false);
 				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				this.getView().getModel("appView").setProperty('/asUrgentVis', true);
+				this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
+				this.getView().getModel('appView').setProperty('/modifybtnvis', false);
 			}
 			else if (sUserRole === "Factory Manager") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
@@ -77,61 +80,13 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
 				this.getView().getModel("appView").setProperty('/profilNavVisb',true);
 			}
-			else if (sUserRole === "Raw Material Head") {
+			else if (sUserRole === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head" || "Artwork Head") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				// this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
 				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', false);
-				// this.getView().getModel('appView').setProperty('/modifybtnvis', false);
-			}
-			else if (sUserRole === "Printing Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				// this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', false);
-				// this.getView().getModel('appView').setProperty('/modifybtnvis', false);
-			}
-			else if (sUserRole === "Post Press Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				// this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', false);
-				// this.getView().getModel('appView').setProperty('/modifybtnvis', false);
-			}
-			else if (sUserRole === "Dispatch Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				// this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', false);
-				// this.getView().getModel('appView').setProperty('/modifybtnvis', false);
-			}
-			else if (sUserRole === "Raw Material Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				// this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', false);
-				// this.getView().getModel('appView').setProperty('/modifybtnvis', false);
-			}
-			else if (sUserRole === "Accounts Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				// this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', false);
-				// this.getView().getModel('appView').setProperty('/modifybtnvis', false);
-			}
-			else if (sUserRole === "Artwork Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				// this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', false);
-				// this.getView().getModel('appView').setProperty('/modifybtnvis', false);
+				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+
 			}
 			this.getModel("appView").updateBindings();
 		},

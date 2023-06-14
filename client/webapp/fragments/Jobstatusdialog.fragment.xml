@@ -42,7 +42,8 @@ resizable="false" >
 				<Input type="Number" value="{appView>Pasting}" visible="{appView>/dispatchHeadVis}"/>
 				<Label text="Packing" visible="{appView>/dispatchHeadVis}" />
 				<Input type="Number" value="{appView>/totalShippers}" visible="{appView>/dispatchHeadVis}"  placeholder="No. Of Shippers"/>
-				<Input liveChange="onLiveChnageValuePacking" type="Number" visible="{appView>/dispatchHeadVis}" placeholder="No. Of Piece Per Box"/>
+				<Input liveChange="onLiveChnagePiecePerBox" type="Number" visible="{appView>/dispatchHeadVis}" editable="{appView>/piecePerBoxEdit}" placeholder="Piece Per Box"/>
+				<Input liveChange="onLiveChnagePieceToSend" type="Number" visible="{appView>/dispatchHeadVis}" placeholder="Pieces to be Send"/>
 
 
 				<Label text="Inv. No." visible="{appView>/accountHeadVis}"/>

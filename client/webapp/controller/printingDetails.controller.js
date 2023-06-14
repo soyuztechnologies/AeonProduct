@@ -27,7 +27,8 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
-					that.getJobsData();
+					// that.getJobsData();
+					that.getJobsDataByCompanyFilter();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -1009,7 +1010,7 @@ sap.ui.define([
 			oModel.update(sEntityPath, oUpdatedData, {
 				success: function(data) {
 		        	MessageToast.show("Job Production Started")
-					that.getJobsData();
+					that.getJobsDataByCompanyFilter();
 				},
 		
 				error: function(error) {
@@ -1024,34 +1025,48 @@ sap.ui.define([
 
 
 
-		getJobsData: function () {
-			var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
-			if (sUserRole === "Customer") {
-				var id = this.getView().getModel('appView').getProperty('/appUserId');
-				sPath = `/AppUsers('${id}')/job`;
-			} else {
-				var sPath = `/Jobs`
-			}
-			// debugger;
-			var that = this;
-			var oModel = this.getView().getModel();
-			oModel.read(sPath, {
-				success: function (data) {
-					that.getView().getModel("appView").setProperty("/jobsData", data.results);
-				},
-				error: function (error) {
-					that.middleWare.errorHandler(error, that);
-					MessageToast.show("Something is Wrong");
-				}
-			});
-			// this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
-			//     that.getView().getModel("appView").setProperty("/jobsData", data);
-			// })
-			// .catch(function (jqXhr, textStatus, errorMessage) {
-			//   that.middleWare.errorHandler(jqXhr, that);
-			// });
+		// getJobsData: function () {
+		// 	var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
+		// 	if (sUserRole === "Customer") {
+		// 		var id = this.getView().getModel('appView').getProperty('/appUserId');
+		// 		// sPath = `/AppUsers('${id}')/job`;
+		// 		var sPath = `/Jobs`
+		// 	} else {
+		// 		var sPath = `/Jobs`
+		// 	}
+		// 	// debugger;
+		// 	var that = this;
+		// 	var oModel = this.getView().getModel();
+		// 	oModel.read(sPath, {
+		// 		success: function (data) {
+		// 			that.getView().getModel("appView").setProperty("/jobsData", data.results);
+		// 		},
+		// 		error: function (error) {
+		// 			that.middleWare.errorHandler(error, that);
+		// 			MessageToast.show("Something is Wrong");
+		// 		}
+		// 	});
+		// 	// this.middleWare.callMiddleWare("getJobsData", "get").then(function (data, status, xhr) {
+		// 	//     that.getView().getModel("appView").setProperty("/jobsData", data);
+		// 	// })
+		// 	// .catch(function (jqXhr, textStatus, errorMessage) {
+		// 	//   that.middleWare.errorHandler(jqXhr, that);
+		// 	// });
 
-		},
+		// },
+		getJobsDataByCompanyFilter: function(){
+			debugger;
+			var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
+			var url = 'api/Jobs?filter='+oFilter
+			var that = this;
+			this.middleWare.callMiddleWare(url, "get")
+			  .then(function (data, status, xhr) {
+				that.getView().getModel("appView").setProperty("/jobsData", data);
+			  })
+			  .catch(function (jqXhr, textStatus, errorMessage) {
+				that.middleWare.errorHandler(jqXhr, that);
+			  });
+		   },
 		onLiveChange: function (event) {
 			var newValue = event.getParameter("value");
 			var value = this.getView().getModel("appView").getProperty("/allRemainingDatas");
@@ -1077,10 +1092,11 @@ sap.ui.define([
 			}
 
 		},
-		onLiveChnageValuePacking: function (oEvent) {
+		onLiveChnagePiecePerBox: function (oEvent) {
 			debugger;
+			// this.onLiveChnagePieceToSend();
 			// var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
-			var totalPrinted = 100000;
+			var totalPrinted = this.getView().getModel("appView").getProperty("/totalPrintingPieces");
 			var newValue = oEvent.getParameter("newValue");
 			if (newValue > totalPrinted) {
 				
@@ -1100,7 +1116,13 @@ sap.ui.define([
 
 
 		},
-
+		onLiveChnagePieceToSend: function(oEvent){
+           debugger;
+		   var newValue = oEvent.getParameter("newValue");
+		   var that = this;
+			var totalPrinting = 100000;
+			var totalPrintingPieces = this.getView().getModel("appView").setProperty("/totalPrintingPieces", newValue);
+		},
 		isValueValid: function (value, maxValue) {
 
 			return value <= maxValue;

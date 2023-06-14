@@ -67,6 +67,14 @@ sap.ui.define([
 					else if(data.temp === true){
 						that.openUpdateDialog();
 					}
+					else if(data.Role === "Admin"){
+						that.getModel("appView").setProperty("/visibleHeader", true);
+						that.getModel("appView").setProperty("/userRole", that.UserRole);
+						that.getView().byId("userid").setValueState('None');
+						that.getView().byId("pwd").setValueState('None');
+						that.getModel("appView").updateBindings();
+						that.getRouter().navTo("Carborator");
+					}
 					else if(data.Role==="Customer"){
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/userRole", that.UserRole);
@@ -76,6 +84,14 @@ sap.ui.define([
 						that.getRouter().navTo("allPrinters");
 					}
 					else if(data.Role==="Factory Manager"){
+						that.getModel("appView").setProperty("/visibleHeader", true);
+						that.getModel("appView").setProperty("/userRole", that.UserRole);
+						that.getView().byId("userid").setValueState('None');
+						that.getView().byId("pwd").setValueState('None');
+						that.getModel("appView").updateBindings();
+						that.getRouter().navTo("allPrinters");
+					}
+					else if(data.Role === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head" || "Artwork Head"){
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
