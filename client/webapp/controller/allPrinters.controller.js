@@ -30,7 +30,8 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
-					that.getJobsData();
+					// that.getJobsData();
+					that.getJobsDataByCompanyFilter();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -42,6 +43,7 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
 			// this.getUserName();
+			// this.getJobAccordingCustomer();
 		},
 
 		// * this function will redirect the data of the job to the details page.
@@ -130,37 +132,37 @@ sap.ui.define([
 		},
 
 
-		getJobsData: function () {
-			var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
-			// if (sUserRole === "Admin") {
-				var sPath = `/Jobs`
-			// }
-			// else{
+		// getJobsData: function () {
+		// 	var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
+		// 	// if (sUserRole === "Admin") {
+		// 		var sPath = `/Jobs`
+		// 	// }
+		// 	// else{
 
-			// 	var id =this.getView().getModel('appView').getProperty('/appUserId');
-			// 	// var id = this.getView().getModel('appView').getProperty('/appUserId');
-			// 	sPath = `/AppUsers('${id}')/job`;
-			// }
-			var that = this;
-			var oModel = this.getView().getModel();
-			oModel.read(sPath, {
-				// urlParameters: {
-				// 	"$expand": "appUser"
-				// },
-				success: function (data) {
-					that.getView().getModel("appView").setProperty("/jobsData", data.results);
-					MessageToast.show("aagai jobs");
-				},
-				error: function (error) {
-				  // Error callback
-				//   that.middleWare.errorHandler(error, that);
-				  MessageToast.show("Error reading data");
-					// Error callback
-					//   that.middleWare.errorHandler(error, that);
-					// MessageToast.show("Error reading data");
-				}
-			});
-		},
+		// 	// 	var id =this.getView().getModel('appView').getProperty('/appUserId');
+		// 	// 	// var id = this.getView().getModel('appView').getProperty('/appUserId');
+		// 	// 	sPath = `/AppUsers('${id}')/job`;
+		// 	// }
+		// 	var that = this;
+		// 	var oModel = this.getView().getModel();
+		// 	oModel.read(sPath, {
+		// 		// urlParameters: {
+		// 		// 	"$expand": "appUser"
+		// 		// },
+		// 		success: function (data) {
+		// 			that.getView().getModel("appView").setProperty("/jobsData", data.results);
+		// 			// MessageToast.show("Jobs Data Successfully Uploded");
+		// 		},
+		// 		error: function (error) {
+		// 		  // Error callback
+		// 		//   that.middleWare.errorHandler(error, that);
+		// 		  MessageToast.show("Error reading data");
+		// 			// Error callback
+		// 			//   that.middleWare.errorHandler(error, that);
+		// 			// MessageToast.show("Error reading data");
+		// 		}
+		// 	});
+		// },
 
 		onViewSettingsCancel: function () {
 			var oTable = this.getView().byId("idListAllPrinters");
@@ -177,7 +179,7 @@ sap.ui.define([
 			console.log("Selected User ID:", oSelectedItem);
 		},
 
-		// * this fcuntion is working to search the data into the allPrinters screen.
+		//* this fcuntion is working to search the data into the allPrinters screen.
 		onSearchJob: function (oEvent) {
 			debugger;
 			var sValue = oEvent.getParameter("query");
@@ -198,7 +200,60 @@ sap.ui.define([
 			var oBinding = oList.getBinding("items");
 			oBinding.filter(oFilter);
 		},
+       // this function filter the job by company id and also send job as to spacific user
+       getJobsDataByCompanyFilter: function(){
+		debugger;
+		var id = this.getModel('appView').getProperty('/UserId');
+		var payLoad = {
+			id,
+		}
+		var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
+		var url = 'api/Jobs?filter='+oFilter
+		var that = this;
+		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+		if(sUserRole === "Customer"){
+			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
+			.then(function (data, status, xhr) {
+			  debugger;
+			  that.getView().getModel("appView").setProperty("/jobsData", data);						
+		  })
+			.catch(function (jqXhr, textStatus, errorMessage) {
+			  that.middleWare.errorHandler(jqXhr, that);
+			});
+		}else{
 
+			this.middleWare.callMiddleWare(url, "get")
+			.then(function (data, status, xhr) {
+				that.getView().getModel("appView").setProperty("/jobsData", data);
+			})
+			.catch(function (jqXhr, textStatus, errorMessage) {
+				that.middleWare.errorHandler(jqXhr, that);
+			});
+		}
+	   },
+
+	//    getJobAccordingCustomer : function(){
+	// 	debugger;
+	// 	// step1. get the id property and set into one variable;
+	// 	var id = this.getModel('appView').getProperty('/UserId');
+	// 	var payLoad = {
+	// 		id,
+	// 	}
+	// 	// step 2 : make a  middleware call
+	// 	this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
+    //       .then(function (data, status, xhr) {
+	// 		debugger;
+	// 		that.getView().getModel("appView").setProperty("/jobsAccordingCustomer", data);						
+	// 	})
+    //       .catch(function (jqXhr, textStatus, errorMessage) {
+    //         that.middleWare.errorHandler(jqXhr, that);
+    //       });
+	// 	// send the payload to backend 
+	// 	// check into the node debugger
+	// 	// if the call hits or not.
+	// 	// if hit then check the appuser is similar to the login user.
+	// 	// if user found then update the call in server for finding jobs.
+	//    },
 
 	});
 });

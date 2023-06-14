@@ -778,8 +778,6 @@ app.start = function () {
 			}
 		});
 
-
-
 		// * this post call is use to hanlde the uploaded attachments in loopback.
 		app.post('/UploadAttachment', async (req, res) => {
 			
@@ -1319,6 +1317,30 @@ app.start = function () {
 		// 		res.status(500).json({ error: 'An error occurred while processing the request' });
 		// 	}
 		// });
+
+		
+
+		app.post('/JobsCustomer', async (req, res) => {
+			this.AppUser = app.models.AppUser;
+			this.Job = app.models.Job;
+			const {id} =  req.body;
+
+			let AppUser = await this.AppUser.findOne({ where: { id } });
+			const CompanyId = AppUser.CompanyId;
+			if(AppUser){
+				let Jobs = await this.Job.find({ where: { CompanyId } });
+				return res.status(200).send(Jobs);
+			}
+			// at above we find the appuser from the id.
+			// if user exiest then take smae process to find the jobs accoring to user 
+			// for this use the company id form {AppUser.compnayId}
+			// at here you get the id and the make the further process.
+
+			console.log(AppUser);
+			return res.status(400).send('user not found');
+		});
+
+
 
 		app.post('/usersRemove', (req, res) => {
 			const userEmail = "dheeraj@soyuztechnologies.com";
