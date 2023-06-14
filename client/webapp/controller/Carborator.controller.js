@@ -165,8 +165,8 @@ sap.ui.define([
                     item.operation = "R";
                   });
             that.getView().getModel("appView").setProperty("/excelValues", data);
-            var newData=[];
-          that.getView().getModel("appView").setProperty("/newData",newData);
+          //   var newData=[];
+          // that.getView().getModel("appView").setProperty("/newData",newData);
           })
           .catch(function (jqXhr, textStatus, errorMessage) {
             that.middleWare.errorHandler(jqXhr, that);
@@ -218,47 +218,12 @@ sap.ui.define([
 
       var aExcelFiles = this.getView().getModel("appView").getProperty("/excelValues");
       var oNewData=this.getView().getModel("appView").getProperty("/newData");
-      aExcelFiles = aExcelFiles.concat(oNewData);
+      // aExcelFiles = aExcelFiles.concat(oNewData);
       var sPath = `/Jobs`
       var oModel = this.getView().getModel();
-      // var filterString = 'filter[where][jobCardNo][inq]=' + jobCardNos;
+      oJobsData=aExcelFiles;
+      oUploadJobs=oNewData;
       var that = this;
-      // var jobCardNos = ["304", "098", "016"]; // Replace with your array of values
-
-      // var filters = [];
-      // jobCardNos.forEach(function (jobCardNo) {
-      //   filters.push(`filter[where][jobCardNo]=${jobCardNo}`);
-      // });
-
-      // var filterString = filters.join("&$or=");
-      // var url = `api/Jobs?${filterString}`;
-
-      // var jobCardNos = ['016'];
-      // var filterString = 'filter[where][jobCardNo][inq]=' + encodeURIComponent(JSON.stringify(jobCardNos));
-      // var filterString = {
-      //   where: {
-      //     jobCardNo: {
-      //       inq: jobCardNos
-      //     }
-      //   }
-      // };
-
-      
-      // var jobCardNos = ["016", "098"]; // Dynamic array of jobCardNo values
-      // var filters = jobCardNos.map(function (value) {
-      //   return { jobCardNo: value };
-      // });
-      
-      // var filter = {
-      //   where: {
-      //     or: filters
-      //   }
-      // };
-      // var filter = encodeURIComponent(JSON.stringify({"where": {"or": [{"jobCardNo": "016"}, {"jobCardNo": "098"}]}}));
-
-      // var filter = encodeURIComponent('{"where": {"or": [{"jobCardNo": "016"}, {"jobCardNo": "098"}]}}');
-      // var jobCardNos = ['016', '001','099']; // Dynamically set the jobCardNo values
-
       var filters = jobCardNos.map(function(jobCardNo) {
         return '{"jobCardNo": "' + jobCardNo + '"}';
       });
@@ -283,15 +248,30 @@ sap.ui.define([
         // }
         for (let index = 0; index < data.length; index++) {
           const element = data[index];
-          var oIndex=aExcelFiles.findIndex((ele) => {
+          var oIndex=oJobsData.findIndex((ele) => {
             return ele.jobCardNo===element.jobCardNo
           });
           if(oIndex !== -1){
-            aExcelFiles[oIndex].operation="RU";
-            aExcelFiles.splice(oIndex, 1);
+            let index=oUploadJobs.findIndex((ele) => {
+              return ele.jobCardNo===element.jobCardNo
+            });
+            oJobsData[oIndex]=oUploadJobs[index];
+            oJobsData[oIndex].operation='RU';// CompanyId===null
+            oUploadJobs.splice(index,1);
           }
+          else{
+            let index=oUploadJobs.findIndex((ele) => {
+              return ele.jobCardNo===element.jobCardNo
+            });
+            oUploadJobs[index].operation='RU';
+            oJobsData.push(oUploadJobs[index]);//CompanyId!==null
+            oUploadJobs.splice(index,1);
+          }
+          
         }
-        that.getView().getModel("appView").setProperty("/excelValues",aExcelFiles)
+        oJobsData.concat(oUploadJobs);
+        
+        that.getView().getModel("appView").setProperty("/excelValues",oJobsData)
         that.getView().getModel('appView').updateBindings();
 
       })
