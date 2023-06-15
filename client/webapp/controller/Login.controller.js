@@ -137,11 +137,20 @@ sap.ui.define([
 			// 		that.middleWare.errorHandler(jqXhr, that);
 			// 	});
 		},
+		onLiveChnagePassValidationForUpdateTempPassward: function(oEvent){
+			debugger;
+           var newValue = oEvent.getParameter("newValue");
+		   var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+		   if (!passwordRegex.test(newValue)) {
+			MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+			return;
+		  }
 
+		},
 		
 
 		openUpdateDialog : function(){
-			// debugger
+			debugger
 			var oView = this.getView();
             var that = this;
 			
@@ -164,18 +173,19 @@ sap.ui.define([
 
 		onUpdatePassOk : function(){
 			// Regular expression to check for password validation
- 			 var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+ 			//  var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			 var oModel = this.getView().getModel("appView");
-			 var passValue =  oModel.getProperty("/Pass");
-			 var conPassValue = oModel.getProperty("/NewPass");
-			 var prevPass = oModel.getProperty("/prevPass");
+			 var that = this;
+			 var prevPass = this.getView().getModel("appView").getProperty("/prevPass");
+			 var passValue =  this.getView().getModel("appView").getProperty("/newPass");
+			 var conPassValue = this.getView().getModel("appView").getProperty("/confirmPass");
 			 var userName = this.getView().byId("userid").getValue();
 
-			 if (!passwordRegex.test(passValue) || !passwordRegex.test(conPassValue)) {
-				MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
-				return;
-			  }
-
+			//  if (!passwordRegex.test(passValue) || !passwordRegex.test(conPassValue)) {
+			// 	MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+			// 	return;
+			//   }
+			
 			if(!conPassValue || !passValue) {
 				MessageToast.show("Enter the Password");
 			}
@@ -192,6 +202,9 @@ sap.ui.define([
 				.then( function (data, status, xhr) {
 					
 					MessageToast.show(" Success");
+					that.passUpdateDialog.then(function (oDialog) {
+						oDialog.close();
+				});
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
@@ -201,6 +214,12 @@ sap.ui.define([
 					
 
 		},
+        onRejectCan: function(){
+			this.passUpdateDialog.then(function (oDialog) {
+				oDialog.close();
+		});
+		},
+		
 		openDialog : function(){
 			var oView = this.getView();
 			var that = this;

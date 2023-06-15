@@ -44,7 +44,7 @@
 						<Text text="{appView>UserName}" />
 						<Text text="{appView>EmailId}" />
 						<Text text="{appView>Role}" />
-						<Switch state="{=${appView>Blocked} === 'Yes' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">
+						<Switch state="{=${appView>Blocked} === 'No' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">
 							<layoutData>
 								<FlexItemData growFactor="1" />
 							</layoutData>
@@ -54,12 +54,10 @@
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />
 						</Select>
-						<Select selectedKey="{appView>/SelectCompany}"  forceSelection="false"    change="onSelectComPany">
-							<core:Item text="Select Company" key="Pending" />
-							<core:Item text="Reject" key="Reject" />
-							<core:Item text="Approved" key="Approved" />
+						<Select items="{appView>/companyNames}" selectedKey="{appView>CompanyName}"  forceSelection="false" change="onSelectComPany">
+							<core:Item text="{appView>CompanyName}" key="{appView>CompanyId}" />
 						</Select>
-						<Button type="Accept"  press="SendEmailExistUser" icon="sap-icon://email"></Button>
+						<Button type="Reject" text="Password" press="SendEmailExistUser" icon="sap-icon://reset"></Button>
 					</cells>
 				</ColumnListItem>
 			</items>

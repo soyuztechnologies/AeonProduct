@@ -4,17 +4,17 @@
     xmlns:i="sap.ui.core"	
     xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog title="update Your PassWord" showHeader="true" >
+    <Dialog title="update Your Password" showHeader="true" >
     <f:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false">
         <f:content>
             <Label text="Temporary Password"/>
-            <Input value = "{appView>/prevPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" />
+            <Input value ="{appView>/prevPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" />
 
-            <Label text="New PassWord"/>
-            <Input value = "{appView>/Pass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" />
+            <Label text="New Password"/>
+            <Input value ="{appView>/newPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" liveChange="onLiveChnagePassValidationForUpdateTempPassward"/>
                 
-            <Label text="Confirm New PassWord"/>
-            <Input value ="{appView>/NewPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password"  />
+            <Label text="Confirm New Password"/>
+            <Input value ="{appView>/confirmPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" liveChange="onLiveChnagePassValidationForUpdateTempPassward" />
         </f:content>
     </f:SimpleForm>
     <beginButton>

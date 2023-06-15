@@ -32,6 +32,7 @@ sap.ui.define([
 			oModel.updateBindings();
 			this.getUserData();
 			this.getUserRoleData();
+			this.getCompanyName();
 		},
 
 		// * this function will get the role form the company details fragment.
@@ -175,7 +176,7 @@ sap.ui.define([
 		onBlockCustomer:function(oEvent){
 			debugger;
 			var state = oEvent.getParameter('state');
-			state = state === true ? 'Yes' : 'No';
+			state = state === true ? 'No' : 'Yes';
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
 			var oid = this.getView().getModel("appView").getProperty(opath);
 			var custid = oid.id;
@@ -296,22 +297,23 @@ sap.ui.define([
 			  }
 		},
 
-		// * At here we are getting  the companies al all the app.  
-		onSelectComPany : function(oEvent){
+		// * At here we are getting  the companies all the app.  
+		getCompanyName: function () {
 			debugger;
-			var selectedItem = oEvent.getParameter("selectedItem").getKey();
-			debugger
-
-            // var oModel = this.getView().getModel();
-            // oModel.read({
-            //     success: function(data) {
-            //       MessageToast.show("Company data success");
-            //     },
-            //     error: function(error) {
-            //       MessageToast.show("Something is Wrong");
-            //     }
-            //   });
-		},
+			var oModel = this.getView().getModel();
+			var that = this;
+			oModel.read('/Company', {
+			  success: function (data) {
+				debugger;
+				that.getView().getModel("appView").setProperty("/companyNames", data.results);
+			  },
+			  error: function (error) {
+				// Error callback
+				that.middleWare.errorHandler(error, that);
+				MessageToast.show("Error reading data");
+			  }
+			});
+		  },
 
 		userPassDialogValidation: function(){
 			
@@ -496,7 +498,28 @@ sap.ui.define([
 			}
 
 		},
-
+		//when select comapny this function trigger
+		onSelectComPany: function(oEvent){
+           debugger;
+		   var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
+		   var oModel = this.getView().getModel();
+			var id = oEvent.getSource().getParent().getBindingContext("appView").getObject().id;
+		   const sEntityPath = `/AppUsers('${id}')`;
+		   const payload = {
+			"CompanyId" :oSelectedCompanyKey		 
+		  };
+		   
+		   oModel.update(sEntityPath, payload, {
+			   success: function(data) {
+				   MessageToast.show("successfully Company Assigned to User");
+			   },
+			   error: function(error) {
+				   this.middleWare.errorHandler(error, that);
+				   // console.error("PATCH request failed");
+			   }
+		   });
+		},
+		//this update call for set company data to appUser tabel
 		resetPassExistingUser : function(pass){
 			debugger
 			var that= this;
@@ -519,10 +542,17 @@ sap.ui.define([
 		SendEmailExistUser : function(oEvent){
 			debugger;
 			var that= this;
+			// var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			var oRow = oEvent.getSource().getBindingContext('appView').getObject();
 			var Email = oRow.EmailId;
 			var id = oRow.TechnicalId;
-			this.payload = {
+			var name = oRow.UserName;
+			this.getView().getModel("appView").setProperty("/selectedUsername",name);
+			// if (!passwordRegex.test(password)) {
+			// 	MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+			// 	return;
+			//   }
+			this.payload = { 
 				EmailId : Email,
 				TechnicalId : id,
 				password: ""
@@ -544,6 +574,15 @@ sap.ui.define([
 				// 	that.middleWare.errorHandler(jqXhr, that);
 				// });
 		},
-		
+		onLiveChnagePassValidationForAddPassward: function(oEvent){
+			debugger;
+           var newValue = oEvent.getParameter("newValue");
+		   var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+		   if (!passwordRegex.test(newValue)) {
+			MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+			return;
+		  }
+
+		}
 	});
 });

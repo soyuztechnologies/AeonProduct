@@ -375,6 +375,7 @@ sap.ui.define([
 			});
 		},
 		onSeePasswordClick: function (oEvent) {
+			debugger;
 			var oInput = oEvent.getSource();
 			if (oInput.getType() === "Password") {
 				setTimeout(function () {
