@@ -1032,7 +1032,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       debugger;
       if(sOperation === "RU")
       {
-        var aCheckCompany =  this.getView().getModel("appView").getProperty("/excelValues")
+        var aCheckCompany =  this.getView().getModel("appView").getProperty("/allExcelData")
         for (let i = 0; i < aCheckCompany.length; i++) {
           const element = aCheckCompany[i];
           if(element.CompanyId !=null && element.operation ==="RU"){
