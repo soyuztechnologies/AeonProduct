@@ -16,7 +16,7 @@
                     id="fileUploader"
                     sameFilenameAllowed="true"
                     class="sapUiTinyMargin"
-                    change="onFileUploaddChange"
+                    change="onUploadExcels"
                     icon="sap-icon://browse-folder"
                     buttonText="Browse"
                     fileType="xml,xlsx"
@@ -28,7 +28,7 @@
 				type="Warning"
 				showIcon="true">
 			</MessageStrip> -->
-            <Table items="{appView>/excelValues}">
+            <Table updateFinished="onUploadExcelsUpdateFinished" items="{appView>/allExcelData}">
                 <columns>
                     <Column>
                         <Label text="File Name" />
