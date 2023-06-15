@@ -211,7 +211,7 @@ sap.ui.define([
 		var url = 'api/Jobs?filter='+oFilter
 		var that = this;
 		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
-		if(sUserRole === "Customer" || "Raw Material Head"){
+		if(sUserRole === "Customer"){
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
 			.then(function (data, status, xhr) {
 			  debugger;

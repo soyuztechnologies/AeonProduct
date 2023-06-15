@@ -1056,16 +1056,33 @@ sap.ui.define([
 		// },
 		getJobsDataByCompanyFilter: function(){
 			debugger;
+			var id = this.getModel('appView').getProperty('/UserId');
+			var payLoad = {
+				id,
+			}
 			var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
 			var url = 'api/Jobs?filter='+oFilter
 			var that = this;
-			this.middleWare.callMiddleWare(url, "get")
-			  .then(function (data, status, xhr) {
-				that.getView().getModel("appView").setProperty("/jobsData", data);
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+			if(sUserRole === "Customer"){
+				this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
+				.then(function (data, status, xhr) {
+				  debugger;
+				  that.getView().getModel("appView").setProperty("/jobsData", data);						
 			  })
-			  .catch(function (jqXhr, textStatus, errorMessage) {
-				that.middleWare.errorHandler(jqXhr, that);
-			  });
+				.catch(function (jqXhr, textStatus, errorMessage) {
+				  that.middleWare.errorHandler(jqXhr, that);
+				});
+			}else{
+	
+				this.middleWare.callMiddleWare(url, "get")
+				.then(function (data, status, xhr) {
+					that.getView().getModel("appView").setProperty("/jobsData", data);
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+			}
 		   },
 		onLiveChange: function (event) {
 			var newValue = event.getParameter("value");
