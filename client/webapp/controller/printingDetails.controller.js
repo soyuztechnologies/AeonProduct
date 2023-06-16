@@ -186,6 +186,7 @@ sap.ui.define([
 			var oldData = oModel.getProperty("/newJobStatus");
 			oModel.setProperty("/statusInvAttachment", "");
 			oModel.setProperty("/statusDeliveryAttachment", "");
+			oModel.setProperty("/attachmentFile", "");
 			var data = oModel.getProperty("/readedJobdata");
 
 			// oModel.setProperty("/newJobStatus",this.jobStatusData);
@@ -223,22 +224,55 @@ sap.ui.define([
 
 		// * this will opens the dialog for the multiple roles.
 		oDialogOpen: function () {
-			var oView = this.getView();
-			var that = this;
-			if (!this.oUploadDialog) {
-				this.oUploadDialog = Fragment.load({
-					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.uploadDoc",
-					controller: this
-				}).then(function (oDialog) {
-					// Add dialog to view hierarchy
-					oView.addDependent(oDialog);
-					return oDialog;
-				}.bind(this));
 
-			}
-			return this.oUploadDialog;
-		},
+            var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+
+            var oView = this.getView();
+
+            var that = this;
+
+            if (!this.oUploadDialog) {
+
+                this.oUploadDialog = Fragment.load({
+
+                    id: oView.getId(),
+
+                    name: "ent.ui.ecommerce.fragments.uploadDoc",
+
+                    controller: this
+
+                }).then(function (oDialog) {
+
+                    // Add dialog to view hierarchy
+
+                    oView.addDependent(oDialog);
+
+                    return oDialog;
+
+                }.bind(this));
+
+
+
+
+            }
+
+            if(sUserRole === "Admin" || sUserRole === "Artwork Head"){
+
+                this.getView().getModel("appView").setProperty("/browseVisArtwork" , true);
+
+                this.getView().getModel("appView").setProperty("/btnVisibility" , true);
+
+            }else{
+
+                this.getView().getModel("appView").setProperty("/browseVisArtwork" , false);    
+
+                this.getView().getModel("appView").setProperty("/btnVisibility" , false);  
+
+            }
+
+            return this.oUploadDialog;
+
+        },
 
 		openCustomerAttachmentDialog: function (oEvent) {
 			debugger;
@@ -275,7 +309,9 @@ sap.ui.define([
 		},
 
 		onRejectCustomerDialog: function () {
+			var that = this;
 			this.CustomerAttachment.then(function (oDialog) {
+				// that.getView().getModel("appView").setProperty("/attachmentFiles", "")
 				oDialog.close();
 			});
 		},
@@ -360,15 +396,21 @@ sap.ui.define([
 			});
 		},
 
-
+		// * this fucntion opens the dialog onto the addJobFragmentDialog.
 		onClickAddStatusAttachment: function (oEvent) {
 			this.jobAttachmentId = oEvent.getSource().getId();
 			var that = this;
 			var oModel = this.getView().getModel("appView");
+			oModel.setProperty("/attachmentFiles","");
 			this.oDialogOpen().then(function (oDialog) {
 				oModel.setProperty("/buttonText", "Update");
 				oModel.setProperty("/uploadDocumnetTitle", "Upload  Document");
 				oDialog.open();
+				// oDialog.attachAfterClose(function () {
+				// 	debugger;
+				// 	oDialog.unbindProperty();
+				// });
+				debugger;
 				var sUserRole = oModel.getProperty('/UserRole');
 				if (sUserRole === 'Customer') {
 					oModel.setProperty('/browseVis', false);
@@ -486,13 +528,18 @@ sap.ui.define([
 			}
 
 			this.getModel('appView').setProperty('/newJob', oNewJob);
+			this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
 			debugger;
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oModel.setProperty("/addJobStatusdialogTitle", "Add Job Status ");
 				oModel.setProperty("/addJobStatusSave", "Add");
+				oModel.setProperty("/DeliveryNo","")
+				oModel.setProperty("/InvNo","")
+
 				that.isEditStatus = false;
 				oDialog.open();
+				oModel.setProperty("/uploadFileName","")
 				//Editability for Admin
 				if (sUserRole === 'Admin') {
 					oModel.setProperty("/rawMaterialHeadVis", true);
@@ -574,11 +621,18 @@ sap.ui.define([
 		onSubmitData: function () {
 			debugger;
 			var oModel = this.getView().getModel("appView");
+			var invData = oModel.getProperty("/InvNo");
+			var delData = oModel.getProperty("/DeliveryNo");
 			oModel.updateBindings();
+			// oModel.getProperty("/")
 			// var rawMaterialSelect = this.getView().getModel("appView").getProperty("/rawMaterialSelected");
 			var oldData = oModel.getProperty("/newJobStatus");
 			var oNewJobData = oModel.getProperty('/newJob');
+
+			oNewJobData.DeliveryNo = delData;
+			oNewJobData.InvNo = invData;
 			oNewJobData.rawMaterial = oModel.getProperty('/selectedKey');
+
 			// this for the attachments files in jobstatus.
 			oNewJobData.incAttachment = oModel.getProperty("/statusInvAttachment");
 			oNewJobData.deliveryAttachment = oModel.getProperty("/statusDeliveryAttachment");
@@ -910,13 +964,15 @@ sap.ui.define([
 
 		// * this fucntion will trigerr the onChange event for the fileuploader.
 		onChangeFileUploader: function (oEvent) {
+			debugger;
 			var files = oEvent.getParameter("files");
 
 			if (this.clickedLink == "clientPONo") {
-				this.onFileUploader(files);
+				this.getView().getModel("appView").setProperty("/uploadFileName",files.name)
+				this.onFileUploader(files)
 			}
 			else if (this.clickedLink == "artworkCode") {
-
+				this.getView().getModel("appView").setProperty("/uploadFileName",files.name)
 				this.onFileUploader(files);
 			}
 			else if (this.clickedLink == "InvNo") {
@@ -924,12 +980,14 @@ sap.ui.define([
 				this.onFileUploader(files);
 			}
 			else if (this.clickedLink == "DeliveryNo") {
-
+				// this.getView().getModel("appView").setProperty("/uploadFileName",files[0].name)
 				this.onFileUploader(files);
 			}
 			else {
-
+				
 				this.onFileUploader(files);
+
+
 			}
 		},
 
@@ -949,7 +1007,7 @@ sap.ui.define([
 					// var fileType = files[0].type;
 
 					oModel.setProperty("/attachmentFiles", vContent);
-					oModel.updateBindings();
+					// oModel.updateBindings();
 
 					var idbtn = that.jobAttachmentId;
 					if (!idbtn) {
@@ -957,9 +1015,18 @@ sap.ui.define([
 					}
 					else if (idbtn.includes("DeliveryStatus")) {
 						oModel.setProperty("/statusDeliveryAttachment", vContent);
+						const fullName = files[0].name;
+						const parts = fullName.split("_");
+						const name = parts[0];
+						oModel.setProperty("/DeliveryNo",name)
+
 					}
 					else if (idbtn.includes("Invstatus")) {
 						oModel.setProperty("/statusInvAttachment", vContent);
+						const fullName = files[0].name;
+						const parts = fullName.split("_");
+						const name = parts[0];
+						oModel.setProperty("/InvNo",name)
 
 					}
 					oModel.updateBindings();
@@ -1134,12 +1201,40 @@ sap.ui.define([
 
 		},
 		onLiveChnagePieceToSend: function(oEvent){
-           debugger;
-		   var newValue = oEvent.getParameter("newValue");
-		   var that = this;
-			var totalPrinting = 100000;
-			var totalPrintingPieces = this.getView().getModel("appView").setProperty("/totalPrintingPieces", newValue);
-		},
+
+			debugger;
+			var newValue = oEvent.getParameter("newValue");
+			var that = this;
+			 var totalPrinting = 100000;
+			 var totalPrintingPieces = this.getView().getModel("appView").setProperty("/totalPrintingPieces", newValue);
+			 if(!newValue){
+				 this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
+ 
+			 }else{
+ 
+				 this.getView().getModel("appView").setProperty("/piecePerBoxEdit", true);
+ 
+			 }
+ 
+			 var maxValue = totalPrinting;
+ 
+			 var isValid = this.isValueValid(newValue, maxValue);
+ 
+			 var inputControl = oEvent.getSource();
+ 
+			 if (!isValid) {
+ 
+				 inputControl.setValueState("Error");
+ 
+				 inputControl.setValueStateText("Value cannot exceed more than:" + maxValue);
+ 
+			 } else {
+ 
+				 inputControl.setValueState("None");
+ 
+			 }
+ 
+		 },
 		isValueValid: function (value, maxValue) {
 
 			return value <= maxValue;

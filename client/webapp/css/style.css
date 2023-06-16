@@ -10,4 +10,8 @@
         font-weight: bolder;
     }
 }
+
+.columnListItem > .sapMListTblHighlightCell > .sapMLIBHighlightIndication08{
+    background-color: gray;
+}
  

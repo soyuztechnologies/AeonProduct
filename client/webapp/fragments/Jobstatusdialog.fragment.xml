@@ -47,11 +47,11 @@ resizable="false" >
 
 
 				<Label text="Inv. No." visible="{appView>/accountHeadVis}"/>
-				<Input type="Number" value="{appView>InvNo}" visible="{appView>/accountHeadVis}" />
+				<Input  value="{appView>/InvNo}" visible="{appView>/accountHeadVis}" />
 				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{appView>/accountHeadVis}"/>
 
 				<Label text="Delivery No." visible="{appView>/accountHeadVis}"/>
-				<Input type="Number" value="{appView>DeliveryNo}" visible="{appView>/accountHeadVis}"/>
+				<Input  value="{appView>/DeliveryNo}" visible="{appView>/accountHeadVis}"/>
 				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{appView>/accountHeadVis}"/>
 
 				<Label required="true" text="Status" visible="{appView>/jobStatusVis}"/>

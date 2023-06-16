@@ -8,8 +8,8 @@
     <Label text="Plate"/>
     <Input value = "{appView>plate}" editable="false"/>
 
-    <Input value = "{appView>plate1}" editable="false"/>
-    <Input value = "{appView>plate2}" editable="false"/>
+    <Input tooltip="{appView>plate1}" value = "{appView>plate1}" editable="false"/>
+    <Input tooltip="{appView>plate2}" value = "{appView>plate2}" editable="false"/>
 
     <Label text="Pantone Inks"/>
     <Input value = "{appView>pantoneInks}"  editable="false"/>
@@ -21,9 +21,9 @@
     <Label text="Emboss Block"/>
     <Input value = "{appView>embossBlock}" editable="false"/>
     <Label text="Punch"/>
-    <Input value = "{appView>punch}" editable="false"/>
-    <Input value = "{appView>punch1}" editable="false"/>
-    <Input value = "{appView>punch2}" editable="false"/>
+    <Input tooltip="{appView>punch}" value = "{appView>punch}" editable="false"/>
+    <Input tooltip="{appView>punch1}" value = "{appView>punch1}" editable="false"/>
+    <Input tooltip="{appView>punch2}" value = "{appView>punch2}" editable="false"/>
     <Label text="Reference"/>
     <Input value = "{appView>reference}" editable="false"/>
                                 

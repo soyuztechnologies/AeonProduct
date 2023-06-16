@@ -1028,32 +1028,47 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
 
     },
-    highlightFormatter: function(sOperation) {
+    highlightFormatter: function(sOperation, sCompany) {
       debugger;
-      if(sOperation === "RU")
-      {
-        var aCheckCompany =  this.getView().getModel("appView").getProperty("/allExcelData")
-        for (let i = 0; i < aCheckCompany.length; i++) {
-          const element = aCheckCompany[i];
-          if(element.CompanyId !=null && element.operation ==="RU"){
-            return "Error"
-          }
-          if(!element.CompanyId && element.operation ==="RU"){
-            return "Warning"
-          }
-        }
-        
-      }
-      if (sOperation === 'N') {
+      if (sOperation === "RU" && !sCompany ) 
+      { return "Warning";
+      } 
+      if (sOperation === "RU" && sCompany ) 
+      { return "Error";
+      } 
+      else if (sOperation === 'N') {
         return 'Indication08';
-      } else if (sOperation === 'U') {
+      } 
+      else if (sOperation === 'U') {
         return 'Warning';
-      } else if (sOperation === 'R') {
+      } 
+      else if (sOperation === 'R') {
         return 'Information';
-      } else {
-        return 'Indication02';
       }
-    }
+      return 'None';
+    },
+    costStructureVis: function(role){
+
+      // debugger;
+      // var role = this.getView().getModel("appView").getProperty("/UserRole");
+      if(role === "Admin"){
+        return true;
+      }
+      else{
+        return false;
+      }
+    },
+    // customerCompanyVis: function(role){
+    //   // debugger;
+    //   // var role = this.getView().getModel("appView").getProperty("/UserRole");
+    //   if(role === "Customer"){
+    //     return true;
+    //   }
+    //   else{
+    //     return false;
+    //   }
+    // },
+    
 
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];

@@ -8,7 +8,7 @@
                                 <Label text="Job Card No."/>
                                 <Input  value = "{appView>jobCardNo}" editable="{appView>/editableFields}"/>
                                 <Label text="Name of the Product"/>
-                                <Input  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
+                                <Input tooltip="{appView>nameOFTheProduct}"  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
                     
                                 <Label text="Carton Type"/>
                                 <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>

@@ -37,8 +37,9 @@
                         <Label text="Company" />
                     </Column>
                 </columns>
+                <!-- {path: 'appView>operation', formatter: '.formatter.highlightFormatter'} -->
                 <items>
-                    <ColumnListItem  highlight="{path: 'appView>operation', formatter: '.formatter.highlightFormatter'}" detailPress="onGetDialog" type="DetailAndActive">
+                    <ColumnListItem  highlight="{parts:[ {path:'appView>operation'}, { path: 'appView>CompanyId'}] ,formatter:'.formatter.highlightFormatter'}" class="columnListItem" detailPress="onGetDialog" type="DetailAndActive">
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>

@@ -13,7 +13,7 @@
         showIcon="true"
         showCloseButton="true">
     </MessageStrip> -->
-            <Table items="{appView>/withCompanyId}">
+            <Table items="{path: 'appView>/allExcelData', filters: [{ path: 'operation', operator: 'EQ', value1: 'RU'},{ path: 'CompanyId', operator: 'NE', value1: null}]}">
                 <columns>
                     <Column>
                         <Label text="File Name" />
@@ -29,7 +29,7 @@
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem  highlight="{path: 'appView>operation', formatter: '.formatter.highlightFormatter'}" >
+                    <ColumnListItem  highlight="{parts:[ {path:'appView>operation'}, { path: 'appView>CompanyId'}] ,formatter:'.formatter.highlightFormatter'}" >
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>
@@ -55,7 +55,7 @@
 				showIcon="true"
 				showCloseButton="true">
 			</MessageStrip> -->
-            <Table items="{appView>/withoutCompanyId}">
+            <Table items="{path: 'appView>/allExcelData', filters: [{ path: 'operation', operator: 'EQ', value1: 'RU'},{ path: 'CompanyId', operator: 'EQ', value1: null}]}">
                 <columns>
                     <Column>
                         <Label text="File Name" />
@@ -72,7 +72,7 @@
                 </columns>
                 <items>
                     
-                    <ColumnListItem  highlight="{path: 'appView>operation', formatter: '.formatter.highlightFormatter'}">
+                    <ColumnListItem  highlight="{parts:[ {path:'appView>operation'}, { path: 'appView>CompanyId'}] ,formatter:'.formatter.highlightFormatter'}">
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>

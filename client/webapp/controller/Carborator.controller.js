@@ -166,6 +166,7 @@ sap.ui.define([
               oJobsData[oIndex] = oUploadJobs[jobIndex];
               oJobsData[oIndex].operation = 'RU';// CompanyId===null
               that.Flag = true;
+              oUploadJobs[jobIndex].CompanyId = element.CompanyId;
               oUploadJobs.splice(jobIndex, 1);
               // that.validateJobs();
             }
@@ -230,8 +231,11 @@ sap.ui.define([
       if (oEvent) {
         var oSelectedItem = oEvent.getSource().getSelectedKey();
         var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
-        if (change.operation === 'R' || change.operation === "N") {
-          change.operation = 'RU'
+        if (change.operation === "N") {
+          change.operation = 'U'
+        }
+        if (change.operation === 'R') {
+          change.operation = 'U'
         }
         that.getView().getModel('appView').updateBindings();
         that.getView().getModel("appView").setProperty("/customerId", oSelectedItem);
@@ -402,9 +406,9 @@ sap.ui.define([
       var allDataWithId = this.getView().getModel('appView').getProperty("/withCompanyId");
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
   
-      var indexToRemove = allDataWithId.findIndex(function (item) {
-        return item.jobCardNo === selectedJob.jobCardNo; 
-      });
+      // var indexToRemove = allDataWithId.findIndex(function (item) {
+      //   return item.jobCardNo === selectedJob.jobCardNo; 
+      // });
       var indexToRemoveFromAllData = validatedExcels.findIndex(function (item) {
         return item.jobCardNo === selectedJob.jobCardNo; 
       });
@@ -412,9 +416,9 @@ sap.ui.define([
       if (indexToRemoveFromAllData != -1) {
         validatedExcels.splice(indexToRemoveFromAllData, 1);
       }
-      if (indexToRemove != -1) {
-        allDataWithId.splice(indexToRemove, 1);
-      }
+      // if (indexToRemove != -1) {
+      //   allDataWithId.splice(indexToRemove, 1);
+      // }
       this.getView().getModel('appView').updateBindings();
 
     },
@@ -422,31 +426,22 @@ sap.ui.define([
       debugger;
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
       var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
-      var allDataWithoutId = this.getView().getModel('appView').getProperty("/withoutCompanyId");
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
 
-      
-      var indexToRemove = allDataWithoutId.findIndex(function (item) {
-        return item.jobCardNo === selectedJob.jobCardNo; 
-      });
       var indexToRemoveFromAllData = validatedExcels.findIndex(function (item) {
         return item.jobCardNo === selectedJob.jobCardNo; 
       });
+
+
       var aIndexDBData = oldData.findIndex(function (item) {
         return item.jobCardNo === selectedJob.jobCardNo; 
       });
-      
-      if (indexToRemove != -1) {
-        allDataWithoutId.splice(indexToRemove, 1);
-      }
-      debugger;
       
       if (indexToRemoveFromAllData != -1) {
         validatedExcels.splice(indexToRemoveFromAllData, 1);
         validatedExcels.push(oldData[aIndexDBData])
       }
       this.getView().getModel('appView').updateBindings();
-      // this.getView().getModel('appView').setProperty("/withoutCompanyId", allDataWithoutId);
 
     },
 
@@ -584,6 +579,7 @@ sap.ui.define([
       dbFieldsJSON.forEach(item => {
 
         dbFields.operation = "N"
+        dbFields.CompanyId = null
         dbFields[item.dbField] = arrayToJSON[item.data];
         if (!dbFields[item.dbField]) {
 
