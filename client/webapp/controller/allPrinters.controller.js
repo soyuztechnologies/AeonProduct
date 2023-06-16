@@ -203,6 +203,7 @@ sap.ui.define([
        // this function filter the job by company id and also send job as to spacific user
        getJobsDataByCompanyFilter: function(){
 		debugger;
+		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 		var id = this.getModel('appView').getProperty('/UserId');
 		var payLoad = {
 			id,
@@ -210,7 +211,6 @@ sap.ui.define([
 		var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
 		var url = 'api/Jobs?filter='+oFilter
 		var that = this;
-		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 		if(sUserRole === "Customer"){
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
 			.then(function (data, status, xhr) {

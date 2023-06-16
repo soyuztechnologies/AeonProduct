@@ -26,7 +26,7 @@
                     
                             </f:content>
                         </f:SimpleForm>
-                        <f:SimpleForm editable="false"   layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                        <f:SimpleForm visible="{path: 'appView>/UserRole', formatter: '.formatter.costStructureVis'}" editable="false"   layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
                                 <core:Title text="Cost Structure" />
                                     

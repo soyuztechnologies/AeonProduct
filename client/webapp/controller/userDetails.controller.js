@@ -131,12 +131,18 @@ sap.ui.define([
 		
 		// * this function is read the all appUsers data.
 		getUserData:function(){
+			debugger;
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
+			// var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			var that = this; 
 			oModel.read('/AppUsers', {
 				success: function(data) {
 				that.getView().getModel("appView").setProperty("/userDetails",data.results);
+				that.getView().getModel("appView").setProperty("/userName",data.results[0].UserName);
+				// if(sUserRole === "Admin"){
+				// 	that.getView().getModel("appView").setProperty("/companyselBoxVis" ,false);
+				// }
 				BusyIndicator.hide();
 				},
 				error: function(error) {
@@ -503,7 +509,7 @@ sap.ui.define([
            debugger;
 		   var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
 		   var oModel = this.getView().getModel();
-			var id = oEvent.getSource().getParent().getBindingContext("appView").getObject().id;
+			var id = oEvent.getSource().getBindingContext("appView").getObject().id;
 		   const sEntityPath = `/AppUsers('${id}')`;
 		   const payload = {
 			"CompanyId" :oSelectedCompanyKey		 
