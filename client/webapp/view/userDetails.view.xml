@@ -54,7 +54,15 @@
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />
 						</Select>
-						<Select items="{appView>/companyNames}" selectedKey="{appView>CompanyName}"  forceSelection="false" change="onSelectComPany">
+						<!-- <ComboBox
+						 items="{appView>/companyNames}"
+						 selectedKey="{appView>CompanyId}" 
+						 forceSelection="false" 
+						 change="onSelectComPany" 
+						 placeholder="Select Company">
+							<core:Item text="{appView>CompanyName}" key="{appView>CompanyId}" />
+						</ComboBox> -->
+						<Select items="{appView>/companyNames}" selectedKey="{appView>CompanyId}"  forceSelection="false" change="onSelectComPany"  visible="{=${appView>Role} === 'Customer' ? true : false}">
 							<core:Item text="{appView>CompanyName}" key="{appView>CompanyId}" />
 						</Select>
 						<Button type="Reject" text="Password" press="SendEmailExistUser" icon="sap-icon://reset"></Button>
