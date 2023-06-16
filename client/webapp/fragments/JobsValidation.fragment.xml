@@ -43,7 +43,7 @@
                                         key="{appView>CompanyId}"/>
                                 </items>
                             </ComboBox>
-                            <core:Icon color="Critical" src="sap-icon://alert" ></core:Icon>
+                            <core:Icon color="Negative" src="sap-icon://alert" ></core:Icon>
                             <!-- <Button enabled="false" tooltip="Remove the Job" icon="sap-icon://alert"></Button> -->
                             <Button press="removeJobwithId" tooltip="Remove the Job" icon="sap-icon://decline"></Button>
                         </cells>
@@ -86,7 +86,7 @@
                                         key="{appView>CompanyId}"/>
                                 </items>
                             </ComboBox>
-                            <core:Icon color="Positive" src="sap-icon://alert" ></core:Icon>
+                            <core:Icon color="Critical" src="sap-icon://alert" ></core:Icon>
                             <Button press="removeJobwithoutId"  tooltip="Remove the Job" icon="sap-icon://decline"></Button>   
                         </cells>
                     </ColumnListItem>
@@ -96,7 +96,7 @@
 
         </content>
         <endButton>
-            <Button text="Close" type="Reject" press="onCloseValDialog" />
+            <Button text="Replace" type="Emphasized" press="onCloseValDialog" />
         </endButton>
     </Dialog>
                                 
