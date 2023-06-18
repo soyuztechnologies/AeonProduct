@@ -40,15 +40,17 @@ sap.ui.define([
         oModel.setProperty('/desktop', false);
       }
       oModel.updateBindings();
-      this.onPopinLayoutChanged();
+      this.selectCompany();
       this.getUserRoleData();
       this.getCompanyName()
     },
     onPressNavigate: function () {
       this.getRouter().navTo("allPrinters");
     },
-    onUploadExcels: function (oEvent) {
 
+
+    //* This function is use to upload all the excel files in bulk!
+    onUploadExcels: function (oEvent) {
       var that = this;
       that.getView().getModel("appView").setProperty("/newlySelectedData", "");
       var oFileUploader = oEvent.getSource();
@@ -76,7 +78,7 @@ sap.ui.define([
           that.getModel("appView").setProperty("/uploadButtonVisibility", false);
           that.getModel("appView").setProperty("/imgVisibility", false);
           if (that.count === files.length) {
-            that.getStringValue();
+            that.allJobcardnoToString();
             that.checkInJobs();
           }
         };
@@ -85,6 +87,9 @@ sap.ui.define([
 
 
     },
+
+
+    //* This function will get all the jobs that are already present on the backend and show it to screen!
     getJobsData: function () {
       var oFilter = encodeURIComponent('{"where":{"CompanyId": null}}');
       var url = 'api/Jobs?filter=' + oFilter
@@ -102,20 +107,26 @@ sap.ui.define([
           that.middleWare.errorHandler(jqXhr, that);
         });
     },
-    getStringValue: function () {
+
+
+    //* This will get only jobCardNo and convert it to the string
+    allJobcardnoToString: function () {
       var preData = this.getView().getModel("appView").getProperty("/newlySelectedData");
       var array = [];
       for (let i = 0; i < preData.length; i++) {
         const element = preData[i].jobCardNo;
         array.push(element)
       }
-      this.getView().getModel("appView").setProperty("/stringData", array)
+      this.getView().getModel("appView").setProperty("/jobCardNoInString", array)
     },
     onViewPdf: function () {
       var viewPdf = this.getView().getModel("appView").getProperty("/pdfUrl")
       window.open(viewPdf, '_blank', 'width=600,height=800')
     },
 
+
+
+    //* This function will get the company name!
     getCompanyName: function () {
       var oModel = this.getView().getModel();
       var that = this;
@@ -133,11 +144,12 @@ sap.ui.define([
     },
 
 
+    //* This function will check the jobs on the backend and if they are present then it will change the operation accordingly!
     checkInJobs: function () {
       debugger;
       this.Flag = false;
       // var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
-      var jobCardNos = this.getView().getModel("appView").getProperty("/stringData");
+      var jobCardNos = this.getView().getModel("appView").getProperty("/jobCardNoInString");
       var aExcelFiles = this.getView().getModel("appView").getProperty("/allExcelData");
       var oNewData = this.getView().getModel("appView").getProperty("/newlySelectedData");
       // aExcelFiles = aExcelFiles.concat(oNewData);
@@ -168,7 +180,7 @@ sap.ui.define([
               that.Flag = true;
               oUploadJobs[jobIndex].CompanyId = element.CompanyId;
               oUploadJobs.splice(jobIndex, 1);
-              // that.validateJobs();
+              that.validateJobs();
             }
             else {
               let jobIndex = oUploadJobs.findIndex((ele) => {
@@ -179,7 +191,7 @@ sap.ui.define([
               oUploadJobs[jobIndex].CompanyId = element.CompanyId;
               oJobsData.push(oUploadJobs[jobIndex]);//CompanyId!==null
               oUploadJobs.splice(jobIndex, 1);
-
+              that.validateJobs();
             }
 
           }
@@ -198,25 +210,25 @@ sap.ui.define([
           console.log(oJobsData);
           that.getView().getModel("appView").setProperty("/allExcelData", oJobsData)
           that.getView().getModel('appView').updateBindings();
+          
           // var isPresent = false;
 
 
-          //* Filtering The Job on the basis of RE-Upload and with or without companyID!
-          var filterWithJobs = oJobsData.filter((job) => {
-            return job.operation === "RU" && job.CompanyId
-          });
-          that.getView().getModel("appView").setProperty("/withCompanyId", filterWithJobs);
-          // isPresent = true;
+          // * Filtering The Job on the basis of RE-Upload and with or without companyID( NO NEED RIGHT NOW! )!
+          // var filterWithJobs = oJobsData.filter((job) => {
+          //   return job.operation === "RU" && job.CompanyId
+          // });
+          // that.getView().getModel("appView").setProperty("/withCompanyId", filterWithJobs);
+          // // isPresent = true;
 
-          var filterWithoutJobs = oJobsData.filter((job) => {
-            return job.operation === "RU" && !job.CompanyId
-            // isPresent
-          })
-          that.getView().getModel("appView").setProperty("/withoutCompanyId", filterWithoutJobs);
-          if (that.Flag) {
-            that.validateJobs();
-          }
-
+          // var filterWithoutJobs = oJobsData.filter((job) => {
+          //   return job.operation === "RU" && !job.CompanyId
+          //   // isPresent
+          // })
+          // that.getView().getModel("appView").setProperty("/withoutCompanyId", filterWithoutJobs);
+          // if (that.Flag) {
+            // }
+            
         })
         .catch(function (jqXhr, textStatus, errorMessage) {
           debugger;
@@ -224,7 +236,9 @@ sap.ui.define([
         });
 
     },
-    onPopinLayoutChanged: function (oEvent) {
+
+    //* This function is used to select the company inside a comboBox
+    selectCompany: function (oEvent) {
       debugger;
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
@@ -238,19 +252,18 @@ sap.ui.define([
           change.operation = 'U'
         }
         that.getView().getModel('appView').updateBindings();
-        that.getView().getModel("appView").setProperty("/customerId", oSelectedItem);
+        that.getView().getModel("appView").setProperty("/companyId", oSelectedItem);
         console.log("Selected User ID:", oSelectedItem);
-
       }
-      this.middleWare.callMiddleWare("customerNames", "get")
-        .then(function (data, status, xhr) {
-          debugger;
-          that.getView().getModel("appView").setProperty("/customerUser", data);
-        })
-        .catch(function (jqXhr, textStatus, errorMessage) {
-          debugger;
-          that.middleWare.errorHandler(jqXhr, that);
-        });
+      // this.middleWare.callMiddleWare("customerNames", "get")
+      //   .then(function (data, status, xhr) {
+      //     debugger;
+      //     that.getView().getModel("appView").setProperty("/customerUser", data);
+      //   })
+      //   .catch(function (jqXhr, textStatus, errorMessage) {
+      //     debugger;
+      //     that.middleWare.errorHandler(jqXhr, that);
+      //   });
     },
 
 
@@ -284,7 +297,7 @@ sap.ui.define([
           // element.jobCardNo.toString();
           aNewFetchedExcel.push(element)
         }
-        if (element.operation === "RU") {
+        if (element.operation === "RU" || element.operation === "U") {
           aExcelToBeUploaded.push(element)
         }
       }
@@ -324,16 +337,9 @@ sap.ui.define([
         // that.getJobsData();
       }
 
-
       if(!aExcelToBeUploaded.length && !aNewFetchedExcel.length){
         MessageToast.show("Those Jobs Are Already Saved")
       }
-
-
-      //*This will get the All the jobs that is already present on the backend!
-    },
-    onPressDetails: function (oEvent) {
-      debugger;
     },
     // onUpdateJob: function () {
     //   debugger;
@@ -398,21 +404,20 @@ sap.ui.define([
     onUploadExcelsUpdateFinished:function(){
       this.getView().getModel('appView').setProperty("/onSavePayloadVis", true);
     },
-    //* This function will remove the job when click on 'X' button on the fragment!
 
-    removeJobwithId: function (oEvent) {
+
+    //* This function will remove the job when click on 'X' button on the fragment, which already have companyID!
+    removeJobwithCompId: function (oEvent) {
       debugger;
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
       var allDataWithId = this.getView().getModel('appView').getProperty("/withCompanyId");
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
-  
       // var indexToRemove = allDataWithId.findIndex(function (item) {
       //   return item.jobCardNo === selectedJob.jobCardNo; 
       // });
       var indexToRemoveFromAllData = validatedExcels.findIndex(function (item) {
         return item.jobCardNo === selectedJob.jobCardNo; 
       });
-
       if (indexToRemoveFromAllData != -1) {
         validatedExcels.splice(indexToRemoveFromAllData, 1);
       }
@@ -422,7 +427,10 @@ sap.ui.define([
       this.getView().getModel('appView').updateBindings();
 
     },
-    removeJobwithoutId: function (oEvent) {
+
+
+     //* This function will remove the job when click on 'X' button on the fragment, which doNot have companyID!
+    removeJobwithoutCompId: function (oEvent) {
       debugger;
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
       var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
@@ -446,6 +454,8 @@ sap.ui.define([
     },
 
 
+
+    //* This function will open the dialog and shows all the details of the particular job!
     oUploadDialogFragment: function () {
       var oView = this.getView();
       var that = this;
@@ -462,7 +472,6 @@ sap.ui.define([
       }
       return this.jobdialog;
     },
-
     onGetDialog: function (oEvent) {
       var excelData = oEvent.getSource().getBindingContext("appView").getObject();
       this.getView().getModel("appView").setProperty("/excelDataUplode", excelData);
@@ -474,18 +483,15 @@ sap.ui.define([
         var oSimpleForm = that.getView().byId("allJobDetails")
         oSimpleForm.bindElement('appView>/excelDataUplode');
       });
-
     },
     onnReject: function () {
       this.oUploadDialogFragment().then(function (oDialog) {
-
         oDialog.close();
       })
     },
 
 
     //* This function will open the dialog to check if the job is already present or not and which job u want to keep or not
-
     ojobValidation: function () {
       var oView = this.getView();
       var that = this;
@@ -502,7 +508,6 @@ sap.ui.define([
       }
       return this.jobsvalidatioin;
     },
-
     validateJobs: function (oEvent) {
       // var excelData = oEvent.getSource().getBindingContext("appView").getObject();
       // this.getView().getModel("appView").setProperty("/excelDataUplode", excelData);
@@ -514,7 +519,6 @@ sap.ui.define([
         // var oSimpleForm = that.getView().byId("allJobDetails")
         // oSimpleForm.bindElement('appView>/excelDataUplode');
       });
-
     },
     onCloseValDialog: function () {
       debugger
@@ -529,45 +533,45 @@ sap.ui.define([
 
 
 
-    onUploadId: function () {
+    //* This function is not in use right now
+    // onUploadId: function () {
+    //   var oModel = this.getView().getModel();  //default model get at here
+    //   var that = this;
+    //   var ids = this.getView().getModel("appView").getProperty("/postId")
+    //   const sEntityPath = `/JobStatus`;
+    //   // Perform the read operation
+    //   const oUpdatedData = {
 
-      var oModel = this.getView().getModel();  //default model get at here
-      var that = this;
-      var ids = this.getView().getModel("appView").getProperty("/postId")
-      const sEntityPath = `/JobStatus`;
-      // Perform the read operation
-      const oUpdatedData = {
+    //     JobId: "Pending",
+    //     JobStatusId: "",
+    //     rawMaterial: "Pending",
+    //     Printing: "Pending",
+    //     Foiling: "Pending",
+    //     Coating: "Pending",
+    //     InvNo: "Pending",
+    //     DeliveryNo: "Pending",
+    //     Embossing: "Pending",
+    //     Pasting: "Pending",
+    //     spotUV: "Pending",
+    //     Punching: "Pending",
+    //     Packing: "Pending",
+    //     incAttachment: "Pending",
+    //     deliveryAttachment: "Pending"
 
-        JobId: "Pending",
-        JobStatusId: "",
-        rawMaterial: "Pending",
-        Printing: "Pending",
-        Foiling: "Pending",
-        Coating: "Pending",
-        InvNo: "Pending",
-        DeliveryNo: "Pending",
-        Embossing: "Pending",
-        Pasting: "Pending",
-        spotUV: "Pending",
-        Punching: "Pending",
-        Packing: "Pending",
-        incAttachment: "Pending",
-        deliveryAttachment: "Pending"
+    //   };
+    //   oModel.create(sEntityPath, oUpdatedData, {
+    //     success: function (oUpdatedData) {
 
-      };
-      oModel.create(sEntityPath, oUpdatedData, {
-        success: function (oUpdatedData) {
+    //       MessageToast.show("Successfully Uploaded");
+    //     },
+    //     error: function (error) {
+    //       // Error callback
+    //       // that.middleWare.errorHandler(error, that);
+    //       MessageToast.show("Error reading data");
+    //     }
+    //   });
 
-          MessageToast.show("Successfully Uploaded");
-        },
-        error: function (error) {
-          // Error callback
-          // that.middleWare.errorHandler(error, that);
-          MessageToast.show("Error reading data");
-        }
-      });
-
-    },
+    // },
 
     extracDbFields: function (data) {
       var that = this;

@@ -182,6 +182,7 @@ sap.ui.define([
 		onBlockCustomer:function(oEvent){
 			debugger;
 			var state = oEvent.getParameter('state');
+			this.getView().getModel("appView").setProperty("/state",state)
 			state = state === true ? 'No' : 'Yes';
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
 			var oid = this.getView().getModel("appView").getProperty(opath);

@@ -45,7 +45,7 @@
                             </ComboBox>
                             <core:Icon color="Negative" src="sap-icon://alert" ></core:Icon>
                             <!-- <Button enabled="false" tooltip="Remove the Job" icon="sap-icon://alert"></Button> -->
-                            <Button press="removeJobwithId" tooltip="Remove the Job" icon="sap-icon://decline"></Button>
+                            <Button press="removeJobwithCompId" tooltip="Remove the Job" icon="sap-icon://decline"></Button>
                         </cells>
                     </ColumnListItem>
                 </items>
@@ -87,7 +87,7 @@
                                 </items>
                             </ComboBox>
                             <core:Icon color="Critical" src="sap-icon://alert" ></core:Icon>
-                            <Button press="removeJobwithoutId"  tooltip="Remove the Job" icon="sap-icon://decline"></Button>   
+                            <Button press="removeJobwithoutCompId"  tooltip="Remove the Job" icon="sap-icon://decline"></Button>   
                         </cells>
                     </ColumnListItem>
                 </items>

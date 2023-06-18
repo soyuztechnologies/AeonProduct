@@ -1068,7 +1068,18 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     //     return false;
     //   }
     // },
-    
+    companyVis:function(status){
+
+      debugger;
+      if(status ==="Approved")
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
+
+    },
 
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];

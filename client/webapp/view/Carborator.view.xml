@@ -45,7 +45,7 @@
                             </Text>
                             <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}" 
                                 placeholder="Company Name"
-                                change="onPopinLayoutChanged"
+                                change="selectCompany"
                                 class="sapUiTinyMarginEnd">
                                 <items>
                                     <core:Item enabled="true"  text="{appView>CompanyName}" 
