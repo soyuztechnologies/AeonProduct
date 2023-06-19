@@ -34,6 +34,8 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				}
 			);
+			const date = new Date();
+			this.getView().getModel("appView").setProperty("/dateNow",date)
 			var oModel = this.getModel("appView")
 			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
 			oModel.setProperty("/visibleHeader", true);
@@ -44,17 +46,30 @@ sap.ui.define([
 			oModel.setProperty("/onClickModify", false);
 			oModel.setProperty("/addBtnVisible", true);
 			oModel.setProperty("/editableFields", false);
+			// oModel.setProperty("/asUrgentEnabled",true)
 
 			oModel.setProperty("/btnVisibility", true);
 			var sUserRole = oModel.getProperty('/UserRole');
 			if (sUserRole === 'Customer') {
-				oModel.setProperty('/visibleModify', false);
-				oModel.setProperty("/addBtnVisible", false);
-				oModel.setProperty("/cancleBtnVis", false);
-				oModel.setProperty("/updBtnVisibility", false);
-				oModel.setProperty("/editColumnVisible", false);
 
-			}
+                oModel.setProperty('/visibleModify', false);
+
+                oModel.setProperty("/addBtnVisible", false);
+
+                oModel.setProperty("/cancleBtnVis", false);
+
+                oModel.setProperty("/updBtnVisibility", false);
+
+                oModel.setProperty("/editColumnVisible", false);
+
+
+
+
+            }else if(sUserRole === "Artwork Head"){
+
+                oModel.setProperty("/addBtnVisible", false);
+
+            }
 			// oModel.setProperty("/visiblePdfViewer", false);
 			oModel.updateBindings();
 			// this.getUserRoleData();
@@ -112,6 +127,14 @@ sap.ui.define([
 						}
 					} else {
 						return;
+					}
+
+					if(data.Urgent ==="Yes"){
+						that.getView().getModel("appView").setProperty("/asUrgentEnabled",false)
+					}
+					else{
+						that.getView().getModel("appView").setProperty("/asUrgentEnabled",true)
+		
 					}
 
 				},
@@ -256,13 +279,16 @@ sap.ui.define([
 
 			}
 
-			if (sUserRole === "Admin" || sUserRole === "Artwork Head") {
+			if (sUserRole === "Admin" || sUserRole === "Accounts Head") {
 
 				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
 
 				this.getView().getModel("appView").setProperty("/btnVisibility", true);
 
-			} else {
+			}else if(sUserRole === "Artwork Head"){
+				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
+			} 
+			else {
 
 				this.getView().getModel("appView").setProperty("/browseVisArtwork", false);
 
@@ -1398,9 +1424,46 @@ sap.ui.define([
             oModel.setProperty("/totalPrintedSheetsTillNow", totalPrintedSheets * noOfUps);
 
         },
-		onClickUrgent:function(){
+		onClickMarkAsUrgent:function(){
 			debugger;
+			var customerAllJobs = this.getView().getModel("appView").getProperty("/jobsData");
+			var that = this;
 			var selectedJob = this.getView().getModel("appView").getProperty("/Jobs");
+			var maxUrgentJobs = Math.ceil(customerAllJobs.length/5)
+			var oModel = this.getView().getModel();
+			var filterWithMarkAsUrgent = customerAllJobs.filter((job) => {
+            return job.Urgent === "Yes"
+          });
+            var alreadyUrgentJobs = filterWithMarkAsUrgent.length
+		  	if(selectedJob.Urgent ==="Yes"){
+				this.getView().getModel("appView").setProperty("/asUrgentEnabled",false)
+			}
+			else{
+				this.getView().getModel("appView").setProperty("/asUrgentEnabled",true)
+
+			}
+			if(alreadyUrgentJobs < maxUrgentJobs){
+				// selectedJob.Urgent = "Yes"
+			var id = this.oArgs;
+			const sEntityPath = `/Jobs('${id}')`;
+			var payload = {
+				"Urgent" : "Yes"
+			}
+			oModel.update(sEntityPath, payload, {
+				success: function (oUpdatedData) {
+					MessageToast.show("Marked as Urgent Successfully")
+					that.getJobsDataByCompanyFilter();
+				},
+				error: function (error) {
+					that.middleWare.errorHandler(error, that);
+				}
+			});
+				
+			}
+			else{
+				MessageToast.show("You Have already assigned "+ maxUrgentJobs + " jobs as Urgent")
+			}
+
 		}
 
 

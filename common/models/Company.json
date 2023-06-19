@@ -2,14 +2,13 @@
 	"name": "Company",
 	"plural": "Company",
 	"base": "PersistedModel",
-	"idInjection": false,
+	"idInjection": true,
 	"options": {
 		"validateUpsert": true
 	},
 	"properties": {
 		"CompanyId": {
 			"type": "string",
-			"required": true,
             "id":true
 		},
 		"CompanyName": {

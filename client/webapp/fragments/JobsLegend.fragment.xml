@@ -1,0 +1,22 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:core="sap.ui.core"
+        xmlns:u="sap.ui.unified"
+        xmlns:vbm="sap.ui.vbm">
+    <ResponsivePopover
+            id="legendPopover"
+            title="Legend"
+            placement="Bottom"
+            showHeader="true">
+        <PlanningCalendarLegend standardItems="" itemsHeader="" columnWidth="120px">
+            <items >
+                <u:CalendarLegendItem text="New" color="#c4c1be" type="Type18" />
+                <u:CalendarLegendItem text="Read" color="#0070F2" type="Type18" />
+                <u:CalendarLegendItem text="Already Uploaded" color="#E76500" />
+                <u:CalendarLegendItem text="Company Already Assigned" color="#F53232" />
+                <!-- <u:CalendarLegendItem text="Nishan" color="#c4c1be" /> -->
+                <!-- <vbm:LegendItem /> -->
+            </items>
+        </PlanningCalendarLegend>
+    </ResponsivePopover>
+</core:FragmentDefinition>

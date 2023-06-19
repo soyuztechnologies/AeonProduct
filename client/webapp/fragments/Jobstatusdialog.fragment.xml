@@ -16,7 +16,7 @@ resizable="false" >
 				<Text  text="{appView>JobStatusId}" />
 			
 				<Label text="CreatedOn" visible="{appView>/dateFalseforallhead}"/>
-				<DatePicker dateValue="{appView>CreatedOn}" visible="{appView>/dateFalseforallhead}"/>
+				<DatePicker dateValue="{appView>/dateNow}" visible="{appView>/dateFalseforallhead}"/>
 
 				<Label required="true" text="Raw Material" visible="{appView>/rawMaterialHeadVis}"/>
 				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" visible="{appView>/rawMaterialHeadVis}" >

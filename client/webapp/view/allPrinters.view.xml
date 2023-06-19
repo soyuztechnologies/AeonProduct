@@ -20,6 +20,9 @@
 							type="Navigation"
 							title="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"
 							>
+							<markers>
+								<ObjectMarker  type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
+							</markers>
 						    <!-- intro="{parts:[{path: 'appView>appUser/UserName'},{path: 'appView>appUser/FirstName'},{path: 'appView>appUser/LastName'}], formatter: '.formatter.formatFullName'}" -->
 							<!-- number="{appView>jobCardNo}" -->
 							<!-- intro="{path: 'appView>appUser', formatter: '.formatter.formatFullName'}" + -->

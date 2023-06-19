@@ -1086,6 +1086,11 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
 
     },
+    urgentFormatter:function(urgent){
+      if(urgent ==="Yes"){
+        return "Favorite"
+      }
+    },
 
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];

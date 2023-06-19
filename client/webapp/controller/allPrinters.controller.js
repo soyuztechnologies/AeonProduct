@@ -146,9 +146,9 @@ sap.ui.define([
 		// 	var that = this;
 		// 	var oModel = this.getView().getModel();
 		// 	oModel.read(sPath, {
-		// 		// urlParameters: {
-		// 		// 	"$expand": "appUser"
-		// 		// },
+				// urlParameters: {
+				// 	"$expand": "appUser"
+				// },
 		// 		success: function (data) {
 		// 			that.getView().getModel("appView").setProperty("/jobsData", data.results);
 		// 			// MessageToast.show("Jobs Data Successfully Uploded");

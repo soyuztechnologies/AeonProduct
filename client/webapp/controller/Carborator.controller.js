@@ -531,6 +531,29 @@ sap.ui.define([
       })
     },
 
+    openLegend: function (oEvent) {
+      var oSource = oEvent.getSource(),
+          oView = this.getView();
+      if (!this._pLegendPopover) {
+          this._pLegendPopover = Fragment.load({
+              id: oView.getId(),
+              name: "ent.ui.ecommerce.fragments.JobsLegend",
+              controller: this
+          }).then(function (oLegendPopover) {
+              oView.addDependent(oLegendPopover);
+              return oLegendPopover;
+          });
+      }
+      this._pLegendPopover.then(function (oLegendPopover) {
+          if (oLegendPopover.isOpen()) {
+              oLegendPopover.close();
+          } else {
+              oLegendPopover.openBy(oSource);
+          }
+      });
+
+  },
+
 
 
     //* This function is not in use right now
@@ -584,6 +607,7 @@ sap.ui.define([
 
         dbFields.operation = "N"
         dbFields.CompanyId = null
+        dbFields.Urgent = ""
         dbFields[item.dbField] = arrayToJSON[item.data];
         if (!dbFields[item.dbField]) {
 

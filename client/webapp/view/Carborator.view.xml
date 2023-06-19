@@ -8,10 +8,10 @@
     <Page enableScrolling="false"  showHeader="{appView>/visibleHeader}" id="SimpleForm-1">
         <content>
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
-            <!-- <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Center" justifyContent="Center" class="sapUiSmallMarginTop"> -->
+            <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Inherit" justifyContent="Inherit">
                 
                 <u:FileUploader
-                    width="97%"
+                    
                     style="Emphasized"
                     id="fileUploader"
                     sameFilenameAllowed="true"
@@ -21,7 +21,9 @@
                     buttonText="Browse"
                     fileType="xml,xlsx"
                     multiple="true" />
-            <!-- </HBox> -->
+
+            <Button icon="sap-icon://legend" text="Legend" press="openLegend"/>
+            </HBox>
             <!-- <MessageStrip
                 visible="{appView>/messageStripVis}"
 				text="Same Job is already available"

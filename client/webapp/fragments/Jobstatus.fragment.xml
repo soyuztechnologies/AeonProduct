@@ -43,7 +43,7 @@
                             <Label text="Pasting" />
                         </Column>
                         <Column visible="{path: 'appView>InvNo', formatter: '.formatter.tableEntryVisible'}">
-                            <Label text="Inc. No." />
+                            <Label text="Inv. No." />
                         </Column>
                         <Column visible="{path: 'appView>DeliveryNo', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Delivery No." />
