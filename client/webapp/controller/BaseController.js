@@ -80,11 +80,20 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
 				this.getView().getModel("appView").setProperty('/profilNavVisb',true);
 			}
-			else if (sUserRole === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head" || "Artwork Head") {
+			else if (sUserRole === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
 				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
 				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+
+			}
+			else if (sUserRole === "Artwork Head") {
+				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
+				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
+				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 
 			}

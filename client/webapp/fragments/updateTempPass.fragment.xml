@@ -8,13 +8,13 @@
     <f:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false">
         <f:content>
             <Label text="Temporary Password"/>
-            <Input value ="{appView>/prevPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" />
+            <Input value ="{appView>/prevPassword}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" />
 
             <Label text="New Password"/>
-            <Input value ="{appView>/newPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" liveChange="onLiveChnagePassValidationForUpdateTempPassward"/>
+            <Input value ="{appView>/newPassword}" valueState="{appView>/newPassValueState}" valueStateText="{appView>/VSTNewPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" liveChange="onLiveChnagePassValidationForUpdateTempPassward"/>
                 
             <Label text="Confirm New Password"/>
-            <Input value ="{appView>/confirmPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" liveChange="onLiveChnagePassValidationForUpdateTempPassward" />
+            <Input value ="{appView>/confirmPassword}" valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" liveChange="onLiveChnagePassValidationForUpdateTempPassward" />
         </f:content>
     </f:SimpleForm>
     <beginButton>

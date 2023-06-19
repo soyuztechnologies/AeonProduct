@@ -148,5 +148,34 @@ sap.ui.define([
             }, 1000);
 
         },
+        onLiveChnagePassValidationForFrogotPassward: function(oEvent){
+            var newValue = oEvent.getParameter("newValue");
+
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+            if (newValue === "") {
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+            } else if (!passwordRegex.test(newValue)) {
+
+                // MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+                return;
+
+            } else {
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+            }
+        }
 	});
 });

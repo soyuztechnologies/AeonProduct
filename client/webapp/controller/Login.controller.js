@@ -138,19 +138,38 @@ sap.ui.define([
 			// 	});
 		},
 		onLiveChnagePassValidationForUpdateTempPassward: function(oEvent){
-			debugger;
-           var newValue = oEvent.getParameter("newValue");
-		   var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-		   if (!passwordRegex.test(newValue)) {
-			MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
-			return;
-		  }
+			var newValue = oEvent.getParameter("newValue");
+
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+            if (newValue === "") {
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+            } else if (!passwordRegex.test(newValue)) {
+
+                // MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+                return;
+
+            } else {
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+            }
 
 		},
 		
 
 		openUpdateDialog : function(){
-			debugger
 			var oView = this.getView();
             var that = this;
 			
@@ -176,9 +195,9 @@ sap.ui.define([
  			//  var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			 var oModel = this.getView().getModel("appView");
 			 var that = this;
-			 var prevPass = this.getView().getModel("appView").getProperty("/prevPass");
-			 var passValue =  this.getView().getModel("appView").getProperty("/newPass");
-			 var conPassValue = this.getView().getModel("appView").getProperty("/confirmPass");
+			 var prevPass = this.getView().getModel("appView").getProperty("/prevPassword");
+			 var passValue =  this.getView().getModel("appView").getProperty("/newPassword");
+			 var conPassValue = this.getView().getModel("appView").getProperty("/confirmPassword");
 			 var userName = this.getView().byId("userid").getValue();
 
 			//  if (!passwordRegex.test(passValue) || !passwordRegex.test(conPassValue)) {

@@ -11,10 +11,10 @@
             <Label text="Email" />
             <Input  value="{appView>/userEmail}" editable="false" ></Input>
 
-            <Label text="Password" />
-            <Input placeholder="Password" value="{appView>/setNewPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick"></Input>
+            <Label text=" New Password" />
+            <Input placeholder="Password" valueState="{appView>/newPassValueState}" valueStateText="{appView>/VSTNewPass}" value="{appView>/setNewPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnagePassValidationForFrogotPassward"></Input>
             <Label text="Confirm Password" />
-            <Input placeholder="Confirm Password" value="{appView>/setConPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick"></Input>
+            <Input placeholder="Confirm Password" valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" value="{appView>/setConPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnagePassValidationForForgotPassward"></Input>
             
         </f:content>
     </f:SimpleForm>
