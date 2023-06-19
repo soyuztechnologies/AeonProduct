@@ -1,32 +1,63 @@
 <core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+
     xmlns:core="sap.ui.core"
+
     xmlns="sap.m"
-    xmlns:i="sap.ui.core"	
+
+    xmlns:i="sap.ui.core"  
+
     xmlns:f = "sap.ui.layout.form"
+
     xmlns:html="http://www.w3.org/1999/xhtml">
+
     <Dialog title=" Add Password  ({appView>/selectedUsername})"  showHeader="true" >
+
     <f:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false">
+
         <f:content>
+
             <VBox >
-                <Text text="You May Enter the Password Manaualy"></Text>
+
+                <Text text="Do you want to automatically generate the Password "></Text>
+
                 <Switch state="true" change="showPassField"  customTextOn="Yes" customTextOff="No" >
+
                     <layoutData>
+
                         <FlexItemData growFactor="3" />
+
                     </layoutData>
+
                 </Switch>
+
             </VBox>
+
             <Label text="New Password"/>
-            <Input value = "{appView>/NewPassword}" visible="{appView>/newPass}" liveChange="onLiveChnagePassValidationForAddPassward"/>
-                
+
+            <Input value ="{appView>/NewPassword}" valueState="{appView>/newPassValueState}" valueStateText="{appView>/VSTNewPass}" visible="{appView>/newPass}" liveChange="onLiveChnageNewPassValidation"/>
+
+               
+
             <Label text="Confirm New Password"/>
-            <Input value ="{appView>/conPassWord}" visible="{appView>/conPass}" liveChange="onLiveChnagePassValidationForAddPassward"/>
+
+            <Input value ="{appView>/conPassWord}" valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" visible="{appView>/conPass}" liveChange="onLiveChnageConfirmPassValidation"/>
+
         </f:content>
+
     </f:SimpleForm>
+
     <beginButton>
+
         <Button text="OK" type="Accept" press="onAddUserViaAdmin" />
+
     </beginButton>
+
     <endButton>
+
         <Button text="Cancel" type="Reject" press="onRejectPass" />
+
     </endButton>
+
     </Dialog>
+
 </core:FragmentDefinition>

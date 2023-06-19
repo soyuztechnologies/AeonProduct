@@ -57,7 +57,7 @@ sap.ui.define([
 			}
 			// oModel.setProperty("/visiblePdfViewer", false);
 			oModel.updateBindings();
-			this.getUserRoleData();
+			// this.getUserRoleData();
 			this.oGetAgru();
 			this.onReadJobStatus();
 
@@ -225,54 +225,54 @@ sap.ui.define([
 		// * this will opens the dialog for the multiple roles.
 		oDialogOpen: function () {
 
-            var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 
-            var oView = this.getView();
+			var oView = this.getView();
 
-            var that = this;
+			var that = this;
 
-            if (!this.oUploadDialog) {
+			if (!this.oUploadDialog) {
 
-                this.oUploadDialog = Fragment.load({
+				this.oUploadDialog = Fragment.load({
 
-                    id: oView.getId(),
+					id: oView.getId(),
 
-                    name: "ent.ui.ecommerce.fragments.uploadDoc",
+					name: "ent.ui.ecommerce.fragments.uploadDoc",
 
-                    controller: this
+					controller: this
 
-                }).then(function (oDialog) {
+				}).then(function (oDialog) {
 
-                    // Add dialog to view hierarchy
+					// Add dialog to view hierarchy
 
-                    oView.addDependent(oDialog);
+					oView.addDependent(oDialog);
 
-                    return oDialog;
+					return oDialog;
 
-                }.bind(this));
-
-
+				}.bind(this));
 
 
-            }
 
-            if(sUserRole === "Admin" || sUserRole === "Artwork Head"){
 
-                this.getView().getModel("appView").setProperty("/browseVisArtwork" , true);
+			}
 
-                this.getView().getModel("appView").setProperty("/btnVisibility" , true);
+			if (sUserRole === "Admin" || sUserRole === "Artwork Head") {
 
-            }else{
+				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
 
-                this.getView().getModel("appView").setProperty("/browseVisArtwork" , false);    
+				this.getView().getModel("appView").setProperty("/btnVisibility", true);
 
-                this.getView().getModel("appView").setProperty("/btnVisibility" , false);  
+			} else {
 
-            }
+				this.getView().getModel("appView").setProperty("/browseVisArtwork", false);
 
-            return this.oUploadDialog;
+				this.getView().getModel("appView").setProperty("/btnVisibility", false);
 
-        },
+			}
+
+			return this.oUploadDialog;
+
+		},
 
 		openCustomerAttachmentDialog: function (oEvent) {
 			debugger;
@@ -401,7 +401,7 @@ sap.ui.define([
 			this.jobAttachmentId = oEvent.getSource().getId();
 			var that = this;
 			var oModel = this.getView().getModel("appView");
-			oModel.setProperty("/attachmentFiles","");
+			oModel.setProperty("/attachmentFiles", "");
 			this.oDialogOpen().then(function (oDialog) {
 				oModel.setProperty("/buttonText", "Update");
 				oModel.setProperty("/uploadDocumnetTitle", "Upload  Document");
@@ -528,18 +528,18 @@ sap.ui.define([
 			}
 
 			this.getModel('appView').setProperty('/newJob', oNewJob);
-			this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
+			// this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
 			debugger;
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oModel.setProperty("/addJobStatusdialogTitle", "Add Job Status ");
 				oModel.setProperty("/addJobStatusSave", "Add");
-				oModel.setProperty("/DeliveryNo","")
-				oModel.setProperty("/InvNo","")
+				oModel.setProperty("/DeliveryNo", "")
+				oModel.setProperty("/InvNo", "")
 
 				that.isEditStatus = false;
 				oDialog.open();
-				oModel.setProperty("/uploadFileName","")
+				oModel.setProperty("/uploadFileName", "")
 				//Editability for Admin
 				if (sUserRole === 'Admin') {
 					oModel.setProperty("/rawMaterialHeadVis", true);
@@ -968,11 +968,11 @@ sap.ui.define([
 			var files = oEvent.getParameter("files");
 
 			if (this.clickedLink == "clientPONo") {
-				this.getView().getModel("appView").setProperty("/uploadFileName",files.name)
+				this.getView().getModel("appView").setProperty("/uploadFileName", files.name)
 				this.onFileUploader(files)
 			}
 			else if (this.clickedLink == "artworkCode") {
-				this.getView().getModel("appView").setProperty("/uploadFileName",files.name)
+				this.getView().getModel("appView").setProperty("/uploadFileName", files.name)
 				this.onFileUploader(files);
 			}
 			else if (this.clickedLink == "InvNo") {
@@ -984,7 +984,7 @@ sap.ui.define([
 				this.onFileUploader(files);
 			}
 			else {
-				
+
 				this.onFileUploader(files);
 
 
@@ -1018,7 +1018,7 @@ sap.ui.define([
 						const fullName = files[0].name;
 						const parts = fullName.split("_");
 						const name = parts[0];
-						oModel.setProperty("/DeliveryNo",name)
+						oModel.setProperty("/DeliveryNo", name)
 
 					}
 					else if (idbtn.includes("Invstatus")) {
@@ -1026,7 +1026,7 @@ sap.ui.define([
 						const fullName = files[0].name;
 						const parts = fullName.split("_");
 						const name = parts[0];
-						oModel.setProperty("/InvNo",name)
+						oModel.setProperty("/InvNo", name)
 
 					}
 					oModel.updateBindings();
@@ -1065,7 +1065,7 @@ sap.ui.define([
 
 		// Start Production Button Pressed
 
-		whenProductionStart: function() {
+		whenProductionStart: function () {
 			debugger;
 			var oModel = this.getView().getModel();
 			var that = this;
@@ -1075,19 +1075,19 @@ sap.ui.define([
 				status: "In-Progress"
 			};
 			oModel.update(sEntityPath, oUpdatedData, {
-				success: function(data) {
-		        	MessageToast.show("Job Production Started")
+				success: function (data) {
+					MessageToast.show("Job Production Started")
 					that.getJobsDataByCompanyFilter();
 				},
-		
-				error: function(error) {
+
+				error: function (error) {
 					// Error callback
 					that.middleWare.errorHandler(error, that);
 					// MessageToast.show("Something is Wrong");
 				}
 			});
 		},
-			
+
 
 
 
@@ -1121,39 +1121,39 @@ sap.ui.define([
 		// 	// });
 
 		// },
-		getJobsDataByCompanyFilter: function(){
+		getJobsDataByCompanyFilter: function () {
 			debugger;
 			var id = this.getModel('appView').getProperty('/UserId');
 			var payLoad = {
 				id,
 			}
 			var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
-			var url = 'api/Jobs?filter='+oFilter
+			var url = 'api/Jobs?filter=' + oFilter
 			var that = this;
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
-			if(sUserRole === "Customer"){
-				this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
-				.then(function (data, status, xhr) {
-				  debugger;
-				  that.getView().getModel("appView").setProperty("/jobsData", data);						
-			  })
-				.catch(function (jqXhr, textStatus, errorMessage) {
-				  that.middleWare.errorHandler(jqXhr, that);
-				});
-			}else{
-	
+			if (sUserRole === "Customer") {
+				this.middleWare.callMiddleWare("JobsCustomer", "POST", payLoad)
+					.then(function (data, status, xhr) {
+						debugger;
+						that.getView().getModel("appView").setProperty("/jobsData", data);
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						that.middleWare.errorHandler(jqXhr, that);
+					});
+			} else {
+
 				this.middleWare.callMiddleWare(url, "get")
-				.then(function (data, status, xhr) {
-					that.getView().getModel("appView").setProperty("/jobsData", data);
-				})
-				.catch(function (jqXhr, textStatus, errorMessage) {
-					that.middleWare.errorHandler(jqXhr, that);
-				});
+					.then(function (data, status, xhr) {
+						that.getView().getModel("appView").setProperty("/jobsData", data);
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						that.middleWare.errorHandler(jqXhr, that);
+					});
 			}
-		   },
+		},
 		onLiveChange: function (event) {
 			var newValue = event.getParameter("value");
-			var value = this.getView().getModel("appView").getProperty("/allRemainingDatas");
+			var value = this.getView().getModel("appView").getProperty("/totalPrintedSheetsTillNow");
 			var maxValue = value.Printing;
 			var maxLength = 4;
 			var isValid = this.isValueValid(newValue, maxValue);
@@ -1176,205 +1176,231 @@ sap.ui.define([
 			}
 
 		},
+
 		onLiveChnagePiecePerBox: function (oEvent) {
-			debugger;
-			// this.onLiveChnagePieceToSend();
-			// var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
-			var totalPrinted = this.getView().getModel("appView").getProperty("/totalPrintingPieces");
-			var newValue = oEvent.getParameter("newValue");
-			if (newValue > totalPrinted) {
-				
-			} else {
-				var totalBox = totalPrinted / parseInt(newValue);
-				var value = this.getView().getModel("appView").setProperty("/totalShippers", totalBox);
+
+
+
+
+			var newPiecePerBox = parseInt(oEvent.getParameter("newValue"));
+
+			var tempPiecePerBox = newPiecePerBox;
+
+			var totalShippingPeices = this.getView().getModel("appView").getProperty("/totalShippingPieces");
+
+			if (newPiecePerBox.toString() === 'NaN') {
+
+				this.getView().getModel("appView").setProperty("/valueStatePiecePerBox", "None");
+
+				this.getView().getModel("appView").setProperty("/VSTPiecePerBox", "");
+
+				this.getView().getModel("appView").setProperty("/totalShippers", 0);
+
 			}
-			var maxValue = totalPrinted;
-			var isValid = this.isValueValid(newValue, maxValue);
-			var inputControl = oEvent.getSource();
-			if (!isValid) {
-				inputControl.setValueState("Error");
-				inputControl.setValueStateText("Value cannot exceed more than:" + maxValue);
-			} else {
-				inputControl.setValueState("None");
+
+			else if (newPiecePerBox <= totalShippingPeices) {
+
+				this.getView().getModel("appView").setProperty("/valueStatePiecePerBox", "None");
+
+				this.getView().getModel("appView").setProperty("/VSTPiecePerBox", "");
+
+				this.getView().getModel("appView").setProperty("/piecePerBox", tempPiecePerBox);
+
+				var noOfShippers = Math.floor(totalShippingPeices / tempPiecePerBox);
+
+				this.getView().getModel("appView").setProperty("/totalShippers", noOfShippers);
+
 			}
 
+			else {
 
-		},
-		onLiveChnagePieceToSend: function(oEvent){
+				this.getView().getModel("appView").setProperty("/valueStatePiecePerBox", "Error");
 
-			debugger;
-			var newValue = oEvent.getParameter("newValue");
-			var that = this;
-			 var totalPrinting = 100000;
-			 var totalPrintingPieces = this.getView().getModel("appView").setProperty("/totalPrintingPieces", newValue);
-			 if(!newValue){
-				 this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
- 
-			 }else{
- 
-				 this.getView().getModel("appView").setProperty("/piecePerBoxEdit", true);
- 
-			 }
- 
-			 var maxValue = totalPrinting;
- 
-			 var isValid = this.isValueValid(newValue, maxValue);
- 
-			 var inputControl = oEvent.getSource();
- 
-			 if (!isValid) {
- 
-				 inputControl.setValueState("Error");
- 
-				 inputControl.setValueStateText("Value cannot exceed more than:" + maxValue);
- 
-			 } else {
- 
-				 inputControl.setValueState("None");
- 
-			 }
- 
-		 },
-		isValueValid: function (value, maxValue) {
+				this.getView().getModel("appView").setProperty("/piecePerBox", 0);
 
-			return value <= maxValue;
+				this.getView().getModel("appView").setProperty("/VSTPiecePerBox", "Pieces can't be more than " + totalShippingPeices);
+
+				this.getView().getModel("appView").setProperty("/totalShippers", 0);
+
+			}
+
+			this.getView().getModel("appView").updateBindings();
+
 
 
 
 
 		},
 
+		onLiveChnagePieceToSend: function (oEvent) {
 
 
 
-		// getremainingJobData: function () {
 
+			if (oEvent) {
 
+				var newValue = parseInt(oEvent.getParameter("newValue"));
 
+			} else {
 
-		//  var oModel = this.getView().getModel();  //default model get at here
+				var newValue = this.getView().getModel("appView").getProperty("/totalShippingPieces");
 
+			}
 
+			var intNewValue = newValue;
 
 
-		//  var that = this;
 
 
+			var totalPrintedPieces = this.getView().getModel("appView").getProperty("/totalPrintedSheetsTillNow");
 
+			this.getView().getModel("appView").setProperty("/totalShippingPieces", intNewValue);
 
-		//  var ids = this.oArgs;
+			totalPrintedPieces = 14000;
 
+			if (intNewValue.toString() === 'NaN' || totalPrintedPieces >= intNewValue) {
 
 
 
-		//  var jobId = this.getView().getModel("appView").getProperty("/postId")
 
+				this.getView().getModel("appView").setProperty("/valueStatePieceToSend", "None");
 
+				this.getView().getModel("appView").setProperty("/VSTPieceToSend", "");
 
+				this.getView().getModel("appView").setProperty("/totalShippingPieces", newValue);
 
-		//  var payload = {
 
 
 
 
-		//      "jobId": ids
+			} else {
 
+				this.getView().getModel("appView").setProperty("/valueStatePieceToSend", "Error");
 
+				this.getView().getModel("appView").setProperty("/totalShippingPieces", 0);
 
+				this.getView().getModel("appView").setProperty("/VSTPieceToSend", "Pieces can't be more than " + totalPrintedPieces);
 
-		//  }
+			}
 
+			this.onLiveChnagePiecePerBox();
 
+			this.getView().getModel("appView").updateBindings();
 
 
-		//  this.middleWare.callMiddleWare("getRemJobStatus", "POST", payload)
 
 
 
-
-		//      .then(function (data) {
-
-
-
-
-		//          debugger;
-
-
-
-
-		//          that.getView().getModel("appView").setProperty("/remJobData", data);
-
-
-
-
-		//      })
-
-
-
-
-		//      .catch(function (jqXhr, textStatus, errorMessage, error) {
-
-
-
-
-
-
-
-
-
-		//          MessageToast.show("Error");
-
-
-
-
-		//      });
-
-
-
-
-		// },
+		},
 
 		getRemJobsStatus: function () {
+
+
+
+
+            var oModel = this.getView().getModel("appView");
+
+            var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
+
+            var noOfUps = allJobs.noOfUps3;
+
+            var totalprintingsheets = allJobs.noOfSheets1;
+
+            var oSumOfData = {
+
+
+
+
+                "Coating": 0,
+
+
+
+
+                "Printing": 0,
+
+
+
+
+                "Punching": 0,
+
+
+
+
+                "Foiling": 0,
+
+
+
+
+                "Embossing": 0,
+
+
+
+
+                "Pasting": 0,
+
+
+
+
+                "spotUV": 0,
+
+
+
+
+                "Packing": 0,
+
+
+
+
+                "rawMaterial": "",
+
+
+
+
+                "InvNo": "",
+
+
+
+
+                "DeliveryNo": ""
+
+
+
+
+            }
+
+
+
+
+            var printingsheet = oModel.getProperty("/newJobStatus");
+
+            for (let i = 0; i < printingsheet.length; i++) {
+
+                var stringNum = printingsheet[i].Printing;
+
+                var integerNumber = parseInt(stringNum);
+
+                oSumOfData.Printing += integerNumber;
+
+            }
+
+            var remData = {
+
+                "Printing": totalprintingsheets - oSumOfData.Printing
+
+            }
+
+            var totalPrintedSheets = oSumOfData.Printing
+
+            // var totalPrintedPieces = (totalPrintedSheets*noOfUps).toString();
+
+            oModel.setProperty("/allRemainingDatas", remData)
+
+            oModel.setProperty("/totalPrintedSheetsTillNow", totalPrintedSheets * noOfUps);
+
+        },
+		onClickUrgent:function(){
 			debugger;
-			var oModel = this.getView().getModel("appView");
-			var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
-			var totalprintingsheets = allJobs.noOfSheets1;
-			var oSumOfData = {
-
-				"Coating": 0,
-
-				"Printing": 0,
-
-				"Punching": 0,
-
-				"Foiling": 0,
-
-				"Embossing": 0,
-
-				"Pasting": 0,
-
-				"spotUV": 0,
-
-				"Packing": 0,
-
-				"rawMaterial": "",
-
-				"InvNo": "",
-
-				"DeliveryNo": ""
-
-			}
-
-			var printingsheet = oModel.getProperty("/newJobStatus");
-			for (let i = 0; i < printingsheet.length; i++) {
-				var stringNum = printingsheet[i].Printing;
-				var integerNumber = parseInt(stringNum);
-				oSumOfData.Printing += integerNumber;
-			}
-			var remData = {
-				"Printing": totalprintingsheets - oSumOfData.Printing
-			}
-			oModel.setProperty("/allRemainingDatas", remData)
+			var selectedJob = this.getView().getModel("appView").getProperty("/Jobs");
 		}
 
 

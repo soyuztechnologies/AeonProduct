@@ -31,7 +31,6 @@ sap.ui.define([
       oModel.setProperty("/messageStripVis", false)
       oModel.setProperty("/onUpdateJobVis", false)
       // this.onPressClear();
-      this.getJobsData();
       
       var bSystemType = this.getModel("device").getData().system.desktop;
       if (bSystemType) {
@@ -43,6 +42,7 @@ sap.ui.define([
       this.selectCompany();
       this.getUserRoleData();
       this.getCompanyName()
+      this.getJobsData();
     },
     onPressNavigate: function () {
       this.getRouter().navTo("allPrinters");

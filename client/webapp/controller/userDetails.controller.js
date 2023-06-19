@@ -29,6 +29,13 @@ sap.ui.define([
 			};
 			oModel.setProperty("/newPass",false);
 			oModel.setProperty("/conPass",false);
+			this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+            this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+            this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+
+            this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
 			oModel.updateBindings();
 			this.getUserData();
 			this.getUserRoleData();
@@ -204,6 +211,7 @@ sap.ui.define([
 					MessageToast.show("Error while update the status")
 				}
 			});
+			this.getView().getModel("appView").updateBindings();
 		},
 
 		// * this function is handling the image and convert into the base64 after that setinto the property.
@@ -483,28 +491,118 @@ sap.ui.define([
 		},
 
 		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
-		onAddUserViaAdmin : function(oEvent){
-			var oModel = this.getView().getModel("appView");
-			var pass = oModel.getProperty("/conPassWord");
-			var Conpass = oModel.getProperty("/NewPassword");
-			if(!pass && !Conpass) {
-				MessageToast.show("Please Enter the Password");
-			}
-			else if (pass !== Conpass ){
-				MessageToast.show("Passwords doesn't Match");
-			}
-			// else if (pass === Conpass) {
-			// 	// MessageToast.show("Matched Password");
-			// }
-			if(this.isResetPassword==true){
-			   this.resetPassExistingUser(Conpass);
-			}
-			else{
-				this.oFormData.PassWord = Conpass;
-			    this.AddCustomers();
-			}
+		onAddUserViaAdmin: function (oEvent) {
 
-		},
+            debugger;
+
+            var oModel = this.getView().getModel("appView");
+
+            var checkSwitchStatus = oModel.getProperty("/newPass");
+
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+            if (checkSwitchStatus) {
+
+                var pass = oModel.getProperty("/conPassWord");
+
+                var Conpass = oModel.getProperty("/NewPassword");
+
+                if (!pass && !Conpass) {
+
+                    MessageToast.show("Please Enter the Password");
+
+                } else {
+
+                    if (!passwordRegex.test(pass)) {
+
+                        this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+
+                        this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+                    } else {
+
+                        this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                        this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+                    }
+
+                    if (!passwordRegex.test(Conpass)) {
+
+                        this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+
+                        this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+                    } else {
+
+                        this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+
+                        this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+
+                    }
+
+                }
+
+
+
+
+                if (pass != Conpass) {
+
+                    this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+
+                    this.getView().getModel("appView").setProperty("/VSTNewPass", "Password didn't match");
+
+                    this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+
+                    this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password didn't match");
+
+                }else{
+
+                    this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                    this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+                    this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+
+                    this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+
+                }
+
+
+
+
+                this.getView().getModel("appView").updateBindings();
+
+
+
+
+
+            }
+
+            // else if (pass === Conpass) {
+
+            //  // MessageToast.show("Matched Password");
+
+            // }
+
+            if (this.isResetPassword == true) {
+
+                this.resetPassExistingUser(Conpass);
+
+            }
+
+            else {
+
+                this.oFormData.PassWord = Conpass;
+
+                this.AddCustomers();
+
+            }
+
+
+
+
+        },
 		//when select comapny this function trigger
 		onSelectComPany: function(oEvent){
            debugger;
@@ -581,15 +679,68 @@ sap.ui.define([
 				// 	that.middleWare.errorHandler(jqXhr, that);
 				// });
 		},
-		onLiveChnagePassValidationForAddPassward: function(oEvent){
-			debugger;
-           var newValue = oEvent.getParameter("newValue");
-		   var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-		   if (!passwordRegex.test(newValue)) {
-			MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
-			return;
-		  }
+		onLiveChnageNewPassValidation: function (oEvent) {
+            var newValue = oEvent.getParameter("newValue");
 
-		}
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+            if (newValue === "") {
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+            } else if (!passwordRegex.test(newValue)) {
+
+                // MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+                return;
+
+            } else {
+
+                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+            }
+
+            this.getView().getModel("appView").updateBindings();
+
+        },
+
+        onLiveChnageConfirmPassValidation: function (oEvent) {
+
+            var newValue = oEvent.getParameter("newValue");
+
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+            if (!passwordRegex.test(newValue)) {
+
+                // MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+
+                this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+
+                this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+                return;
+
+            } else {
+
+                this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+
+                this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+
+            }
+
+            this.getView().getModel("appView").updateBindings();
+
+
+
+
+        }
 	});
 });

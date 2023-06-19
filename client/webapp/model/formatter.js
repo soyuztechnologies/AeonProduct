@@ -1068,15 +1068,21 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     //     return false;
     //   }
     // },
-    companyVis:function(status){
+    companyVis:function(blocked, status){
+
+
+
 
       debugger;
-      if(status ==="Approved")
-      {
-        return true;
-      }
-      else{
+
+      if(blocked === "Yes" || status != "Approved"){
+
         return false;
+
+      }else{
+
+        return true;
+
       }
 
     },
