@@ -1029,7 +1029,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
     },
     highlightFormatter: function(sOperation, sCompany) {
-      debugger;
+      
       if (sOperation === "RU" && !sCompany ) 
       { return "Warning";
       } 
@@ -1049,7 +1049,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     },
     costStructureVis: function(role){
 
-      // debugger;
+      // 
       // var role = this.getView().getModel("appView").getProperty("/UserRole");
       if(role === "Admin"){
         return true;
@@ -1059,7 +1059,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
     },
     // customerCompanyVis: function(role){
-    //   // debugger;
+    //   // 
     //   // var role = this.getView().getModel("appView").getProperty("/UserRole");
     //   if(role === "Customer"){
     //     return true;
@@ -1073,7 +1073,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
 
 
-      debugger;
+      
 
       if(blocked === "Yes" || status != "Approved"){
 

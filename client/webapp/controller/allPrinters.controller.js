@@ -52,7 +52,7 @@ sap.ui.define([
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			this.getView().getModel("appView").setProperty('/datas', datassss);
 			this.getView().getModel("appView").setProperty('/jobId', datassss.jobCardNo);
-			debugger;
+			
 			this.getModel("appView").updateBindings();
 			this.getRouter().navTo("printingDetails", {
 				jobId: datassss.jobCardNo
@@ -172,7 +172,7 @@ sap.ui.define([
 
 		//* this function is getting the userName into the Select dialog box.
 		getUserName: function (oEvent) {
-            debugger;
+            
 			var oModel = this.getView().getModel("appView");
 			var oSelectedItem = oEvent.getParameter("value");
 			oModel.setProperty("/Username", oSelectedItem);
@@ -181,7 +181,7 @@ sap.ui.define([
 
 		//* this fcuntion is working to search the data into the allPrinters screen.
 		onSearchJob: function (oEvent) {
-			debugger;
+			
 			var sValue = oEvent.getParameter("query");
 			if (!sValue) {
 				var sValue = oEvent.getParameter("newValue")
@@ -202,7 +202,7 @@ sap.ui.define([
 		},
        // this function filter the job by company id and also send job as to spacific user
        getJobsDataByCompanyFilter: function(){
-		debugger;
+		
 		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 		var id = this.getModel('appView').getProperty('/UserId');
 		var payLoad = {
@@ -214,7 +214,7 @@ sap.ui.define([
 		if(sUserRole === "Customer"){
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
 			.then(function (data, status, xhr) {
-			  debugger;
+			  
 			  that.getView().getModel("appView").setProperty("/jobsData", data);						
 		  })
 			.catch(function (jqXhr, textStatus, errorMessage) {
@@ -233,7 +233,7 @@ sap.ui.define([
 	   },
 
 	//    getJobAccordingCustomer : function(){
-	// 	debugger;
+	// 	
 	// 	// step1. get the id property and set into one variable;
 	// 	var id = this.getModel('appView').getProperty('/UserId');
 	// 	var payLoad = {
@@ -242,7 +242,7 @@ sap.ui.define([
 	// 	// step 2 : make a  middleware call
 	// 	this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
     //       .then(function (data, status, xhr) {
-	// 		debugger;
+	// 		
 	// 		that.getView().getModel("appView").setProperty("/jobsAccordingCustomer", data);						
 	// 	})
     //       .catch(function (jqXhr, textStatus, errorMessage) {

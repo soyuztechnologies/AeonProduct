@@ -7,10 +7,6 @@
 		"validateUpsert": true
 	},
 	"properties": {
-		"CompanyId": {
-			"type": "string",
-            "id":true
-		},
 		"CompanyName": {
             "type":"string",
 			"default":""

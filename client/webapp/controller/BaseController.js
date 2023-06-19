@@ -32,7 +32,7 @@ sap.ui.define([
 
 		},
 		getUserRoleData: function () {
-			debugger;
+			
 			var that = this;
 			return new Promise(function (myResolve, myReject) {
 				that.middleWare.callMiddleWare("getUserRole", "get")
@@ -384,7 +384,7 @@ sap.ui.define([
 			});
 		},
 		onSeePasswordClick: function (oEvent) {
-			debugger;
+			
 			var oInput = oEvent.getSource();
 			if (oInput.getType() === "Password") {
 				setTimeout(function () {

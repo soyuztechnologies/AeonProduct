@@ -883,9 +883,9 @@ app.start = function () {
 				}
 
 				// Retrieve the user's role or any other relevant data
-				const {Status,TechnicalId,Role,EmailId,id} = Appuser;
+				const {Status,TechnicalId,Role,EmailId,id,CompanyId} = Appuser;
 				const responseData = {
-					role: {Status,TechnicalId,Role,EmailId,id},
+					role: {Status,TechnicalId,Role,EmailId,id,CompanyId},
 					// Include other relevant data if needed
 				};
 
@@ -1024,7 +1024,7 @@ app.start = function () {
 			}
 		});
 		app.post('/getSumOfJobStatus', async (req, res) => {
-			debugger;
+			
 			const JobStatus = app.models.JobStatus;
 			const Job = app.models.Job;
 			const { jobId } = req.body;
@@ -1078,7 +1078,7 @@ app.start = function () {
 		});
 
 		app.post('/getRemJobStatus', async (req, res) => {
-			debugger;
+			
 			const JobStatus = app.models.JobStatus;
 			const Job = app.models.Job;
 			const { jobId } = req.body;
@@ -1123,7 +1123,7 @@ app.start = function () {
 					
 				}
 				const totalJobDetails = await Job.findOne({where:{jobCardNo:jobId}})
-				debugger;
+				
 				var remainingData = {
 					"RemainingCoating": totalJobDetails.__data.noOfSheets1 - oSumOfData.Printing,
 					
@@ -1321,6 +1321,7 @@ app.start = function () {
 		
 
 		app.post('/JobsCustomer', async (req, res) => {
+			
 			this.AppUser = app.models.AppUser;
 			this.Job = app.models.Job;
 			const {id} =  req.body;
@@ -1328,7 +1329,7 @@ app.start = function () {
 			let AppUser = await this.AppUser.findOne({ where: { id } });
 			const CompanyId = AppUser.CompanyId;
 			if(AppUser){
-				let Jobs = await this.Job.find({ where: { CompanyId } });
+				let Jobs = await this.Job.find({ where: { "CompanyId": CompanyId} });
 				return res.status(200).send(Jobs);
 			}
 			// at above we find the appuser from the id.

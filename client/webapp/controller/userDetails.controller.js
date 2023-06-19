@@ -138,7 +138,7 @@ sap.ui.define([
 		
 		// * this function is read the all appUsers data.
 		getUserData:function(){
-			debugger;
+			
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			// var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
@@ -187,7 +187,7 @@ sap.ui.define([
 
 		// * this function is make the update call for block and unblock the customer.
 		onBlockCustomer:function(oEvent){
-			debugger;
+			
 			var state = oEvent.getParameter('state');
 			this.getView().getModel("appView").setProperty("/state",state)
 			state = state === true ? 'No' : 'Yes';
@@ -314,12 +314,12 @@ sap.ui.define([
 
 		// * At here we are getting  the companies all the app.  
 		getCompanyName: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();
 			var that = this;
 			oModel.read('/Company', {
 			  success: function (data) {
-				debugger;
+				
 				that.getView().getModel("appView").setProperty("/companyNames", data.results);
 			  },
 			  error: function (error) {
@@ -493,7 +493,7 @@ sap.ui.define([
 		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
 		onAddUserViaAdmin: function (oEvent) {
 
-            debugger;
+            
 
             var oModel = this.getView().getModel("appView");
 
@@ -605,7 +605,7 @@ sap.ui.define([
         },
 		//when select comapny this function trigger
 		onSelectComPany: function(oEvent){
-           debugger;
+           
 		   var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
 		   var oModel = this.getView().getModel();
 			var id = oEvent.getSource().getBindingContext("appView").getObject().id;
@@ -645,7 +645,7 @@ sap.ui.define([
 		
 		isResetPassword : null,
 		SendEmailExistUser : function(oEvent){
-			debugger;
+			
 			var that= this;
 			// var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			var oRow = oEvent.getSource().getBindingContext('appView').getObject();

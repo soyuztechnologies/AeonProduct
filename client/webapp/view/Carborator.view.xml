@@ -8,10 +8,10 @@
     <Page enableScrolling="false"  showHeader="{appView>/visibleHeader}" id="SimpleForm-1">
         <content>
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
-            <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Inherit" justifyContent="Inherit">
+            <!-- <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Inherit" justifyContent="Inherit"> -->
                 
                 <u:FileUploader
-                    
+                    width="98%"
                     style="Emphasized"
                     id="fileUploader"
                     sameFilenameAllowed="true"
@@ -22,8 +22,8 @@
                     fileType="xml,xlsx"
                     multiple="true" />
 
-            <Button icon="sap-icon://legend" text="Legend" press="openLegend"/>
-            </HBox>
+            
+            <!-- </HBox> -->
             <!-- <MessageStrip
                 visible="{appView>/messageStripVis}"
 				text="Same Job is already available"
@@ -31,6 +31,15 @@
 				showIcon="true">
 			</MessageStrip> -->
             <Table updateFinished="onUploadExcelsUpdateFinished" items="{appView>/allExcelData}">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                           <ToolbarSpacer/>
+                            
+                                <Button icon="sap-icon://legend" text="Legend" press="openLegend"/>
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
                 <columns>
                     <Column>
                         <Label text="File Name" />
@@ -45,13 +54,13 @@
                         <cells>
                             <Text text="{appView>fileName}">
                             </Text>
-                            <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}" 
+                            <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}"
                                 placeholder="Company Name"
                                 change="selectCompany"
                                 class="sapUiTinyMarginEnd">
                                 <items>
                                     <core:Item enabled="true"  text="{appView>CompanyName}" 
-                                        key="{appView>CompanyId}"/>
+                                        key="{appView>id}"/>
                                 </items>
                             </ComboBox>
                         </cells>

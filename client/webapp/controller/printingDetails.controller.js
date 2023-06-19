@@ -109,13 +109,13 @@ sap.ui.define([
 
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel();
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			oModel.read("/Jobs('" + this.oArgs + "')", {
 				success: function (data) {
-					debugger;
+					
 					that.getView().getModel("appView").setProperty("/Jobs", data);
 					that.loadForm();
 					that.getView().getModel("appView").setProperty("/status", data.status);
@@ -147,7 +147,7 @@ sap.ui.define([
 
 		// * these fucnion will chnage the visibility of the buttons and the files.
 		onModify: function () {
-			debugger;
+			
 			// var oModel = this.getView().getModel("appView");
 			// oModel.setProperty("/inputEditable", true)
 			// oModel.setProperty("/updBtnVisibility", true)
@@ -161,7 +161,7 @@ sap.ui.define([
 		},
 
 		onSaveJobStatus: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView"); // Default model get at here
 			var that = this;
 			var data = oModel.getProperty("/newJobStatus");
@@ -204,7 +204,7 @@ sap.ui.define([
 		},
 
 		onClickCancel: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView");
 			var oldData = oModel.getProperty("/newJobStatus");
 			oModel.setProperty("/statusInvAttachment", "");
@@ -301,7 +301,7 @@ sap.ui.define([
 		},
 
 		openCustomerAttachmentDialog: function (oEvent) {
-			debugger;
+			
 			var data = oEvent.getSource().getBindingContext("appView").getObject();
 			var clickedrow = oEvent.getSource().getBinding("text").getPath();
 			var invoice = data.InvNo;
@@ -330,7 +330,7 @@ sap.ui.define([
 				}
 				// var oSimpleForm = that.getView().byId('allJobDetails')
 				// oSimpleForm.bindElement('appView>/Jobs');
-				// debugger;
+				// 
 			});
 		},
 
@@ -433,10 +433,10 @@ sap.ui.define([
 				oModel.setProperty("/uploadDocumnetTitle", "Upload  Document");
 				oDialog.open();
 				// oDialog.attachAfterClose(function () {
-				// 	debugger;
+				// 	
 				// 	oDialog.unbindProperty();
 				// });
-				debugger;
+				
 				var sUserRole = oModel.getProperty('/UserRole');
 				if (sUserRole === 'Customer') {
 					oModel.setProperty('/browseVis', false);
@@ -446,7 +446,7 @@ sap.ui.define([
 		},
 
 		allJobDialog: function () {
-			debugger;
+			
 			this.allJob();
 		},
 		allJob: function () {
@@ -469,7 +469,7 @@ sap.ui.define([
 				oDialog.open();
 				var oSimpleForm = that.getView().byId('allJobDetails')
 				oSimpleForm.bindElement('appView>/Jobs');
-				debugger;
+				
 			});
 		},
 
@@ -555,7 +555,7 @@ sap.ui.define([
 
 			this.getModel('appView').setProperty('/newJob', oNewJob);
 			// this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
-			debugger;
+			
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oModel.setProperty("/addJobStatusdialogTitle", "Add Job Status ");
@@ -645,7 +645,7 @@ sap.ui.define([
 
 		// * this fucntion is triger when user click on save in fragment.
 		onSubmitData: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView");
 			var invData = oModel.getProperty("/InvNo");
 			var delData = oModel.getProperty("/DeliveryNo");
@@ -677,7 +677,7 @@ sap.ui.define([
 
 		},
 		// rawMaterialGet: function () {
-		// 	debugger;
+		// 	
 		// 	var oModel = this.getView().getModel("appView");
 		// 	var sUserRole = this.getView().getModel("appView").getProperty("/UserRole");
 		// 	var oNewJobData = oModel.getProperty('/newJob');
@@ -726,7 +726,7 @@ sap.ui.define([
 		// * at here we are going to edit the row data for the entries.
 		editJobstatusEntry: function (oEvent) {
 			this.isEditStatus = true;
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel('appView');
 			var rowdata = oEvent.getSource().getParent().getBindingContext("appView").getObject();
@@ -955,7 +955,7 @@ sap.ui.define([
 
 		// * this fucntion will read the data for job status and shows into the table.
 		onReadJobStatus: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView");  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
@@ -990,7 +990,7 @@ sap.ui.define([
 
 		// * this fucntion will trigerr the onChange event for the fileuploader.
 		onChangeFileUploader: function (oEvent) {
-			debugger;
+			
 			var files = oEvent.getParameter("files");
 
 			if (this.clickedLink == "clientPONo") {
@@ -1092,7 +1092,7 @@ sap.ui.define([
 		// Start Production Button Pressed
 
 		whenProductionStart: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
@@ -1127,7 +1127,7 @@ sap.ui.define([
 		// 	} else {
 		// 		var sPath = `/Jobs`
 		// 	}
-		// 	// debugger;
+		// 	// 
 		// 	var that = this;
 		// 	var oModel = this.getView().getModel();
 		// 	oModel.read(sPath, {
@@ -1148,7 +1148,7 @@ sap.ui.define([
 
 		// },
 		getJobsDataByCompanyFilter: function () {
-			debugger;
+			
 			var id = this.getModel('appView').getProperty('/UserId');
 			var payLoad = {
 				id,
@@ -1160,7 +1160,7 @@ sap.ui.define([
 			if (sUserRole === "Customer") {
 				this.middleWare.callMiddleWare("JobsCustomer", "POST", payLoad)
 					.then(function (data, status, xhr) {
-						debugger;
+						
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
@@ -1425,7 +1425,7 @@ sap.ui.define([
 
         },
 		onClickMarkAsUrgent:function(){
-			debugger;
+			
 			var customerAllJobs = this.getView().getModel("appView").getProperty("/jobsData");
 			var that = this;
 			var selectedJob = this.getView().getModel("appView").getProperty("/Jobs");
