@@ -62,7 +62,9 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
 				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
-				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+				// this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
+			this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 			}
 			else if (sUserRole === "Customer") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
@@ -79,6 +81,8 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/welPrintNavVisb',true);
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
 				this.getView().getModel("appView").setProperty('/profilNavVisb',true);
+				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
+			this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 			}
 			else if (sUserRole === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head") {
 				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
@@ -86,6 +90,8 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
 				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
+			this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 
 			}
 			else if (sUserRole === "Artwork Head") {
@@ -95,6 +101,8 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
+			this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 
 			}
 			this.getModel("appView").updateBindings();

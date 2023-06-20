@@ -282,37 +282,39 @@ sap.ui.define([
         var oSelectedItem = oEvent.getSource().getSelectedKey();
         if (oSelectedItem === "") {
           var companyName = oEvent.getSource().getValue();
-          var payLoad = {
-            "CompanyName": companyName,
-          }
-          MessageBox.information("This Company does not exist, do you want to create it ? {" + companyName + "}", {
-            actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
-            onClose: function (sAction) {
-              if (sAction === "OK") {
-                oModel.create('/Company', payLoad, {
-                  success: function (data) {
-                    
-                    if (change.operation === "N") {
-                      change.operation = 'U'
-                    }
-                    if (change.operation === 'R') {
-                      change.operation = 'U'
-                    }
-                    change.CompanyId = data.id;
-                    that.getView().getModel("appView").setProperty("/companyId", data.id);
-                    console.log("Selected User ID:", data.id);
-                    that.getView().getModel('appView').updateBindings();
-
-                  },
-                  error: function (error) {
-                    // Error callback
-                    that.middleWare.errorHandler(error, that);
-                    // MessageToast.show("Error reading data");
-                  }
-                });
-              }
+          if (companyName != "") {
+            var payLoad = {
+              "CompanyName": companyName,
             }
-          });
+            MessageBox.information("This Company does not exist, do you want to create it ? {" + companyName + "}", {
+              actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+              onClose: function (sAction) {
+                if (sAction === "OK") {
+                  oModel.create('/Company', payLoad, {
+                    success: function (data) {
+
+                      if (change.operation === "N") {
+                        change.operation = 'U'
+                      }
+                      if (change.operation === 'R') {
+                        change.operation = 'U'
+                      }
+                      change.CompanyId = data.id;
+                      that.getView().getModel("appView").setProperty("/companyId", data.id);
+                      console.log("Selected User ID:", data.id);
+                      that.getView().getModel('appView').updateBindings();
+
+                    },
+                    error: function (error) {
+                      // Error callback
+                      that.middleWare.errorHandler(error, that);
+                      // MessageToast.show("Error reading data");
+                    }
+                  });
+                }
+              }
+            });
+          }
         } else {
           // var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
           if (change.operation === "N") {
@@ -407,10 +409,15 @@ sap.ui.define([
         }
         // that.getJobsData();
       }
-
+      
       if (!aExcelToBeUploaded.length && !aNewFetchedExcel.length) {
         MessageToast.show("Those Jobs Are Already Saved")
       }
+      else{
+        this.getJobsData();
+
+      }
+
     },
     // onUpdateJob: function () {
     //   debugger;

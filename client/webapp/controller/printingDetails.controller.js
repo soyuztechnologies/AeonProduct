@@ -37,8 +37,8 @@ sap.ui.define([
 			);
 			const date = new Date();
 			this.getView().getModel("appView").setProperty("/dateNow",date)
-			that.getView().getModel("appView").setProperty("/asUrgentVis", false);
-			that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
+			// that.getView().getModel("appView").setProperty("/asUrgentVis", false);
+			// that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 			var oModel = this.getModel("appView")
 			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
 			oModel.setProperty("/visibleHeader", true);
@@ -70,6 +70,8 @@ sap.ui.define([
             }else if(sUserRole === "Artwork Head"){
 
                 oModel.setProperty("/addBtnVisible", false);
+				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
+				this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 
             }
 			// oModel.setProperty("/visiblePdfViewer", false);
@@ -119,10 +121,10 @@ sap.ui.define([
 				success: function (data) {
 					if(data.Urgent === "Yes"){
 						that.getView().getModel("appView").setProperty("/asUrgentVis", false);
-						that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", true);
+						// that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", true);
 					}
 					else{
-						that.getView().getModel("appView").setProperty("/asUrgentVis", true);
+						// that.getView().getModel("appView").setProperty("/asUrgentVis", true);
 						that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 					}
 					that.getView().getModel("appView").setProperty("/Jobs", data);
@@ -162,7 +164,7 @@ sap.ui.define([
 		},
 
 		onSaveJobStatus: function () {
-			
+			debugger;
 			var oModel = this.getView().getModel("appView"); // Default model get at here
 			var that = this;
 			var data = oModel.getProperty("/newJobStatus");
@@ -646,6 +648,7 @@ sap.ui.define([
 
 		// * this fucntion is triger when user click on save in fragment.
 		onSubmitData: function () {
+			debugger;
 			
 			var oModel = this.getView().getModel("appView");
 			var invData = oModel.getProperty("/InvNo");
@@ -726,6 +729,7 @@ sap.ui.define([
 
 		// * at here we are going to edit the row data for the entries.
 		editJobstatusEntry: function (oEvent) {
+			debugger	
 			this.isEditStatus = true;
 			
 			var that = this;
@@ -740,6 +744,10 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
+			var invNoEditGrag = rowdata.InvNo;
+			var delEditFrag = rowdata.DeliveryNo;
+			oModel.setProperty("/InvNo",invNoEditGrag);
+			oModel.setProperty("/DeliveryNo",delEditFrag);
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oModel.setProperty("/addJobStatusdialogTitle", "Edit Job Status ");
@@ -978,6 +986,7 @@ sap.ui.define([
 						item.TobeUpdated = false;
 					});
 					oModel.setProperty("/readedJobdata", data);
+					debugger;
 					oModel.setProperty("/newJobStatus", data);
 					// that.showAddedFields();
 					// that.jobStatusData = oModel.getProperty("/readedJobdata");
@@ -1524,7 +1533,7 @@ sap.ui.define([
 								MessageToast.show("Successfully Removed")
 								that.getJobsDataByCompanyFilter();
 								that.getView().getModel("appView").setProperty("/asUrgentVis", true);
-					that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
+								that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 								
 							},
 							error: function (error) {

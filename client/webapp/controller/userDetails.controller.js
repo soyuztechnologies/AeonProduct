@@ -4,8 +4,8 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/BusyIndicator",
-	
-], function (BaseController,MessageToast, JSONModel,Fragment,BusyIndicator) {
+
+], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.userDetails", {
@@ -14,28 +14,28 @@ sap.ui.define([
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("userDetails").attachPatternMatched(this._matchedHandler, this);
 		},
-		
+
 		// * RMh funciton
-		_matchedHandler:function(oEvent){
+		_matchedHandler: function (oEvent) {
 			var oModel = this.getView().getModel("appView");
 			oModel.setProperty("/layout", "OneColumn");
-			oModel.setProperty("/visibleHeader",true);
+			oModel.setProperty("/visibleHeader", true);
 
 			var oPath = oEvent.getParameter("name");
-			if(oPath == "userDetails"){
+			if (oPath == "userDetails") {
 				oModel.setProperty('/editableFields', true);
 				oModel.setProperty('/EmailVisible', true);
 				oModel.setProperty('/Passwordfield', true);
 			};
-			oModel.setProperty("/newPass",false);
-			oModel.setProperty("/conPass",false);
+			oModel.setProperty("/newPass", false);
+			oModel.setProperty("/conPass", false);
 			this.getView().getModel("appView").setProperty("/newPassValueState", "None");
 
-            this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+			this.getView().getModel("appView").setProperty("/VSTNewPass", "");
 
-            this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+			this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
 
-            this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+			this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
 			oModel.updateBindings();
 			this.getUserData();
 			this.getUserRoleData();
@@ -44,11 +44,11 @@ sap.ui.define([
 
 		// * this function will get the role form the company details fragment.
 
-		onRoleChange : function(oEvent){
-			
+		onRoleChange: function (oEvent) {
+
 			var oSelectedKey = oEvent.getParameter("selectedItem").getKey();
 			var oModel = this.getView().getModel("appView");
-			oModel.setProperty('/selectedrole',oSelectedKey)
+			oModel.setProperty('/selectedrole', oSelectedKey)
 		},
 
 		// * this function will load the smae fragement for user add and edit the user data too.
@@ -70,32 +70,32 @@ sap.ui.define([
 		},
 
 		//  * this fucntion will opne the add user fragment and create the payload too and set into the property.
-		AddUserDialog : function(){
+		AddUserDialog: function () {
 			// debugger
-            var that = this;
+			var that = this;
 			var oModel = this.getView().getModel('appView');
 
 			this.oFormData = {
-					"EmailId": "",
-					"CompanyEmail": "",
-					"CompanyName": "",
-					"GSTNO": "",
-					"CompanyAddress": "",
-					"Title": "",
-					"FirstName": "",
-					"LastName": "",
-					"phoneNumber": "",
-					"PassWord": "",
-					"BillingCountry": "",
-					"BillingCity": "",
-					"ShippingCity": "",
-					"ShippingCountry": "",
-					"BillingZipCode": "",
-					"ShippingZipCode": "",
-					"BillingAddress": "",
-					"ShippingAddress": "",
-					"Companylogo":'',
-					"Role": ""
+				"EmailId": "",
+				"CompanyEmail": "",
+				"CompanyName": "",
+				"GSTNO": "",
+				"CompanyAddress": "",
+				"Title": "",
+				"FirstName": "",
+				"LastName": "",
+				"phoneNumber": "",
+				"PassWord": "",
+				"BillingCountry": "",
+				"BillingCity": "",
+				"ShippingCity": "",
+				"ShippingCountry": "",
+				"BillingZipCode": "",
+				"ShippingZipCode": "",
+				"BillingAddress": "",
+				"ShippingAddress": "",
+				"Companylogo": '',
+				"Role": ""
 			}
 
 			// the whole form data will be set to the  "AddUserData" property in appView model.
@@ -106,53 +106,53 @@ sap.ui.define([
 				userAddFrag.open();
 				userAddFrag.bindElement('appView>/AddUserData');
 				oModel.setProperty('/TitleUserAdd', "AddUser");
-				oModel.setProperty('/existingData',false);
-				oModel.setProperty('/userEditBtn',false);
-				oModel.setProperty('/userCancelBtn',true);
-				oModel.setProperty('/userupdateBtn',true);
-				oModel.setProperty('/currentLogo',false);
+				oModel.setProperty('/existingData', false);
+				oModel.setProperty('/userEditBtn', false);
+				oModel.setProperty('/userCancelBtn', true);
+				oModel.setProperty('/userupdateBtn', true);
+				oModel.setProperty('/currentLogo', false);
 
 			});
 
 		},
 
 		// * this function is close the dialog on add user and edit user.
-		onReject : function(){
-			
-			var oModel =  this.getView().getModel('appView');
+		onReject: function () {
+
+			var oModel = this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
 			this.openUserDialog().then(function (userAddFrag) {
 				userAddFrag.close();
 				// that.getView().getModel('appView').setProperty('/existingData',false);
 			});
-			
+
 		},
 
 		// * this function is close the dialog which ask for the passwprd when user add.
-		onRejectPass : function(){
-			this.openDialog().then(function(oDialog){
+		onRejectPass: function () {
+			this.openDialog().then(function (oDialog) {
 				// 
 				oDialog.close();
 			});
 		},
-		
+
 		// * this function is read the all appUsers data.
-		getUserData:function(){
-			
+		getUserData: function () {
+
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			// var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
-			var that = this; 
+			var that = this;
 			oModel.read('/AppUsers', {
-				success: function(data) {
-				that.getView().getModel("appView").setProperty("/userDetails",data.results);
-				that.getView().getModel("appView").setProperty("/userName",data.results[0].UserName);
-				// if(sUserRole === "Admin"){
-				// 	that.getView().getModel("appView").setProperty("/companyselBoxVis" ,false);
-				// }
-				BusyIndicator.hide();
+				success: function (data) {
+					that.getView().getModel("appView").setProperty("/userDetails", data.results);
+					that.getView().getModel("appView").setProperty("/userName", data.results[0].UserName);
+					// if(sUserRole === "Admin"){
+					// 	that.getView().getModel("appView").setProperty("/companyselBoxVis" ,false);
+					// }
+					BusyIndicator.hide();
 				},
-				error: function(error) {
+				error: function (error) {
 					BusyIndicator.hide();
 					that.middleWare.errorHandler(error, that);
 					MessageToast.show("Error reading data");
@@ -161,24 +161,24 @@ sap.ui.define([
 		},
 
 		// * this function is make the update call for change the approval status.
-		onApproveCustomer:function(oEvent){
-			
+		onApproveCustomer: function (oEvent) {
 			var selectedItem = oEvent.getParameter("selectedItem").getKey();
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
 			var oid = this.getView().getModel("appView").getProperty(opath);
 			var custid = oid.id;
 			
 			const oModel = this.getView().getModel();
-			const sEntityPath = `/AppUsers('`+custid+"')"; // Replace with the appropriate entity set name and ID
+			const sEntityPath = `/AppUsers('` + custid + "')"; // Replace with the appropriate entity set name and ID
 			const oData = {
 				"Status": selectedItem
 			};
-			
+
 			oModel.update(sEntityPath, oData, {
-				success: function(data) {
+				success: function (data) {
 					MessageToast.show("Customer " + selectedItem + " selected successfully");
+
 				},
-				error: function(error) {
+				error: function (error) {
 					this.middleWare.errorHandler(error, that);
 					// console.error("PATCH request failed");
 				}
@@ -186,37 +186,38 @@ sap.ui.define([
 		},
 
 		// * this function is make the update call for block and unblock the customer.
-		onBlockCustomer:function(oEvent){
-			
+		onBlockCustomer: function (oEvent) {
 			var state = oEvent.getParameter('state');
-			this.getView().getModel("appView").setProperty("/state",state)
+			this.getView().getModel("appView").setProperty("/state", state)
 			state = state === true ? 'No' : 'Yes';
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
 			var oid = this.getView().getModel("appView").getProperty(opath);
 			var custid = oid.id;
-			
+
 			const oModel = this.getView().getModel();
-			const sEntityPath = `/AppUsers('`+custid+"')"; // Replace with the appropriate entity set name and ID
-			
+			const sEntityPath = `/AppUsers('` + custid + "')"; // Replace with the appropriate entity set name and ID
+
 			const oData = {
 				"Blocked": state
 			};
-			
+
 			oModel.update(sEntityPath, oData, {
-				success: function(data) {
+				success: function (data) {
 					MessageToast.show("Customer Blocked Status is Changed Successfully")
 				},
-				error: function(error) {
+				error: function (error) {
 					this.middleWare.errorHandler(error, that);
 					MessageToast.show("Error while update the status")
 				}
 			});
 			this.getView().getModel("appView").updateBindings();
+			debugger;
+			this.getView().byId("idProductsTable").getBinding("items").update;
 		},
 
 		// * this function is handling the image and convert into the base64 after that setinto the property.
 		handleUploadPress: function (oEvent) {
-			
+
 			var files = oEvent.getParameter("files");
 			var that = this;
 			var oModel = this.getView().getModel("appView");
@@ -230,13 +231,13 @@ sap.ui.define([
 						var vContent = e.currentTarget.result; //.result.replace("data:image/jpeg;base64,", "");
 						// that.img.Content = vContent;
 						var stream = that.getImageUrlFromContent(vContent);
-						
+
 						// that.getModel("appView").setProperty("/companyLogo", stream);
 						oModel.setProperty("/LogoAvonUserProfile", vContent);
 						oModel.setProperty("/streamUrlLogo", stream)
 						// var logo = oModel.getProperty("logoUpdate")	
 						// var logoProperty = oModel.getProperty("/LogoAvonUserProfile");
-                        // var base64String = logoProperty.split(",")[1];
+						// var base64String = logoProperty.split(",")[1];
 						// logo = base64String;
 						oModel.updateBindings();
 					} catch (jqXhr) {
@@ -284,61 +285,61 @@ sap.ui.define([
 		},
 
 		// * this onSelect event works to show the passWord field in the Password Fragment.
-		showPassField : function(oEvent){
-			
+		showPassField: function (oEvent) {
+
 			var passSwitchState = oEvent.getParameter('state');
 			var omodel = this.getView().getModel("appView");
-			if(passSwitchState === false){
-				omodel.setProperty("/newPass",true);
-				omodel.setProperty("/conPass",true);
+			if (passSwitchState === false) {
+				omodel.setProperty("/newPass", true);
+				omodel.setProperty("/conPass", true);
 			}
-			else{
-			omodel.setProperty("/newPass",false);
-			omodel.setProperty("/conPass",false);
+			else {
+				omodel.setProperty("/newPass", false);
+				omodel.setProperty("/conPass", false);
 			}
 		},
 
 		// * this funciton handle the validation on the add user and open the password fragment to make call.
-		openPassdialog : function(){
-			
+		openPassdialog: function () {
+
 			var oModel = this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
 
-			if(!bExistingData){ // value is false
+			if (!bExistingData) { // value is false
 				// if user press add nee button
 				this.userPassDialogValidation();
-			  }else if(bExistingData){
+			} else if (bExistingData) {
 				this.updateRowData();
-			  }
+			}
 		},
 
 		// * At here we are getting  the companies all the app.  
 		getCompanyName: function () {
-			
+
 			var oModel = this.getView().getModel();
 			var that = this;
 			oModel.read('/Company', {
-			  success: function (data) {
-				
-				that.getView().getModel("appView").setProperty("/companyNames", data.results);
-			  },
-			  error: function (error) {
-				// Error callback
-				that.middleWare.errorHandler(error, that);
-				MessageToast.show("Error reading data");
-			  }
-			});
-		  },
+				success: function (data) {
 
-		userPassDialogValidation: function(){
-			
+					that.getView().getModel("appView").setProperty("/companyNames", data.results);
+				},
+				error: function (error) {
+					// Error callback
+					that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error reading data");
+				}
+			});
+		},
+
+		userPassDialogValidation: function () {
+
 			var oView = this.getView();
-            var that = this;
+			var that = this;
 			var oModel = this.getView().getModel('appView');
-			var roleUSerSelected =  oModel.getProperty('/selectedrole');
+			var roleUSerSelected = oModel.getProperty('/selectedrole');
 			var Email = this.oFormData.EmailId;
 			var phone = this.oFormData.phoneNumber;
-			var firstName =  this.oFormData.FirstName;
+			var firstName = this.oFormData.FirstName;
 			var lastName = this.oFormData.LastName;
 			var address = this.oFormData.CompanyAddress;
 			var billingCity = this.oFormData.BillingCity;
@@ -347,50 +348,50 @@ sap.ui.define([
 			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 			if (phone && !phone.match(phoneRegex)) {
-			MessageToast.show("Phone number should be 10 digits");
-			return;
+				MessageToast.show("Phone number should be 10 digits");
+				return;
 			}
 			if (Email && !Email.match(emailRegex)) {
 				MessageToast.show("Please enter a valid email address");
 				return;
 			}
 
-			if(!roleUSerSelected){
+			if (!roleUSerSelected) {
 				MessageToast.show("Please Select a Role for the New user");
 				return;
 			}
-			if(roleUSerSelected === "Admin" && !Email ){
+			if (roleUSerSelected === "Admin" && !Email) {
 				MessageToast.show("Please enter the email address");
 				return;
 			};
-			if(roleUSerSelected === "Customer" && (!Email || !phone || !firstName || !lastName || !address || !billingCity || !ShippingCity)) {
+			if (roleUSerSelected === "Customer" && (!Email || !phone || !firstName || !lastName || !address || !billingCity || !ShippingCity)) {
 				MessageToast.show("Please enter the required fields");
 				return;
-			  }
-			  
-			  if(roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
+			}
+
+			if (roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
 				MessageToast.show("Please enter the required fields");
 				return;
-			  }
-		
-			this.openDialog().then(function(oDialog){
+			}
+
+			this.openDialog().then(function (oDialog) {
 				oDialog.open();
 			});
 		},
 
 		// * this fucntion will do a update call when admin edit the user data.
-		updateRowData : function(){
+		updateRowData: function () {
 			var oModel = this.getView().getModel("appView");
 			var dModel = this.getView().getModel();
 			var dataModel = oModel.getProperty("/userData");
 			var logoProperty = this.getView().getModel("appView").getProperty("/LogoAvonUserProfile");
-			if (!logoProperty){
+			if (!logoProperty) {
 				var Companylogo = dataModel.Companylogo;
 				dataModel.Companylogo = Companylogo;
 			}
-			else{
-            var base64String = logoProperty.split(",")[1];
-			dataModel.Companylogo = base64String;
+			else {
+				var base64String = logoProperty.split(",")[1];
+				dataModel.Companylogo = base64String;
 			}
 
 			var userId = dataModel.id;
@@ -412,74 +413,74 @@ sap.ui.define([
 		},
 
 		// * this fucntion load and open the Adduserpass fragment dialog at here.
-		openDialog:function(){
+		openDialog: function () {
 			var oView = this.getView();
-            var that = this;
+			var that = this;
 			if (!this.passDialog) {
-                this.passDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "ent.ui.ecommerce.fragments.AddUserPass",
-                    controller: this
-                }).then(function (oPassDialog) {    
-                    oView.addDependent(oPassDialog);
-                    return oPassDialog;
-                }.bind(this));
-            }
-            // this.passDialog.then(function (oPassDialog) {
+				this.passDialog = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.AddUserPass",
+					controller: this
+				}).then(function (oPassDialog) {
+					oView.addDependent(oPassDialog);
+					return oPassDialog;
+				}.bind(this));
+			}
+			// this.passDialog.then(function (oPassDialog) {
 			// 		oPassDialog.open();
-            // });
+			// });
 			return this.passDialog;
 		},
 
-		onUserEdit: function(){
+		onUserEdit: function () {
 			var omodel = this.getView().getModel("appView");
-			omodel.setProperty('/userupdateBtn',true);
-			omodel.setProperty('/userCancelBtn',true);
-			omodel.setProperty('/editableFields',true);
-			omodel.setProperty('/EmailVisible',false);
-			omodel.setProperty('/RoleField',true);
-			omodel.setProperty('/enabledCompanyLogo',true);
-			omodel.setProperty('/LogoShowButton',true);
-			omodel.setProperty('/userEditBtn',false);
+			omodel.setProperty('/userupdateBtn', true);
+			omodel.setProperty('/userCancelBtn', true);
+			omodel.setProperty('/editableFields', true);
+			omodel.setProperty('/EmailVisible', false);
+			omodel.setProperty('/RoleField', true);
+			omodel.setProperty('/enabledCompanyLogo', true);
+			omodel.setProperty('/LogoShowButton', true);
+			omodel.setProperty('/userEditBtn', false);
 
 		},
 
 		// * this fucntion will get the entity data and bind the data into the edit user fragment.
-		rowItemsPressUser :function(oEvent){
-			
+		rowItemsPressUser: function (oEvent) {
+
 			var oParameter = oEvent.getParameter('listItem');
 			var omodel = this.getView().getModel("appView");
-			var sData =oParameter.getBindingContext('appView').getObject();
+			var sData = oParameter.getBindingContext('appView').getObject();
 			omodel.setProperty('/userData', sData)
 			var oView = this.getView();
-            var that = this;
+			var that = this;
 
 			this.openUserDialog().then(function (userAddFrag) {
 				userAddFrag.open();
 				userAddFrag.bindElement('appView>/userData');
 				omodel.setProperty('/existingData', true);
 				omodel.setProperty('/TitleUserAdd', "Edit User");
-				omodel.setProperty('/userupdateBtn',false);
-				omodel.setProperty('/userCancelBtn',true);
-				omodel.setProperty('/editableFields',false);
-				omodel.setProperty('/EmailVisible',false);
-				omodel.setProperty('/RoleField',false);
-				omodel.setProperty('/enabledCompanyLogo',false);
-				omodel.setProperty('/LogoShowButton',false);
-				omodel.setProperty('/userEditBtn',true);
+				omodel.setProperty('/userupdateBtn', false);
+				omodel.setProperty('/userCancelBtn', true);
+				omodel.setProperty('/editableFields', false);
+				omodel.setProperty('/EmailVisible', false);
+				omodel.setProperty('/RoleField', false);
+				omodel.setProperty('/enabledCompanyLogo', false);
+				omodel.setProperty('/LogoShowButton', false);
+				omodel.setProperty('/userEditBtn', true);
 			});
 
 		},
-		
+
 		// * it make a post call to create the user via admin side.
-		AddCustomers : function(){
-			
+		AddCustomers: function () {
+
 			var that = this;
 
-			var payload =  this.oFormData;
+			var payload = this.oFormData;
 
 			this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
-				.then( function (data, status, xhr) {
+				.then(function (data, status, xhr) {
 					// debugger
 					MessageToast.show("User Created Successfully");
 					that.onReject();
@@ -493,145 +494,145 @@ sap.ui.define([
 		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
 		onAddUserViaAdmin: function (oEvent) {
 
-            
-
-            var oModel = this.getView().getModel("appView");
-
-            var checkSwitchStatus = oModel.getProperty("/newPass");
-
-            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-
-            if (checkSwitchStatus) {
-
-                var pass = oModel.getProperty("/conPassWord");
-
-                var Conpass = oModel.getProperty("/NewPassword");
-
-                if (!pass && !Conpass) {
-
-                    MessageToast.show("Please Enter the Password");
-
-                } else {
-
-                    if (!passwordRegex.test(pass)) {
-
-                        this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
-
-                        this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
-
-                    } else {
-
-                        this.getView().getModel("appView").setProperty("/newPassValueState", "None");
-
-                        this.getView().getModel("appView").setProperty("/VSTNewPass", "");
-
-                    }
-
-                    if (!passwordRegex.test(Conpass)) {
-
-                        this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
-
-                        this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
-
-                    } else {
-
-                        this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
-
-                        this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
-
-                    }
-
-                }
 
 
+			var oModel = this.getView().getModel("appView");
 
+			var checkSwitchStatus = oModel.getProperty("/newPass");
 
-                if (pass != Conpass) {
+			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 
-                    this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+			if (checkSwitchStatus) {
 
-                    this.getView().getModel("appView").setProperty("/VSTNewPass", "Password didn't match");
+				var pass = oModel.getProperty("/conPassWord");
 
-                    this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+				var Conpass = oModel.getProperty("/NewPassword");
 
-                    this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password didn't match");
+				if (!pass && !Conpass) {
 
-                }else{
+					MessageToast.show("Please Enter the Password");
 
-                    this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+				} else {
 
-                    this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+					if (!passwordRegex.test(pass)) {
 
-                    this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+						this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
 
-                    this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+						this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
 
-                }
+					} else {
+
+						this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+						this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+					}
+
+					if (!passwordRegex.test(Conpass)) {
+
+						this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+
+						this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+					} else {
+
+						this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+
+						this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+
+					}
+
+				}
 
 
 
 
-                this.getView().getModel("appView").updateBindings();
+				if (pass != Conpass) {
+
+					this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+
+					this.getView().getModel("appView").setProperty("/VSTNewPass", "Password didn't match");
+
+					this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+
+					this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password didn't match");
+
+				} else {
+
+					this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+					this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+					this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+
+					this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+
+				}
+
+
+
+
+				this.getView().getModel("appView").updateBindings();
 
 
 
 
 
-            }
+			}
 
-            // else if (pass === Conpass) {
+			// else if (pass === Conpass) {
 
-            //  // MessageToast.show("Matched Password");
+			//  // MessageToast.show("Matched Password");
 
-            // }
+			// }
 
-            if (this.isResetPassword == true) {
+			if (this.isResetPassword == true) {
 
-                this.resetPassExistingUser(Conpass);
+				this.resetPassExistingUser(Conpass);
 
-            }
+			}
 
-            else {
+			else {
 
-                this.oFormData.PassWord = Conpass;
+				this.oFormData.PassWord = Conpass;
 
-                this.AddCustomers();
+				this.AddCustomers();
 
-            }
-
-
+			}
 
 
-        },
+
+
+		},
 		//when select comapny this function trigger
-		onSelectComPany: function(oEvent){
-           debugger;
-		   var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
-		   var oModel = this.getView().getModel();
+		onSelectComPany: function (oEvent) {
+			debugger;
+			var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
+			var oModel = this.getView().getModel();
 			var id = oEvent.getSource().getBindingContext("appView").getObject().id;
-		   const sEntityPath = `/AppUsers('${id}')`;
-		   const payload = {
-			"CompanyId" :oSelectedCompanyKey		 
-		  };
-		   
-		   oModel.update(sEntityPath, payload, {
-			   success: function(data) {
-				   MessageToast.show("successfully Company Assigned to User");
-			   },
-			   error: function(error) {
-				   this.middleWare.errorHandler(error, that);
-				   // console.error("PATCH request failed");
-			   }
-		   });
+			const sEntityPath = `/AppUsers('${id}')`;
+			const payload = {
+				"CompanyId": oSelectedCompanyKey
+			};
+
+			oModel.update(sEntityPath, payload, {
+				success: function (data) {
+					MessageToast.show("successfully Company Assigned to User");
+				},
+				error: function (error) {
+					this.middleWare.errorHandler(error, that);
+					// console.error("PATCH request failed");
+				}
+			});
 		},
 		//this update call for set company data to appUser tabel
-		resetPassExistingUser : function(pass){
+		resetPassExistingUser: function (pass) {
 			debugger
-			var that= this;
+			var that = this;
 			var password = pass;
 			this.payload.password = password;
 			this.middleWare.callMiddleWare("sendEmailExistUser", "POST", this.payload)
-				.then( function (data, status, xhr) {
+				.then(function (data, status, xhr) {
 					// debugger
 					MessageToast.show("Mail Sent Succefully");
 					that.onRejectPass();
@@ -642,105 +643,105 @@ sap.ui.define([
 				});
 
 		},
-		
-		isResetPassword : null,
-		SendEmailExistUser : function(oEvent){
-			
-			var that= this;
+
+		isResetPassword: null,
+		SendEmailExistUser: function (oEvent) {
+
+			var that = this;
 			// var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			var oRow = oEvent.getSource().getBindingContext('appView').getObject();
 			var Email = oRow.EmailId;
 			var id = oRow.TechnicalId;
 			var name = oRow.UserName;
-			this.getView().getModel("appView").setProperty("/selectedUsername",name);
+			this.getView().getModel("appView").setProperty("/selectedUsername", name);
 			// if (!passwordRegex.test(password)) {
 			// 	MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 			// 	return;
 			//   }
-			this.payload = { 
-				EmailId : Email,
-				TechnicalId : id,
+			this.payload = {
+				EmailId: Email,
+				TechnicalId: id,
 				password: ""
 			};
-			this.openDialog().then(function(oDialog){
+			this.openDialog().then(function (oDialog) {
 				that.isResetPassword = true;
 				oDialog.open();
 			});
 
 
-				// this.middleWare.callMiddleWare("sendEmailExistUser", "POST", payload)
-				// .then( function (data, status, xhr) {
-				// 	// debugger
-				// 	MessageToast.show("Mail Sent Succefully");
-				// 	// that.onReject();
-				// 	// that.onRejectPass();
-				// })
-				// .catch(function (jqXhr, textStatus, errorMessage) {
-				// 	that.middleWare.errorHandler(jqXhr, that);
-				// });
+			// this.middleWare.callMiddleWare("sendEmailExistUser", "POST", payload)
+			// .then( function (data, status, xhr) {
+			// 	// debugger
+			// 	MessageToast.show("Mail Sent Succefully");
+			// 	// that.onReject();
+			// 	// that.onRejectPass();
+			// })
+			// .catch(function (jqXhr, textStatus, errorMessage) {
+			// 	that.middleWare.errorHandler(jqXhr, that);
+			// });
 		},
 		onLiveChnageNewPassValidation: function (oEvent) {
-            var newValue = oEvent.getParameter("newValue");
+			var newValue = oEvent.getParameter("newValue");
 
-            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 
-            if (newValue === "") {
+			if (newValue === "") {
 
-                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/newPassValueState", "None");
 
-                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+				this.getView().getModel("appView").setProperty("/VSTNewPass", "");
 
-            } else if (!passwordRegex.test(newValue)) {
+			} else if (!passwordRegex.test(newValue)) {
 
-                // MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+				// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 
-                this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+				this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
 
-                this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+				this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
 
-                return;
+				return;
 
-            } else {
+			} else {
 
-                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/newPassValueState", "None");
 
-                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+				this.getView().getModel("appView").setProperty("/VSTNewPass", "");
 
-            }
+			}
 
-            this.getView().getModel("appView").updateBindings();
+			this.getView().getModel("appView").updateBindings();
 
-        },
+		},
 
-        onLiveChnageConfirmPassValidation: function (oEvent) {
+		onLiveChnageConfirmPassValidation: function (oEvent) {
 
-            var newValue = oEvent.getParameter("newValue");
+			var newValue = oEvent.getParameter("newValue");
 
-            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 
-            if (!passwordRegex.test(newValue)) {
+			if (!passwordRegex.test(newValue)) {
 
-                // MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+				// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 
-                this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+				this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
 
-                this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+				this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
 
-                return;
+				return;
 
-            } else {
+			} else {
 
-                this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
 
-                this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+				this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
 
-            }
+			}
 
-            this.getView().getModel("appView").updateBindings();
-
-
+			this.getView().getModel("appView").updateBindings();
 
 
-        }
+
+
+		}
 	});
 });

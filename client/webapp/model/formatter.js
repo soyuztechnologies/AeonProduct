@@ -1069,22 +1069,11 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     //   }
     // },
     companyVis:function(blocked, status){
-
-
-
-
-      
-
       if(blocked === "Yes" || status != "Approved"){
-
         return false;
-
       }else{
-
         return true;
-
       }
-
     },
     urgentFormatter:function(urgent){
       if(urgent ==="Yes"){
