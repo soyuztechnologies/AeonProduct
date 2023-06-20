@@ -15,7 +15,7 @@
                 </content>
             </OverflowToolbar>
         <!-- </headerToolbar> -->
-        <VBox tooltip ="USer Company Details">
+        <VBox tooltip ="User Company Details">
             <core:Fragment id="idPersonalDetails" fragmentName="ent.ui.ecommerce.fragments.CompanyDetails" type="XML"></core:Fragment>
         </VBox>
         <VBox tooltip="User Personal Details">

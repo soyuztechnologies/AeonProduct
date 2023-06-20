@@ -38,7 +38,7 @@
 											</form:fields>
 											<form:fields>
 
-											<Button id="idSignupButtn" text="signUp" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="100%" iconDensityAware="false" class="newButtonStyle"/>
+											<Button id="idSignupButtn" text="Sign Up" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="100%" iconDensityAware="false" class="newButtonStyle"/>
 										</form:fields>
 											<HBox
 											alignContent="Center"
