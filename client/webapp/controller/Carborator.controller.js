@@ -31,7 +31,7 @@ sap.ui.define([
       oModel.setProperty("/messageStripVis", false)
       oModel.setProperty("/onUpdateJobVis", false)
       // this.onPressClear();
-      
+
       var bSystemType = this.getModel("device").getData().system.desktop;
       if (bSystemType) {
         oModel.setProperty('/desktop', true);
@@ -39,7 +39,7 @@ sap.ui.define([
         oModel.setProperty('/desktop', false);
       }
       oModel.updateBindings();
-      this.selectCompany();
+      // this.selectCompany();
       this.getUserRoleData();
       this.getCompanyName()
       this.getJobsData();
@@ -101,7 +101,7 @@ sap.ui.define([
           });
           that.getView().getModel("appView").setProperty("/storeDBJobs", JSON.parse(JSON.stringify(data)));
           that.getView().getModel("appView").setProperty("/allExcelData", data);
-          
+
         })
         .catch(function (jqXhr, textStatus, errorMessage) {
           that.middleWare.errorHandler(jqXhr, that);
@@ -133,6 +133,13 @@ sap.ui.define([
       oModel.read('/Company', {
         success: function (data) {
           debugger;
+          that.CompanyData = data;
+          //   const results = results.filter(obj => {
+          //    return obj.id === "64913ea67f0ea353ac20a390";
+          //  });
+          //  var filteredArray =  results.filter(function(obj) {
+          //   return obj.age > 25;
+          // });
           that.getView().getModel("appView").setProperty("/companyDetails", data.results);
         },
         error: function (error) {
@@ -210,7 +217,7 @@ sap.ui.define([
           console.log(oJobsData);
           that.getView().getModel("appView").setProperty("/allExcelData", oJobsData)
           that.getView().getModel('appView').updateBindings();
-          
+
           // var isPresent = false;
 
 
@@ -227,8 +234,8 @@ sap.ui.define([
           // })
           // that.getView().getModel("appView").setProperty("/withoutCompanyId", filterWithoutJobs);
           // if (that.Flag) {
-            // }
-            
+          // }
+
         })
         .catch(function (jqXhr, textStatus, errorMessage) {
           debugger;
@@ -238,30 +245,94 @@ sap.ui.define([
     },
 
     //* This function is used to select the company inside a comboBox
+    // selectCompany: function (oEvent) {
+    //   debugger;
+    //   var oModel = this.getView().getModel();  //default model get at here
+    //   var that = this;
+    //   if (oEvent) {
+    //     var oSelectedItem = oEvent.getSource().getSelectedKey();
+    //     var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
+    //     if (change.operation === "N") {
+    //       change.operation = 'U'
+    //     }
+    //     if (change.operation === 'R') {
+    //       change.operation = 'U'
+    //     }
+    //     that.getView().getModel('appView').updateBindings();
+    //     that.getView().getModel("appView").setProperty("/companyId", oSelectedItem);
+    //     console.log("Selected User ID:", oSelectedItem);
+    //   }
+    //   // this.middleWare.callMiddleWare("customerNames", "get")
+    //   //   .then(function (data, status, xhr) {
+    //   //     debugger;
+    //   //     that.getView().getModel("appView").setProperty("/customerUser", data);
+    //   //   })
+    //   //   .catch(function (jqXhr, textStatus, errorMessage) {
+    //   //     debugger;
+    //   //     that.middleWare.errorHandler(jqXhr, that);
+    //   //   });
+    // },
     selectCompany: function (oEvent) {
       debugger;
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
+      var aExcelsWithMissingCompanies = [];
       if (oEvent) {
+        var change = oEvent.getSource().getParent().getBindingContext("appView").getObject();
         var oSelectedItem = oEvent.getSource().getSelectedKey();
-        var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
-        if (change.operation === "N") {
-          change.operation = 'U'
+        if (oSelectedItem === "") {
+          var companyName = oEvent.getSource().getValue();
+          var payLoad = {
+            "CompanyName": companyName,
+          }
+          MessageBox.information("This Company does not exist, do you want to create it ? {" + companyName + "}", {
+            actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+            onClose: function (sAction) {
+              if (sAction === "OK") {
+                oModel.create('/Company', payLoad, {
+                  success: function (data) {
+                    
+                    if (change.operation === "N") {
+                      change.operation = 'U'
+                    }
+                    if (change.operation === 'R') {
+                      change.operation = 'U'
+                    }
+                    change.CompanyId = data.id;
+                    that.getView().getModel("appView").setProperty("/companyId", data.id);
+                    console.log("Selected User ID:", data.id);
+                    that.getView().getModel('appView').updateBindings();
+
+                  },
+                  error: function (error) {
+                    // Error callback
+                    that.middleWare.errorHandler(error, that);
+                    // MessageToast.show("Error reading data");
+                  }
+                });
+              }
+            }
+          });
+        } else {
+          // var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
+          if (change.operation === "N") {
+            change.operation = 'U'
+          }
+          if (change.operation === 'R') {
+            change.operation = 'U'
+          }
+          that.getView().getModel('appView').updateBindings();
+          that.getView().getModel("appView").setProperty("/companyId", oSelectedItem);
+          console.log("Selected User ID:", oSelectedItem);
         }
-        if (change.operation === 'R') {
-          change.operation = 'U'
-        }
-        that.getView().getModel('appView').updateBindings();
-        that.getView().getModel("appView").setProperty("/companyId", oSelectedItem);
-        console.log("Selected User ID:", oSelectedItem);
       }
       // this.middleWare.callMiddleWare("customerNames", "get")
       //   .then(function (data, status, xhr) {
-      //     debugger;
+      //    
       //     that.getView().getModel("appView").setProperty("/customerUser", data);
       //   })
       //   .catch(function (jqXhr, textStatus, errorMessage) {
-      //     debugger;
+      //    
       //     that.middleWare.errorHandler(jqXhr, that);
       //   });
     },
@@ -314,7 +385,7 @@ sap.ui.define([
             debugger;
             that.middleWare.errorHandler(jqXhr, that);
           });
-          // that.getJobsData();
+        // that.getJobsData();
       }
 
       //*This call is used to RE-upload the data that is already present on the backend!
@@ -337,7 +408,7 @@ sap.ui.define([
         // that.getJobsData();
       }
 
-      if(!aExcelToBeUploaded.length && !aNewFetchedExcel.length){
+      if (!aExcelToBeUploaded.length && !aNewFetchedExcel.length) {
         MessageToast.show("Those Jobs Are Already Saved")
       }
     },
@@ -382,7 +453,7 @@ sap.ui.define([
     onPressClear: function (oEvent) {
       var that = this;
       debugger;
-     var oldData =  this.getView().getModel('appView').getProperty("/storeDBJobs");
+      var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
       this.getView().getModel('appView').setProperty("/allExcelData", oldData);
       this.getView().byId("fileUploader").setValue("")
       // this.getView().getModel('appView').setProperty("/jsonValue", "");
@@ -401,7 +472,7 @@ sap.ui.define([
       // this.getView().getModel("appView").setProperty("/allExcelData", dbJobs);
       // this.getView().getModel('appView').updateBindings();
     },
-    onUploadExcelsUpdateFinished:function(){
+    onUploadExcelsUpdateFinished: function () {
       this.getView().getModel('appView').setProperty("/onSavePayloadVis", true);
     },
 
@@ -416,7 +487,7 @@ sap.ui.define([
       //   return item.jobCardNo === selectedJob.jobCardNo; 
       // });
       var indexToRemoveFromAllData = validatedExcels.findIndex(function (item) {
-        return item.jobCardNo === selectedJob.jobCardNo; 
+        return item.jobCardNo === selectedJob.jobCardNo;
       });
       if (indexToRemoveFromAllData != -1) {
         validatedExcels.splice(indexToRemoveFromAllData, 1);
@@ -429,7 +500,7 @@ sap.ui.define([
     },
 
 
-     //* This function will remove the job when click on 'X' button on the fragment, which doNot have companyID!
+    //* This function will remove the job when click on 'X' button on the fragment, which doNot have companyID!
     removeJobwithoutCompId: function (oEvent) {
       debugger;
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
@@ -437,14 +508,14 @@ sap.ui.define([
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
 
       var indexToRemoveFromAllData = validatedExcels.findIndex(function (item) {
-        return item.jobCardNo === selectedJob.jobCardNo; 
+        return item.jobCardNo === selectedJob.jobCardNo;
       });
 
 
       var aIndexDBData = oldData.findIndex(function (item) {
-        return item.jobCardNo === selectedJob.jobCardNo; 
+        return item.jobCardNo === selectedJob.jobCardNo;
       });
-      
+
       if (indexToRemoveFromAllData != -1) {
         validatedExcels.splice(indexToRemoveFromAllData, 1);
         validatedExcels.push(oldData[aIndexDBData])
@@ -533,26 +604,26 @@ sap.ui.define([
 
     openLegend: function (oEvent) {
       var oSource = oEvent.getSource(),
-          oView = this.getView();
+        oView = this.getView();
       if (!this._pLegendPopover) {
-          this._pLegendPopover = Fragment.load({
-              id: oView.getId(),
-              name: "ent.ui.ecommerce.fragments.JobsLegend",
-              controller: this
-          }).then(function (oLegendPopover) {
-              oView.addDependent(oLegendPopover);
-              return oLegendPopover;
-          });
+        this._pLegendPopover = Fragment.load({
+          id: oView.getId(),
+          name: "ent.ui.ecommerce.fragments.JobsLegend",
+          controller: this
+        }).then(function (oLegendPopover) {
+          oView.addDependent(oLegendPopover);
+          return oLegendPopover;
+        });
       }
       this._pLegendPopover.then(function (oLegendPopover) {
-          if (oLegendPopover.isOpen()) {
-              oLegendPopover.close();
-          } else {
-              oLegendPopover.openBy(oSource);
-          }
+        if (oLegendPopover.isOpen()) {
+          oLegendPopover.close();
+        } else {
+          oLegendPopover.openBy(oSource);
+        }
       });
 
-  },
+    },
 
 
 
