@@ -605,7 +605,7 @@ sap.ui.define([
         },
 		//when select comapny this function trigger
 		onSelectComPany: function(oEvent){
-           
+           debugger;
 		   var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
 		   var oModel = this.getView().getModel();
 			var id = oEvent.getSource().getBindingContext("appView").getObject().id;

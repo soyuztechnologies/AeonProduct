@@ -63,7 +63,7 @@
 							<core:Item text="{appView>CompanyName}" key="{appView>CompanyId}" />
 						</ComboBox> -->
 						<Select enabled="{parts:[ {path:'appView>Blocked'}, { path: 'appView>Status'}] ,formatter:'.formatter.companyVis'}" items="{appView>/companyNames}" selectedKey="{appView>CompanyId}"  forceSelection="false" change="onSelectComPany"  visible="{=${appView>Role} === 'Customer' ? true : false}">
-							<core:Item text="{appView>CompanyName}" key="{appView>CompanyId}" />
+							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
 						</Select>
 						<Button type="Reject" text="Password" press="SendEmailExistUser" icon="sap-icon://reset"></Button>
 					</cells>

@@ -35,7 +35,7 @@ app.use(fileUpload());
 
 function myMiddleware(options) {
 	return function (req, res, next) {
-		
+
 
 		// Save the original send function
 		if (req.url.includes("/api/Users/login") || req.url.includes("/login")) {
@@ -115,7 +115,7 @@ app.start = function () {
 
 		// * this function is send the email to the user in secenerio like signup,forgot password,admin add user etc.
 		async function sendEmail(email, token, replacements, templateFileName, emailSubject) {
-			
+
 			var nodemailer = require('nodemailer');
 			var smtpTransport = require('nodemailer-smtp-transport');
 			this.Param = app.models.Param;
@@ -602,7 +602,7 @@ app.start = function () {
 		// * this post call is responsble for login the registered user into the portal.
 
 		app.post('/login', async (req, res) => {
-			
+
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -675,7 +675,7 @@ app.start = function () {
 		// * this post call is use to create the new user via the admin side in the portal.
 
 		app.post('/addUserAdmin', async (req, res) => {
-			
+
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -780,7 +780,7 @@ app.start = function () {
 
 		// * this post call is use to hanlde the uploaded attachments in loopback.
 		app.post('/UploadAttachment', async (req, res) => {
-			
+
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -812,7 +812,7 @@ app.start = function () {
 
 		});
 		app.post('/uploadjob', async (req, res) => {
-			
+
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -820,17 +820,17 @@ app.start = function () {
 			this.Job = app.models.Job;
 			var key = req.body.jobCardNo;
 			try {
-			// 	const newJob = {};
-			// for (const field in req.body) {
-			// 	newJob[field] = req.body[field];
-			// }
-			var value = await this.Job.findOne({ where: { jobCardNo: key } });
-			if (value) {
-				let  msg = "Job is already exist."
-				return res.status(200).json({ success:msg,value });
-			}else{
-				return res.status(500).json({ error: 'Not Available' });
-			}
+				// 	const newJob = {};
+				// for (const field in req.body) {
+				// 	newJob[field] = req.body[field];
+				// }
+				var value = await this.Job.findOne({ where: { jobCardNo: key } });
+				if (value) {
+					let msg = "Job is already exist."
+					return res.status(200).json({ success: msg, value });
+				} else {
+					return res.status(500).json({ error: 'Not Available' });
+				}
 
 			} catch (error) {
 
@@ -856,7 +856,7 @@ app.start = function () {
 			const sessionCookie = cookies.soyuz_session;
 
 			try {
-				
+
 				// Retrieve the access token based on the session cookie
 				const accessToken = await this.AccessToken.findOne({ where: { id: sessionCookie } });
 
@@ -864,7 +864,7 @@ app.start = function () {
 					// Handle case when access token is not found
 					return res.status(404).json({ error: 'Session not found' });
 				}
-				const {  ttl, created, userId } = accessToken;
+				const { ttl, created, userId } = accessToken;
 
 				let userID = accessToken.userId;
 
@@ -883,9 +883,9 @@ app.start = function () {
 				}
 
 				// Retrieve the user's role or any other relevant data
-				const {Status,TechnicalId,Role,EmailId,id,CompanyId} = Appuser;
+				const { Status, TechnicalId, Role, EmailId, id, CompanyId } = Appuser;
 				const responseData = {
-					role: {Status,TechnicalId,Role,EmailId,id,CompanyId},
+					role: { Status, TechnicalId, Role, EmailId, id, CompanyId },
 					// Include other relevant data if needed
 				};
 
@@ -910,7 +910,7 @@ app.start = function () {
 			const sessionCookie = cookies.soyuz_session;
 
 			try {
-				
+
 				// Retrieve the access token based on the session cookie
 				const accessToken = await this.AccessToken.findOne({ where: { id: sessionCookie } });
 
@@ -918,7 +918,7 @@ app.start = function () {
 					// Handle case when access token is not found
 					return res.status(404).json({ error: 'Session not found' });
 				}
-				const {  ttl, created, userId } = accessToken;
+				const { ttl, created, userId } = accessToken;
 
 				let userID = accessToken.userId;
 
@@ -995,10 +995,10 @@ app.start = function () {
 
 		});
 		app.get('/customerNames', async (req, res) => {
-			
+
 			const appUsers = app.models.AppUser;
 			try {
-				const customerData = await appUsers.find({ where: { Role: "Customer", Status : "Approved" } }); // Retrieve job status data
+				const customerData = await appUsers.find({ where: { Role: "Customer", Status: "Approved" } }); // Retrieve job status data
 				// var data = JSON.stringify(customerData);
 				res.status(200).json(customerData);
 			} catch (error) {
@@ -1009,7 +1009,7 @@ app.start = function () {
 
 		// * this call is gettting the jobstatus data.
 		app.post('/jobStatusData', async (req, res) => {
-			
+
 			const JobStatus = app.models.JobStatus;
 			const { jobId } = req.body;
 			try {
@@ -1024,21 +1024,21 @@ app.start = function () {
 			}
 		});
 		app.post('/getSumOfJobStatus', async (req, res) => {
-			
+
 			const JobStatus = app.models.JobStatus;
 			const Job = app.models.Job;
 			const { jobId } = req.body;
 			var oSumOfData = {
-				"Coating":0,
-				"Printing":0,
-				"Punching":0,
-				"Foiling":0,
-				"Embossing":0,
-				"Pasting":0,
-				"spotUV":0,
-				"Packing":0,
-				"rawMaterial":"",
-				"InvNo":[],
+				"Coating": 0,
+				"Printing": 0,
+				"Punching": 0,
+				"Foiling": 0,
+				"Embossing": 0,
+				"Pasting": 0,
+				"spotUV": 0,
+				"Packing": 0,
+				"rawMaterial": "",
+				"InvNo": [],
 				"DeliveryNo": []
 			}
 			try {
@@ -1054,22 +1054,22 @@ app.start = function () {
 					oSumOfData.spotUV += jobStatusData[i].spotUV;
 					oSumOfData.Packing += jobStatusData[i].Packing;
 					oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
-					if(jobStatusData[i].InvNo){
+					if (jobStatusData[i].InvNo) {
 						oSumOfData.InvNo.push({
-							InvNo : jobStatusData[i].InvNo,
-							attachment : jobStatusData[i].incAttachment
+							InvNo: jobStatusData[i].InvNo,
+							attachment: jobStatusData[i].incAttachment
 						})
 					}
-					if(jobStatusData[i].DeliveryNo){
+					if (jobStatusData[i].DeliveryNo) {
 						oSumOfData.DeliveryNo.push({
-							DeliveryNo : jobStatusData[i].DeliveryNo,
-							attachment : jobStatusData[i].deliveryAttachment
+							DeliveryNo: jobStatusData[i].DeliveryNo,
+							attachment: jobStatusData[i].deliveryAttachment
 						})
 					}
 				}
-				
-				var array =[oSumOfData]
-			
+
+				var array = [oSumOfData]
+
 				res.status(200).json(array);
 			} catch (error) {
 				console.error(error);
@@ -1078,21 +1078,21 @@ app.start = function () {
 		});
 
 		app.post('/getRemJobStatus', async (req, res) => {
-			
+
 			const JobStatus = app.models.JobStatus;
 			const Job = app.models.Job;
 			const { jobId } = req.body;
 			var oSumOfData = {
-				"Coating":0,
-				"Printing":0,
-				"Punching":0,
-				"Foiling":0,
-				"Embossing":0,
-				"Pasting":0,
-				"spotUV":0,
-				"Packing":0,
-				"rawMaterial":"",
-				"InvNo":[],
+				"Coating": 0,
+				"Printing": 0,
+				"Punching": 0,
+				"Foiling": 0,
+				"Embossing": 0,
+				"Pasting": 0,
+				"spotUV": 0,
+				"Packing": 0,
+				"rawMaterial": "",
+				"InvNo": [],
 				"DeliveryNo": []
 			}
 			try {
@@ -1108,29 +1108,29 @@ app.start = function () {
 					oSumOfData.spotUV += jobStatusData[i].spotUV;
 					oSumOfData.Packing += jobStatusData[i].Packing;
 					oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
-					if(jobStatusData[i].InvNo){
+					if (jobStatusData[i].InvNo) {
 						oSumOfData.InvNo.push({
-							invNo : jobStatusData[i].InvNo,
-							attachment : jobStatusData[i].incAttachment
+							invNo: jobStatusData[i].InvNo,
+							attachment: jobStatusData[i].incAttachment
 						})
 					}
-					if(jobStatusData[i].DeliveryNo){
+					if (jobStatusData[i].DeliveryNo) {
 						oSumOfData.DeliveryNo.push({
-							DeliveryNo : jobStatusData[i].DeliveryNo,
-							attachment : jobStatusData[i].deliveryAttachment
+							DeliveryNo: jobStatusData[i].DeliveryNo,
+							attachment: jobStatusData[i].deliveryAttachment
 						})
 					}
-					
+
 				}
-				const totalJobDetails = await Job.findOne({where:{jobCardNo:jobId}})
-				
+				const totalJobDetails = await Job.findOne({ where: { jobCardNo: jobId } })
+
 				var remainingData = {
 					"RemainingCoating": totalJobDetails.__data.noOfSheets1 - oSumOfData.Printing,
-					
-				  };
-				
-				var array = array=[remainingData]
-			
+
+				};
+
+				var array = array = [remainingData]
+
 				res.status(200).json(array);
 			} catch (error) {
 				console.error(error);
@@ -1149,26 +1149,26 @@ app.start = function () {
 				const jobs = await Job.find({ include: 'appUser' })
 				const jobsWithData = jobs.map(job => {
 
-				  const fullName = `${job.appUser.FirstName} ${job.appUser.LastName}`;
-				  return {
-					...job.toJSON(),
-					appUserFullName: fullName
-				  };
-  
+					const fullName = `${job.appUser.FirstName} ${job.appUser.LastName}`;
+					return {
+						...job.toJSON(),
+						appUserFullName: fullName
+					};
+
 				});
 				return res.status(200).json(jobsWithData);
-			  } catch (error) {
+			} catch (error) {
 				console.error(error);
 				return res.status(500).json({ error: 'An error occurred' });
-  
-			  }
+
+			}
 		});
-		
+
 
 		// * this call is sending the emol to the existing user that admin create.
 		// todo need this to optimize 
 		app.post('/sendEmailExistUser', async (req, res) => {
-			
+
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -1181,31 +1181,31 @@ app.start = function () {
 
 			var EmailId = newCustomer.EmailId;
 			var id = newCustomer.TechnicalId;
-			if(!newCustomer.password){
+			if (!newCustomer.password) {
 				var password = generateRandomPassword();
-			}else{
-				var password =	newCustomer.password;
+			} else {
+				var password = newCustomer.password;
 			}
 			try {
 				let userTableUser = await this.User.findOne({ where: { email: EmailId, id: id } });
-				let AppUser = await this.AppUser.findOne({ where: {  EmailId, TechnicalId: id } });
+				let AppUser = await this.AppUser.findOne({ where: { EmailId, TechnicalId: id } });
 				// let TempPassW = userTableUser.TempPass;
 				if (userTableUser) {
 					// Update the password in both tables
-					userTableUser.updateAttributes({ password: password,TempPass:password }, (err, updatedUser) => {
+					userTableUser.updateAttributes({ password: password, TempPass: password }, (err, updatedUser) => {
 						if (err) {
 							console.error('Error updating password:', err);
 							return res.status(500).send('Internal server error');
 						}
 					});
 
-						// // Update the password in the AppUser table
-						// AppUser.updateAttributes({ TechnicalId: user.id }, { password: password,TempPass:password }, (err) => {
-						//   if (err) {
-						// 	console.error('Error updating password in AppUser table:', err);
-						// 	return res.status(500).send('Internal server error');
-						//   }
-						// });
+					// // Update the password in the AppUser table
+					// AppUser.updateAttributes({ TechnicalId: user.id }, { password: password,TempPass:password }, (err) => {
+					//   if (err) {
+					// 	console.error('Error updating password in AppUser table:', err);
+					// 	return res.status(500).send('Internal server error');
+					//   }
+					// });
 				};
 				// if (!TempPassW) {
 				// 	res.status(404).json("this user doesn't exist with the temporary password");
@@ -1214,9 +1214,9 @@ app.start = function () {
 				// const { email, TempPass } = userTableUser;
 				const token = "";
 				const replacements = {
-				// 	// verify : `${req.headers.referer}#/updatePassword/${token}`,
+					// 	// verify : `${req.headers.referer}#/updatePassword/${token}`,
 					email: "noreply@aeonproducts.com",
-				 	user: EmailId,
+					user: EmailId,
 					password: password,
 				};
 				const templateFileName = "NewUser.html"
@@ -1238,12 +1238,12 @@ app.start = function () {
 		// 	this.Param = app.models.Param;
 		// 	this.AppUser = app.models.AppUser;
 		// 	this.Job = app.models.Job;
-		  
+
 		// 	const newJob = {};
 		// 	for (const field in req.body) {
 		// 		newJob[field] = req.body[field];
 		// 	}
-		  
+
 		// 	try {
 		// 	  let jobId = newJob.jobCardNo;
 		// 	   var jobs = await this.Job.findOne({ where: { jobCardNo: jobId} });
@@ -1253,25 +1253,25 @@ app.start = function () {
 		// 		else{
 		// 			res.status(404).json("Job is already exists with this job card no.")
 		// 		}
-		  
+
 		// 	  // Fetch only firstname and lastname from the appusers table using the customer ID
 		// 	  const customerId = newJob.CustomerId; // Assuming the customer ID field is 'customerId'
 		// 	  const appUser = await this.AppUser.findOne({where: { id:customerId } });
-		  
+
 		// 	  if (!appUser) {
 		// 		res.status(404).json("Customer id Is not Valid");
 		// 	  }
 		// 		const { FirstName, LastName } = appUser;
-				
+
 		// 		job.userName = FirstName + " " + LastName;
-		  
+
 		// 	  res.status(200).json(job);
 		// 	} catch (error) {
 		// 	  console.error(error);
 		// 	  res.status(500).json({ error: 'An error occurred while processing the request' });
 		// 	}
 		//   });
-	
+
 		// app.post('/uploadJobData', async (req, res) => {
 		// 	
 		// 	this.User = app.models.User;
@@ -1318,86 +1318,91 @@ app.start = function () {
 		// 	}
 		// });
 
-		
+
 
 		app.post('/JobsCustomer', async (req, res) => {
-			
+
 			this.AppUser = app.models.AppUser;
 			this.Job = app.models.Job;
-			const {id} =  req.body;
+			const { id } = req.body;
 
 			let AppUser = await this.AppUser.findOne({ where: { id } });
-			const CompanyId = AppUser.CompanyId;
-			if(AppUser){
-				let Jobs = await this.Job.find({ where: { "CompanyId": CompanyId} });
-				return res.status(200).send(Jobs);
+			if (AppUser) {
+				const CompanyId = AppUser.CompanyId;
+				if (CompanyId) {
+					let Jobs = await this.Job.find({ where: { CompanyId } });
+					return res.status(200).send(Jobs);
+				} else {
+					return res.status(200).send([]);
+				}
+			} else {
+				return res.status(400).send('user not found');
 			}
+
 			// at above we find the appuser from the id.
 			// if user exiest then take smae process to find the jobs accoring to user 
 			// for this use the company id form {AppUser.compnayId}
 			// at here you get the id and the make the further process.
 
-			console.log(AppUser);
-			return res.status(400).send('user not found');
 		});
 
 
 
 		app.post('/usersRemove', (req, res) => {
 			const userEmail = "dheeraj@soyuztechnologies.com";
-		  
+
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
-		  
+
 			User.findOne({ email: userEmail })
-			  .then((user) => {
-				if (!user) {
-				  return res.status(404).send('User not found');
-				}
-		  
-				AppUser.findOne({ email: userEmail,Role:'Customer' })
-				  .then((appUser) => {
-					if (!appUser) {
-					  // Delete the user only if the appUser is not found
-					  user.remove()
-						.then(() => {
-						  return res.status(200).send('User deleted successfully');
-						})
-						.catch((error) => {
-						  console.error('Error deleting user:', error);
-						  return res.status(500).send('Internal server error');
-						});
-					} else {
-					  // Delete both the user and appUser
-					  user.remove()
-						.then(() => {
-						  appUser.remove()
-							.then(() => {
-							  return res.status(200).send('User and AppUser deleted successfully');
-							})
-							.catch((error) => {
-							  console.error('Error deleting appUser:', error);
-							  return res.status(500).send('Internal server error');
-							});
-						})
-						.catch((error) => {
-						  console.error('Error deleting user:', error);
-						  return res.status(500).send('Internal server error');
-						});
+				.then((user) => {
+					if (!user) {
+						return res.status(404).send('User not found');
 					}
-				  })
-				  .catch((error) => {
-					console.error('Error finding appUser:', error);
+
+					AppUser.findOne({ email: userEmail, Role: 'Customer' })
+						.then((appUser) => {
+							if (!appUser) {
+								// Delete the user only if the appUser is not found
+								user.remove()
+									.then(() => {
+										return res.status(200).send('User deleted successfully');
+									})
+									.catch((error) => {
+										console.error('Error deleting user:', error);
+										return res.status(500).send('Internal server error');
+									});
+							} else {
+								// Delete both the user and appUser
+								user.remove()
+									.then(() => {
+										appUser.remove()
+											.then(() => {
+												return res.status(200).send('User and AppUser deleted successfully');
+											})
+											.catch((error) => {
+												console.error('Error deleting appUser:', error);
+												return res.status(500).send('Internal server error');
+											});
+									})
+									.catch((error) => {
+										console.error('Error deleting user:', error);
+										return res.status(500).send('Internal server error');
+									});
+							}
+						})
+						.catch((error) => {
+							console.error('Error finding appUser:', error);
+							return res.status(500).send('Internal server error');
+						});
+				})
+				.catch((error) => {
+					console.error('Error finding user:', error);
 					return res.status(500).send('Internal server error');
-				  });
-			  })
-			  .catch((error) => {
-				console.error('Error finding user:', error);
-				return res.status(500).send('Internal server error');
-			  });
-		  });
-		  
-		  
+				});
+		});
+
+
 
 
 
@@ -1468,7 +1473,7 @@ app.start = function () {
 					]
 				}
 			}).then(function (data) {
-				
+
 				var tempRep = [];
 				for (var i = 0; i < data.length; i++) {
 					var record = data[i];
@@ -1672,7 +1677,7 @@ app.start = function () {
 		});
 
 		app.post('/getLeaveValidator', function (req, res) {
-			
+
 			var date = req.body.date;
 			var selectedDay = new Date(date).getDate();
 			var selectedMonth = new Date(date).getMonth();
@@ -1787,7 +1792,7 @@ app.start = function () {
 
 					}
 
-					
+
 					//	var holidayCal = [];
 					for (var l = 0; l < holidayLeaveCal.length; l++) {
 						var oDate = holidayLeaveCal[l].Date;
@@ -1880,7 +1885,7 @@ app.start = function () {
 			this.empId = req.body.EmpId;
 			var today = new Date();
 
-			
+
 
 
 			var oArrTime = [];
@@ -2539,7 +2544,7 @@ app.start = function () {
 
 						}
 
-						
+
 						res.send(idCardData);
 					} catch (e) {
 
@@ -2681,16 +2686,16 @@ app.start = function () {
 						}
 						// });
 
-						
+
 						// var loginPayload = {
 						// 	"email": this.loginEmail,
 						// 	"password": this.loginPassword
 						// };
 
 						// var Otp = app.models.Otp;
-						
+
 						await Otp.deleteById(oNumber);
-						
+
 
 						var User = app.models.User;
 						var d = await User.login(loginPayload);
@@ -2805,7 +2810,7 @@ app.start = function () {
 				}
 			], function (err, accountRecords, accountBalances, Records) {
 				// result now equals 'done'
-				
+
 				try {
 					var responseData = [];
 					for (var i = 0; i < accountRecords.length; i++) {
@@ -2901,7 +2906,7 @@ app.start = function () {
 			);
 		});
 		app.post('/sendPaymentVerificationEmail', async function (req, res) {
-			
+
 			var nodemailer = require('nodemailer');
 			var smtpTransport = require('nodemailer-smtp-transport');
 			var xoauth2 = require('xoauth2');
@@ -2988,7 +2993,7 @@ app.start = function () {
 
 		app.post('/sendOtpViaEmail',
 			async function (req, res) {
-				
+
 				var nodemailer = require('nodemailer');
 				var smtpTransport = require('nodemailer-smtp-transport');
 				const xoauth2 = require('xoauth2');
@@ -3076,7 +3081,7 @@ app.start = function () {
 				};
 
 				transporter.sendMail(emailContent, function (error, info) {
-					
+
 					if (error) {
 						console.log(error);
 						if (error.code === "EAUTH") {
@@ -3378,7 +3383,7 @@ app.start = function () {
 			var Students = app.models.Student;
 			var Courses = app.models.Course;
 			var async = require('async');
-			
+
 			async.waterfall([
 				function (callback) {
 					Students.find().then(function (students) {
@@ -3443,7 +3448,7 @@ app.start = function () {
 			], function (err, Records) {
 				// result now equals 'done'
 				try {
-					
+
 					var excel = require('exceljs');
 					var workbook = new excel.Workbook(); //creating workbook
 					var sheet = workbook.addWorksheet('MySheet'); //creating worksheet
@@ -3479,7 +3484,7 @@ app.start = function () {
 			var Students = app.models.Student;
 			var Courses = app.models.Course;
 			var async = require('async');
-			
+
 			async.waterfall([
 				function (callback) {
 					Students.find().then(function (students) {
@@ -3533,7 +3538,7 @@ app.start = function () {
 			], function (err, Records) {
 				// result now equals 'done'
 				try {
-					
+
 					var excel = require('exceljs');
 					var workbook = new excel.Workbook(); //creating workbook
 					var sheet = workbook.addWorksheet('MySheet'); //creating worksheet
@@ -4118,7 +4123,7 @@ app.start = function () {
 							auth: sampleClient.oAuth2Client,
 						});
 
-						
+
 						if (that2.isCalRequire === true &&
 							(courseStr.CalendarId != "null" && courseStr.CalendarId != "" &&
 								courseStr.EventId != "null" && courseStr.EventId != "")
@@ -4310,7 +4315,7 @@ app.start = function () {
 				}
 			})
 				.then(function (record) {
-					
+
 					var app = require('../server/server');
 					var AccountBalance = app.models.AccountBalance;
 					if (record) {
@@ -4335,7 +4340,7 @@ app.start = function () {
 							}
 						}, newRec)
 							.then(function (inq) {
-								
+
 								console.log("created successfully");
 							})
 							.catch(function (err) {
@@ -4436,7 +4441,7 @@ app.start = function () {
 											})
 												.then(function (stu) {
 													if (stu.length > 0) {
-														
+
 														console.log(stu[0].GmailId + " found");
 													}
 												});
@@ -4454,7 +4459,7 @@ app.start = function () {
 														var Student = app.models.Student;
 														var Server = app.models.Server;
 														var newRecord = {};
-														
+
 														newRecord.CreatedOn = getMyDate("20180101");
 														newRecord.CreatedBy = "5c187035dba2681834ffe301";
 														newRecord.ChangedOn = getMyDate("20180101");
@@ -4507,7 +4512,7 @@ app.start = function () {
 											})
 												.then(function (stu) {
 													if (stu) {
-														
+
 														var app = require('../server/server');
 														var Student = app.models.Student;
 														var id = stu.id;
@@ -4552,7 +4557,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													
+
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4586,7 +4591,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													
+
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4623,7 +4628,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													
+
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4650,7 +4655,7 @@ app.start = function () {
 												}
 											}, newRec)
 												.then(function (inq) {
-													
+
 													console.log("created successfully");
 												})
 												.catch(function (err) {
@@ -4686,7 +4691,7 @@ app.start = function () {
 													}
 												}, studentRec)
 													.then(function (inq) {
-														
+
 														console.log("Student also created successfully");
 													})
 													.catch(function (err) {
@@ -4777,7 +4782,7 @@ app.start = function () {
 														}
 													}, studentRec)
 														.then(function (inq) {
-															
+
 															console.log("Student also created successfully");
 														})
 														.catch(function (err) {
@@ -4891,7 +4896,7 @@ app.start = function () {
 																'studentid', studentsx);
 															newRec.StudentId = studentsx;
 															newRec.CourseId = batchid;
-															
+
 															Sub.findOrCreate({
 																"where": {
 																	"and": [{

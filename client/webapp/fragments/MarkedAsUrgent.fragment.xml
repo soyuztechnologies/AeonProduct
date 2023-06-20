@@ -1,0 +1,41 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+  
+    <Dialog contentWidth="100%" contentHeight="100%" title="Already Marked As Urgent" >
+        <content>
+			<Table items="{path: 'appView>/jobsData', filters: [{ path: 'Urgent', operator: 'EQ', value1: 'Yes'}]}">
+                <columns>
+                    <Column>
+                        <Label text="File Name" />
+                    </Column>
+                    <Column hAlign="Center" >
+                        <Label text="Urgent" />
+                    </Column>
+                    <Column hAlign="End" >
+                        <Label text="Remove as Urgent" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem >
+                        <cells>
+                            <Text text="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}">
+                            </Text>
+                            <Text text="{appView>Urgent}">
+                            </Text>
+                            <Button press="onClickRemoveAsUrgent" text="Remove As Urgent" tooltip="Remove the Job"></Button>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+        <endButton>
+            <Button text="Close" type="Emphasized" press="onCloseMarkAsUrgentDialog" />
+        </endButton>
+    </Dialog>
+                                
+   
+</core:FragmentDefinition>

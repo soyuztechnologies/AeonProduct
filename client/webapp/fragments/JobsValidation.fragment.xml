@@ -40,7 +40,7 @@
                                 class="sapUiTinyMarginEnd">
                                 <items>
                                     <core:Item enabled="true"  text="{appView>CompanyName}" 
-                                        key="{appView>CompanyId}"/>
+                                        key="{appView>id}"/>
                                 </items>
                             </ComboBox>
                             <core:Icon color="Negative" src="sap-icon://alert" ></core:Icon>
@@ -83,7 +83,7 @@
                                 class="sapUiTinyMarginEnd">
                                 <items>
                                     <core:Item enabled="true"  text="{appView>CompanyName}" 
-                                        key="{appView>CompanyId}"/>
+                                        key="{appView>id}"/>
                                 </items>
                             </ComboBox>
                             <core:Icon color="Critical" src="sap-icon://alert" ></core:Icon>

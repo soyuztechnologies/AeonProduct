@@ -57,6 +57,7 @@
 			<ToolbarSpacer/>
 				<Button enabled="{appView>/saveEnabled}" visible="{appView>/updBtnVisibility}"  icon="sap-icon://save" type="Emphasized" text="Save" press="onSaveJobStatus"></Button>
 				<Button visible="{appView>/asUrgentVis}" enabled="{appView>/asUrgentEnabled}" icon="sap-icon://accelerated" type="Emphasized" text="Make As Urgent" press="onClickMarkAsUrgent"></Button>
+				<Button visible="{appView>/RemoveasUrgentVis}" enabled="{appView>/RemoveasUrgentEnabled}" icon="sap-icon://accelerated" type="Emphasized" text="Remove As Urgent" press="onClickRemoveAsUrgent"></Button>
 				<!-- <Button visible="{appView>/visibleModify}" icon="sap-icon://customize" text="Modify"  type="Emphasized" press="onModify"></Button> -->
 				<Button visible="{appView>/cancleBtnVis}" icon="sap-icon://cancel" text="Cancel"  type="Emphasized" press="onClickCancel"></Button>
 			</Toolbar>
