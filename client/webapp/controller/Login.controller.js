@@ -312,6 +312,9 @@ sap.ui.define([
 					
 					MessageToast.show("Verfication Email Sent to Your Mail");
 					oModel.setProperty("/ResendStatusSignup",true);
+					oModel.setProperty("/submitEnable",false)
+
+                    oModel.setProperty("/EmailEditable",false)
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
 					
 					// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
