@@ -26,20 +26,40 @@ resizable="false" >
 					</items>
 				</Select>
 				<Label text="Printing" visible="{appView>/printingHeadVis}"/>
-				<Input liveChange="onLiveChange" type="Number" value="{appView>Printing}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}"/>
+				<Input liveChange="onLiveChange" valueStateText="{appView>/VSTTPrintingSheets}" valueState="{appView>/valueStateTotalPrintingSheets}" type="Number" value="{appView>Printing}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}"/>
+
+
+
 				<Label text="Coating" visible="{appView>/printingHeadVis}"/>
-				<Input type="Number" value="{appView>Coating}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}" />					
+				<Input liveChange="coatingLiveChange" type="Number" value="{appView>Coating}" valueStateText="{appView>/VSTCoating}" valueState="{appView>/valueStateCoating}" visible="{appView>/printingHeadVis}" editable="{appView>/printingHeadEdit}" />		
+					
+					
+
 				<Label text="Foiling" visible="{appView>/postPressHeadVis}"/>
-				<Input type="Number" value="{appView>Foiling}" visible="{appView>/postPressHeadVis}"/>
+				<Input liveChange="foilingLiveChange" type="Number" value="{appView>Foiling}" valueStateText="{appView>/VSTFoiling}" valueState="{appView>/valueStateFoiling}" visible="{appView>/postPressHeadVis}"/>
+
+
+
+
 				<Label text="Spot UV" visible="{appView>/postPressHeadVis}"/>
-				<Input type="Number" value="{appView>spotUV}" visible="{appView>/postPressHeadVis}"/>
+				<Input liveChange="spotUVLiveChange" type="Number" value="{appView>spotUV}" valueStateText="{appView>/VSTspotUV}" valueState="{appView>/valueStatespotUV}" visible="{appView>/postPressHeadVis}"/>
+
+
+
 				<Label text="Embossing" visible="{appView>/postPressHeadVis}"/>
-				<Input type="Number" value="{appView>Embossing}" visible="{appView>/postPressHeadVis}"/>
+				<Input  liveChange="embossingLiveChange" type="Number" value="{appView>Embossing}" valueStateText="{appView>/VSTEmbossing}" valueState="{appView>/valueStateEmbossing}" visible="{appView>/postPressHeadVis}"/>
+
 
 				<Label text="Punching" visible="{appView>/postPressHeadVis}"/>
-				<Input type="Number" value="{appView>Punching}" visible="{appView>/postPressHeadVis}"/>
+				<Input liveChange="punchingLiveChange" type="Number" value="{appView>Punching}" valueStateText="{appView>/VSTPunching}" valueState="{appView>/valueStatePunching}" visible="{appView>/postPressHeadVis}"/>
+
+
+
 				<Label text="Pasting" visible="{appView>/dispatchHeadVis}"/>
-				<Input type="Number" value="{appView>Pasting}" visible="{appView>/dispatchHeadVis}"/>
+				<Input liveChange="pastingLiveChange" type="Number" value="{appView>Pasting}" valueStateText="{appView>/VSTPasting}" valueState="{appView>/valueStatePasting}" visible="{appView>/dispatchHeadVis}"/>
+
+
+
 				<Label text="Packing" visible="{appView>/dispatchHeadVis}" />
 				<Input type="Number" value="{appView>/totalShippers}"  visible="{appView>/dispatchHeadVis}"  placeholder="No. Of Shippers"/>
 				<Input liveChange="onLiveChnagePiecePerBox" type="Number" valueState="{appView>/valueStatePiecePerBox}" valueStateText="{appView>/VSTPiecePerBox}" value="{appView>/piecePerBox}" visible="{appView>/dispatchHeadVis}" placeholder="Piece Per Box"/>
