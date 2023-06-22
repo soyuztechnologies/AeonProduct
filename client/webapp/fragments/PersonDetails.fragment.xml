@@ -21,7 +21,7 @@
             <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>LastName}" editable="{appView>/editableFields}"/>
 
             <Label text="{i18n>CurrentCompanyLogo}" visible="{appView>/currentLogo}"/>
-            <Image src="data:image/jpeg;base64,{appView>/userData/Companylogo}" width="50%" height="50%"/>
+            <Image src="data:image/jpeg;base64,{appView>/userData/Companylogo}" width="50%" height="50%" visible="{appView>/logoImgVis}"/>
 
                <Label  text="{i18n>NewCompanyLogo}"/>
                 

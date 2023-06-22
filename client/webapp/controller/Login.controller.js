@@ -261,7 +261,9 @@ sap.ui.define([
 				oDialog.close();
 				oModel.setProperty("/Email","");
 				oModel.setProperty("/showError",false);
+				oModel.setProperty("/EmailEditable",true);
 				// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
+				oModel.setProperty("/ResendStatusSignup",false);
 				oModel.setProperty("/submitEnable",true);
 			})
         },
@@ -283,6 +285,7 @@ sap.ui.define([
 				oModel.setProperty("/ResendStatusSignup",false);
 				oDialog.open();
 				oModel.setProperty("/Title","Forgot Password");
+				oModel.setProperty("/ResendStatusSignup", false);
 				isSignupButton = false;
 			})
         },

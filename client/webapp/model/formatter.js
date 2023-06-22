@@ -665,23 +665,54 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
       return "Warning";
     },
-    getImageUrlFromContent: function (base64Stream) {
-      if (base64Stream) {
-        var b64toBlob = function (dataURI) {
-          var byteString = atob(dataURI.split(',')[1]);
-          var ab = new ArrayBuffer(byteString.length);
-          var ia = new Uint8Array(ab);
-          for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-          }
-          return new Blob([ab], {
-            type: 'image/jpeg'
-          });
-        };
-        var x = b64toBlob(base64Stream);
-        return URL.createObjectURL(x);
-      }
-    },
+      getImageUrlFromContent: function (base64Stream) {
+        if (base64Stream) {
+          var b64toBlob = function (dataURI) {
+            var byteString = atob(dataURI.split(',')[1]);
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], {
+              type: 'image/jpeg'
+            });
+          };
+          var x = b64toBlob(base64Stream);
+          return URL.createObjectURL(x);
+        }
+      },
+      // getImageUrlFromContent: function(base64Stream) {
+      //   if (base64Stream) {
+      //     var b64toBlob = function(dataURI) {
+      //       try {
+      //         var byteString;
+      //         var dataURIParts = dataURI.split(',');
+      //         if (dataURIParts.length > 1) {
+      //           byteString = atob(dataURIParts[1]);
+      //         } else {
+      //           byteString = atob(dataURI);
+      //         }
+      //         var ab = new ArrayBuffer(byteString.length);
+      //         var ia = new Uint8Array(ab);
+      //         for (var i = 0; i < byteString.length; i++) {
+      //           ia[i] = byteString.charCodeAt(i);
+      //         }
+      //         return new Blob([ab], { type: 'image/jpeg' });
+      //       } catch (e) {
+      //         console.error("Failed to decode Base64 string:", e);
+      //         return null;
+      //       }
+      //     };
+      
+      //     var x = b64toBlob(base64Stream);
+      //     if (x) {
+      //       return URL.createObjectURL(x);
+      //     }
+      //   }
+      //   return null;
+      // },
+      
     checkEmailFormat: function (email) {
       if (email) {
         var mailregex = /^\w+[\w-+\.]*\@\w+([-\.]\w+)*\.[a-zA-Z]{2,}$/;

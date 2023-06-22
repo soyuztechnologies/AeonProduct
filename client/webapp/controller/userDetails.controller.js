@@ -71,10 +71,9 @@ sap.ui.define([
 
 		//  * this fucntion will opne the add user fragment and create the payload too and set into the property.
 		AddUserDialog: function () {
-			// debugger
+			debugger
 			var that = this;
 			var oModel = this.getView().getModel('appView');
-
 			this.oFormData = {
 				"EmailId": "",
 				"CompanyEmail": "",
@@ -100,17 +99,25 @@ sap.ui.define([
 
 			// the whole form data will be set to the  "AddUserData" property in appView model.
 			oModel.setProperty("/AddUserData", this.oFormData);
-
+            oModel.updateBindings();
 			// this will open the dilaog to add the user 
 			this.openUserDialog().then(function (userAddFrag) {
 				userAddFrag.open();
 				userAddFrag.bindElement('appView>/AddUserData');
-				oModel.setProperty('/TitleUserAdd', "AddUser");
+				oModel.setProperty('/TitleUserAdd', "Add User");
 				oModel.setProperty('/existingData', false);
 				oModel.setProperty('/userEditBtn', false);
 				oModel.setProperty('/userCancelBtn', true);
 				oModel.setProperty('/userupdateBtn', true);
-				oModel.setProperty('/currentLogo', false);
+				oModel.setProperty('/currentLogo', true);
+				oModel.setProperty('/RoleField', true);
+				oModel.setProperty('/UserlogoVis', false);
+				oModel.setProperty('/EmailVisible', true);
+				oModel.setProperty('/editableFields', true);
+				oModel.setProperty('/enabledCompanyLogo', true);
+				oModel.setProperty('/editCompName', true);
+				oModel.setProperty('/logoImgVis', false);
+				oModel.updateBindings();
 
 			});
 
@@ -123,6 +130,7 @@ sap.ui.define([
 			var bExistingData = oModel.getProperty('/existingData');
 			this.openUserDialog().then(function (userAddFrag) {
 				userAddFrag.close();
+				oModel.updateBindings();
 				// that.getView().getModel('appView').setProperty('/existingData',false);
 			});
 
@@ -250,6 +258,7 @@ sap.ui.define([
 
 		// * this function works to show the logo when user clicks on the show logo button
 		onLogo: function () {
+			debugger;
 			var oLogo = this.getModel("appView").getProperty("/streamUrlLogo");
 			var stream = this.formatter.getImageUrlFromContent(oLogo);
 			if (!this.lightBox) {
@@ -315,7 +324,7 @@ sap.ui.define([
 
 		// * At here we are getting  the companies all the app.  
 		getCompanyName: function () {
-
+            debugger;
 			var oModel = this.getView().getModel();
 			var that = this;
 			oModel.read('/Company', {
@@ -399,7 +408,7 @@ sap.ui.define([
 
 			dModel.update(sEntityPath, dataModel, {
 				success: function (data) {
-					sap.m.MessageToast.show("Customer updated successfully");
+				       MessageToast.show("Customer updated successfully");
 					// that.getModel('appView').setProperty('/SaCaVisible', false);
 					// that.getModel('appView').setProperty('/editVisible', true);
 					// that.getModel('appView').setProperty('/editableFields', false);
@@ -442,12 +451,13 @@ sap.ui.define([
 			omodel.setProperty('/enabledCompanyLogo', true);
 			omodel.setProperty('/LogoShowButton', true);
 			omodel.setProperty('/userEditBtn', false);
+			omodel.setProperty('/logoImgVis', true);
 
 		},
 
 		// * this fucntion will get the entity data and bind the data into the edit user fragment.
 		rowItemsPressUser: function (oEvent) {
-
+            debugger;
 			var oParameter = oEvent.getParameter('listItem');
 			var omodel = this.getView().getModel("appView");
 			var sData = oParameter.getBindingContext('appView').getObject();
@@ -456,6 +466,7 @@ sap.ui.define([
 			var that = this;
 
 			this.openUserDialog().then(function (userAddFrag) {
+				debugger;
 				userAddFrag.open();
 				userAddFrag.bindElement('appView>/userData');
 				omodel.setProperty('/existingData', true);
@@ -467,9 +478,13 @@ sap.ui.define([
 				omodel.setProperty('/RoleField', false);
 				omodel.setProperty('/enabledCompanyLogo', false);
 				omodel.setProperty('/LogoShowButton', false);
+				omodel.setProperty('/UserlogoVis', true);
 				omodel.setProperty('/userEditBtn', true);
+				omodel.setProperty('/editCompName', false);
+				// omodel.setProperty('/logoImgVis', true);
 			});
-
+			omodel.updateBindings();
+			
 		},
 
 		// * it make a post call to create the user via admin side.
@@ -607,12 +622,15 @@ sap.ui.define([
 		//when select comapny this function trigger
 		onSelectComPany: function (oEvent) {
 			debugger;
+			var oSelectedCompanyName = oEvent.getParameter("selectedItem").getText();
 			var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
 			var oModel = this.getView().getModel();
+			var that = this;
 			var id = oEvent.getSource().getBindingContext("appView").getObject().id;
 			const sEntityPath = `/AppUsers('${id}')`;
 			const payload = {
-				"CompanyId": oSelectedCompanyKey
+				"CompanyId": oSelectedCompanyKey,
+				"CompanyName": oSelectedCompanyName
 			};
 
 			oModel.update(sEntityPath, payload, {
