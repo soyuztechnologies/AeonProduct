@@ -640,6 +640,9 @@ sap.ui.define([
 
 		// * this fucntion will close the dialog of the "onPressAdd" or Add button dialog on status.
 		onClose: function () {
+			debugger;	
+			// var oSimpleForm2 = this.getView().byId('jobStatusDialog');
+			// 	oSimpleForm2.bindElement('appView>/oldJobs');
 			this.openJobstatusDialog().then(function (oDialog) {
 				oDialog.close();
 
@@ -729,6 +732,7 @@ sap.ui.define([
 
 		// * at here we are going to edit the row data for the entries.
 		editJobstatusEntry: function (oEvent) {
+			this.getRemJobsStatus();
 			debugger	
 			this.isEditStatus = true;
 			
@@ -744,6 +748,7 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
+			// oModel.setProperty("/oldJobs",JSON.parse(JSON.stringify(rowdata)))
 			var invNoEditGrag = rowdata.InvNo;
 			var delEditFrag = rowdata.DeliveryNo;
 			oModel.setProperty("/InvNo",invNoEditGrag);
@@ -1190,37 +1195,183 @@ sap.ui.define([
 					});
 			}
 		},
-		onLiveChange: function (event) {
-			var newValue = event.getParameter("value");
-			var value = this.getView().getModel("appView").getProperty("/totalPrintedSheetsTillNow");
-			var maxValue = value.Printing;
-			var maxLength = 4;
-			var isValid = this.isValueValid(newValue, maxValue);
-			var inputControl = event.getSource();
-			if (!isValid) {
-				inputControl.setValueState("Error");
-				//   if (parseInt(event.getParameter('value')) > maxValue) {
-				//  // event.getSource().setValue(event.getParameter('value').substring(0, maxLength))
-				//   }
-				inputControl.setValueStateText("Value cannot exceed more than:" + maxValue);
-
-				this.getView().getModel("appView").setProperty("/saveEnabled", false)
-
+		onLiveChange: function (oEvent) {
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			var allRemPrinting = this.getView().getModel("appView").getProperty("/allRemainingDatas").Printing
+			// this.getView().getModel("appView").setProperty("/Printing", intNewValue);
+			if (allRemPrinting >= intNewValue) {
+				this.getView().getModel("appView").setProperty("/valueStateTotalPrintingSheets", "None");
+				// this.getView().getModel("appView").setProperty("/totalPrintingSheets", "");
+				this.getView().getModel("appView").setProperty("/Printing", newValue);
 			} else {
-
-				inputControl.setValueState("None");
-
-				this.getView().getModel("appView").setProperty("/saveEnabled", true)
-
+				this.getView().getModel("appView").setProperty("/valueStateTotalPrintingSheets", "Error");
+				this.getView().getModel("appView").setProperty("/Printing", 0);
+				this.getView().getModel("appView").setProperty("/VSTTPrintingSheets", "Value Can't be More than " + allRemPrinting);
 			}
+		},
+		coatingLiveChange: function (oEvent) {
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			// this.getView().getModel("appView").updateBindings();
+			var totalRemCoating = this.getView().getModel("appView").getProperty("/allRemainingDatas").Coating
+			var livePrintingValue = this.getView().getModel("appView").getProperty('/Printing')
+			if(!livePrintingValue){
+				livePrintingValue = 0;
+			}
+			var totalRemJobValues = totalRemCoating +livePrintingValue;
+			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+			
 
+				if (totalRemJobValues >= intNewValue) {
+					this.getView().getModel("appView").setProperty("/valueStateCoating", "None");
+					this.getView().getModel("appView").setProperty("/Coating", newValue);
+
+				} else {
+					this.getView().getModel("appView").setProperty("/valueStateCoating", "Error");
+					this.getView().getModel("appView").setProperty("/Coating", 0);
+					this.getView().getModel("appView").setProperty("/VSTCoating", "Value Can't be More than " + totalRemJobValues);
+				}
+			
+			
+		},
+		foilingLiveChange: function (oEvent) {
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			var totalRemFoiling = this.getView().getModel("appView").getProperty("/allRemainingDatas").Foiling
+			var liveCoatingValue = this.getView().getModel("appView").getProperty('/Coating')
+			if(!liveCoatingValue){
+				liveCoatingValue = 0;
+			}
+			var totalRemJobValues = totalRemFoiling + liveCoatingValue;
+			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+				if (totalRemJobValues >= intNewValue ) {
+					this.getView().getModel("appView").setProperty("/valueStateFoiling", "None");
+					this.getView().getModel("appView").setProperty("/Foiling", newValue);
+				} else {
+					this.getView().getModel("appView").setProperty("/valueStateFoiling", "Error");
+					this.getView().getModel("appView").setProperty("/Foiling", 0);
+					this.getView().getModel("appView").setProperty("/VSTFoiling", "Value Can't be More than " + totalRemJobValues);
+				}
+			
+		},
+		spotUVLiveChange: function (oEvent) {
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			var totalRemSpotUV = this.getView().getModel("appView").getProperty("/allRemainingDatas").spotUV
+			var liveSpotUVValue = this.getView().getModel("appView").getProperty('/Foiling')
+			if(!liveSpotUVValue){
+				liveSpotUVValue = 0;
+			}
+			var totalRemJobValues = totalRemSpotUV + liveSpotUVValue;
+			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+
+				if (totalRemJobValues >= intNewValue ) {
+					this.getView().getModel("appView").setProperty("/valueStatespotUV", "None");
+					this.getView().getModel("appView").setProperty("/spotUV", newValue);
+				} else {
+					this.getView().getModel("appView").setProperty("/valueStatespotUV", "Error");
+					this.getView().getModel("appView").setProperty("/spotUV", 0);
+					this.getView().getModel("appView").setProperty("/VSTspotUV", "Value Can't be More than " + totalRemJobValues);
+				}
+			
+			
+		},
+		embossingLiveChange: function (oEvent) {
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			var totalRemEmbossing = this.getView().getModel("appView").getProperty("/allRemainingDatas").Embossing
+			var livespotUVValue = this.getView().getModel("appView").getProperty('/spotUV')
+			if(!livespotUVValue){
+				livespotUVValue = 0;
+			}
+			var totalRemJobValues = totalRemEmbossing + livespotUVValue;
+			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+		
+
+				if (totalRemJobValues >= intNewValue ) {
+					this.getView().getModel("appView").setProperty("/valueStateEmbossing", "None");
+					this.getView().getModel("appView").setProperty("/Embossing", newValue);
+				} else {
+					this.getView().getModel("appView").setProperty("/valueStateEmbossing", "Error");
+					this.getView().getModel("appView").setProperty("/Embossing", 0);
+					this.getView().getModel("appView").setProperty("/VSTEmbossing", "Value Can't be More than " + totalRemJobValues);
+				}
+			
+		},
+		punchingLiveChange: function (oEvent) {
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			var totalRemPunching = this.getView().getModel("appView").getProperty("/allRemainingDatas").Punching
+			var liveEmbossingValue = this.getView().getModel("appView").getProperty('/Embossing')
+			if(!liveEmbossingValue){
+				liveEmbossingValue = 0;
+			}
+			var totalRemJobValues = totalRemPunching + liveEmbossingValue;
+			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+
+				if (totalRemJobValues >= intNewValue ) {
+					this.getView().getModel("appView").setProperty("/valueStatePunching", "None");
+					this.getView().getModel("appView").setProperty("/Punching", newValue);
+				} else {
+					this.getView().getModel("appView").setProperty("/valueStatePunching", "Error");
+					this.getView().getModel("appView").setProperty("/Punching", 0);
+					this.getView().getModel("appView").setProperty("/VSTPunching", "Value Can't be More than " + totalRemJobValues);
+				}
+			
+			
+		},
+		pastingLiveChange: function (oEvent) {
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			var totalRemPasting = this.getView().getModel("appView").getProperty("/allRemainingDatas").Pasting
+			var livePunchingValue = this.getView().getModel("appView").getProperty('/Punching')
+			if(!livePunchingValue){
+				livePunchingValue = 0;
+			}
+			var totalRemJobValues = totalRemPasting + livePunchingValue;
+			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+			
+
+				if (totalRemJobValues >= intNewValue ) {
+					this.getView().getModel("appView").setProperty("/valueStatePasting", "None");
+					this.getView().getModel("appView").setProperty("/Pasting", newValue);
+				} else {
+					this.getView().getModel("appView").setProperty("/valueStatePasting", "Error");
+					this.getView().getModel("appView").setProperty("/Pasting", 0);
+					this.getView().getModel("appView").setProperty("/VSTPasting", "Value Can't be More than " + totalRemJobValues);
+				}
+			
+			
+			
 		},
 
+
+
+
+
+
+
+
+
+
+
+
 		onLiveChnagePiecePerBox: function (oEvent) {
-
-
-
-
 			var newPiecePerBox = parseInt(oEvent.getParameter("newValue"));
 
 			var tempPiecePerBox = newPiecePerBox;
@@ -1334,7 +1485,7 @@ sap.ui.define([
 
 		getRemJobsStatus: function () {
 
-
+			debugger;
 
 
             var oModel = this.getView().getModel("appView");
@@ -1415,17 +1566,46 @@ sap.ui.define([
             for (let i = 0; i < printingsheet.length; i++) {
 
                 var stringNum = printingsheet[i].Printing;
+                var coating = printingsheet[i].Coating;
+                var foiling = printingsheet[i].Foiling;
+                var spotUV = printingsheet[i].spotUV;
+                var embossing = printingsheet[i].Embossing;
+                var punching = printingsheet[i].Punching;
+                var pasting = printingsheet[i].Pasting;
+
+
+
 
                 var integerNumber = parseInt(stringNum);
+                var noOfCoating = parseInt(coating);
+                var noOfFoiling = parseInt(foiling);
+                var noOfSpotUV = parseInt(spotUV);
+                var noOfEmbossing = parseInt(embossing);
+                var noOfPunching = parseInt(punching);
+                var noOfPasting = parseInt(pasting);
+
+
+
 
                 oSumOfData.Printing += integerNumber;
+                oSumOfData.Coating += noOfCoating;
+                oSumOfData.Foiling += noOfFoiling;
+                oSumOfData.spotUV += noOfSpotUV;
+                oSumOfData.Embossing += noOfEmbossing;
+                oSumOfData.Punching += noOfPunching;
+                oSumOfData.Pasting += noOfPasting;
 
             }
 
             var remData = {
 
-                "Printing": totalprintingsheets - oSumOfData.Printing
-
+                "Printing": totalprintingsheets - oSumOfData.Printing,
+				"Coating": oSumOfData.Printing - oSumOfData.Coating,
+				"Foiling": oSumOfData.Coating - oSumOfData.Foiling,
+				"spotUV": oSumOfData.Foiling - oSumOfData.spotUV,
+				"Embossing": oSumOfData.spotUV - oSumOfData.Embossing,
+				"Punching": oSumOfData.Embossing - oSumOfData.Punching,
+				"Pasting": oSumOfData.Punching - oSumOfData.Pasting
             }
 
             var totalPrintedSheets = oSumOfData.Printing
@@ -1433,6 +1613,8 @@ sap.ui.define([
             // var totalPrintedPieces = (totalPrintedSheets*noOfUps).toString();
 
             oModel.setProperty("/allRemainingDatas", remData)
+            oModel.setProperty("/totalPrintCompleted", totalPrintedSheets)
+
 
             oModel.setProperty("/totalPrintedSheetsTillNow", totalPrintedSheets * noOfUps);
 
