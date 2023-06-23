@@ -36,10 +36,10 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
 
 			this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
-			oModel.updateBindings();
 			this.getUserData();
 			this.getUserRoleData();
 			this.getCompanyName();
+			oModel.updateBindings();
 		},
 
 		// * this function will get the role form the company details fragment.
@@ -116,6 +116,7 @@ sap.ui.define([
 				oModel.setProperty('/editableFields', true);
 				oModel.setProperty('/enabledCompanyLogo', true);
 				oModel.setProperty('/editCompName', true);
+				oModel.setProperty('/LogoShowButton', true);
 				oModel.setProperty('/logoImgVis', false);
 				oModel.updateBindings();
 
@@ -125,16 +126,15 @@ sap.ui.define([
 
 		// * this function is close the dialog on add user and edit user.
 		onReject: function () {
-
-			var oModel = this.getView().getModel('appView');
-			var bExistingData = oModel.getProperty('/existingData');
-			this.openUserDialog().then(function (userAddFrag) {
-				userAddFrag.close();
-				oModel.updateBindings();
-				// that.getView().getModel('appView').setProperty('/existingData',false);
-			});
-
-		},
+            var oModel = this.getView().getModel('appView');
+            var bExistingData = oModel.getProperty('/existingData');    
+            this.getView().getModel("appView").setProperty(this.bindingPath,this.seledtedUserData)
+            oModel.updateBindings();
+            this.openUserDialog().then(function (userAddFrag) {
+                userAddFrag.close();
+                // that.getView().getModel('appView').setProperty('/existingData',false);
+            });
+        },
 
 		// * this function is close the dialog which ask for the passwprd when user add.
 		onRejectPass: function () {
@@ -195,7 +195,9 @@ sap.ui.define([
 
 		// * this function is make the update call for block and unblock the customer.
 		onBlockCustomer: function (oEvent) {
+			debugger;
 			var state = oEvent.getParameter('state');
+			var that = this;
 			this.getView().getModel("appView").setProperty("/state", state)
 			state = state === true ? 'No' : 'Yes';
 			var opath = oEvent.getSource().getBindingContext("appView").getPath();
@@ -211,6 +213,7 @@ sap.ui.define([
 
 			oModel.update(sEntityPath, oData, {
 				success: function (data) {
+					that.getUserData();
 					MessageToast.show("Customer Blocked Status is Changed Successfully")
 				},
 				error: function (error) {
@@ -230,7 +233,9 @@ sap.ui.define([
 			var that = this;
 			var oModel = this.getView().getModel("appView");
 			var Data = oModel.getProperty("/userData");
-			oModel.setProperty("/logoUpdate", Data.Companylogo);
+			if(Data){
+				oModel.setProperty("/logoUpdate", Data.Companylogo);
+			}
 			if (!files.length) {
 			} else {
 				var reader = new FileReader();
@@ -242,7 +247,7 @@ sap.ui.define([
 
 						// that.getModel("appView").setProperty("/companyLogo", stream);
 						oModel.setProperty("/LogoAvonUserProfile", vContent);
-						oModel.setProperty("/streamUrlLogo", stream)
+						oModel.setProperty("/streamUrlLogo", vContent)
 						// var logo = oModel.getProperty("logoUpdate")	
 						// var logoProperty = oModel.getProperty("/LogoAvonUserProfile");
 						// var base64String = logoProperty.split(",")[1];
@@ -442,6 +447,8 @@ sap.ui.define([
 		},
 
 		onUserEdit: function () {
+			var userData = this.getView().getModel("appView").getProperty("/userData");
+            this.seledtedUserData = JSON.parse(JSON.stringify(userData));
 			var omodel = this.getView().getModel("appView");
 			omodel.setProperty('/userupdateBtn', true);
 			omodel.setProperty('/userCancelBtn', true);
@@ -459,6 +466,8 @@ sap.ui.define([
 		rowItemsPressUser: function (oEvent) {
             debugger;
 			var oParameter = oEvent.getParameter('listItem');
+			var oPath = oEvent.getParameter("listItem").getBindingContextPath();
+            this.bindingPath = oPath;
 			var omodel = this.getView().getModel("appView");
 			var sData = oParameter.getBindingContext('appView').getObject();
 			omodel.setProperty('/userData', sData)
@@ -481,7 +490,7 @@ sap.ui.define([
 				omodel.setProperty('/UserlogoVis', true);
 				omodel.setProperty('/userEditBtn', true);
 				omodel.setProperty('/editCompName', false);
-				// omodel.setProperty('/logoImgVis', true);
+				omodel.setProperty('/logoImgVis', true);
 			});
 			omodel.updateBindings();
 			

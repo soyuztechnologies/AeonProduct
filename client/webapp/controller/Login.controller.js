@@ -265,6 +265,7 @@ sap.ui.define([
 				// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
 				oModel.setProperty("/ResendStatusSignup",false);
 				oModel.setProperty("/submitEnable",true);
+				oModel.setProperty("/signUpValueState", 'None');
 			})
         },
 

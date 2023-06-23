@@ -36,7 +36,7 @@
             <Input value = "{appView>Website}"  editable="{appView>/editableFields}"/>
 
             <Label required="{=${appView>/selectedrole} ? ${appView>/selectedrole} === 'Admin' ? false : true : false}" text="Company Phone Number"/>
-            <Input required="{=${appView>/selectedrole} ? ${appView>/selectedrole} === 'Admin' ? false : true : false}" value = "{appView>phoneNumber}" editable="{appView>/editableFields}"/>
+            <Input required="{=${appView>/selectedrole} ? ${appView>/selectedrole} === 'Admin' ? false : true : false}" type="Number" value = "{appView>phoneNumber}" editable="{appView>/editableFields}"/>
 
             <!-- <Label text="Update Password"/>
             <Input value = "{appView>PassWord}" visible="{appView>/Passwordfield}" /> -->

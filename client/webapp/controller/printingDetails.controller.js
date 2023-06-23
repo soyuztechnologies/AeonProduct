@@ -282,7 +282,7 @@ sap.ui.define([
 
 			}
 
-			if (sUserRole === "Admin" || sUserRole === "Accounts Head") {
+			if (sUserRole === "Admin" || sUserRole === "Artwork Head") {
 
 				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
 
@@ -748,6 +748,7 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
+			oModel.setProperty("/newJob", JSON.parse(JSON.stringify(rowdata)));
 			// oModel.setProperty("/oldJobs",JSON.parse(JSON.stringify(rowdata)))
 			var invNoEditGrag = rowdata.InvNo;
 			var delEditFrag = rowdata.DeliveryNo;
@@ -1498,71 +1499,19 @@ sap.ui.define([
 
             var oSumOfData = {
 
-
-
-
                 "Coating": 0,
-
-
-
-
                 "Printing": 0,
-
-
-
-
                 "Punching": 0,
-
-
-
-
                 "Foiling": 0,
-
-
-
-
                 "Embossing": 0,
-
-
-
-
                 "Pasting": 0,
-
-
-
-
                 "spotUV": 0,
-
-
-
-
                 "Packing": 0,
-
-
-
-
                 "rawMaterial": "",
-
-
-
-
                 "InvNo": "",
-
-
-
-
                 "DeliveryNo": ""
-
-
-
-
             }
-
-
-
-
             var printingsheet = oModel.getProperty("/newJobStatus");
-
             for (let i = 0; i < printingsheet.length; i++) {
 
                 var stringNum = printingsheet[i].Printing;
@@ -1574,8 +1523,6 @@ sap.ui.define([
                 var pasting = printingsheet[i].Pasting;
 
 
-
-
                 var integerNumber = parseInt(stringNum);
                 var noOfCoating = parseInt(coating);
                 var noOfFoiling = parseInt(foiling);
@@ -1583,8 +1530,6 @@ sap.ui.define([
                 var noOfEmbossing = parseInt(embossing);
                 var noOfPunching = parseInt(punching);
                 var noOfPasting = parseInt(pasting);
-
-
 
 
                 oSumOfData.Printing += integerNumber;
@@ -1614,8 +1559,6 @@ sap.ui.define([
 
             oModel.setProperty("/allRemainingDatas", remData)
             oModel.setProperty("/totalPrintCompleted", totalPrintedSheets)
-
-
             oModel.setProperty("/totalPrintedSheetsTillNow", totalPrintedSheets * noOfUps);
 
         },

@@ -6,7 +6,7 @@
         <f:SimpleForm layout="ResponsiveGridLayout">
             <VBox >
                 <Label text="Mail Address: " visible="{appView>/emailVisible}" />
-                <Input id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
+                <Input id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" valueState="{appView>/signUpValueState}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
                 <MessageStrip text="{appView>/errorMessage}" type="Information" showIcon="true" visible="{appView>/showError}" />
             </VBox>
             <ObjectStatus  press="ResendEmailSend" title="{appView>/ResendMsg}" active="{appView>/onResendOTP}" id="countdownT" text="{appView>/timerText}" visible="{appView>/ResendStatusSignup}"/>

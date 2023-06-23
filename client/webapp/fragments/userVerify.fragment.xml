@@ -14,7 +14,7 @@
             <Label text=" New Password" />
             <Input placeholder="Password" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" valueState="{appView>/newPassValueState}" valueStateText="{appView>/VSTNewPass}" value="{appView>/setNewPass}"  liveChange="onLiveChnagePassValidationForForgotPassward"></Input>
             <Label text="Confirm Password" />
-            <Input placeholder="Confirm Password" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password"  valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" value="{appView>/setConPass}"  liveChange="onLiveChnagePassValidationForForgotPassward"></Input>
+            <Input placeholder="Confirm Password" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password"  valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" value="{appView>/setConPass}"  liveChange="onLiveChnagePassValidationForFrogotConfirmPassValidation"></Input>
             
         </f:content>
     </f:SimpleForm>
