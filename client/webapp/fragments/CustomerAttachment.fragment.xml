@@ -3,40 +3,68 @@
     xmlns:i="sap.ui.core"
     xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog contentWidth="100%" contentHeight="100%" title="Customer Attachment" id="CustomerAttachment">
-        <content>
-            <List items="{appView>/CustomerAttachment}">
+    <Dialog title="Customer Attachment" id="CustomerAttachment">
+        <!-- <content> -->
+            <Table visible="{appView>/custDelAttachVis}" items="{appView>/CustomerAttachment}">
+                <columns>
+                    <Column hAlign="Left">
+                        <Label text="DeliveryNo." />
+                    </Column>
+                    <!-- <Column hAlign="Center" >
+                        <Label text="Availablity" />
+                    </Column> -->
+                    <Column hAlign="End" >
+                        <Label text="Show" />
+                    </Column>
+                </columns>
                 <items>
-                    <CustomListItem >
-                        <Table  popinLayout= 'GridSmall'  autoPopinMode="true" >
-                            <!-- <VBox > -->
-                            <!-- visibleRowCount="4" selectionMode="Single" -->
-                            <columns>
-                                <Column width="15%">
-                                    <!-- <Label text="Invoice Number" /> -->
-                                </Column>
-                                <Column>
-                                    <!-- <Label text="Attachment" /> -->
-                                </Column>
-                            </columns>
-                            <items>
-                                <ColumnListItem >
-                                    <cells>
-                                        <Text text="Invoice No. {appView>InvNo}"></Text>
-                                        <!-- <Button  press="PressEdt"  type="Emphasized" icon="sap-icon://show"/> -->
-                                        <VBox width="100%">
-                                            <ObjectStatus text="Attachment not available" visible="{=${appView>/attachment} ? false : true}" state="Warning"/>
-                                            <PDFViewer visible="{=${appView>/attachment} ? true : false}" source="{path: 'appView>attachment', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />
-                                        </VBox>
-                                        
-                                    </cells>
-                                </ColumnListItem>
-                            </items>
-                        </Table>
-                    </CustomListItem>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{appView>DeliveryNo}">
+                            </Text>
+                            <!-- <ObjectStatus text="Attachment not available" visible="{=${appView>/attachment} ? false : true}" state="Warning"/> -->
+                            <!-- <PDFViewer visible="{=${appView>/attachment} ? true : false}" source="{path: 'appView>attachment', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" /> -->
+                                <Button press="getCustomerAttachments" icon="sap-icon://attachment" text="Show"></Button>
+                        </cells>
+                    </ColumnListItem>
                 </items>
-            </List>
-        </content>
+            </Table>
+
+
+            <Table visible="{appView>/custInvAttachVis}" items="{appView>/CustomerAttachment}">
+                <columns>
+                    <Column>
+                        <Label text="InvNo." />
+                    </Column>
+                    <!-- <Column hAlign="Center" >
+                        <Label text="Availablity" />
+                    </Column> -->
+                    <Column hAlign="End" >
+                        <Label text="Show" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{appView>InvNo}">
+                            </Text>
+                            <!-- <ObjectStatus text="Attachment not available" visible="{=${appView>/attachment} ? false : true}" state="Warning"/> -->
+                            <!-- <PDFViewer visible="{=${appView>/attachment} ? true : false}" source="{path: 'appView>attachment', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" /> -->
+                                <Button press="getCustomerAttachments" icon="sap-icon://attachment" text="Show"></Button>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+
+
+
+
+            
+
+
+            
+        <!-- </content> -->
         <!-- <beginButton>
             <Button  text="update" type="Accept" press="press" />
         </beginButton> -->

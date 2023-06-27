@@ -977,7 +977,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     },
 
     formatInvNo: function (InvNo) {
-
+debugger;
       var oModel = this.getView().getModel("appView");
 
       var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
@@ -988,7 +988,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
           var invNoValues = InvNo.map(function (obj) {
 
-            return obj.invNo;
+            return obj.InvNo;
 
           });
 

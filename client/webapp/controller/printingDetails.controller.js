@@ -291,6 +291,9 @@ sap.ui.define([
 			}else if(sUserRole === "Artwork Head"){
 				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
 			} 
+			else if(sUserRole === "Accounts Head"){
+				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
+			}
 			else {
 
 				this.getView().getModel("appView").setProperty("/browseVisArtwork", false);
@@ -304,11 +307,13 @@ sap.ui.define([
 		},
 
 		openCustomerAttachmentDialog: function (oEvent) {
-			
+			debugger;
 			var data = oEvent.getSource().getBindingContext("appView").getObject();
 			var clickedrow = oEvent.getSource().getBinding("text").getPath();
 			var invoice = data.InvNo;
-			var Delivery = data.InvNo;
+			var Delivery = data.DeliveryNo;
+			// var poNo = data.poAttachment;
+			// var artwork = data.artworkAttachment;
 
 			var oView = this.getView();
 			var that = this;
@@ -324,13 +329,63 @@ sap.ui.define([
 			}
 
 			this.CustomerAttachment.then(function (oDialog) {
-				oDialog.open();
+				if(clickedrow === "DeliveryNo"){
+					that.getView().getModel("appView").setProperty("/custInvAttachVis", false)
+					that.getView().getModel("appView").setProperty("/custDelAttachVis", true)
+				}
+				else{
+					that.getView().getModel("appView").setProperty("/custInvAttachVis", true)
+					that.getView().getModel("appView").setProperty("/custDelAttachVis", false)
+
+				}
 				if (clickedrow == "DeliveryNo") {
-					that.getModel("appView").setProperty("/CustomerAttachment", invoice);
+					var oModel = that.getView().getModel("appView");
+					oModel.setProperty("/uploadDocumnetTitle", " Delivery Attachment");
+					that.getModel("appView").setProperty("/CustomerAttachment", Delivery);
+					oDialog.open();
 				}
 				else if (clickedrow == "InvNo") {
-					that.getModel("appView").setProperty("/CustomerAttachment", Delivery);
+					var oModel = that.getView().getModel("appView");
+					oModel.setProperty("/uploadDocumnetTitle", " Invoice Attachment");
+					that.getModel("appView").setProperty("/CustomerAttachment", invoice);
+					oDialog.open();
 				}
+				
+				
+				if(clickedrow === "clientPONo"){
+					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
+					// oDialog.open();
+					that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.poAttachment)
+					var oModel = that.getView().getModel("appView");
+					oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
+					that.oDialogOpen().then(function (oDialog) {
+					oDialog.open();
+					var sUserRole = oModel.getProperty('/UserRole');
+					if (sUserRole === 'Customer') {
+						
+						oModel.setProperty('/browseVis', false);
+					}
+				});
+				}
+				if(clickedrow === "artworkCode"){
+					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
+					// oDialog.open();
+					that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.artworkAttachment)
+					var oModel = that.getView().getModel("appView");
+					oModel.setProperty("/uploadDocumnetTitle", " Artwork Attachment");
+					that.oDialogOpen().then(function (oDialog) {
+					oDialog.open();
+					var sUserRole = oModel.getProperty('/UserRole');
+					if (sUserRole === 'Customer') {
+						
+						oModel.setProperty('/browseVis', false);
+					}
+				});
+				}
+				// else if (clickedrow == "artworkCode") {
+				// 	that.getModel("appView").setProperty("/CustomerAttachment", artwork);
+				// }
+				
 				// var oSimpleForm = that.getView().byId('allJobDetails')
 				// oSimpleForm.bindElement('appView>/Jobs');
 				// 
@@ -338,6 +393,7 @@ sap.ui.define([
 		},
 
 		onRejectCustomerDialog: function () {
+			debugger
 			var that = this;
 			this.CustomerAttachment.then(function (oDialog) {
 				// that.getView().getModel("appView").setProperty("/attachmentFiles", "")
@@ -351,6 +407,7 @@ sap.ui.define([
 		clickedLink: null,
 		jobStatusPath: null,
 		onClickPopup: function (oEvent) {
+			debugger; 
 			var that = this;
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 			this.clickedLink = oEvent.getSource().getBinding("text").getPath();
@@ -366,6 +423,9 @@ sap.ui.define([
 				this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
 				oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 				var pofile = oData.poAttachment;
+				if(sUserRole === 'Accounts Head'){
+					oModel.setProperty("/browseVisArtwork", false);
+				}
 				if (pofile) {
 					oModel.setProperty("/buttonText", "Update");
 				}
@@ -385,7 +445,8 @@ sap.ui.define([
 					oModel.setProperty("/buttonText", "Upload");
 				}
 			}
-			else if (this.clickedLink == "DeliveryNo") {
+			
+			if (this.clickedLink == "DeliveryNo") {
 				this.getModel("appView").setProperty("/attachmentFiles", oData.deliveryAttachment)
 				var Delfile = oData.deliveryAttachment;
 				oModel.setProperty("/uploadDocumnetTitle", "Upload Delivery Document");
@@ -399,7 +460,7 @@ sap.ui.define([
 					oModel.setProperty("/buttonText", "Upload");
 				}
 			}
-			else if (this.clickedLink == "InvNo") {
+			if (this.clickedLink == "InvNo") {
 				this.getModel("appView").setProperty("/attachmentFiles", oData.incAttachment)
 				var incFile = oData.incAttachment;
 				oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
@@ -419,10 +480,53 @@ sap.ui.define([
 				oDialog.open();
 				var sUserRole = oModel.getProperty('/UserRole');
 				if (sUserRole === 'Customer') {
+					
 					oModel.setProperty('/browseVis', false);
 				}
 
 			});
+		},
+
+		getCustomerAttachments:function(oEvent){
+			var that = this;
+			var oData = oEvent.getSource().getBindingContext("appView").getObject();
+			var jobs = this.getView().getModel("appView").getProperty("/Jobs");
+			// this.jobStatusPath = oEvent.getSource().getBindingContext("appView").sPath;
+			var oModel = this.getView().getModel("appView");
+			var sUserRole = oModel.getProperty('/UserRole');
+			
+				this.getModel("appView").setProperty("/attachmentFiles", oData.attachment)
+				// oModel.setProperty("/uploadDocumnetTitle", "Upload Delivery Document");
+				oModel.setProperty("/btnVisibility", false);
+				oModel.setProperty("/browseVisArtwork", false);
+
+			
+			// if (this.clickedLink == "InvNo") {
+			// 	this.getModel("appView").setProperty("/attachmentFiles", oData.incAttachment)
+			// 	var incFile = oData.incAttachment;
+			// 	oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
+			// 	oModel.setProperty("/btnVisibility", false);
+			// 	oModel.setProperty("/browseVisArtwork", false);
+			// 	if (incFile) {
+			// 		oModel.setProperty("/buttonText", "Update");
+			// 	}
+			// 	else {
+			// 		oModel.setProperty("/buttonText", "Upload");
+			// 	}
+			// }
+
+
+			var oModel = this.getView().getModel("appView");
+			this.oDialogOpen().then(function (oDialog) {
+				oDialog.open();
+				var sUserRole = oModel.getProperty('/UserRole');
+				if (sUserRole === 'Customer') {
+					
+					oModel.setProperty('/browseVis', false);
+				}
+
+			});
+			
 		},
 
 		// * this fucntion opens the dialog onto the addJobFragmentDialog.
@@ -630,6 +734,7 @@ sap.ui.define([
 					oModel.setProperty("/accountHeadVis", true);
 					oModel.setProperty("/jobStatusVis", false);
 					oModel.setProperty("/dateFalseforallhead", false);
+					oModel.setProperty("/browseVisArtwork", true);
 				}
 				// that.loadForm2();
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
@@ -1117,7 +1222,7 @@ sap.ui.define([
 			};
 			oModel.update(sEntityPath, oUpdatedData, {
 				success: function (data) {
-					MessageToast.show("Job Production Started")
+					// MessageToast.show("Job Production Started")
 					that.getJobsDataByCompanyFilter();
 				},
 

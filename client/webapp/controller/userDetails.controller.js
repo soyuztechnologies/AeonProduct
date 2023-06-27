@@ -126,9 +126,14 @@ sap.ui.define([
 
 		// * this function is close the dialog on add user and edit user.
 		onReject: function () {
+			this.editVis = this.getView().getModel("appView").getProperty("/userEditBtn");
+			if(this.editVis === false){
+
+				this.getView().getModel("appView").setProperty(this.bindingPath,this.seledtedUserData)
+			}
             var oModel = this.getView().getModel('appView');
             var bExistingData = oModel.getProperty('/existingData');    
-            this.getView().getModel("appView").setProperty(this.bindingPath,this.seledtedUserData)
+			
             oModel.updateBindings();
             this.openUserDialog().then(function (userAddFrag) {
                 userAddFrag.close();
@@ -476,7 +481,6 @@ sap.ui.define([
 
 			this.openUserDialog().then(function (userAddFrag) {
 				debugger;
-				userAddFrag.open();
 				userAddFrag.bindElement('appView>/userData');
 				omodel.setProperty('/existingData', true);
 				omodel.setProperty('/TitleUserAdd', "Edit User");
@@ -491,6 +495,7 @@ sap.ui.define([
 				omodel.setProperty('/userEditBtn', true);
 				omodel.setProperty('/editCompName', false);
 				omodel.setProperty('/logoImgVis', true);
+				userAddFrag.open();
 			});
 			omodel.updateBindings();
 			
