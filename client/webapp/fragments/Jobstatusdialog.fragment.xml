@@ -19,10 +19,10 @@ resizable="false" >
 				<DatePicker dateValue="{appView>/dateNow}" visible="{appView>/dateFalseforallhead}"/>
 
 				<Label required="true" text="Raw Material" visible="{appView>/rawMaterialHeadVis}"/>
-				<Select forceSelection="false" selectedKey=""  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" visible="{appView>/rawMaterialHeadVis}" >
+				<Select forceSelection="false" selectedKey="Pending"  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" visible="{appView>/rawMaterialHeadVis}" >
 					<items>
-						<core:Item text="In Stock" key="instock" />
-						<core:Item text="Pending" key="pending" />
+						<core:Item text="In Stock" key="In Stock" />
+						<core:Item text="Pending" key="Pending" />
 					</items>
 				</Select>
 				<Label text="Printing" visible="{appView>/printingHeadVis}"/>

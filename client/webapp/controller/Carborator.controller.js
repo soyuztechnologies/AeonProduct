@@ -186,6 +186,7 @@ sap.ui.define([
               oJobsData[oIndex].operation = 'RU';// CompanyId===null
               that.Flag = true;
               oUploadJobs[jobIndex].CompanyId = element.CompanyId;
+              oUploadJobs[jobIndex].status = element.status;
               oUploadJobs.splice(jobIndex, 1);
               that.validateJobs();
             }
@@ -196,6 +197,7 @@ sap.ui.define([
               oUploadJobs[jobIndex].operation = 'RU';
               that.Flag = true;
               oUploadJobs[jobIndex].CompanyId = element.CompanyId;
+              oUploadJobs[jobIndex].status = element.status ;
               oJobsData.push(oUploadJobs[jobIndex]);//CompanyId!==null
               oUploadJobs.splice(jobIndex, 1);
               that.validateJobs();
@@ -282,11 +284,13 @@ sap.ui.define([
         var oSelectedItem = oEvent.getSource().getSelectedKey();
         if (oSelectedItem === "") {
           var companyName = oEvent.getSource().getValue();
-          if (companyName != "") {
-            var payLoad = {
-              "CompanyName": companyName,
-            }
-            MessageBox.information("This Company does not exist, do you want to create it ? {" + companyName + "}", {
+                   // var lowerCaseValue = value.toLowerCase();
+                   let lowercaseString =companyName.charAt(0).toUpperCase() + companyName.slice(1).toLowerCase();;         
+                   if (lowercaseString != "") {         
+                     var payLoad = {         
+                       "CompanyName": lowercaseString,         
+                     }
+            MessageBox.information("This Company does not exist, do you want to create it ? {" + lowercaseString   + "}", {
               actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
               onClose: function (sAction) {
                 if (sAction === "OK") {

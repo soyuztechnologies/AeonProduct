@@ -126,14 +126,15 @@ sap.ui.define([
 
 		// * this function is close the dialog on add user and edit user.
 		onReject: function () {
-			this.editVis = this.getView().getModel("appView").getProperty("/userEditBtn");
-			if(this.editVis === false){
-
-				this.getView().getModel("appView").setProperty(this.bindingPath,this.seledtedUserData)
-			}
+            this.editVis = this.getView().getModel("appView").getProperty("/userEditBtn");
+            this.addUserTitle = this.getView().getModel("appView").getProperty("/TitleUserAdd");
+            if(this.addUserTitle ==="Add User" ){
+           }
+            else if(this.editVis === false ){
+                this.getView().getModel("appView").setProperty(this.bindingPath,this.seledtedUserData)
+            }
             var oModel = this.getView().getModel('appView');
-            var bExistingData = oModel.getProperty('/existingData');    
-			
+            var bExistingData = oModel.getProperty('/existingData');  
             oModel.updateBindings();
             this.openUserDialog().then(function (userAddFrag) {
                 userAddFrag.close();

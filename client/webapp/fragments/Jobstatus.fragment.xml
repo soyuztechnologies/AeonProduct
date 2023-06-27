@@ -71,7 +71,7 @@
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
                                 <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
                                 <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
-                                <Button  press="editJobstatusEntry" type="Emphasized" icon="sap-icon://edit"/>
+                                <Button  press="editJobstatusEntry" visible="{appView>/editColumnVisible}" type="Emphasized" icon="sap-icon://edit"/>
                             </cells>
                         </ColumnListItem>
                     </items>

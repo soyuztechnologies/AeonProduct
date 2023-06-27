@@ -70,10 +70,14 @@ sap.ui.define([
             }else if(sUserRole === "Artwork Head"){
 
                 oModel.setProperty("/addBtnVisible", false);
+				oModel.setProperty("/editColumnVisible", false);
+				oModel.setProperty("/updBtnVisibility", false);
 				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
 				this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 
-            }
+            }else{
+				oModel.setProperty("/editColumnVisible", true);
+			}
 			// oModel.setProperty("/visiblePdfViewer", false);
 			oModel.updateBindings();
 			// this.getUserRoleData();
@@ -288,12 +292,13 @@ sap.ui.define([
 
 				this.getView().getModel("appView").setProperty("/btnVisibility", true);
 
-			}else if(sUserRole === "Artwork Head"){
-				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
-			} 
-			else if(sUserRole === "Accounts Head"){
-				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
 			}
+			// else if(sUserRole === "Artwork Head"){
+			// 	this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
+			// } 
+			// else if(sUserRole === "Accounts Head"){
+			// 	this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
+			// }
 			else {
 
 				this.getView().getModel("appView").setProperty("/browseVisArtwork", false);
@@ -423,9 +428,9 @@ sap.ui.define([
 				this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
 				oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 				var pofile = oData.poAttachment;
-				if(sUserRole === 'Accounts Head'){
-					oModel.setProperty("/browseVisArtwork", false);
-				}
+				// if(sUserRole === 'Accounts Head'){
+				// 	oModel.setProperty("/browseVisArtwork", false);
+				// }
 				if (pofile) {
 					oModel.setProperty("/buttonText", "Update");
 				}
@@ -604,12 +609,10 @@ sap.ui.define([
 		},
 
 		onSelectKeyRawMaterial: function (oEvent) {
-
 			var selectedText = oEvent.getParameter("selectedItem").getText();
 			this.getView().getModel("appView").setProperty("/selectedKey", selectedText);
 		},
 		onSelectKeyStatus: function (oEvent) {
-
 			var selectStatus = oEvent.getParameter("selectedItem").getText();
 			this.getView().getModel("appView").setProperty("/selectStatus", selectStatus);
 		},
@@ -872,7 +875,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", true);
 					oModel.setProperty("/accountHeadVis", true);
 					oModel.setProperty("/jobStatusVis", true);
-					oModel.setProperty("/falseforallhead", true);
+					oModel.setProperty("/dateFalseforallhead", true);
 					// oModel.setProperty("/addBtnVisible", true);
 				}
 				//Editability for Ram Material Head
@@ -883,7 +886,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 					// oModel.setProperty("/addBtnVisible", false);
 				}
 				//Editability for Printing Head
@@ -894,7 +897,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				//Editability for Post Press Head
 				if (sUserRole === 'Post Press Head') {
@@ -904,7 +907,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				//Editability for Dispatch Head
 				if (sUserRole === 'Dispatch Head') {
@@ -914,7 +917,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", true);
 					oModel.setProperty("/accountHeadVis", false);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				//Editability for Accounts Head
 				if (sUserRole === 'Accounts Head') {
@@ -924,7 +927,7 @@ sap.ui.define([
 					oModel.setProperty("/dispatchHeadVis", false);
 					oModel.setProperty("/accountHeadVis", true);
 					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/falseforallhead", false);
+					oModel.setProperty("/dateFalseforallhead", false);
 				}
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
