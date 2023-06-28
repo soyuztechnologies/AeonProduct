@@ -185,6 +185,7 @@ sap.ui.define([
 						success: function (data) {
 							MessageToast.show("Successfully Uploaded");
 							// that.onUploadStatus();
+							that.onReadJobStatus()
 							oModel.updateBindings();
 						},
 						error: function (error) {
@@ -418,11 +419,17 @@ sap.ui.define([
 			this.clickedLink = oEvent.getSource().getBinding("text").getPath();
 			this.jobStatusPath = oEvent.getSource().getBindingContext("appView").sPath;
 			var oModel = this.getView().getModel("appView");
+			oModel.setProperty("/buttonText", "Update");
+
 			var sUserRole = oModel.getProperty('/UserRole');
+			this.openCustomerAttachmentDialog(oEvent);
 			if (sUserRole === 'Customer') {
-				this.openCustomerAttachmentDialog(oEvent);
-				return;
-			};
+				oModel.setProperty("/customerTitle", "Customer Attachment");
+
+			}else{
+				oModel.setProperty("/customerTitle", "Attachment");
+			}
+			return;
 
 			if (this.clickedLink == "clientPONo") {
 				this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
@@ -588,11 +595,13 @@ sap.ui.define([
 		// * this function will close the add Attachment dialog.
 		onReject: function () {
 			var oModel = this.getView().getModel("appView");
+			var that= this;
 			this.oUploadDialog.then(function (oDialog) {
 				oDialog.close();
 				oModel.setProperty("/clientPONo", "")
 				oModel.setProperty("/ArtWork", "")
 				oModel.setProperty('/visibleDownloadButton', false);
+				that.clickedLink=null;
 				oDialog.updateBindings();
 
 			});
@@ -939,6 +948,7 @@ sap.ui.define([
 		// * these funciton is handling the upload attachment files in backend.
 
 		onUploadDataPress: function () {
+			debugger
 			var idbtn = this.jobAttachmentId;
 			var oModel = this.getView().getModel("appView");
 			if (this.clickedLink == "clientPONo") {
@@ -967,6 +977,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel("appView");
 			var element = oModel.getProperty(this.jobStatusPath)
 			var id = element.id;
+			var that = this;
 			var oData = this.getView().getModel();
 			var file = this.getView().getModel('appView').getProperty("/attachmentFiles");
 			var payload = file ? file.attachmentPdfFiles : "";
@@ -1091,7 +1102,7 @@ sap.ui.define([
 			} else {
 				endPoint = "jobStatusData"
 			}
-			this.middleWare.callMiddleWare(endPoint, "POST", payload)
+			this.middleWare.callMiddleWare("getSumOfJobStatus", "POST", payload)
 				.then(function (data) {
 					if (!data) {
 						return

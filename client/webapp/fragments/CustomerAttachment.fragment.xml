@@ -3,7 +3,7 @@
     xmlns:i="sap.ui.core"
     xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog title="Customer Attachment" id="CustomerAttachment">
+    <Dialog title="{appView>/customerTitle}" id="CustomerAttachment">
         <!-- <content> -->
             <Table visible="{appView>/custDelAttachVis}" items="{appView>/CustomerAttachment}">
                 <columns>

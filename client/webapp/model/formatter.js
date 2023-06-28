@@ -925,16 +925,16 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     //   return formattedValue + " pcs";
     // },
     tableEntryVisible: function (Data) {
+      debugger;
+      if(!Data || Data.length === 0){
 
-      if(Data){
-
-        return true;
+        return false;
 
       }
 
       else{
 
-        return false;
+        return true;
 
       }
 
@@ -982,7 +982,6 @@ debugger;
 
       var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
 
-      if (userName === "Customer") {
 
         if (Array.isArray(InvNo) && InvNo.length > 0) {
 
@@ -998,7 +997,7 @@ debugger;
 
         }
 
-      }
+      
 
 
 
@@ -1016,7 +1015,7 @@ debugger;
 
       var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
 
-      if (userName === "Customer") {
+      
 
         if (Array.isArray(DeliveryNo) && DeliveryNo.length > 0) {
 
@@ -1030,7 +1029,7 @@ debugger;
 
           return invNoValues.join(", ");
 
-        }
+        
 
       }
 

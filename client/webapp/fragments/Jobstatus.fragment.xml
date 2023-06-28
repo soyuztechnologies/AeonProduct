@@ -48,7 +48,7 @@
                         <Column visible="{path: 'appView>DeliveryNo', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Delivery No." />
                         </Column>
-                        <Column visible="{appView>/editColumnVisible}">
+                        <Column visible="false">
                             <Label text="Edit Entry" />
                         </Column>
                     </columns>
@@ -71,7 +71,8 @@
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
                                 <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
                                 <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
-                                <Button  press="editJobstatusEntry" visible="{appView>/editColumnVisible}" type="Emphasized" icon="sap-icon://edit"/>
+                                <Button  press="editJobstatusEntry" visible="false" type="Emphasized" icon="sap-icon://edit"/>
+                                <!-- visible="{appView>/editColumnVisible}" -->
                             </cells>
                         </ColumnListItem>
                     </items>
