@@ -173,42 +173,133 @@ sap.ui.define([
 			var that = this;
 			var data = oModel.getProperty("/newJobStatus");
 			var oData = this.getView().getModel();
-
-			for (var i = 0; i < data.length; i++) {
-				var jobStatus = data[i];
-				var id = jobStatus.id;
-				const sEntityPath = `/JobStatus('${id}')`;
-
-				if (jobStatus.TobeUpdated == "X") {
-					delete jobStatus.TobeUpdated;
-					oData.create("/JobStatus", jobStatus, {
-						success: function (data) {
-							MessageToast.show("Successfully Uploaded");
-							// that.onUploadStatus();
-							that.onReadJobStatus()
-							oModel.updateBindings();
-						},
-						error: function (error) {
-							// Error callback
-							that.middleWare.errorHandler(error, that);
-							// MessageToast.show("Error reading data");
-						}
-					});
-				} else if (jobStatus.TobeUpdated == true) {
-					delete jobStatus.TobeUpdated;
-					oData.update(sEntityPath, jobStatus, {
-						success: function (Data) {
-							MessageToast.show("Successfully Update the Entry");
-						},
-						error: function (error) {
-							MessageToast.show("Error reading data");
-							// Error callback
-							that.middleWare.errorHandler(error, that);
-						}
-					});
+			// if(sUserRole === "Raw Material Head"){
+				for (var i = 0; i < data.length; i++) {
+					var jobStatus = data[i];
+					var id = jobStatus.id;
+					const sEntityPath = `/JobStatus('${id}')`;
+	
+					if (jobStatus.TobeUpdated == "X") {
+						delete jobStatus.TobeUpdated;
+						oData.create("/JobStatus", jobStatus, {
+							success: function (data) {
+								MessageToast.show("Successfully Uploaded");
+								// that.onUploadStatus();
+								that.onReadJobStatus()
+								oModel.updateBindings();
+							},
+							error: function (error) {
+								// Error callback
+								that.middleWare.errorHandler(error, that);
+								// MessageToast.show("Error reading data");
+							}
+						});
+					} else if (jobStatus.TobeUpdated == true) {
+						delete jobStatus.TobeUpdated;
+						oData.update(sEntityPath, jobStatus, {
+							success: function (Data) {
+								MessageToast.show("Successfully Update the Entry");
+							},
+							error: function (error) {
+								MessageToast.show("Error reading data");
+								// Error callback
+								that.middleWare.errorHandler(error, that);
+							}
+						});
+					}
 				}
-			}
-			this.whenProductionStart();
+				this.whenProductionStart();
+			
+			// else{
+			// 		var jobStatus = data;
+			// 		// var payload = [jobStatus]
+			// 		var id = data[0].id;
+			// 		var rawMaterial = data[0].rawMaterial;
+			
+			// //*-----------------------------------------------------------------------------------------
+
+
+			
+			// 	var totalJobStatusData = {
+			// 		"Coating": 0,
+			// 		"Printing": 0,
+			// 		"Punching": 0,
+			// 		"Foiling": 0,
+			// 		"Embossing": 0,
+			// 		"Pasting": 0,
+			// 		"spotUV": 0,
+			// 		"Packing": 0,
+			// 		"rawMaterial": "",
+			// 		"incAttachment": "",
+			// 		"deliveryAttachment":"" 
+			// 	}
+			// 	for (let i = 0; i < data.length; i++) { //5
+			// 		totalJobStatusData.Coating += parseInt(data[i].Coating);
+			// 		totalJobStatusData.Printing += parseInt(data[i].Printing);
+			// 		totalJobStatusData.Punching += parseInt(data[i].Punching);
+			// 		totalJobStatusData.Foiling += parseInt(data[i].Foiling);
+			// 		totalJobStatusData.Embossing += parseInt(data[i].Embossing);
+			// 		totalJobStatusData.Pasting += parseInt(data[i].Pasting);
+			// 		totalJobStatusData.spotUV += parseInt(data[i].spotUV);
+			// 		totalJobStatusData.Packing += parseInt(data[i].Packing);
+			// 		totalJobStatusData.rawMaterial +=parseInt(data[i].rawMaterial);
+					
+			// 	}
+
+			// 	var value =totalJobStatusData;
+			// 	value.Coating = isNaN(value.Coating) ? "" : value.Coating;
+			// 	value.Punching = isNaN(value.Punching) ? "" : value.Punching;
+			// 	value.Printing = isNaN(value.Printing) ? "" : value.Printing;
+			// 	value.Foiling = isNaN(value.Foiling) ? "" : value.Foiling;
+			// 	value.Embossing = isNaN(value.Embossing) ? "" : value.Embossing;
+			// 	value.Pasting = isNaN(value.Pasting) ? "" : value.Pasting;
+			// 	value.spotUV = isNaN(value.spotUV) ? "" : value.spotUV;
+			// 	value.Packing = isNaN(value.Packing) ? "" : value.Packing;
+			// 	// value.rawMaterial = isNaN(value.rawMaterial) ? "" : value.rawMaterial;
+			// 	value.id = id;
+			// 	value.deliveryAttachment = id;
+
+			// 	that.middleWare.callMiddleWare("api/JobStatus", "PUT" , value)
+			// 	.then(function (data, status, xhr) {
+			// 	  MessageToast.show("Succccess")
+			// 	//   that.getView().getModel("appView").setProperty("/jobsData", data);						
+			//   })
+			// 	.catch(function (jqXhr, textStatus, errorMessage) {
+			// 	  that.middleWare.errorHandler(jqXhr, that);
+			// 	});
+			// 	// if(array.Coating === NaN){
+			// 	// 	array.Coating = ""
+			// 	// }
+			// 	// if(array.Printing === Nan){
+			// 	// 	array.Printing = ""
+			// 	// }
+			// 	// var payload = {
+			// 	// 	"jobId": "096"
+			// 	// }
+			// 	// this.middleWare.callMiddleWare("getSumOfJobStatus", "POST", payload)
+			// 	// .then(function (data, status, xhr) {
+			// 	// 	debugger;
+			// 	// 	that.getView().getModel("appView").setProperty("/totalJobsStatus",data)
+			// 	// })
+			// 	// .catch(function (jqXhr, textStatus, errorMessage) {
+			// 	// 	that.middleWare.errorHandler(jqXhr, that);
+			// 	// });
+			
+
+
+
+			// //* ----------------------------------------------------------------------------------------
+			// // oData.patch(`/JobStatus('${id}')`, payload, {
+			// // 	success: function (Data) {
+			// // 		MessageToast.show("Successfully Update the Entry");
+			// // 	},
+			// // 	error: function (error) {
+			// // 		MessageToast.show("Error reading data");
+			// // 		// Error callback
+			// // 		that.middleWare.errorHandler(error, that);
+			// // 	}
+			// // });
+			// 	}
 		},
 
 		onClickCancel: function () {
@@ -422,81 +513,90 @@ sap.ui.define([
 			oModel.setProperty("/buttonText", "Update");
 
 			var sUserRole = oModel.getProperty('/UserRole');
-			this.openCustomerAttachmentDialog(oEvent);
 			if (sUserRole === 'Customer') {
 				oModel.setProperty("/customerTitle", "Customer Attachment");
 
 			}else{
 				oModel.setProperty("/customerTitle", "Attachment");
 			}
-			return;
 
-			if (this.clickedLink == "clientPONo") {
-				this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
-				oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
-				var pofile = oData.poAttachment;
-				// if(sUserRole === 'Accounts Head'){
-				// 	oModel.setProperty("/browseVisArtwork", false);
-				// }
-				if (pofile) {
-					oModel.setProperty("/buttonText", "Update");
-				}
-				else {
-					oModel.setProperty("/buttonText", "Upload");
-				}
+
+			if(sUserRole === "Customer"){
+
+				this.openCustomerAttachmentDialog(oEvent);
 			}
-			else if (this.clickedLink == "artworkCode") {
-				this.getModel("appView").setProperty("/attachmentFiles", oData.artworkAttachment)
-				var artfile = oData.artworkAttachment
-				oModel.setProperty("/uploadDocumnetTitle", "Upload Artwork Document");
-
-				if (artfile) {
-					oModel.setProperty("/buttonText", "Update");
+			else{
+				if (this.clickedLink == "clientPONo") {
+					this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
+					oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
+					var pofile = oData.poAttachment;
+					// if(sUserRole === 'Accounts Head'){
+					// 	oModel.setProperty("/browseVisArtwork", false);
+					// }
+					if (pofile) {
+						oModel.setProperty("/buttonText", "Update");
+					}
+					else {
+						oModel.setProperty("/buttonText", "Upload");
+					}
 				}
-				else {
-					oModel.setProperty("/buttonText", "Upload");
+				else if (this.clickedLink == "artworkCode") {
+					this.getModel("appView").setProperty("/attachmentFiles", oData.artworkAttachment)
+					var artfile = oData.artworkAttachment
+					oModel.setProperty("/uploadDocumnetTitle", "Upload Artwork Document");
+	
+					if (artfile) {
+						oModel.setProperty("/buttonText", "Update");
+					}
+					else {
+						oModel.setProperty("/buttonText", "Upload");
+					}
 				}
+				
+				if (this.clickedLink == "DeliveryNo") {
+					this.getModel("appView").setProperty("/attachmentFiles", oData.deliveryAttachment)
+					var Delfile = oData.deliveryAttachment;
+					oModel.setProperty("/uploadDocumnetTitle", "Upload Delivery Document");
+					oModel.setProperty("/btnVisibility", false);
+					oModel.setProperty("/browseVisArtwork", false);
+	
+					if (Delfile) {
+						oModel.setProperty("/buttonText", "Update");
+					}
+					else {
+						oModel.setProperty("/buttonText", "Upload");
+					}
+				}
+				if (this.clickedLink == "InvNo") {
+					this.getModel("appView").setProperty("/attachmentFiles", oData.incAttachment)
+					var incFile = oData.incAttachment;
+					oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
+					oModel.setProperty("/btnVisibility", false);
+					oModel.setProperty("/browseVisArtwork", false);
+					if (incFile) {
+						oModel.setProperty("/buttonText", "Update");
+					}
+					else {
+						oModel.setProperty("/buttonText", "Upload");
+					}
+				}
+	
+	
+				var oModel = this.getView().getModel("appView");
+				this.oDialogOpen().then(function (oDialog) {
+					oDialog.open();
+					var sUserRole = oModel.getProperty('/UserRole');
+					if (sUserRole === 'Customer') {
+						
+						oModel.setProperty('/browseVis', false);
+					}
+	
+				});
 			}
 			
-			if (this.clickedLink == "DeliveryNo") {
-				this.getModel("appView").setProperty("/attachmentFiles", oData.deliveryAttachment)
-				var Delfile = oData.deliveryAttachment;
-				oModel.setProperty("/uploadDocumnetTitle", "Upload Delivery Document");
-				oModel.setProperty("/btnVisibility", false);
-				oModel.setProperty("/browseVisArtwork", false);
+			
 
-				if (Delfile) {
-					oModel.setProperty("/buttonText", "Update");
-				}
-				else {
-					oModel.setProperty("/buttonText", "Upload");
-				}
-			}
-			if (this.clickedLink == "InvNo") {
-				this.getModel("appView").setProperty("/attachmentFiles", oData.incAttachment)
-				var incFile = oData.incAttachment;
-				oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
-				oModel.setProperty("/btnVisibility", false);
-				oModel.setProperty("/browseVisArtwork", false);
-				if (incFile) {
-					oModel.setProperty("/buttonText", "Update");
-				}
-				else {
-					oModel.setProperty("/buttonText", "Upload");
-				}
-			}
-
-
-			var oModel = this.getView().getModel("appView");
-			this.oDialogOpen().then(function (oDialog) {
-				oDialog.open();
-				var sUserRole = oModel.getProperty('/UserRole');
-				if (sUserRole === 'Customer') {
-					
-					oModel.setProperty('/browseVis', false);
-				}
-
-			});
+			
 		},
 
 		getCustomerAttachments:function(oEvent){
@@ -649,6 +749,7 @@ sap.ui.define([
 		// * this fucntion will opens the dialog, for factory manager and admin to update the data.
 		isEditStatus: null,
 		onPressAdd: function () {
+			debugger
 			var that = this;
 			this.getRemJobsStatus();
 			var oModel = this.getView().getModel("appView");
@@ -768,38 +869,80 @@ sap.ui.define([
 
 		// * this fucntion is triger when user click on save in fragment.
 		onSubmitData: function () {
-			debugger;
-			
-			var oModel = this.getView().getModel("appView");
-			var invData = oModel.getProperty("/InvNo");
-			var delData = oModel.getProperty("/DeliveryNo");
-			oModel.updateBindings();
-			// oModel.getProperty("/")
-			// var rawMaterialSelect = this.getView().getModel("appView").getProperty("/rawMaterialSelected");
-			var oldData = oModel.getProperty("/newJobStatus");
-			var oNewJobData = oModel.getProperty('/newJob');
 
-			oNewJobData.DeliveryNo = delData;
-			oNewJobData.InvNo = invData;
-			oNewJobData.rawMaterial = oModel.getProperty('/selectedKey');
+            debugger;
+            var oModel = this.getView().getModel("appView");
+            var invData = oModel.getProperty("/InvNo");
+            var delData = oModel.getProperty("/DeliveryNo");
+            oModel.updateBindings();
+            // oModel.getProperty("/")
+            // var rawMaterialSelect = this.getView().getModel("appView").getProperty("/rawMaterialSelected");
+            var oldData = oModel.getProperty("/newJobStatus");
+            var oNewJobData = oModel.getProperty('/newJob');
+            oNewJobData.DeliveryNo = delData;
+            oNewJobData.InvNo = invData;
+			var rawMaterialSelectedKey = oModel.getProperty('/selectedKey');
+			if(!rawMaterialSelectedKey){
+				oNewJobData.rawMaterial = oModel.getProperty("/newJobStatus/0/rawMaterial")
 
-			// this for the attachments files in jobstatus.
-			oNewJobData.incAttachment = oModel.getProperty("/statusInvAttachment");
-			oNewJobData.deliveryAttachment = oModel.getProperty("/statusDeliveryAttachment");
+			}else{
 
-			if (!this.isEditStatus) {
-				oNewJobData.TobeUpdated = "X";
-				oldData.push(oNewJobData);
-
+				oNewJobData.rawMaterial = oModel.getProperty('/selectedKey');
 			}
-			oModel.setProperty("/newJobStatus", oldData);
-			oModel.updateBindings();
-			oModel.refresh();
-			// this.rawMaterialGet();
-			// this.whenProductionStart();		
-			this.onClose();
+			
+            // this for the attachments files in jobstatus.
+            oNewJobData.incAttachment = oModel.getProperty("/statusInvAttachment");
+            oNewJobData.deliveryAttachment = oModel.getProperty("/statusDeliveryAttachment");
+            if (!this.isEditStatus) {
+                oNewJobData.TobeUpdated = "X";
+                oldData.push(oNewJobData);
+            }
+            oModel.setProperty("/newJobStatus", oldData);
+            oModel.updateBindings();
+            oModel.refresh();
+            // this.rawMaterialGet();
+            // this.whenProductionStart();      
+            this.onClose();
+        },
+		// onSubmitData: function () {
+		// 	debugger;
+			
+		// 	var oModel = this.getView().getModel("appView");
+		// 	var invData = oModel.getProperty("/InvNo");
+		// 	var delData = oModel.getProperty("/DeliveryNo");
+		// 	oModel.updateBindings();
+		// 	// oModel.getProperty("/")
+		// 	var rawMaterialSelect = this.getView().getModel("appView").getProperty("/rawMaterialSelected");
+		// 	// var readJobStatusData = oModel.getProperty("/readedJobdata");
+		// 	var oldData = oModel.getProperty("/newJobStatus");
+		// 	var oNewJobData = oModel.getProperty('/newJob');
+		// 	var rawMaterial = oModel.getProperty("/newJobStatus/0/rawMaterial")
 
-		},
+		// 	oNewJobData.DeliveryNo = delData;
+		// 	oNewJobData.InvNo = invData;
+		// 	oNewJobData.rawMaterial = rawMaterial;
+
+		// 	// this for the attachments files in jobstatus.
+		// 	oNewJobData.incAttachment = oModel.getProperty("/statusInvAttachment");
+		// 	oNewJobData.deliveryAttachment = oModel.getProperty("/statusDeliveryAttachment");
+
+		// 	if (!this.isEditStatus) {
+		// 		oNewJobData.TobeUpdated = "X";
+		// 		oldData.push(oNewJobData);
+
+		// 	}
+
+		// 	// var data = oldData.slice(1,0)
+		// 	// data.rawMaterial = 
+		// 	// oldData.push(oNewJobData)
+		// 	// oModel.setProperty("/newJobStatus", data);
+		// 	oModel.updateBindings();
+		// 	oModel.refresh();
+		// 	// this.rawMaterialGet();
+		// 	// this.whenProductionStart();		
+		// 	this.onClose();
+
+		// },
 		// rawMaterialGet: function () {
 		// 	
 		// 	var oModel = this.getView().getModel("appView");
@@ -849,8 +992,12 @@ sap.ui.define([
 
 		// * at here we are going to edit the row data for the entries.
 		editJobstatusEntry: function (oEvent) {
+			var sUserRole = this.getView().getModel("appView").getProperty("/UserRole");
+			if(sUserRole === "Customer"){
+				return;
+			}
 			this.getRemJobsStatus();
-			debugger	
+			debugger;	
 			this.isEditStatus = true;
 			
 			var that = this;
@@ -865,7 +1012,7 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
-			oModel.setProperty("/newJob", JSON.parse(JSON.stringify(rowdata)));
+			// oModel.setProperty("/newJob", JSON.parse(JSON.stringify(rowdata)));
 			// oModel.setProperty("/oldJobs",JSON.parse(JSON.stringify(rowdata)))
 			var invNoEditGrag = rowdata.InvNo;
 			var delEditFrag = rowdata.DeliveryNo;
@@ -1102,7 +1249,7 @@ sap.ui.define([
 			} else {
 				endPoint = "jobStatusData"
 			}
-			this.middleWare.callMiddleWare("getSumOfJobStatus", "POST", payload)
+			this.middleWare.callMiddleWare(endPoint, "POST", payload)
 				.then(function (data) {
 					if (!data) {
 						return
@@ -1566,7 +1713,7 @@ sap.ui.define([
 
 			this.getView().getModel("appView").setProperty("/totalShippingPieces", intNewValue);
 
-			totalPrintedPieces = 14000;
+			// totalPrintedPieces = 14000;
 
 			if (intNewValue.toString() === 'NaN' || totalPrintedPieces >= intNewValue) {
 
