@@ -224,7 +224,7 @@ sap.ui.define([
 			// 		"Coating": 0,
 			// 		"Printing": 0,
 			// 		"Punching": 0,
-			// 		"Foiling": 0,
+			// 		"Printing": 0,
 			// 		"Embossing": 0,
 			// 		"Pasting": 0,
 			// 		"spotUV": 0,
@@ -237,7 +237,7 @@ sap.ui.define([
 			// 		totalJobStatusData.Coating += parseInt(data[i].Coating);
 			// 		totalJobStatusData.Printing += parseInt(data[i].Printing);
 			// 		totalJobStatusData.Punching += parseInt(data[i].Punching);
-			// 		totalJobStatusData.Foiling += parseInt(data[i].Foiling);
+			// 		totalJobStatusData.Printing += parseInt(data[i].Printing);
 			// 		totalJobStatusData.Embossing += parseInt(data[i].Embossing);
 			// 		totalJobStatusData.Pasting += parseInt(data[i].Pasting);
 			// 		totalJobStatusData.spotUV += parseInt(data[i].spotUV);
@@ -250,7 +250,7 @@ sap.ui.define([
 			// 	value.Coating = isNaN(value.Coating) ? "" : value.Coating;
 			// 	value.Punching = isNaN(value.Punching) ? "" : value.Punching;
 			// 	value.Printing = isNaN(value.Printing) ? "" : value.Printing;
-			// 	value.Foiling = isNaN(value.Foiling) ? "" : value.Foiling;
+			// 	value.Printing = isNaN(value.Printing) ? "" : value.Printing;
 			// 	value.Embossing = isNaN(value.Embossing) ? "" : value.Embossing;
 			// 	value.Pasting = isNaN(value.Pasting) ? "" : value.Pasting;
 			// 	value.spotUV = isNaN(value.spotUV) ? "" : value.spotUV;
@@ -378,26 +378,29 @@ sap.ui.define([
 
 			}
 
-			if (sUserRole === "Admin" || sUserRole === "Artwork Head") {
-
-				this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
-
-				this.getView().getModel("appView").setProperty("/btnVisibility", true);
-
+			if (sUserRole === "Artwork Head" || sUserRole === "Admin") {
+            	this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", true);
+			}else{
+				this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", false);		
 			}
+			// 	this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", true);
+
+			// 	this.getView().getModel("appView").setProperty("/btnVisibility", true);
+
+			// }
 			// else if(sUserRole === "Artwork Head"){
 			// 	this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
 			// } 
 			// else if(sUserRole === "Accounts Head"){
 			// 	this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
 			// }
-			else {
+			// else {
 
-				this.getView().getModel("appView").setProperty("/browseVisArtwork", false);
+			// 	this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", false);
 
-				this.getView().getModel("appView").setProperty("/btnVisibility", false);
+			// 	this.getView().getModel("appView").setProperty("/btnVisibility", false);
 
-			}
+			// }
 
 			return this.oUploadDialog;
 
@@ -440,12 +443,24 @@ sap.ui.define([
 					oModel.setProperty("/uploadDocumnetTitle", " Delivery Attachment");
 					that.getModel("appView").setProperty("/CustomerAttachment", Delivery);
 					oDialog.open();
+					// var sUserRole = oModel.getProperty('/UserRole');
+					// if(sUserRole === "Accounts Head"){
+					// 	oModel.setProperty("/uploadDocBrowseVis", true)
+					// }else{
+					// 	oModel.setProperty("/uploadDocBrowseVis", false)
+					// }
 				}
 				else if (clickedrow == "InvNo") {
 					var oModel = that.getView().getModel("appView");
 					oModel.setProperty("/uploadDocumnetTitle", " Invoice Attachment");
 					that.getModel("appView").setProperty("/CustomerAttachment", invoice);
+					// var sUserRole = oModel.getProperty('/UserRole');
 					oDialog.open();
+					// if(sUserRole === "Accounts Head"){
+					// 	oModel.setProperty("/uploadDocBrowseVis", true)
+					// }else{
+					// 	oModel.setProperty("/uploadDocBrowseVis", false)
+					// }
 				}
 				
 				
@@ -457,11 +472,13 @@ sap.ui.define([
 					oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
 					that.oDialogOpen().then(function (oDialog) {
 					oDialog.open();
-					var sUserRole = oModel.getProperty('/UserRole');
-					if (sUserRole === 'Customer') {
+					// var sUserRole = oModel.getProperty('/UserRole');
+					// if (sUserRole === 'Artwork Head') {
 						
-						oModel.setProperty('/browseVis', false);
-					}
+					// 	oModel.setProperty('/uploadDocBrowseVis', true);
+					// }else{
+					// 	oModel.setProperty('/uploadDocBrowseVis', false);
+					// }
 				});
 				}
 				if(clickedrow === "artworkCode"){
@@ -472,11 +489,12 @@ sap.ui.define([
 					oModel.setProperty("/uploadDocumnetTitle", " Artwork Attachment");
 					that.oDialogOpen().then(function (oDialog) {
 					oDialog.open();
-					var sUserRole = oModel.getProperty('/UserRole');
-					if (sUserRole === 'Customer') {
-						
-						oModel.setProperty('/browseVis', false);
-					}
+					// var sUserRole = oModel.getProperty('/UserRole');
+					// if (sUserRole === 'Artwork Head') {	
+					// 	oModel.setProperty('/uploadDocBrowseVis', true);
+					// }else{
+					// 	oModel.setProperty('/uploadDocBrowseVis', false);
+					// }
 				});
 				}
 				// else if (clickedrow == "artworkCode") {
@@ -651,6 +669,12 @@ sap.ui.define([
 				oModel.setProperty("/buttonText", "Update");
 				oModel.setProperty("/uploadDocumnetTitle", "Upload  Document");
 				oDialog.open();
+				var sUserRole = oModel.getProperty('/UserRole');
+                 if(sUserRole === 'Accounts Head' || sUserRole === "Admin"){
+					oModel.setProperty("/uploadDocBrowseVis", true)
+				 }else{
+					oModel.setProperty("/uploadDocBrowseVis", false)
+				 }
 				// oDialog.attachAfterClose(function () {
 				// 	
 				// 	oDialog.unbindProperty();
@@ -758,7 +782,7 @@ sap.ui.define([
 				"Coating": "",
 				"DeliveryNo": "",
 				"Embossing": "",
-				"Foiling": "",
+				"Printing": "",
 				"InvNo": "",
 				"CreatedOn": new Date(),
 				"JobId": "",
@@ -993,7 +1017,7 @@ sap.ui.define([
 		// * at here we are going to edit the row data for the entries.
 		editJobstatusEntry: function (oEvent) {
 			var sUserRole = this.getView().getModel("appView").getProperty("/UserRole");
-			if(sUserRole === "Customer"){
+			if(sUserRole === "Customer" || sUserRole === "Artwork Head"){
 				return;
 			}
 			this.getRemJobsStatus();
@@ -1462,7 +1486,7 @@ sap.ui.define([
 					});
 			}
 		},
-		onLiveChange: function (oEvent) {
+		printingLiveChange: function (oEvent) {
 			debugger;
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
@@ -1490,7 +1514,7 @@ sap.ui.define([
 			if(!livePrintingValue){
 				livePrintingValue = 0;
 			}
-			var totalRemJobValues = totalRemCoating +livePrintingValue;
+			var totalRemJobValues = totalRemCoating;
 			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
 			
 
@@ -1516,7 +1540,7 @@ sap.ui.define([
 			if(!liveCoatingValue){
 				liveCoatingValue = 0;
 			}
-			var totalRemJobValues = totalRemFoiling + liveCoatingValue;
+			var totalRemJobValues = totalRemFoiling;
 			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
 				if (totalRemJobValues >= intNewValue ) {
 					this.getView().getModel("appView").setProperty("/valueStateFoiling", "None");
@@ -1538,7 +1562,7 @@ sap.ui.define([
 			if(!liveSpotUVValue){
 				liveSpotUVValue = 0;
 			}
-			var totalRemJobValues = totalRemSpotUV + liveSpotUVValue;
+			var totalRemJobValues = totalRemSpotUV;
 			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
 
 				if (totalRemJobValues >= intNewValue ) {
@@ -1562,7 +1586,7 @@ sap.ui.define([
 			if(!livespotUVValue){
 				livespotUVValue = 0;
 			}
-			var totalRemJobValues = totalRemEmbossing + livespotUVValue;
+			var totalRemJobValues = totalRemEmbossing;
 			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
 		
 
@@ -1586,7 +1610,7 @@ sap.ui.define([
 			if(!liveEmbossingValue){
 				liveEmbossingValue = 0;
 			}
-			var totalRemJobValues = totalRemPunching + liveEmbossingValue;
+			var totalRemJobValues = totalRemPunching;
 			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
 
 				if (totalRemJobValues >= intNewValue ) {
@@ -1782,7 +1806,7 @@ sap.ui.define([
 
                 var stringNum = printingsheet[i].Printing;
                 var coating = printingsheet[i].Coating;
-                var foiling = printingsheet[i].Foiling;
+                var foiling = printingsheet[i].Printing;
                 var spotUV = printingsheet[i].spotUV;
                 var embossing = printingsheet[i].Embossing;
                 var punching = printingsheet[i].Punching;
@@ -1807,15 +1831,14 @@ sap.ui.define([
                 oSumOfData.Pasting += noOfPasting;
 
             }
-
+debugger;
             var remData = {
-
                 "Printing": totalprintingsheets - oSumOfData.Printing,
-				"Coating": oSumOfData.Printing - oSumOfData.Coating,
-				"Foiling": oSumOfData.Coating - oSumOfData.Foiling,
-				"spotUV": oSumOfData.Foiling - oSumOfData.spotUV,
-				"Embossing": oSumOfData.spotUV - oSumOfData.Embossing,
-				"Punching": oSumOfData.Embossing - oSumOfData.Punching,
+				"Coating": totalprintingsheets - oSumOfData.Coating,
+				"Foiling": totalprintingsheets - oSumOfData.Foiling,
+				"spotUV": totalprintingsheets - oSumOfData.spotUV,
+				"Embossing": totalprintingsheets - oSumOfData.Embossing,
+				"Punching": totalprintingsheets - oSumOfData.Punching,
 				"Pasting": oSumOfData.Punching - oSumOfData.Pasting
             }
 

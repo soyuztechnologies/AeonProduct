@@ -19,6 +19,7 @@
 					<ObjectListItem
 							type="Navigation"
 							title="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"
+							intro="{path: 'appView>jobCardNo', parameters: {expand: 'Company'}}"
 							>
 							<markers>
 								<ObjectMarker  type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />

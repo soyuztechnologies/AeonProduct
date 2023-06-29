@@ -30,13 +30,14 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
-					// that.getJobsData();
 					that.getJobsDataByCompanyFilter();
+					// that.getCompanyName();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
 				}
 			);
+
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader", true);
 			this.getModel("appView").setProperty("/visibility", true);
@@ -210,6 +211,7 @@ sap.ui.define([
 		}
 		var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
 		var url = 'api/Jobs?filter='+oFilter
+		// sPath = `/Jobs('${id}')/Company`;
 		var that = this;
 		if(sUserRole === "Customer"){
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
@@ -225,12 +227,38 @@ sap.ui.define([
 			this.middleWare.callMiddleWare(url, "get")
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);
+				// var jobData = 
+				// for (let i = 0; i < data.length; i++) {
+				//   const element = data[i].jobCardNo;
+				//   jobData.push(element)
+				// }
+				// that.getView().getModel("appView").setProperty("/jobsId", data);
 			})
 			.catch(function (jqXhr, textStatus, errorMessage) {
 				that.middleWare.errorHandler(jqXhr, that);
 			});
 		}
 	   },
+	// //  At here we are getting  the company Name. 
+	// 		getCompanyName: function () {
+	// 			debugger;
+	// 			// var ids = oEvent.getSource().getBindingContext("appView").getObject().id;
+	// 			var oModel = this.getView().getModel();
+	// 			var id = "033";
+	// 			var that = this;
+	// 			oModel.read(`/Jobs('${id}')/Company`, {
+	// 				// urlParameters: {
+	// 				// 	"$expand": "company"
+	// 				// },
+	// 				success: function (data) {
+	// 					that.getView().getModel("appView").setProperty("/companyName", data.CompanyName);
+	// 				},
+	// 				error: function (error) {
+	// 				that.middleWare.errorHandler(error, that);
+	// 				MessageToast.show("Error reading data");
+	// 				}
+	// 			});
+	// 		},
 
 	//    getJobAccordingCustomer : function(){
 	// 	

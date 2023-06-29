@@ -4,43 +4,43 @@
             <Title text="Job Status" />
             <ToolbarSpacer/>
                 <Button
-                   visible="{appView>/addBtnVisible}"
+                   visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }"
                    icon="sap-icon://add"
                    press="onPressAdd"/>
     </OverflowToolbar>
     <VBox items="{path: 'appView>/newJobStatus'}">
         <items>
             <CustomListItem >
-                <Table  popinLayout= 'GridSmall'  autoPopinMode="true" id="jobStatusTable">
+                <Table  popinLayout= 'GridSmall'  autoPopinMode="true" id="jobStatusTable" itemPress="editJobstatusEntry">
                     <!-- <VBox > -->
                     <!-- visibleRowCount="4" selectionMode="Single" -->
                     <columns>
                         <Column visible="{path: 'appView>rawMaterial', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Raw Material" />
                         </Column>
-                        <Column  visible="{path: 'appView>Coating', formatter: '.formatter.tableEntryVisible'}">
-                            <Label text="Coating" />
-                        </Column>
-                        <Column visible="{path: 'appView>spotUV', formatter: '.formatter.tableEntryVisible'}">
-                            <Label text="Spot UV" />
-                        </Column>
-                        <Column visible="{path: 'appView>Punching', formatter: '.formatter.tableEntryVisible'}">
-                            <Label text="Punching" />
-                        </Column>
-                        <Column visible="{path: 'appView>Packing', formatter: '.formatter.tableEntryVisible'}">
-                            <Label text="Packing" />
-                        </Column>
                         <Column visible="{path: 'appView>Printing', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Printing" />
+                        </Column>
+                        <Column  visible="{path: 'appView>Coating', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Coating" />
                         </Column>
                         <Column visible="{path: 'appView>Foiling', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Foiling" />
                         </Column>
+                        <Column visible="{path: 'appView>spotUV', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Spot UV" />
+                        </Column>
                         <Column visible="{path: 'appView>Embossing', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Embossing" />
                         </Column>
+                        <Column visible="{path: 'appView>Punching', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Punching" />
+                        </Column>
                         <Column visible="{path: 'appView>Pasting', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Pasting" />
+                        </Column>
+                        <Column visible="{path: 'appView>Packing', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Packing" />
                         </Column>
                         <Column visible="{path: 'appView>InvNo', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Inv. No." />
@@ -53,7 +53,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem >
+                        <ColumnListItem type="Active">
                             <cells>
                                 <Select editable="{appView>/onClickModify}" forceSelection="false" selectedKey="{appView>rawMaterial}" change="onSelectKeyRawMaterial">
                                     <items>
@@ -61,14 +61,22 @@
                                         <core:Item text="Pending" key="Pending" />
                                     </items>
                                 </Select>
+                                <!-- <Input type="Number" liveChange="onLiveChange" editable="{appView>/onClickModify}" value="{appView>Printing}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Coating}" />
-                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input>
-                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
-                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input>
-                                <Input type="Number" liveChange="onLiveChange" editable="{appView>/onClickModify}" value="{appView>Printing}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Foiling}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>spotUV}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Embossing}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
+                                <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input> -->
+                                <Text  text="{appView>Printing}"></Text>
+                                <Text  text="{appView>Coating}" />
+                                <Text  text="{appView>Foiling}"></Text>
+                                <Text  text="{appView>spotUV}"></Text>
+                                <Text  text="{appView>Embossing}"></Text>
+                                <Text  text="{appView>Punching}"></Text>
+                                <Text  text="{appView>Pasting}"></Text>
+                                <Text  text="{appView>Packing}"></Text>
                                 <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
                                 <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
                                 <Button  press="editJobstatusEntry" visible="false" type="Emphasized" icon="sap-icon://edit"/>
