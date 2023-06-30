@@ -64,7 +64,13 @@ resizable="false" >
 				<Input type="Number" value="{appView>/totalShippers}"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }"  placeholder="No. Of Shippers"/>
 				<Input liveChange="onLiveChnagePiecePerBox" type="Number" valueState="{appView>/valueStatePiecePerBox}" valueStateText="{appView>/VSTPiecePerBox}" value="{appView>/piecePerBox}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" placeholder="Piece Per Box"/>
 				<Input liveChange="onLiveChnagePieceToSend" valueState="{appView>/valueStatePieceToSend}" valueStateText="{appView>/VSTPieceToSend}" type="Number" value="{appView>/totalShippingPieces}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" placeholder="Pieces to be Send"/>
-
+				<!-- <VBox> -->
+				<Label text="Additional Packing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" />
+                <!-- <Input  value="{appView>/remainingNoOfShippers}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining Shippers"/>   -->
+                <Input  value="{appView>/remainingPiecesPerBox}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining  Box"/>  
+                <Input  value="{path: 'appView>/remainingPiecesToSend', formatter: '.formatter.decimalFormatterForPieces'}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining Piece"/>  
+				<!-- </VBox> -->
+ 
 
 				<Label text="Inv. No." visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
 				<Input  value="{appView>/InvNo}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }" />

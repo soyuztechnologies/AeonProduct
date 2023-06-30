@@ -426,6 +426,22 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
       return data;
     },
+    decimalFormatterForPieces: function (data) {
+      if (data) {
+        data = parseFloat(data);
+        var oCurrencyFormat = NumberFormat.getCurrencyInstance({
+          currencyCode: false,
+          decimals: 0,
+        });
+
+        return oCurrencyFormat.format(data.toFixed(0));
+        // return data.toFixed(1);
+        // }
+
+
+      }
+      return data;
+    },
     decimalFormatterWithSheets: function (data) {
       if (data) {
         data = parseFloat(data);

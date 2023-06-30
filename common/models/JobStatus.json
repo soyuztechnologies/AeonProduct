@@ -66,6 +66,22 @@
 			"type":"number",
 			"default":""
 		},
+		"noOfBoxPerPieces": {
+			"type":"number",
+			"default":""
+		},
+		"noOfPiecesToSend": {
+			"type":"number",
+			"default":""
+		},
+		"remainingBox": {
+			"type":"number",
+			"default":""
+		},
+		"remainingPiecesToSend": {
+			"type":"number",
+			"default":""
+		},
 		"incAttachment":{
 			"type":"string",
 			"default":null

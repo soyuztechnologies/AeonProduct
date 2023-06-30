@@ -787,6 +787,10 @@ sap.ui.define([
 				"CreatedOn": new Date(),
 				"JobId": "",
 				"Packing": "",
+				"noOfPiecesToSend":"",
+				"noOfBoxPerPieces":"",
+				"remainingBox": "",
+				"remainingPiecesToSend": "",
 				"Pasting": "",
 				"Printing": "",
 				"Punching": "",
@@ -810,69 +814,6 @@ sap.ui.define([
 				that.isEditStatus = false;
 				oDialog.open();
 				oModel.setProperty("/uploadFileName", "")
-				//Editability for Admin
-				if (sUserRole === 'Admin') {
-					oModel.setProperty("/rawMaterialHeadVis", true);
-					oModel.setProperty("/printingHeadVis", true);
-					oModel.setProperty("/postPressHeadVis", true);
-					oModel.setProperty("/dispatchHeadVis", true);
-					oModel.setProperty("/accountHeadVis", true);
-					oModel.setProperty("/jobStatusVis", true);
-					oModel.setProperty("/dateFalseforallhead", true);
-					// oModel.setProperty("/addBtnVisible", true);
-				}
-				//Editability for Ram Material Head
-				if (sUserRole === 'Raw Material Head') {
-					oModel.setProperty("/rawMaterialHeadVis", true);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-					// oModel.setProperty("/addBtnVisible", false);
-				}
-				//Editability for Printing Head
-				if (sUserRole === 'Printing Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", true);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-				}
-				//Editability for Post Press Head
-				if (sUserRole === 'Post Press Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", true);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-				}
-				//Editability for Dispatch Head
-				if (sUserRole === 'Dispatch Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", true);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-				}
-				//Editability for Accounts Head
-				if (sUserRole === 'Accounts Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", true);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-					oModel.setProperty("/browseVisArtwork", true);
-				}
 				// that.loadForm2();
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
@@ -898,13 +839,28 @@ sap.ui.define([
             var oModel = this.getView().getModel("appView");
             var invData = oModel.getProperty("/InvNo");
             var delData = oModel.getProperty("/DeliveryNo");
+
+            var totalShippers = oModel.getProperty("/totalShippers");
+            var totalPiecesToSend = oModel.getProperty("/totalShippingPieces");
+            var totalPiecePerBox = oModel.getProperty("/piecePerBox");
+            var remainingBox = oModel.getProperty("/remainingPiecesPerBox");
+            var remainingPiecesToSend = oModel.getProperty("/remainingPiecesToSend");
+
             oModel.updateBindings();
             // oModel.getProperty("/")
             // var rawMaterialSelect = this.getView().getModel("appView").getProperty("/rawMaterialSelected");
             var oldData = oModel.getProperty("/newJobStatus");
             var oNewJobData = oModel.getProperty('/newJob');
+
             oNewJobData.DeliveryNo = delData;
             oNewJobData.InvNo = invData;
+
+            oNewJobData.Packing = totalShippers;
+            oNewJobData.noOfPiecesToSend = totalPiecesToSend;
+            oNewJobData.noOfBoxPerPieces = totalPiecePerBox;
+            oNewJobData.remainingBox = remainingBox;
+            oNewJobData.remainingPiecesToSend = parseInt(remainingPiecesToSend);
+			
 			var rawMaterialSelectedKey = oModel.getProperty('/selectedKey');
 			if(!rawMaterialSelectedKey){
 				oNewJobData.rawMaterial = oModel.getProperty("/newJobStatus/0/rawMaterial")
@@ -1047,68 +1003,6 @@ sap.ui.define([
 				oModel.setProperty("/addJobStatusdialogTitle", "Edit Job Status ");
 				oModel.setProperty("/addJobStatusSave", "Update");
 				oDialog.open();
-				//Editability for Admin
-				if (sUserRole === 'Admin') {
-					oModel.setProperty("/rawMaterialHeadVis", true);
-					oModel.setProperty("/printingHeadVis", true);
-					oModel.setProperty("/postPressHeadVis", true);
-					oModel.setProperty("/dispatchHeadVis", true);
-					oModel.setProperty("/accountHeadVis", true);
-					oModel.setProperty("/jobStatusVis", true);
-					oModel.setProperty("/dateFalseforallhead", true);
-					// oModel.setProperty("/addBtnVisible", true);
-				}
-				//Editability for Ram Material Head
-				if (sUserRole === 'Raw Material Head') {
-					oModel.setProperty("/rawMaterialHeadVis", true);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-					// oModel.setProperty("/addBtnVisible", false);
-				}
-				//Editability for Printing Head
-				if (sUserRole === 'Printing Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", true);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-				}
-				//Editability for Post Press Head
-				if (sUserRole === 'Post Press Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", true);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-				}
-				//Editability for Dispatch Head
-				if (sUserRole === 'Dispatch Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", true);
-					oModel.setProperty("/accountHeadVis", false);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-				}
-				//Editability for Accounts Head
-				if (sUserRole === 'Accounts Head') {
-					oModel.setProperty("/rawMaterialHeadVis", false);
-					oModel.setProperty("/printingHeadVis", false);
-					oModel.setProperty("/postPressHeadVis", false);
-					oModel.setProperty("/dispatchHeadVis", false);
-					oModel.setProperty("/accountHeadVis", true);
-					oModel.setProperty("/jobStatusVis", false);
-					oModel.setProperty("/dateFalseforallhead", false);
-				}
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
 			});
@@ -1626,41 +1520,31 @@ sap.ui.define([
 		},
 		pastingLiveChange: function (oEvent) {
 			debugger;
-			var newValue1 = oEvent.getParameter("value");
-			var newValue = parseInt(newValue1);
+			var newValue = parseInt(oEvent.getParameter("newValue"));
 			var intNewValue = newValue;
-			var totalRemPasting = this.getView().getModel("appView").getProperty("/allRemainingDatas").Pasting
-			var livePunchingValue = this.getView().getModel("appView").getProperty('/Punching')
-			if(!livePunchingValue){
-				livePunchingValue = 0;
+			var PunchingValue = oEvent.getSource().getParent().getParent().getBindingContext("appView").getObject().Punching;
+			// var totalRemPasting = this.getView().getModel("appView").getProperty("/allRemainingDatas")
+			// var totalNoPasting = this.getView().getModel("appView").getProperty("/totalPastingPcs").Pasting
+			// var totalNoOfUpsInJob = this.getView().getModel("appView").getProperty("/totalNoOfUpsInJob");
+			var totalNoOfPcs = this.getView().getModel("appView").getProperty("/totalNoOfPcs");
+			// var livePunchingValue = this.getView().getModel("appView").getProperty('/Punching')x	
+			if(!PunchingValue){
+				PunchingValue = 0;
 			}
-			var totalRemJobValues = totalRemPasting + livePunchingValue;
 			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
 			
 
-				if (totalRemJobValues >= intNewValue ) {
-					this.getView().getModel("appView").setProperty("/valueStatePasting", "None");
-					this.getView().getModel("appView").setProperty("/Pasting", newValue);
-				} else {
+				if (totalNoOfPcs > intNewValue || totalNoOfPcs === intNewValue) {
 					this.getView().getModel("appView").setProperty("/valueStatePasting", "Error");
+					this.getView().getModel("appView").setProperty("/Pasting", newValue);
+					this.getView().getModel("appView").setProperty("/VSTPasting", "Value Can't be less than " + totalNoOfPcs);
+				} else {
+					this.getView().getModel("appView").setProperty("/valueStatePasting", "None");
 					this.getView().getModel("appView").setProperty("/Pasting", 0);
-					this.getView().getModel("appView").setProperty("/VSTPasting", "Value Can't be More than " + totalRemJobValues);
+					// this.getView().getModel("appView").setProperty("/VSTPasting", "Value Can't be less than " + totalNoOfPcs);
 				}
 			
-			
-			
 		},
-
-
-
-
-
-
-
-
-
-
-
 
 		onLiveChnagePiecePerBox: function (oEvent) {
 			var newPiecePerBox = parseInt(oEvent.getParameter("newValue"));
@@ -1676,6 +1560,9 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty("/VSTPiecePerBox", "");
 
 				this.getView().getModel("appView").setProperty("/totalShippers", 0);
+				this.getView().getModel("appView").setProperty("/remainingPiecesToSend", 0);
+				this.getView().getModel("appView").setProperty("/remainingPiecesPerBox", 0);
+				this.getView().getModel("appView").setProperty("/remainingNoOfShippers", 0);
 
 			}
 
@@ -1686,11 +1573,29 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty("/VSTPiecePerBox", "");
 
 				this.getView().getModel("appView").setProperty("/piecePerBox", tempPiecePerBox);
+				
+				this.getView().getModel("appView").setProperty("/valuePiecePerBox", newPiecePerBox);
 
 				var noOfShippers = Math.floor(totalShippingPeices / tempPiecePerBox);
 
 				this.getView().getModel("appView").setProperty("/totalShippers", noOfShippers);
 
+				var noOfShippersFloat = totalShippingPeices / tempPiecePerBox;
+
+				this.getView().getModel("appView").setProperty("/totalShippersFloat", noOfShippersFloat); 
+
+				var remainingPiecesToSendFloat = noOfShippersFloat - noOfShippers;
+				var remainingPiecesToSend = remainingPiecesToSendFloat * tempPiecePerBox;
+				this.getView().getModel("appView").setProperty("/remainingPiecesToSend", remainingPiecesToSend);
+
+				var remainingPiecesPerBox = 1;
+				if(remainingPiecesToSend !== 0){
+					this.getView().getModel("appView").setProperty("/remainingPiecesPerBox", remainingPiecesPerBox);
+				}
+
+                	this.getView().getModel("appView").setProperty("/remainingPiecesPerBox", remainingPiecesPerBox);
+				var remainingNoOfShippers = noOfShippers + remainingPiecesPerBox;
+				   this.getView().getModel("appView").setProperty("/remainingNoOfShippers", remainingNoOfShippers);
 			}
 
 			else {
@@ -1707,73 +1612,79 @@ sap.ui.define([
 
 			this.getView().getModel("appView").updateBindings();
 
-
-
-
-
 		},
 
 		onLiveChnagePieceToSend: function (oEvent) {
+			// if (oEvent) {
+			// 	var newValue = parseInt(oEvent.getParameter("newValue"));
+			// } else {
+			// 	var newValue = this.getView().getModel("appView").getProperty("/totalShippingPieces");
+			// }
+			// var intNewValue = newValue;
+			// var totalPrintedPieces =  this.getView().getModel("appView").getProperty("/Pasting");
 
+			// this.getView().getModel("appView").setProperty("/totalShippingPieces", intNewValue);
+			// // totalPrintedPieces = 14000;
+			// if (intNewValue.toString() === 'NaN' || totalPrintedPieces >= intNewValue) {
+			// 	this.getView().getModel("appView").setProperty("/valueStatePieceToSend", "None");
 
+			// 	this.getView().getModel("appView").setProperty("/VSTPieceToSend", "");
 
+			// 	this.getView().getModel("appView").setProperty("/totalShippingPieces", newValue);
+			// } else {
 
-			if (oEvent) {
+			// 	this.getView().getModel("appView").setProperty("/valueStatePieceToSend", "Error");
 
-				var newValue = parseInt(oEvent.getParameter("newValue"));
+			// 	this.getView().getModel("appView").setProperty("/totalShippingPieces", 0);
 
-			} else {
+			// 	this.getView().getModel("appView").setProperty("/VSTPieceToSend", "Pieces can't be more than " + totalPrintedPieces);
 
-				var newValue = this.getView().getModel("appView").getProperty("/totalShippingPieces");
+			// }
 
-			}
+			// this.onLiveChnagePiecePerBox();
 
+			// this.getView().getModel("appView").updateBindings();
+			debugger;
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
+			var PastingValue = oEvent.getSource().getParent().getParent().getBindingContext("appView").getObject().Pasting;
+			// var totalRemPasting = this.getView().getModel("appView").getProperty("/allRemainingDatas")
+			// var totalNoPasting = this.getView().getModel("appView").getProperty("/totalPastingPcs").Pasting
+			// var totalNoOfUpsInJob = this.getView().getModel("appView").getProperty("/totalNoOfUpsInJob")
+			// var noOfPiecesToSend = this.getView().getModel("appView").getProperty('/Pasting')
+			if(!PastingValue){
+				PastingValue = 0;
+			}
+			var totalRemJobValues = PastingValue;
+			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+			
 
-
-
-
-			var totalPrintedPieces = this.getView().getModel("appView").getProperty("/totalPrintedSheetsTillNow");
-
-			this.getView().getModel("appView").setProperty("/totalShippingPieces", intNewValue);
-
-			// totalPrintedPieces = 14000;
-
-			if (intNewValue.toString() === 'NaN' || totalPrintedPieces >= intNewValue) {
-
-
-
-
+				if (totalRemJobValues >= intNewValue ) {
 				this.getView().getModel("appView").setProperty("/valueStatePieceToSend", "None");
 
 				this.getView().getModel("appView").setProperty("/VSTPieceToSend", "");
 
 				this.getView().getModel("appView").setProperty("/totalShippingPieces", newValue);
-
-
-
-
-
-			} else {
-
+				} else {
 				this.getView().getModel("appView").setProperty("/valueStatePieceToSend", "Error");
 
 				this.getView().getModel("appView").setProperty("/totalShippingPieces", 0);
 
-				this.getView().getModel("appView").setProperty("/VSTPieceToSend", "Pieces can't be more than " + totalPrintedPieces);
-
-			}
-
-			this.onLiveChnagePiecePerBox();
-
-			this.getView().getModel("appView").updateBindings();
-
-
-
-
+				this.getView().getModel("appView").setProperty("/VSTPieceToSend", "Value Can't be More than " + totalRemJobValues);
+				}
+		},
+		remainingPiecesToSend: function(oEvent){
+			debugger;
+			var valueNoOfPiecesToSend = this.getView().getModel("appView").getProperty("/totalShippingPieces");
+			var valueNoOfPiecesPerBox = this.getView().getModel("appView").getProperty("/valuePiecePerBox");
+			var valueNoOfShippers = this.getView().getModel("appView").getProperty("/totalShippers"); 
+			var remainingValueNoOfShippers = this.getView().getModel("appView").getProperty("/totalShippersFloat"); 
+			var remainingPiecesToSend = remainingValueNoOfShippers - valueNoOfShippers;
+			this.getView().getModel("appView").setProperty("/remainingPiecesToSend", remainingPiecesToSend);
 
 		},
-
+		remainingPiecesPerBox: function(oEvent){},
 		getRemJobsStatus: function () {
 
 			debugger;
@@ -1783,7 +1694,8 @@ sap.ui.define([
 
             var allJobs = this.getView().getModel("appView").getProperty("/Jobs");
 
-            var noOfUps = allJobs.noOfUps3;
+            var totalNoOfUps = allJobs.noOfUps3;
+			var totalNoOfPcs = allJobs.qtyPcs;
 
             var totalprintingsheets = allJobs.noOfSheets1;
 
@@ -1833,13 +1745,13 @@ sap.ui.define([
             }
 debugger;
             var remData = {
-                "Printing": totalprintingsheets - oSumOfData.Printing,
-				"Coating": totalprintingsheets - oSumOfData.Coating,
-				"Foiling": totalprintingsheets - oSumOfData.Foiling,
-				"spotUV": totalprintingsheets - oSumOfData.spotUV,
-				"Embossing": totalprintingsheets - oSumOfData.Embossing,
-				"Punching": totalprintingsheets - oSumOfData.Punching,
-				"Pasting": oSumOfData.Punching - oSumOfData.Pasting
+                "Printing": totalprintingsheets ,
+				"Coating": totalprintingsheets ,
+				"Foiling": totalprintingsheets ,
+				"spotUV": totalprintingsheets ,
+				"Embossing": totalprintingsheets ,
+				"Punching": totalprintingsheets ,
+				"Pasting": oSumOfData.Punching
             }
 
             var totalPrintedSheets = oSumOfData.Printing
@@ -1848,7 +1760,9 @@ debugger;
 
             oModel.setProperty("/allRemainingDatas", remData)
             oModel.setProperty("/totalPrintCompleted", totalPrintedSheets)
-            oModel.setProperty("/totalPrintedSheetsTillNow", totalPrintedSheets * noOfUps);
+            oModel.setProperty("/totalPrintedSheetsTillNow", totalPrintedSheets * totalNoOfUps);
+            oModel.setProperty("/totalNoOfUpsInJob", totalNoOfUps);
+            oModel.setProperty("/totalNoOfPcs", totalNoOfPcs);
 
         },
 		onClickMarkAsUrgent:function(){
