@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="ent.ui.ecommerce.controller.allPrinters" >
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:custom="ent.ui.ecommerce.controller.controls" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="ent.ui.ecommerce.controller.allPrinters" >
   <Page id='idWelcomeP' showHeader="false">
 	  <subHeader>
 		<Toolbar>
@@ -14,23 +14,20 @@
 				<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
 			</content>
 		</Toolbar>
-      <List  id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
+      <List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
 			<items>
-					<ObjectListItem
-							type="Navigation"
-							title="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"
-							intro="{path: 'appView>jobCardNo', parameters: {expand: 'Company'}}"
-							>
-							<markers>
-								<ObjectMarker  type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
-							</markers>
-						    <!-- intro="{parts:[{path: 'appView>appUser/UserName'},{path: 'appView>appUser/FirstName'},{path: 'appView>appUser/LastName'}], formatter: '.formatter.formatFullName'}" -->
-							<!-- number="{appView>jobCardNo}" -->
-							<!-- intro="{path: 'appView>appUser', formatter: '.formatter.formatFullName'}" + -->
-								<firstStatus>
-									<ObjectStatus text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
-								</firstStatus>
-					</ObjectListItem>
+				<custom:customListItem type="Navigation" backgroundColor="{=${appView>status} === 'Value Mismatched' ? 'ff6666' : 'FFFFFF'}" >
+					
+					<HBox>
+						<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
+							<Text text="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"/>
+
+							<ObjectStatus class="sapUiSmallMarginTop" text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
+							
+						</VBox>
+						<ObjectMarker class="sapUiMediumMargin"  type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
+					</HBox>
+				</custom:customListItem>
 			</items>	
 	  </List>
   </Page>

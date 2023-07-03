@@ -1126,6 +1126,12 @@ debugger;
         return "Favorite"
       }
     },
+    statusFormatter:function(color){
+      debugger;
+      var alljobstatus = this.getView().getModel("appView").getProperty("/allJobStatus");
+      var allJobData = this.getView().getModel("appView").getProperty("/jobsData");
+
+    },
 
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];
