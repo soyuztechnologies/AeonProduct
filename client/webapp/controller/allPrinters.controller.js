@@ -216,7 +216,7 @@ sap.ui.define([
 		if(sUserRole === "Customer"){
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
 			.then(function (data, status, xhr) {
-			  
+			  debugger;
 			  that.getView().getModel("appView").setProperty("/jobsData", data);						
 		  })
 			.catch(function (jqXhr, textStatus, errorMessage) {
@@ -227,6 +227,7 @@ sap.ui.define([
 			this.middleWare.callMiddleWare(url, "get")
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);
+				// that.getJobStatus();
 				// var jobData = 
 				// for (let i = 0; i < data.length; i++) {
 				//   const element = data[i].jobCardNo;
@@ -238,6 +239,25 @@ sap.ui.define([
 				that.middleWare.errorHandler(jqXhr, that);
 			});
 		}
+	   },
+	   getJobStatus:function(){
+				
+		var oModel = this.getView().getModel();
+		var that = this;
+		const sEntityPath = `/JobStatus`;
+		oModel.read(sEntityPath,{
+			success: function (data) {
+				// MessageToast.show("success")
+				// that.getJobsDataByCompanyFilter();
+				that.getView().getModel("appView").setProperty("/allJobStatus", data.results);
+			},
+
+			error: function (error) {
+				// Error callback
+				that.middleWare.errorHandler(error, that);
+				// MessageToast.show("Something is Wrong");
+			}
+		});
 	   },
 	// //  At here we are getting  the company Name. 
 	// 		getCompanyName: function () {

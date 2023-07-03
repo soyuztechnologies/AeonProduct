@@ -1,12 +1,12 @@
 sap.ui.define([
 
-    "sap/m/ColumnListItem"
+    "sap/m/CustomListItem"
 
-], function(ColumnListItem) {
+], function(CustomListItem) {
 
     'use strict';
 
-    return ColumnListItem.extend("project1.control.myColumnListItem", {
+    return CustomListItem.extend("ent.ui.ecommerce.controller.controls.customListItem", {
 
         metadata:{
 
@@ -15,15 +15,14 @@ sap.ui.define([
                 "backgroundColor" : "string"
 
               }
-
         },
 
         onAfterRendering : function() {
             // make sure that onAfterRendering function in VBox is not overwritten
+          debugger;
+            if (CustomListItem.prototype.onAfterRendering) {
 
-            if (ColumnListItem.prototype.onAfterRendering) {
-
-              ColumnListItem.prototype.onAfterRendering.apply(this, arguments);
+              CustomListItem.prototype.onAfterRendering.apply(this, arguments);
 
             }
 
@@ -36,7 +35,7 @@ sap.ui.define([
               // });
     
               this.$().css("background-color", "#" + this.getBackgroundColor());
-              this.$Popin().css("background-color", "#" + this.getBackgroundColor());
+              // this.$Popin().css("background-color", "#" + this.getBackgroundColor());
               // $("#container-ent_eCom_ui---SalesOrderDetail--idSalesQuotationTable-tblBody tr").css("background-color", "#" + this.getBackgroundColor());
               //n $("tr:only-child").css("background-color", "#" + this.getBackgroundColor());
               //n $("tr:only-of-type").css("background-color", "#" + this.getBackgroundColor());
