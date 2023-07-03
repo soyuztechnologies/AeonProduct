@@ -168,139 +168,287 @@ sap.ui.define([
 		},
 
 		onSaveJobStatus: function () {
-			debugger;
-			var oModel = this.getView().getModel("appView"); // Default model get at here
-			var that = this;
-			var data = oModel.getProperty("/newJobStatus");
-			var oData = this.getView().getModel();
-			// if(sUserRole === "Raw Material Head"){
-				for (var i = 0; i < data.length; i++) {
-					var jobStatus = data[i];
-					var id = jobStatus.id;
-					const sEntityPath = `/JobStatus('${id}')`;
-	
-					if (jobStatus.TobeUpdated == "X") {
-						delete jobStatus.TobeUpdated;
-						oData.create("/JobStatus", jobStatus, {
-							success: function (data) {
-								MessageToast.show("Successfully Uploaded");
-								// that.onUploadStatus();
-								that.onReadJobStatus()
-								oModel.updateBindings();
-							},
-							error: function (error) {
-								// Error callback
-								that.middleWare.errorHandler(error, that);
-								// MessageToast.show("Error reading data");
-							}
-						});
-					} else if (jobStatus.TobeUpdated == true) {
-						delete jobStatus.TobeUpdated;
-						oData.update(sEntityPath, jobStatus, {
-							success: function (Data) {
-								MessageToast.show("Successfully Update the Entry");
-							},
-							error: function (error) {
-								MessageToast.show("Error reading data");
-								// Error callback
-								that.middleWare.errorHandler(error, that);
-							}
-						});
-					}
-				}
-				this.whenProductionStart();
-			
-			// else{
-			// 		var jobStatus = data;
-			// 		// var payload = [jobStatus]
-			// 		var id = data[0].id;
-			// 		var rawMaterial = data[0].rawMaterial;
-			
-			// //*-----------------------------------------------------------------------------------------
 
+            debugger;
+            var oModel = this.getView().getModel("appView"); // Default model get at here
+            var that = this;
+            var data = oModel.getProperty("/newJobStatus");
+            var oData = this.getView().getModel();
+            var pastingValue = oModel.getProperty("/Jobs");
 
-			
-			// 	var totalJobStatusData = {
-			// 		"Coating": 0,
-			// 		"Printing": 0,
-			// 		"Punching": 0,
-			// 		"Printing": 0,
-			// 		"Embossing": 0,
-			// 		"Pasting": 0,
-			// 		"spotUV": 0,
-			// 		"Packing": 0,
-			// 		"rawMaterial": "",
-			// 		"incAttachment": "",
-			// 		"deliveryAttachment":"" 
-			// 	}
-			// 	for (let i = 0; i < data.length; i++) { //5
-			// 		totalJobStatusData.Coating += parseInt(data[i].Coating);
-			// 		totalJobStatusData.Printing += parseInt(data[i].Printing);
-			// 		totalJobStatusData.Punching += parseInt(data[i].Punching);
-			// 		totalJobStatusData.Printing += parseInt(data[i].Printing);
-			// 		totalJobStatusData.Embossing += parseInt(data[i].Embossing);
-			// 		totalJobStatusData.Pasting += parseInt(data[i].Pasting);
-			// 		totalJobStatusData.spotUV += parseInt(data[i].spotUV);
-			// 		totalJobStatusData.Packing += parseInt(data[i].Packing);
-			// 		totalJobStatusData.rawMaterial +=parseInt(data[i].rawMaterial);
-					
-			// 	}
+            // if(sUserRole === "Raw Material Head"){
 
-			// 	var value =totalJobStatusData;
-			// 	value.Coating = isNaN(value.Coating) ? "" : value.Coating;
-			// 	value.Punching = isNaN(value.Punching) ? "" : value.Punching;
-			// 	value.Printing = isNaN(value.Printing) ? "" : value.Printing;
-			// 	value.Printing = isNaN(value.Printing) ? "" : value.Printing;
-			// 	value.Embossing = isNaN(value.Embossing) ? "" : value.Embossing;
-			// 	value.Pasting = isNaN(value.Pasting) ? "" : value.Pasting;
-			// 	value.spotUV = isNaN(value.spotUV) ? "" : value.spotUV;
-			// 	value.Packing = isNaN(value.Packing) ? "" : value.Packing;
-			// 	// value.rawMaterial = isNaN(value.rawMaterial) ? "" : value.rawMaterial;
-			// 	value.id = id;
-			// 	value.deliveryAttachment = id;
+                for (var i = 0; i < data.length; i++) {
+                    var jobStatus = data[i];
+                    var id = jobStatus.id;
+                    const sEntityPath = `/JobStatus('${id}')`;
+                    var parsedPastingValue = parseInt(jobStatus.Pasting)
 
-			// 	that.middleWare.callMiddleWare("api/JobStatus", "PUT" , value)
-			// 	.then(function (data, status, xhr) {
-			// 	  MessageToast.show("Succccess")
-			// 	//   that.getView().getModel("appView").setProperty("/jobsData", data);						
-			//   })
-			// 	.catch(function (jqXhr, textStatus, errorMessage) {
-			// 	  that.middleWare.errorHandler(jqXhr, that);
-			// 	});
-			// 	// if(array.Coating === NaN){
-			// 	// 	array.Coating = ""
-			// 	// }
-			// 	// if(array.Printing === Nan){
-			// 	// 	array.Printing = ""
-			// 	// }
-			// 	// var payload = {
-			// 	// 	"jobId": "096"
-			// 	// }
-			// 	// this.middleWare.callMiddleWare("getSumOfJobStatus", "POST", payload)
-			// 	// .then(function (data, status, xhr) {
-			// 	// 	debugger;
-			// 	// 	that.getView().getModel("appView").setProperty("/totalJobsStatus",data)
-			// 	// })
-			// 	// .catch(function (jqXhr, textStatus, errorMessage) {
-			// 	// 	that.middleWare.errorHandler(jqXhr, that);
-			// 	// });
-			
+                    if(parseInt(jobStatus.Pasting) < parseInt(pastingValue.qtyPcs) && parsedPastingValue > 0){
+                        this.updateStatusValue();
+                    }
+                    else{
+                        this.whenProductionStart();
+                    }
+                    if(jobStatus.rawMaterial === "In-Stock"){
+
+                        this.whenProductionStart();
+
+                    }
+                    if (jobStatus.TobeUpdated == "X") {
+
+                        delete jobStatus.TobeUpdated;
+
+                        oData.create("/JobStatus", jobStatus, {
+
+                            success: function (data) {
+
+                                MessageToast.show("Successfully Uploaded");
+
+                                // that.onUploadStatus();
+
+                                that.onReadJobStatus()
+
+                                oModel.updateBindings();
+
+                            },
+
+                            error: function (error) {
+
+                                // Error callback
+
+                                that.middleWare.errorHandler(error, that);
+
+                                // MessageToast.show("Error reading data");
+
+                            }
+
+                        });
+
+                    } else if (jobStatus.TobeUpdated == true) {
+
+                        delete jobStatus.TobeUpdated;
+
+                        // if(jobStatus.Pasting < parseInt(pastingValue.qtyPcs)){
+
+                        //  this.updateStatusValue();
+
+                        // }else{
+
+                        //  this.whenProductionStart();
+
+                        // }
+
+                        oData.update(sEntityPath, jobStatus, {
+
+                            success: function (Data) {
+
+                                MessageToast.show("Successfully Update the Entry");
+
+                            },
+
+                            error: function (error) {
+
+                                MessageToast.show("Error reading data");
+
+                                // Error callback
+
+                                that.middleWare.errorHandler(error, that);
+
+                            }
+
+                        });
+
+                    }
+
+                }
+
+            },
+
+                // this.whenProductionStart();
+
+           
+
+            // else{
+
+            //      var jobStatus = data;
+
+            //      // var payload = [jobStatus]
+
+            //      var id = data[0].id;
+
+            //      var rawMaterial = data[0].rawMaterial;
+
+           
+
+            // //*-----------------------------------------------------------------------------------------
 
 
 
-			// //* ----------------------------------------------------------------------------------------
-			// // oData.patch(`/JobStatus('${id}')`, payload, {
-			// // 	success: function (Data) {
-			// // 		MessageToast.show("Successfully Update the Entry");
-			// // 	},
-			// // 	error: function (error) {
-			// // 		MessageToast.show("Error reading data");
-			// // 		// Error callback
-			// // 		that.middleWare.errorHandler(error, that);
-			// // 	}
-			// // });
-			// 	}
-		},
+
+
+           
+
+            //  var totalJobStatusData = {
+
+            //      "Coating": 0,
+
+            //      "Printing": 0,
+
+            //      "Punching": 0,
+
+            //      "Printing": 0,
+
+            //      "Embossing": 0,
+
+            //      "Pasting": 0,
+
+            //      "spotUV": 0,
+
+            //      "Packing": 0,
+
+            //      "rawMaterial": "",
+
+            //      "incAttachment": "",
+
+            //      "deliveryAttachment":""
+
+            //  }
+
+            //  for (let i = 0; i < data.length; i++) { //5
+
+            //      totalJobStatusData.Coating += parseInt(data[i].Coating);
+
+            //      totalJobStatusData.Printing += parseInt(data[i].Printing);
+
+            //      totalJobStatusData.Punching += parseInt(data[i].Punching);
+
+            //      totalJobStatusData.Printing += parseInt(data[i].Printing);
+
+            //      totalJobStatusData.Embossing += parseInt(data[i].Embossing);
+
+            //      totalJobStatusData.Pasting += parseInt(data[i].Pasting);
+
+            //      totalJobStatusData.spotUV += parseInt(data[i].spotUV);
+
+            //      totalJobStatusData.Packing += parseInt(data[i].Packing);
+
+            //      totalJobStatusData.rawMaterial +=parseInt(data[i].rawMaterial);
+
+                   
+
+            //  }
+
+
+
+
+            //  var value =totalJobStatusData;
+
+            //  value.Coating = isNaN(value.Coating) ? "" : value.Coating;
+
+            //  value.Punching = isNaN(value.Punching) ? "" : value.Punching;
+
+            //  value.Printing = isNaN(value.Printing) ? "" : value.Printing;
+
+            //  value.Printing = isNaN(value.Printing) ? "" : value.Printing;
+
+            //  value.Embossing = isNaN(value.Embossing) ? "" : value.Embossing;
+
+            //  value.Pasting = isNaN(value.Pasting) ? "" : value.Pasting;
+
+            //  value.spotUV = isNaN(value.spotUV) ? "" : value.spotUV;
+
+            //  value.Packing = isNaN(value.Packing) ? "" : value.Packing;
+
+            //  // value.rawMaterial = isNaN(value.rawMaterial) ? "" : value.rawMaterial;
+
+            //  value.id = id;
+
+            //  value.deliveryAttachment = id;
+
+
+
+
+            //  that.middleWare.callMiddleWare("api/JobStatus", "PUT" , value)
+
+            //  .then(function (data, status, xhr) {
+
+            //    MessageToast.show("Succccess")
+
+            //  //   that.getView().getModel("appView").setProperty("/jobsData", data);                    
+
+            //   })
+
+            //  .catch(function (jqXhr, textStatus, errorMessage) {
+
+            //    that.middleWare.errorHandler(jqXhr, that);
+
+            //  });
+
+            //  // if(array.Coating === NaN){
+
+            //  //  array.Coating = ""
+
+            //  // }
+
+            //  // if(array.Printing === Nan){
+
+            //  //  array.Printing = ""
+
+            //  // }
+
+            //  // var payload = {
+
+            //  //  "jobId": "096"
+
+            //  // }
+
+            //  // this.middleWare.callMiddleWare("getSumOfJobStatus", "POST", payload)
+
+            //  // .then(function (data, status, xhr) {
+
+            //  //  debugger;
+
+            //  //  that.getView().getModel("appView").setProperty("/totalJobsStatus",data)
+
+            //  // })
+
+            //  // .catch(function (jqXhr, textStatus, errorMessage) {
+
+            //  //  that.middleWare.errorHandler(jqXhr, that);
+
+            //  // });
+
+           
+
+
+
+
+
+
+            // //* ----------------------------------------------------------------------------------------
+
+            // // oData.patch(`/JobStatus('${id}')`, payload, {
+
+            // //   success: function (Data) {
+
+            // //       MessageToast.show("Successfully Update the Entry");
+
+            // //   },
+
+            // //   error: function (error) {
+
+            // //       MessageToast.show("Error reading data");
+
+            // //       // Error callback
+
+            // //       that.middleWare.errorHandler(error, that);
+
+            // //   }
+
+            // // });
+
+            //  }
 
 		onClickCancel: function () {
 			
@@ -789,8 +937,8 @@ sap.ui.define([
 				"Packing": "",
 				"noOfPiecesToSend":"",
 				"noOfBoxPerPieces":"",
-				"remainingBox": "",
-				"remainingPiecesToSend": "",
+				"SecoundarySuppliers": "",
+				"SecoundaryPiecesToSend": "",
 				"Pasting": "",
 				"Printing": "",
 				"Punching": "",
@@ -802,6 +950,7 @@ sap.ui.define([
 			}
 
 			this.getModel('appView').setProperty('/newJob', oNewJob);
+			oModel.updateBindings();
 			// this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
 			
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
@@ -843,8 +992,8 @@ sap.ui.define([
             var totalShippers = oModel.getProperty("/totalShippers");
             var totalPiecesToSend = oModel.getProperty("/totalShippingPieces");
             var totalPiecePerBox = oModel.getProperty("/piecePerBox");
-            var remainingBox = oModel.getProperty("/remainingPiecesPerBox");
-            var remainingPiecesToSend = oModel.getProperty("/remainingPiecesToSend");
+            var SecoundarySuppliers = oModel.getProperty("/remainingPiecesPerBox");
+            var SecoundaryPiecesToSend = oModel.getProperty("/remainingPiecesToSend");
 
             oModel.updateBindings();
             // oModel.getProperty("/")
@@ -858,8 +1007,8 @@ sap.ui.define([
             oNewJobData.Packing = totalShippers;
             oNewJobData.noOfPiecesToSend = totalPiecesToSend;
             oNewJobData.noOfBoxPerPieces = totalPiecePerBox;
-            oNewJobData.remainingBox = remainingBox;
-            oNewJobData.remainingPiecesToSend = parseInt(remainingPiecesToSend);
+            oNewJobData.SecoundarySuppliers = SecoundarySuppliers;
+            oNewJobData.SecoundaryPiecesToSend = parseInt(SecoundaryPiecesToSend);
 			
 			var rawMaterialSelectedKey = oModel.getProperty('/selectedKey');
 			if(!rawMaterialSelectedKey){
@@ -1313,6 +1462,51 @@ sap.ui.define([
 			});
 		},
 
+		updateStatusValue: function () {
+
+           
+
+            var oModel = this.getView().getModel();
+
+            var that = this;
+
+            var ids = this.oArgs;
+
+            const sEntityPath = `/Jobs('${ids}')`;
+
+            const oUpdatedData = {
+
+                status: "Value Mismatched"
+
+            };
+
+            oModel.update(sEntityPath, oUpdatedData, {
+
+                success: function (data) {
+
+                    // MessageToast.show("Job Production Started")
+
+                    that.getJobsDataByCompanyFilter();
+
+                },
+
+
+
+
+                error: function (error) {
+
+                    // Error callback
+
+                    that.middleWare.errorHandler(error, that);
+
+                    // MessageToast.show("Something is Wrong");
+
+                }
+
+            });
+
+        },
+
 
 
 
@@ -1522,7 +1716,7 @@ sap.ui.define([
 			debugger;
 			var newValue = parseInt(oEvent.getParameter("newValue"));
 			var intNewValue = newValue;
-			var PunchingValue = oEvent.getSource().getParent().getParent().getBindingContext("appView").getObject().Punching;
+			var PunchingValue =this.getView().getModel("appView").getProperty("/allRemainingDatas").Punching;
 			// var totalRemPasting = this.getView().getModel("appView").getProperty("/allRemainingDatas")
 			// var totalNoPasting = this.getView().getModel("appView").getProperty("/totalPastingPcs").Pasting
 			// var totalNoOfUpsInJob = this.getView().getModel("appView").getProperty("/totalNoOfUpsInJob");
@@ -1531,7 +1725,7 @@ sap.ui.define([
 			if(!PunchingValue){
 				PunchingValue = 0;
 			}
-			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+			this.getView().getModel("appView").setProperty("/pastingNewValue", intNewValue);
 			
 
 				if (totalNoOfPcs > intNewValue || totalNoOfPcs === intNewValue) {
@@ -1547,6 +1741,7 @@ sap.ui.define([
 		},
 
 		onLiveChnagePiecePerBox: function (oEvent) {
+			debugger;
 			var newPiecePerBox = parseInt(oEvent.getParameter("newValue"));
 
 			var tempPiecePerBox = newPiecePerBox;
@@ -1587,13 +1782,10 @@ sap.ui.define([
 				var remainingPiecesToSendFloat = noOfShippersFloat - noOfShippers;
 				var remainingPiecesToSend = remainingPiecesToSendFloat * tempPiecePerBox;
 				this.getView().getModel("appView").setProperty("/remainingPiecesToSend", remainingPiecesToSend);
-
 				var remainingPiecesPerBox = 1;
-				if(remainingPiecesToSend !== 0){
-					this.getView().getModel("appView").setProperty("/remainingPiecesPerBox", remainingPiecesPerBox);
-				}
-
+				if(remainingPiecesToSend === 0){
                 	this.getView().getModel("appView").setProperty("/remainingPiecesPerBox", remainingPiecesPerBox);
+				}
 				var remainingNoOfShippers = noOfShippers + remainingPiecesPerBox;
 				   this.getView().getModel("appView").setProperty("/remainingNoOfShippers", remainingNoOfShippers);
 			}
@@ -1648,16 +1840,27 @@ sap.ui.define([
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
-			var PastingValue = oEvent.getSource().getParent().getParent().getBindingContext("appView").getObject().Pasting;
+			// var PastingValue = oEvent.getSource().getParent().getParent().getBindingContext("appView").getObject().Pasting;
+			var PastingValue = this.getView().getModel("appView").getProperty("/noOfPastingFromBackend");
+			var remainingPieces = this.getView().getModel("appView").getProperty("/noOfPiecesFrombackend");
+			var newPastingValue = this.getView().getModel("appView").getProperty("/pastingNewValue");
 			// var totalRemPasting = this.getView().getModel("appView").getProperty("/allRemainingDatas")
 			// var totalNoPasting = this.getView().getModel("appView").getProperty("/totalPastingPcs").Pasting
 			// var totalNoOfUpsInJob = this.getView().getModel("appView").getProperty("/totalNoOfUpsInJob")
 			// var noOfPiecesToSend = this.getView().getModel("appView").getProperty('/Pasting')
 			if(!PastingValue){
-				PastingValue = 0;
+				PastingValue = newPastingValue
 			}
-			var totalRemJobValues = PastingValue;
-			this.getView().getModel("appView").setProperty("/intNewValue", intNewValue);
+			if(!remainingPieces){
+				remainingPieces = 0;
+			}
+			if(remainingPieces === null){
+			 var totalRemJobValues = PastingValue;
+			}else{
+				var totalRemJobValues = PastingValue - remainingPieces;
+				totalRemJobValues = isNaN(totalRemJobValues) ? 0 : totalRemJobValues;
+			}
+			this.getView().getModel("appView").setProperty("/piecesToSendNewValue", intNewValue);
 			
 
 				if (totalRemJobValues >= intNewValue ) {
@@ -1674,17 +1877,6 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty("/VSTPieceToSend", "Value Can't be More than " + totalRemJobValues);
 				}
 		},
-		remainingPiecesToSend: function(oEvent){
-			debugger;
-			var valueNoOfPiecesToSend = this.getView().getModel("appView").getProperty("/totalShippingPieces");
-			var valueNoOfPiecesPerBox = this.getView().getModel("appView").getProperty("/valuePiecePerBox");
-			var valueNoOfShippers = this.getView().getModel("appView").getProperty("/totalShippers"); 
-			var remainingValueNoOfShippers = this.getView().getModel("appView").getProperty("/totalShippersFloat"); 
-			var remainingPiecesToSend = remainingValueNoOfShippers - valueNoOfShippers;
-			this.getView().getModel("appView").setProperty("/remainingPiecesToSend", remainingPiecesToSend);
-
-		},
-		remainingPiecesPerBox: function(oEvent){},
 		getRemJobsStatus: function () {
 
 			debugger;
@@ -1709,6 +1901,10 @@ sap.ui.define([
                 "Pasting": 0,
                 "spotUV": 0,
                 "Packing": 0,
+                "noOfBoxPerPieces": 0,
+                "noOfPiecesToSend": 0,
+                "SecoundarySuppliers": 0,
+                "SecoundaryPiecesToSend": 0,
                 "rawMaterial": "",
                 "InvNo": "",
                 "DeliveryNo": ""
@@ -1716,22 +1912,29 @@ sap.ui.define([
             var printingsheet = oModel.getProperty("/newJobStatus");
             for (let i = 0; i < printingsheet.length; i++) {
 
-                var stringNum = printingsheet[i].Printing;
+                var printing = printingsheet[i].Printing;
                 var coating = printingsheet[i].Coating;
                 var foiling = printingsheet[i].Printing;
                 var spotUV = printingsheet[i].spotUV;
                 var embossing = printingsheet[i].Embossing;
                 var punching = printingsheet[i].Punching;
                 var pasting = printingsheet[i].Pasting;
+                var noOfBoxPerPieces = printingsheet[i].noOfBoxPerPieces;
+                var noOfPiecesToSend = printingsheet[i].noOfPiecesToSend;
+                var SecoundarySuppliers = printingsheet[i].SecoundarySuppliers;
+                var SecoundaryPiecesToSend = printingsheet[i].SecoundaryPiecesToSend;
 
 
-                var integerNumber = parseInt(stringNum);
+                var integerNumber = parseInt(printing);
                 var noOfCoating = parseInt(coating);
                 var noOfFoiling = parseInt(foiling);
                 var noOfSpotUV = parseInt(spotUV);
                 var noOfEmbossing = parseInt(embossing);
                 var noOfPunching = parseInt(punching);
                 var noOfPasting = parseInt(pasting);
+                var noOfBoxPerPieces = parseInt(noOfBoxPerPieces);
+                var noOfPiecesToSend = parseInt(noOfPiecesToSend);
+				noOfBoxPerPieces = isNaN(noOfBoxPerPieces) ? "" : noOfBoxPerPieces;
 
 
                 oSumOfData.Printing += integerNumber;
@@ -1741,6 +1944,9 @@ sap.ui.define([
                 oSumOfData.Embossing += noOfEmbossing;
                 oSumOfData.Punching += noOfPunching;
                 oSumOfData.Pasting += noOfPasting;
+                oSumOfData.noOfBoxPerPieces += noOfBoxPerPieces;
+                oSumOfData.noOfPiecesToSend += noOfPiecesToSend;
+				
 
             }
 debugger;
@@ -1751,7 +1957,11 @@ debugger;
 				"spotUV": totalprintingsheets ,
 				"Embossing": totalprintingsheets ,
 				"Punching": totalprintingsheets ,
-				"Pasting": oSumOfData.Punching
+				// "Pasting": oSumOfData.Punching
+				"noOfPiecesToSend": oSumOfData.noOfPiecesToSend ,
+				"noOfBoxPerPieces": oSumOfData.noOfBoxPerPieces ,
+				"SecoundaryPiecesToSend": oSumOfData.SecoundaryPiecesToSend ,
+				"SecoundarySuppliers": oSumOfData.SecoundarySuppliers 
             }
 
             var totalPrintedSheets = oSumOfData.Printing
@@ -1763,6 +1973,8 @@ debugger;
             oModel.setProperty("/totalPrintedSheetsTillNow", totalPrintedSheets * totalNoOfUps);
             oModel.setProperty("/totalNoOfUpsInJob", totalNoOfUps);
             oModel.setProperty("/totalNoOfPcs", totalNoOfPcs);
+            oModel.setProperty("/noOfPastingFromBackend", noOfPasting);
+            oModel.setProperty("/noOfPiecesFrombackend", noOfPiecesToSend);
 
         },
 		onClickMarkAsUrgent:function(){

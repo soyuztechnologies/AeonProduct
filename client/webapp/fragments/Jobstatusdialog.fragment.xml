@@ -19,7 +19,7 @@ resizable="false" >
 				<DatePicker dateValue="{appView>/dateNow}"  visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
 
 				<Label required="true" text="Raw Material"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }"/>
-				<Select forceSelection="false" selectedKey="Pending"  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }" >
+				<Select forceSelection="false" selectedKey="{appView>rawMaterial}"  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }" >
 					<items>
 						<core:Item text="In Stock" key="In Stock" />
 						<core:Item text="Pending" key="Pending" />
@@ -67,8 +67,8 @@ resizable="false" >
 				<!-- <VBox> -->
 				<Label text="Additional Packing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" />
                 <!-- <Input  value="{appView>/remainingNoOfShippers}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining Shippers"/>   -->
-                <Input  value="{appView>/remainingPiecesPerBox}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining  Box"/>  
-                <Input  value="{path: 'appView>/remainingPiecesToSend', formatter: '.formatter.decimalFormatterForPieces'}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining Piece"/>  
+                <Input  value="{appView>/remainingPiecesPerBox}" visible="{=${appView>/remainingPiecesToSend} === 0 ? false : true}" placeholder="Remaining  Box"/>  
+                <Input  value="{path: 'appView>/remainingPiecesToSend', formatter: '.formatter.decimalFormatterForPieces'}" visible="{=${appView>/remainingPiecesToSend} === 0 ? false : true}"	 placeholder="Remaining Piece"/>  
 				<!-- </VBox> -->
  
 

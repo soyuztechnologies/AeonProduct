@@ -74,11 +74,11 @@
 			"type":"number",
 			"default":""
 		},
-		"remainingBox": {
+		"SecoundarySuppliers": {
 			"type":"number",
 			"default":""
 		},
-		"remainingPiecesToSend": {
+		"SecoundaryPiecesToSend": {
 			"type":"number",
 			"default":""
 		},
