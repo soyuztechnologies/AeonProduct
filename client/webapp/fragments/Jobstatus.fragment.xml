@@ -4,7 +4,7 @@
             <Title text="Job Status" />
             <ToolbarSpacer/>
                 <Button
-                   visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }"
+                   visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : ${appView>/selectedKey} !== 'In Stock' ? ${appView>/UserRole} === 'Raw Material Head' ? true : false  : false}"
                    icon="sap-icon://add"
                    press="onPressAdd"/>
     </OverflowToolbar>

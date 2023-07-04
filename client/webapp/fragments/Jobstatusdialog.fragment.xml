@@ -35,19 +35,19 @@ resizable="false" >
 					
 					
 
-				<Label text="Foiling" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input liveChange="foilingLiveChange" type="Number" value="{appView>Foiling}" valueStateText="{appView>/VSTFoiling}" valueState="{appView>/valueStateFoiling}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
+				<Label text="Foiling" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" />
+				<Input liveChange="foilingLiveChange" type="Number" value="{appView>Foiling}" valueStateText="{appView>/VSTFoiling}" valueState="{appView>/valueStateFoiling}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/foilingData} === '0' ? false : true}"/>
 
 
 
 
 				<Label text="Spot UV" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input liveChange="spotUVLiveChange" type="Number" value="{appView>spotUV}" valueStateText="{appView>/VSTspotUV}" valueState="{appView>/valueStatespotUV}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
+				<Input liveChange="spotUVLiveChange" type="Number" value="{appView>spotUV}" valueStateText="{appView>/VSTspotUV}" valueState="{appView>/valueStatespotUV}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/spotUvData} === '0' ? false : true}"/>
 
 
 
 				<Label text="Embossing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input  liveChange="embossingLiveChange" type="Number" value="{appView>Embossing}" valueStateText="{appView>/VSTEmbossing}" valueState="{appView>/valueStateEmbossing}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
+				<Input  liveChange="embossingLiveChange" type="Number" value="{appView>Embossing}" valueStateText="{appView>/VSTEmbossing}" valueState="{appView>/valueStateEmbossing}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/embossingData} === '0' ? false : true}"/>
 
 
 				<Label text="Punching" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
@@ -67,8 +67,8 @@ resizable="false" >
 				<!-- <VBox> -->
 				<Label text="Additional Packing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" />
                 <!-- <Input  value="{appView>/remainingNoOfShippers}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining Shippers"/>   -->
-                <Input  value="{appView>/remainingPiecesPerBox}" visible="{=${appView>/remainingPiecesToSend} === 0 ? false : true}" placeholder="Remaining  Box"/>  
-                <Input  value="{path: 'appView>/remainingPiecesToSend', formatter: '.formatter.decimalFormatterForPieces'}" visible="{=${appView>/remainingPiecesToSend} === 0 ? false : true}"	 placeholder="Remaining Piece"/>  
+                <Input  value="{appView>/remainingPiecesPerBox}" visible="{=${appView>/remainingPiecesToSend} !== 0 ? ${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false  : false}" placeholder="Remaining  Box"/>  
+                <Input  value="{path: 'appView>/remainingPiecesToSend', formatter: '.formatter.decimalFormatterForPieces'}" visible="{=${appView>/remainingPiecesToSend} !== 0 ? ${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false  : false}"	 placeholder="Remaining Piece"/>  
 				<!-- </VBox> -->
  
 

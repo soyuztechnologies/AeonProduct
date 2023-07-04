@@ -134,6 +134,9 @@ sap.ui.define([
 						that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 					}
 					that.getView().getModel("appView").setProperty("/Jobs", data);
+					that.getView().getModel("appView").setProperty("/foilingData", data.foilBlocks);
+					that.getView().getModel("appView").setProperty("/embossingData", data.embossing);
+					that.getView().getModel("appView").setProperty("/spotUvData", data.positive);
 					that.loadForm();
 					that.getView().getModel("appView").setProperty("/status", data.status);
 					if (!data.status) {
@@ -182,6 +185,7 @@ sap.ui.define([
 
                 for (var i = 0; i < data.length; i++) {
                     var jobStatus = data[i];
+					this.getView().getModel("appView").setProperty("/jobStatusRawMaterialValue" , jobStatus);
                     var id = jobStatus.id;
                     const sEntityPath = `/JobStatus('${id}')`;
                     var parsedPastingValue = parseInt(jobStatus.Pasting)
