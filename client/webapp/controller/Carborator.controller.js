@@ -5,9 +5,13 @@ sap.ui.define([
   "sap/ui/core/Fragment",
   "sap/m/MessageBox",
   "sap/ui/core/BusyIndicator",
-  "sap/ui/model/Filter"
-], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator, Filter) {
+  "sap/ui/model/Filter",
+  'sap/ui/export/Spreadsheet',
+  'sap/ui/export/library'
+], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator, Filter,Spreadsheet,exportLibrary) {
   "use strict";
+
+  var EdmType = exportLibrary.EdmType;
 
   return BaseController.extend("ent.ui.ecommerce.controller.Carborator", {
 
@@ -41,7 +45,7 @@ sap.ui.define([
       oModel.updateBindings();
       // this.selectCompany();
       this.getUserRoleData();
-      this.getCompanyName()
+      this.getCompanyName();
       this.getJobsData();
     },
     onPressNavigate: function () {
@@ -127,28 +131,7 @@ sap.ui.define([
 
 
     //* This function will get the company name!
-    getCompanyName: function () {
-      var oModel = this.getView().getModel();
-      var that = this;
-      oModel.read('/Company', {
-        success: function (data) {
-          debugger;
-          that.CompanyData = data;
-          //   const results = results.filter(obj => {
-          //    return obj.id === "64913ea67f0ea353ac20a390";
-          //  });
-          //  var filteredArray =  results.filter(function(obj) {
-          //   return obj.age > 25;
-          // });
-          that.getView().getModel("appView").setProperty("/companyDetails", data.results);
-        },
-        error: function (error) {
-          // Error callback
-          that.middleWare.errorHandler(error, that);
-          MessageToast.show("Error reading data");
-        }
-      });
-    },
+    
 
 
     //* This function will check the jobs on the backend and if they are present then it will change the operation accordingly!
@@ -686,7 +669,9 @@ sap.ui.define([
 
       const dbFields = {};
       dbFieldsJSON.forEach(item => {
-
+        var date = new Date()
+        var formattedDate = date.toLocaleDateString("en-US");
+        dbFields.CreatedOn = formattedDate;
         dbFields.operation = "N"
         dbFields.CompanyId = null
         dbFields.Urgent = ""

@@ -1345,6 +1345,19 @@ app.start = function () {
 			// at here you get the id and the make the further process.
 
 		});
+		app.post('/selectedDateJobStatus', async (req, res) => {
+			const Job = app.models.Job;
+			const JobStatus = app.models.JobStatus;
+			const { CreatedOnStart,CreatedOnEnd } = req.body;
+			try {
+			  let jobStatusSelectedData = await JobStatus.find({ where: {CreatedOn: {between: [CreatedOnStart, CreatedOnEnd]}} }); // Retrieve job status data
+			  res.status(200).json(jobStatusSelectedData);
+			} catch (error) {
+			  console.error(error);
+			  return res.status(500).send('Internal server error');
+			}
+		  });
+		  
 
 
 

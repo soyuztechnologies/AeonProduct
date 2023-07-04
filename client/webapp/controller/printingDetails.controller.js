@@ -80,9 +80,11 @@ sap.ui.define([
 			}
 			// oModel.setProperty("/visiblePdfViewer", false);
 			oModel.updateBindings();
+			this.getCompanyName();
 			// this.getUserRoleData();
 			this.oGetAgru();
 			this.onReadJobStatus();
+
 
 
 		},
@@ -924,6 +926,8 @@ sap.ui.define([
 			debugger
 			var that = this;
 			this.getRemJobsStatus();
+			var date = new Date()
+        var formattedDate = date.toLocaleDateString("en-US");
 			var oModel = this.getView().getModel("appView");
 			var oNewJob = {
 				"JobStatusId": this.oArgs,
@@ -932,7 +936,7 @@ sap.ui.define([
 				"Embossing": "",
 				"Printing": "",
 				"InvNo": "",
-				"CreatedOn": new Date(),
+				"CreatedOn": formattedDate,
 				"JobId": "",
 				"Packing": "",
 				"noOfPiecesToSend":"",

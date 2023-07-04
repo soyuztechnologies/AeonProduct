@@ -1573,5 +1573,27 @@ sap.ui.define([
 					this.middleWare.errorHandler(jqXhr, this);
 				}.bind(this));
 		},
+		getCompanyName: function () {
+			var oModel = this.getView().getModel();
+			var that = this;
+			oModel.read('/Company', {
+			  success: function (data) {
+				debugger;
+				that.CompanyData = data;
+				//   const results = results.filter(obj => {
+				//    return obj.id === "64913ea67f0ea353ac20a390";
+				//  });
+				//  var filteredArray =  results.filter(function(obj) {
+				//   return obj.age > 25;
+				// });
+				that.getView().getModel("appView").setProperty("/companyDetails", data.results);
+			  },
+			  error: function (error) {
+				// Error callback
+				that.middleWare.errorHandler(error, that);
+				MessageToast.show("Error reading data");
+			  }
+			});
+		  },
 	});
 });

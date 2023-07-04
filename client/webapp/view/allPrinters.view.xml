@@ -12,6 +12,7 @@
 				<SearchField liveChange="onSearchJob" width="50%"/>
 				<ToolbarSpacer/>
 				<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
+				<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data"/>     
 			</content>
 		</Toolbar>
       <List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">

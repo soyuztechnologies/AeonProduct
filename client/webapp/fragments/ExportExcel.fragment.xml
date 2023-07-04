@@ -1,0 +1,32 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
+    <Dialog title="Export Excel"
+    resizable="false" id="captchaDialog">
+    <content>
+        <HBox
+        >
+            
+        <DateRangeSelection
+			id="DRS1"
+			class="DRS1"
+			change="handleChange"/>
+            <ToolbarSpacer/>
+            <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}"
+                placeholder="Company Name"
+                change="selectCompany"
+                editable="{=${appView>status} === 'In-Progress' ? false : true}"
+                class="sapUiTinyMarginEnd">
+                <items>
+                    <core:Item enabled="true"  text="{appView>CompanyName}" 
+                        key="{appView>id}"/>
+                </items>
+            </ComboBox>
+        </HBox>
+    </content>
+    <beginButton>
+        <Button text="Export" type="Accept" press="onSubmit"/>
+    </beginButton>
+    <endButton>
+        <Button text="Cancel" type="Reject" press="onReject" />
+    </endButton>
+</Dialog>		
+</core:FragmentDefinition>

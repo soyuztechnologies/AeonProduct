@@ -11,6 +11,7 @@
             <!-- <HBox direction="{=${appView>/desktop} ? 'Row' : 'Column'}" alignItems="Center" alignContent="Inherit" justifyContent="Inherit"> -->
                 
                 <u:FileUploader
+                    
                     width="98%"
                     style="Emphasized"
                     id="fileUploader"

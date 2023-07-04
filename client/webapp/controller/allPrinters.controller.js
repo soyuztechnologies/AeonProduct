@@ -6,10 +6,13 @@ sap.ui.define([
 	'sap/ui/model/Filter',
 	'sap/ui/model/FilterOperator',
 	"sap/ui/core/Fragment",
+	"sap/ui/core/library",
+	"sap/ui/core/date/UI5Date",
+	'sap/ui/export/Spreadsheet'
 
-], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment) {
+], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment,CoreLibrary,UI5Date, Spreadsheet) {
 	"use strict";
-
+	var ValueState = CoreLibrary.ValueState;
 	return BaseController.extend("ent.ui.ecommerce.controller.allPrinters", {
 
 		onInit: function () {
@@ -43,6 +46,7 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/visibility", true);
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
+			this.getCompanyName()
 			// this.getUserName();
 			// this.getJobAccordingCustomer();
 		},
@@ -259,6 +263,164 @@ sap.ui.define([
 			}
 		});
 	   },
+
+
+	   
+	onPressExportData: function () {	
+	this.exportData();
+	},
+	exportData: function () {
+		var oView = this.getView();
+		var that = this;
+		if (!this.oExportData) {
+			this.oExportData = Fragment.load({
+				id: oView.getId(),
+				name: "ent.ui.ecommerce.fragments.ExportExcel",
+				controller: this
+			}).then(function (oDialog) {
+				oView.addDependent(oDialog);
+				return oDialog;
+			}.bind(this));
+		}
+		this.oExportData.then(function (oDialog) {
+			oDialog.open();
+		});
+	},
+	onReject: function () {
+		this.oExportData.then(function (oDialog) {
+			oDialog.close();
+		})
+	},
+	handleChange: function (oEvent) {
+		debugger;
+		var selectedDate = oEvent.getParameter("value")
+		// const formattedDate = selectedDate.toISOString().split('T')[0];
+		this.getView().getModel("appView").setProperty("/selectedDate",selectedDate)
+	},
+	formatDate: function (){
+		var date = this.getView().getModel("appView").getProperty("/selectedDate")
+		const dates = date.split(" - ");
+		var dateString = dates[0];	
+	},
+	onSubmit:function(){
+		debugger;
+		this.formatDate();
+		var that = this
+		var date = this.getView().getModel("appView").getProperty("/selectedDate")
+		const dates = date.split(" - ");
+		var startDate = dates[0];
+		var endDate = dates[1];
+		
+		var payload = {
+			"CreatedOnStart":startDate,
+			"CreatedOnEnd":endDate
+		}
+		this.middleWare.callMiddleWare("selectedDateJobStatus", "POST" , payload)
+			.then(function (data, status, xhr) {
+			  debugger;
+			  that.getView().getModel("appView").setProperty("/jobStatusDate", data);	
+			  that.onExport();					
+		  })
+			.catch(function (jqXhr, textStatus, errorMessage) {
+			  that.middleWare.errorHandler(jqXhr, that);
+			});
+	},
+	createColumnConfig: function() {
+		return [
+			{
+				label: 'Job Card No.',
+				property: 'JobStatusId',
+				scale: 0
+			},
+			{
+				label: 'Raw Material',
+				property: 'rawMaterial',
+				width: '25'
+			},
+			{
+				label: 'Printing',
+				property: 'Printing',
+				width: '25'
+			},
+			{
+				label: 'Coating',
+				property: 'Coating',
+				width: '25'
+			},
+			{
+				label: 'Inc No.',
+				property: 'InvNo',
+				width: '25'
+			},
+			{
+				label: 'Foiling',
+				property: 'Foiling',
+				width: '18'
+			},
+			{
+				label: 'Embossing',
+				property: 'Embossing',
+				width: '18'
+			},
+			{
+				label: 'Pasting',
+				property: 'Pasting',
+				width: '18'
+			},
+			{
+				label: 'SpotUV',
+				property: 'spotUV',
+				width: '18'
+			},
+			{
+				label: 'Punching',
+				property: 'Punching',
+				width: '18'
+			},
+			{
+				label: 'Packing',
+				property: 'Packing',
+				width: '18'
+			},
+			{
+				label: 'No. Of Box Per Pieces',
+				property: 'noOfBoxPerPieces',
+				width: '18'
+			},
+			{
+				label: 'No Of Pieces To Send',
+				property: 'noOfPiecesToSend',
+				width: '18'
+			},
+			
+			];
+	},
+
+	onExport: function() {
+		var aCols, oBinding, oSettings, oSheet, oTable;
+
+		oTable = this.byId('exportTable');
+		oBinding = this.getView().getModel("appView").getProperty("/jobStatusDate")
+		aCols = this.createColumnConfig();
+
+		oSettings = {
+			workbook: { columns: aCols },
+			dataSource: oBinding
+		};
+
+		oSheet = new Spreadsheet(oSettings);
+		oSheet.build()
+			.then(function() {
+				MessageToast.show('Spreadsheet export has finished');
+			}).finally(function() {
+				oSheet.destroy();
+			});
+	}
+
+
+});
+
+});
 	// //  At here we are getting  the company Name. 
 	// 		getCompanyName: function () {
 	// 			debugger;
@@ -303,5 +465,5 @@ sap.ui.define([
 	// 	// if user found then update the call in server for finding jobs.
 	//    },
 
-	});
-});
+// 	});
+// });
