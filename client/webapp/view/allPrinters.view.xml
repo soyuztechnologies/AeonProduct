@@ -12,7 +12,7 @@
 				<SearchField liveChange="onSearchJob" width="50%"/>
 				<ToolbarSpacer/>
 				<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
-				<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data"/>     
+				<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin' ? true :false}"/>     
 			</content>
 		</Toolbar>
       <List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
@@ -21,6 +21,7 @@
 					
 					<HBox>
 						<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
+							<Label text="{appView>Company/CompanyName}" class ="sapUiTinyMarginBottom"/>
 							<Text text="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"/>
 
 							<ObjectStatus class="sapUiSmallMarginTop" text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
@@ -33,26 +34,3 @@
 	  </List>
   </Page>
 </mvc:View>
-
-
-		<!-- <ObjectListItem
-			title="{Name}"
-			type="Active"
-			press="onListItemPress"
-			number="{
-				parts:[{path:'Price'},{path:'CurrencyCode'}],
-				type: 'sap.ui.model.type.Currency',
-				formatOptions: {showMeasure: false}
-			}"
-			numberUnit="{CurrencyCode}">
-			<firstStatus>
-				<ObjectStatus
-					text="{Status}"
-					state="{
-						path: 'Status',
-						formatter: 'sap.m.sample.ObjectListItem.Formatter.status'
-					}" />
-			</firstStatus>
-			<ObjectAttribute text="{WeightMeasure} {WeightUnit}" />
-			<ObjectAttribute text="{Width} x {Depth} x {Height} {DimUnit}" />
-		</ObjectListItem> -->

@@ -1142,9 +1142,13 @@ app.start = function () {
 		app.get('/getJobsWithCompany',async function(req,res){
 			try {
 				const Job = app.models.Job;
-				const jobs = await Job.find({ include: 'Company' })
+				const jobs = await Job.find({ include: 'Company' });
+				const 
+				oFilter = jobs.filter(function (data){
+                 return data.CompanyId != null
+				});
 				debugger;
-				res.send(jobs);
+				res.send(oFilter);
 			} catch (error) {
 				debugger;
 			}
@@ -1177,8 +1181,33 @@ app.start = function () {
 
 			}
 		});
-
-
+		app.post('/selectedDateJobStatus', async (req, res) => {
+		
+					const Job = app.models.Job;
+		
+					const JobStatus = app.models.JobStatus;
+		
+					const { CreatedOnStart, CreatedOnEnd } = req.body;
+		
+					try {
+		
+						let jobStatusSelectedData = await Job.find(
+		
+							// include: 'JobStatus' }
+		
+						); // Retrieve job status data
+		
+						res.status(200).json(jobStatusSelectedData);
+		
+					} catch (error) {
+		
+						console.error(error);
+		
+						return res.status(500).send('Internal server error');
+		
+					}
+		
+				});
 		// * this call is sending the emol to the existing user that admin create.
 		// todo need this to optimize 
 		app.post('/sendEmailExistUser', async (req, res) => {
@@ -1359,22 +1388,7 @@ app.start = function () {
 			// at here you get the id and the make the further process.
 
 		});
-		app.post('/selectedDateJobStatus', async (req, res) => {
-			const Job = app.models.Job;
-			const JobStatus = app.models.JobStatus;
-			const { CreatedOnStart,CreatedOnEnd } = req.body;
-			try {
-			  let jobStatusSelectedData = await JobStatus.find({ where: {CreatedOn: {between: [CreatedOnStart, CreatedOnEnd]}} }); // Retrieve job status data
-			  res.status(200).json(jobStatusSelectedData);
-			} catch (error) {
-			  console.error(error);
-			  return res.status(500).send('Internal server error');
-			}
-		  });
 		  
-
-
-
 		app.post('/usersRemove', (req, res) => {
 			const userEmail = "dheeraj@soyuztechnologies.com";
 
