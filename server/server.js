@@ -1137,9 +1137,23 @@ app.start = function () {
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+		// Relation: Jobs ---> Company >>>> belongsTo >>>> Object
+		// 		Comany ---> Jobs >>>>> hasMany   >>>> Array
+		app.get('/getJobsWithCompany',async function(req,res){
+			try {
+				const Job = app.models.Job;
+				const jobs = await Job.find({ include: 'Company' })
+				debugger;
+				res.send(jobs);
+			} catch (error) {
+				debugger;
+			}
+			
+		})
+		// Relation: Jobs ---> Job status >>>> hasMany  >>>> Array
+		// 		JobStatus ---> Jobs >>>>> Belongs TO >>>> Object
 
-
-
+		// To be done by harsh
 
 		app.get('/getJobsData', async (req, res) => {
 			try {
