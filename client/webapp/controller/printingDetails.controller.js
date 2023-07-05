@@ -17,7 +17,7 @@ sap.ui.define([
 		},
 
 		_matchedHandler: async function (oEvent) {
-			debugger;
+			
 			this.oArgs = oEvent.getParameter("arguments").jobId;
 			var that = this;
 
@@ -125,6 +125,7 @@ sap.ui.define([
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			oModel.read("/Jobs('" + this.oArgs + "')", {
 				success: function (data) {
+					debugger;
 					if(data.Urgent === "Yes"){
 						that.getView().getModel("appView").setProperty("/asUrgentVis", false);
 						// that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", true);
@@ -174,7 +175,6 @@ sap.ui.define([
 
 		onSaveJobStatus: function () {
 
-            debugger;
             var oModel = this.getView().getModel("appView"); // Default model get at here
             var that = this;
             var data = oModel.getProperty("/newJobStatus");
@@ -413,7 +413,7 @@ sap.ui.define([
 
             //  // .then(function (data, status, xhr) {
 
-            //  //  debugger;
+            //  //  
 
             //  //  that.getView().getModel("appView").setProperty("/totalJobsStatus",data)
 
@@ -561,7 +561,6 @@ sap.ui.define([
 		},
 
 		openCustomerAttachmentDialog: function (oEvent) {
-			debugger;
 			var data = oEvent.getSource().getBindingContext("appView").getObject();
 			var clickedrow = oEvent.getSource().getBinding("text").getPath();
 			var invoice = data.InvNo;
@@ -676,7 +675,6 @@ sap.ui.define([
 		clickedLink: null,
 		jobStatusPath: null,
 		onClickPopup: function (oEvent) {
-			debugger; 
 			var that = this;
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 			this.clickedLink = oEvent.getSource().getBinding("text").getPath();
@@ -980,7 +978,7 @@ sap.ui.define([
 
 		// * this fucntion will close the dialog of the "onPressAdd" or Add button dialog on status.
 		onClose: function () {
-			debugger;	
+				
 			// var oSimpleForm2 = this.getView().byId('jobStatusDialog');
 			// 	oSimpleForm2.bindElement('appView>/oldJobs');
 			this.openJobstatusDialog().then(function (oDialog) {
@@ -992,7 +990,7 @@ sap.ui.define([
 		// * this fucntion is triger when user click on save in fragment.
 		onSubmitData: function () {
 
-            debugger;
+            
             var oModel = this.getView().getModel("appView");
             var invData = oModel.getProperty("/InvNo");
             var delData = oModel.getProperty("/DeliveryNo");
@@ -1042,7 +1040,7 @@ sap.ui.define([
             this.onClose();
         },
 		// onSubmitData: function () {
-		// 	debugger;
+		// 	
 			
 		// 	var oModel = this.getView().getModel("appView");
 		// 	var invData = oModel.getProperty("/InvNo");
@@ -1134,7 +1132,7 @@ sap.ui.define([
 				return;
 			}
 			this.getRemJobsStatus();
-			debugger;	
+				
 			this.isEditStatus = true;
 			
 			var that = this;
@@ -1333,7 +1331,7 @@ sap.ui.define([
 						item.TobeUpdated = false;
 					});
 					oModel.setProperty("/readedJobdata", data);
-					debugger;
+					
 					oModel.setProperty("/newJobStatus", data);
 					// that.showAddedFields();
 					// that.jobStatusData = oModel.getProperty("/readedJobdata");
@@ -1573,7 +1571,7 @@ sap.ui.define([
 					});
 			} else {
 
-				this.middleWare.callMiddleWare(url, "get")
+				this.middleWare.callMiddleWare("getJobsWithCompany", "get")
 					.then(function (data, status, xhr) {
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 					})
@@ -1583,7 +1581,7 @@ sap.ui.define([
 			}
 		},
 		printingLiveChange: function (oEvent) {
-			debugger;
+			
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
@@ -1600,7 +1598,7 @@ sap.ui.define([
 			}
 		},
 		coatingLiveChange: function (oEvent) {
-			debugger;
+			
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
@@ -1627,7 +1625,7 @@ sap.ui.define([
 			
 		},
 		foilingLiveChange: function (oEvent) {
-			debugger;
+			
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
@@ -1649,7 +1647,7 @@ sap.ui.define([
 			
 		},
 		spotUVLiveChange: function (oEvent) {
-			debugger;
+			
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
@@ -1673,7 +1671,7 @@ sap.ui.define([
 			
 		},
 		embossingLiveChange: function (oEvent) {
-			debugger;
+			
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
@@ -1697,7 +1695,7 @@ sap.ui.define([
 			
 		},
 		punchingLiveChange: function (oEvent) {
-			debugger;
+			
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
@@ -1721,7 +1719,7 @@ sap.ui.define([
 			
 		},
 		pastingLiveChange: function (oEvent) {
-			debugger;
+			
 			var newValue = parseInt(oEvent.getParameter("newValue"));
 			var intNewValue = newValue;
 			var PunchingValue =this.getView().getModel("appView").getProperty("/allRemainingDatas").Punching;
@@ -1749,7 +1747,7 @@ sap.ui.define([
 		},
 
 		onLiveChnagePiecePerBox: function (oEvent) {
-			debugger;
+			
 			var newPiecePerBox = parseInt(oEvent.getParameter("newValue"));
 
 			var tempPiecePerBox = newPiecePerBox;
@@ -1844,7 +1842,7 @@ sap.ui.define([
 			// this.onLiveChnagePiecePerBox();
 
 			// this.getView().getModel("appView").updateBindings();
-			debugger;
+			
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);
 			var intNewValue = newValue;
@@ -1887,7 +1885,7 @@ sap.ui.define([
 		},
 		getRemJobsStatus: function () {
 
-			debugger;
+			
 
 
             var oModel = this.getView().getModel("appView");
@@ -1957,7 +1955,7 @@ sap.ui.define([
 				
 
             }
-debugger;
+
             var remData = {
                 "Printing": totalprintingsheets ,
 				"Coating": totalprintingsheets ,
@@ -2058,7 +2056,7 @@ debugger;
 
 
 		  onClickRemoveAsUrgent:function(oEvent){
-			debugger;
+			
 			var oModel = this.getView().getModel();
 			var that=this;
 			// var data = that.getView().getModel("appView").getProperty("/Jobs");

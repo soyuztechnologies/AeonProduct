@@ -941,7 +941,6 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     //   return formattedValue + " pcs";
     // },
     tableEntryVisible: function (Data) {
-      debugger;
       if(!Data || Data.length === 0){
 
         return false;

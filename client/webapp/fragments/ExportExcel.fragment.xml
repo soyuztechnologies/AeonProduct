@@ -10,10 +10,10 @@
 			class="DRS1"
 			change="handleChange"/>
             <ToolbarSpacer/>
-            <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}"
+            <ComboBox 
+                items="{appView>/companyDetails}"
                 placeholder="Company Name"
-                change="selectCompany"
-                editable="{=${appView>status} === 'In-Progress' ? false : true}"
+                change="selectCompanyName"
                 class="sapUiTinyMarginEnd">
                 <items>
                     <core:Item enabled="true"  text="{appView>CompanyName}" 

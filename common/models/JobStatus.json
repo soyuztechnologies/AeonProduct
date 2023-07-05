@@ -90,13 +90,18 @@
 			"type":"string",
 			"default":null
 		}
-		
 	},
 	"scope": {
 		"order": "CreatedOn DESC"
 	},
 	"validations": [],
-  	"relations": {},
+  	"relations": {
+		"job":{
+			"type": "belongsTo",
+			"model": "Job",
+			"foreignKey": "JobStatusId"
+		}
+	},
 	"acls": [{
 		"accessType": "*",
 		"principalType": "ROLE",
