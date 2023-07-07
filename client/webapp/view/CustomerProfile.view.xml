@@ -59,7 +59,7 @@
             <ux:subSections>
                 <ux:ObjectPageSubSection>
                     <ux:blocks>
-                        <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CompanyDetails" type="XML"></core:Fragment>
+                        <core:Fragment fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.CompanyDetails" type="XML"></core:Fragment>
                     </ux:blocks>
                 </ux:ObjectPageSubSection>
             </ux:subSections>
@@ -69,7 +69,7 @@
             <ux:subSections>
                 <ux:ObjectPageSubSection>
                     <ux:blocks>
-                        <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PersonDetails" type="XML"></core:Fragment>
+                        <core:Fragment fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.PersonDetails" type="XML"></core:Fragment>
                     </ux:blocks>
                 </ux:ObjectPageSubSection>
             </ux:subSections>
@@ -79,7 +79,7 @@
             <ux:subSections>
                 <ux:ObjectPageSubSection>
                     <ux:blocks>
-                        <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Address" type="XML"></core:Fragment>
+                        <core:Fragment fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.Address" type="XML"></core:Fragment>
                     </ux:blocks>
                 </ux:ObjectPageSubSection>
             </ux:subSections>

@@ -271,192 +271,7 @@ sap.ui.define([
 
             },
 
-                // this.whenProductionStart();
-
-           
-
-            // else{
-
-            //      var jobStatus = data;
-
-            //      // var payload = [jobStatus]
-
-            //      var id = data[0].id;
-
-            //      var rawMaterial = data[0].rawMaterial;
-
-           
-
-            // //*-----------------------------------------------------------------------------------------
-
-
-
-
-
-           
-
-            //  var totalJobStatusData = {
-
-            //      "Coating": 0,
-
-            //      "Printing": 0,
-
-            //      "Punching": 0,
-
-            //      "Printing": 0,
-
-            //      "Embossing": 0,
-
-            //      "Pasting": 0,
-
-            //      "spotUV": 0,
-
-            //      "Packing": 0,
-
-            //      "rawMaterial": "",
-
-            //      "incAttachment": "",
-
-            //      "deliveryAttachment":""
-
-            //  }
-
-            //  for (let i = 0; i < data.length; i++) { //5
-
-            //      totalJobStatusData.Coating += parseInt(data[i].Coating);
-
-            //      totalJobStatusData.Printing += parseInt(data[i].Printing);
-
-            //      totalJobStatusData.Punching += parseInt(data[i].Punching);
-
-            //      totalJobStatusData.Printing += parseInt(data[i].Printing);
-
-            //      totalJobStatusData.Embossing += parseInt(data[i].Embossing);
-
-            //      totalJobStatusData.Pasting += parseInt(data[i].Pasting);
-
-            //      totalJobStatusData.spotUV += parseInt(data[i].spotUV);
-
-            //      totalJobStatusData.Packing += parseInt(data[i].Packing);
-
-            //      totalJobStatusData.rawMaterial +=parseInt(data[i].rawMaterial);
-
-                   
-
-            //  }
-
-
-
-
-            //  var value =totalJobStatusData;
-
-            //  value.Coating = isNaN(value.Coating) ? "" : value.Coating;
-
-            //  value.Punching = isNaN(value.Punching) ? "" : value.Punching;
-
-            //  value.Printing = isNaN(value.Printing) ? "" : value.Printing;
-
-            //  value.Printing = isNaN(value.Printing) ? "" : value.Printing;
-
-            //  value.Embossing = isNaN(value.Embossing) ? "" : value.Embossing;
-
-            //  value.Pasting = isNaN(value.Pasting) ? "" : value.Pasting;
-
-            //  value.spotUV = isNaN(value.spotUV) ? "" : value.spotUV;
-
-            //  value.Packing = isNaN(value.Packing) ? "" : value.Packing;
-
-            //  // value.rawMaterial = isNaN(value.rawMaterial) ? "" : value.rawMaterial;
-
-            //  value.id = id;
-
-            //  value.deliveryAttachment = id;
-
-
-
-
-            //  that.middleWare.callMiddleWare("api/JobStatus", "PUT" , value)
-
-            //  .then(function (data, status, xhr) {
-
-            //    MessageToast.show("Succccess")
-
-            //  //   that.getView().getModel("appView").setProperty("/jobsData", data);                    
-
-            //   })
-
-            //  .catch(function (jqXhr, textStatus, errorMessage) {
-
-            //    that.middleWare.errorHandler(jqXhr, that);
-
-            //  });
-
-            //  // if(array.Coating === NaN){
-
-            //  //  array.Coating = ""
-
-            //  // }
-
-            //  // if(array.Printing === Nan){
-
-            //  //  array.Printing = ""
-
-            //  // }
-
-            //  // var payload = {
-
-            //  //  "jobId": "096"
-
-            //  // }
-
-            //  // this.middleWare.callMiddleWare("getSumOfJobStatus", "POST", payload)
-
-            //  // .then(function (data, status, xhr) {
-
-            //  //  
-
-            //  //  that.getView().getModel("appView").setProperty("/totalJobsStatus",data)
-
-            //  // })
-
-            //  // .catch(function (jqXhr, textStatus, errorMessage) {
-
-            //  //  that.middleWare.errorHandler(jqXhr, that);
-
-            //  // });
-
-           
-
-
-
-
-
-
-            // //* ----------------------------------------------------------------------------------------
-
-            // // oData.patch(`/JobStatus('${id}')`, payload, {
-
-            // //   success: function (Data) {
-
-            // //       MessageToast.show("Successfully Update the Entry");
-
-            // //   },
-
-            // //   error: function (error) {
-
-            // //       MessageToast.show("Error reading data");
-
-            // //       // Error callback
-
-            // //       that.middleWare.errorHandler(error, that);
-
-            // //   }
-
-            // // });
-
-            //  }
-
-		onClickCancel: function () {
+        onClickCancel: function () {
 			
 			var oModel = this.getView().getModel("appView");
 			var oldData = oModel.getProperty("/newJobStatus");
@@ -500,35 +315,19 @@ sap.ui.define([
 
 		// * this will opens the dialog for the multiple roles.
 		oDialogOpen: function () {
-
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
-
 			var oView = this.getView();
-
 			var that = this;
-
 			if (!this.oUploadDialog) {
-
 				this.oUploadDialog = Fragment.load({
-
 					id: oView.getId(),
-
-					name: "ent.ui.ecommerce.fragments.uploadDoc",
-
+					name: "ent.ui.ecommerce.fragments.printingDetailFragment.uploadDoc",
 					controller: this
-
 				}).then(function (oDialog) {
-
 					// Add dialog to view hierarchy
-
 					oView.addDependent(oDialog);
-
 					return oDialog;
-
 				}.bind(this));
-
-
-
 
 			}
 
@@ -537,25 +336,6 @@ sap.ui.define([
 			}else{
 				this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", false);		
 			}
-			// 	this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", true);
-
-			// 	this.getView().getModel("appView").setProperty("/btnVisibility", true);
-
-			// }
-			// else if(sUserRole === "Artwork Head"){
-			// 	this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
-			// } 
-			// else if(sUserRole === "Accounts Head"){
-			// 	this.getView().getModel("appView").setProperty("/browseVisArtwork", true);
-			// }
-			// else {
-
-			// 	this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", false);
-
-			// 	this.getView().getModel("appView").setProperty("/btnVisibility", false);
-
-			// }
-
 			return this.oUploadDialog;
 
 		},
@@ -573,7 +353,7 @@ sap.ui.define([
 			if (!this.CustomerAttachment) {
 				this.CustomerAttachment = Fragment.load({
 					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.CustomerAttachment",
+					name: "ent.ui.ecommerce.fragments.printingDetailFragment.CustomerAttachment",
 					controller: this
 				}).then(function (oDialog) {
 					oView.addDependent(oDialog);
@@ -851,7 +631,7 @@ sap.ui.define([
 			if (!this.oJobDialog) {
 				this.oJobDialog = Fragment.load({
 					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.AllJobs",
+					name: "ent.ui.ecommerce.fragments.printingDetailFragment.AllJobs",
 					controller: this
 				}).then(function (oDialog) {
 					// Add dialog to view hierarchy
@@ -910,7 +690,7 @@ sap.ui.define([
 			if (!this.addJobstatusDialog) {
 				this.addJobstatusDialog = Fragment.load({
 					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.Jobstatusdialog",
+					name: "ent.ui.ecommerce.fragments.printingDetailFragment.Jobstatusdialog",
 					controller: this
 				}).then(function (oDialog) {
 					// Add dialog to view hierarch
@@ -1213,6 +993,8 @@ sap.ui.define([
 				};
 			}
 
+			
+
 			oData.update(`/JobStatus('${id}')`, oUpdatedData, {
 				success: function (data) {
 					BusyIndicator.hide();
@@ -1409,6 +1191,7 @@ sap.ui.define([
 						oModel.setProperty("/InvNo", name)
 
 					}
+					oModel.setProperty("/submitEnable",true);
 					oModel.updateBindings();
 				} catch (jqXhr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -2026,7 +1809,7 @@ sap.ui.define([
 			if (!this.markasurgentdialog) {
 			  this.markasurgentdialog = Fragment.load({
 				id: oView.getId(),
-				name: "ent.ui.ecommerce.fragments.MarkedAsUrgent",
+				name: "ent.ui.ecommerce.fragments.printingDetailFragment.MarkedAsUrgent",
 				controller: this
 			  }).then(function (oDialog) {
 				// Add dialog to view hierarchy

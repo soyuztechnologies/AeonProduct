@@ -16,13 +16,13 @@
             </OverflowToolbar>
         <!-- </headerToolbar> -->
         <VBox tooltip ="User Company Details">
-            <core:Fragment id="idPersonalDetails" fragmentName="ent.ui.ecommerce.fragments.CompanyDetails" type="XML"></core:Fragment>
+            <core:Fragment id="idPersonalDetails" fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.CompanyDetails" type="XML"></core:Fragment>
         </VBox>
         <VBox tooltip="User Personal Details">
-            <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PersonDetails" type="XML"></core:Fragment>
+            <core:Fragment fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.PersonDetails" type="XML"></core:Fragment>
         </VBox>
         <VBox tooltip="User Personal Details">
-            <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Address" type="XML"></core:Fragment>
+            <core:Fragment fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.Address" type="XML"></core:Fragment>
         </VBox>
     </content>
 

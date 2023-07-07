@@ -1,30 +1,3 @@
-<!-- <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
-
-<Dialog contentWidth="10%" contentHeight="40%" title="Job Status"
-  
-resizable="false" >
-<content>
-      <ComboBox id="myComboBox" selectedkey="new" selectionChange="onSelectionChange"  class="sapUiTinyMargin" width="auto">
-        <items>
-            <core:Item text="New" key="new" />
-            <core:Item text="In Progress" key="inprogress" />
-            <core:Item text="Completed" key="completed" />
-            <core:Item text="Packing" key="packing" />
-            <core:Item text="In Transit" key="intransit" />
-            <core:Item text="Delivered" key="delivered" />
-            <core:Item text="Cancelled" key="cancelled" />
-        </items>
-      </ComboBox>
-</content>
-<beginButton>
-    <Button text="OK" type="Emphasized" press="onSubmit"/>
-</beginButton>
-<endButton>
-    <Button text="Cancel" type="Reject" press="onClose"/>
-</endButton>
-</Dialog>	
-
-</core:FragmentDefinition> -->
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
   <ViewSettingsDialog id="myViewSettingsDialog" confirm="onViewSettingsConfirm" cancel="onViewSettingsCancel">
     <filterItems>

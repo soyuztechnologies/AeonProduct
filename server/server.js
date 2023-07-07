@@ -11,6 +11,8 @@ var express = require('express');
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const { RoleMapping } = require('loopback');
+const moment = require('moment');
+
 
 
 var fs = require('fs');
@@ -1182,32 +1184,59 @@ app.start = function () {
 			}
 		});
 		app.post('/selectedDateJobStatus', async (req, res) => {
+			const Job = app.models.Job;
+			const JobStatus = app.models.JobStatus;
+			const { CreatedOnStart, CreatedOnEnd, cId } = req.body;
 		
-					const Job = app.models.Job;
+			try {
+				const startDate = CreatedOnStart;
+				const endDate = CreatedOnEnd;
 		
-					const JobStatus = app.models.JobStatus;
 		
-					const { CreatedOnStart, CreatedOnEnd } = req.body;
-		
-					try {
-		
-						let jobStatusSelectedData = await Job.find(
-		
-							// include: 'JobStatus' }
-		
-						); // Retrieve job status data
-		
-						res.status(200).json(jobStatusSelectedData);
-		
-					} catch (error) {
-		
-						console.error(error);
-		
-						return res.status(500).send('Internal server error');
-		
-					}
-		
+				let jobStatusSelectedData = await Job.find({
+					where: {
+						and: [
+							{ CreatedOn: { gte: startDate } }, // Filter jobs created on or after CreatedOnStart
+							{ CreatedOn: { lte: endDate } }, // Filter jobs created on or before CreatedOnEnd
+							{ CompanyId: cId } // Filter jobs matching the specified CompanyId
+						]
+					},
+					include: 'JobStatus' // Include JobStatus relation
 				});
+		
+				res.status(200).json(jobStatusSelectedData);
+			} catch (error) {
+				console.error(error);
+				return res.status(500).send('Internal server error');
+			}
+		});
+		// app.post('/selectedDateJobStatus', async (req, res) => {
+		
+		// 			const Job = app.models.Job;
+		
+		// 			const JobStatus = app.models.JobStatus;
+		
+		// 			const { CreatedOnStart, CreatedOnEnd ,CompanyId } = req.body;
+		
+		// 			try {
+		
+		// 				let jobStatusSelectedData = await Job.find(
+		
+		// 					// include: 'JobStatus' }
+		
+		// 				); // Retrieve job status data
+		
+		// 				res.status(200).json(jobStatusSelectedData);
+		
+		// 			} catch (error) {
+		
+		// 				console.error(error);
+		
+		// 				return res.status(500).send('Internal server error');
+		
+		// 			}
+		
+		// 		});
 		// * this call is sending the emol to the existing user that admin create.
 		// todo need this to optimize 
 		app.post('/sendEmailExistUser', async (req, res) => {

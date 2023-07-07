@@ -112,6 +112,7 @@ sap.ui.define([
 			this.getView().getModel("appView").updateBindings();
 		},
         onCreateUser: function (oEvent) {
+            var oModel = this.getView().getModel("appView");
             var that = this;
             var pass = this.getModel("appView").getProperty('/setNewPass');
             var Conpass = this.getModel("appView").getProperty('/setConPass');

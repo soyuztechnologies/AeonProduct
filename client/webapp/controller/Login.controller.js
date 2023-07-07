@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController", "sap/m/MessageBox","sap/ui/core/Fragment", 'sap/m/MessageToast','sap/m/MessageStrip'
+	"./BaseController", "sap/m/MessageBox", "sap/ui/core/Fragment", 'sap/m/MessageToast', 'sap/m/MessageStrip'
 ], function (
 	BaseController,
 	MessageBox,
@@ -9,8 +9,8 @@ sap.ui.define([
 ) {
 	"use strict";
 	// try {
-		var isSignupButton = false; // Global flag variable
-		var uId;
+	var isSignupButton = false; // Global flag variable
+	var uId;
 	return BaseController.extend("ent.ui.ecommerce.controller.Login", {
 		onInit: function onInit(oEvent) {
 			this.getRouter()
@@ -25,20 +25,20 @@ sap.ui.define([
 			oModel.setProperty("/layout", "OneColumn");
 			oModel.setProperty("/hamburgerVisibility", false);
 			oModel.setProperty("/logoutVisibility", false);
-			oModel.setProperty("/ResendStatusSignup",false);
-			oModel.setProperty("/showError",false);
+			oModel.setProperty("/ResendStatusSignup", false);
+			oModel.setProperty("/showError", false);
 			this.getUserRoleData();
 		},
 
 		Login: function () {
-			
+
 			// * for cookie session expire.
 			var allCookies = document.cookie.split(';');
 			// The "expire" attribute of every cookie is
 			// Set to "Thu, 01 Jan 1970 00:00:00 GMT"
 			for (var i = 0; i < allCookies.length; i++) {
 				document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
-				document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString()+";path=/api";
+				document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString() + ";path=/api";
 			}
 
 			var that = this;
@@ -48,26 +48,26 @@ sap.ui.define([
 				"email": userName,
 				"password": password
 			};
-			if(userName===password){
+			if (userName === password) {
 				that.getRouter().navTo("");
 			};
 			this.middleWare.callMiddleWare("login", "POST", payload)
-				.then( function (data, status, xhr) {
-										// MessageToast.show("Login Success");
+				.then(function (data, status, xhr) {
+					// MessageToast.show("Login Success");
 					that.UserRole = data.Role
-					if(data.Blocked=="Yes"){
+					if (data.Blocked == "Yes") {
 						MessageBox.information("Your Account has been blocked by Administrator, For Further Details Contact Admin");
 					}
-					else if(data.Status === "Pending"){
+					else if (data.Status === "Pending") {
 						MessageBox.information("Your Account Status is Pending, so please contact Admin for further Details");
 					}
-					else if(data.Status === "Reject"){
+					else if (data.Status === "Reject") {
 						MessageBox.information("Your Account Status is Reject, For Further Details Contact Admin");
 					}
-					else if(data.temp === true){
+					else if (data.temp === true) {
 						that.openUpdateDialog();
 					}
-					else if(data.Role === "Admin"){
+					else if (data.Role === "Admin") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
@@ -75,7 +75,7 @@ sap.ui.define([
 						that.getModel("appView").updateBindings();
 						that.getRouter().navTo("Carborator");
 					}
-					else if(data.Role==="Customer"){
+					else if (data.Role === "Customer") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
@@ -83,7 +83,7 @@ sap.ui.define([
 						that.getModel("appView").updateBindings();
 						that.getRouter().navTo("allPrinters");
 					}
-					else if(data.Role==="Factory Manager"){
+					else if (data.Role === "Factory Manager") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
@@ -91,7 +91,7 @@ sap.ui.define([
 						that.getModel("appView").updateBindings();
 						that.getRouter().navTo("allPrinters");
 					}
-					else if(data.Role === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head" || "Artwork Head"){
+					else if (data.Role === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head" || "Artwork Head") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');
@@ -110,7 +110,7 @@ sap.ui.define([
 					that.getModel().setHeaders({
 						"Authorization": data.id
 					});
-					
+
 					uId = data.userId;
 
 				})
@@ -119,133 +119,103 @@ sap.ui.define([
 					that.getView().byId("pwd").setValueState('Error');
 					that.middleWare.errorHandler(jqXhr, that);
 				});
-				
-			// this.middleWare.callMiddleWare("api/Users/login", "POST", payload)
-			// 	.then( function (data, status, xhr) {
-			// 		
-			// 		MessageToast.show("Login Success");
-			// 		that.getModel("appView").setProperty("/visibleHeader", true);
-			// 		that.getView().byId("userid").setValueState('None');
-			// 		that.getView().byId("pwd").setValueState('None');
-			// 		that.getModel("appView").updateBindings();
-			// 		that.getRouter().navTo("Carborator");
 
-			// 	})
-			// 	.catch(function (jqXhr, textStatus, errorMessage) {
-			// 		that.getView().byId("userid").setValueState('Error');
-			// 		that.getView().byId("pwd").setValueState('Error');
-			// 		that.middleWare.errorHandler(jqXhr, that);
-			// 	});
 		},
-		onLiveChnagePassValidationForUpdateTempPassward: function(oEvent){
+		onLiveChnagePassValidationForUpdateTempPassward: function (oEvent) {
 			var newValue = oEvent.getParameter("newValue");
-
-            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-
-            if (newValue === "") {
-
-                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
-
-                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
-
-            } else if (!passwordRegex.test(newValue)) {
-
-                // MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
-
-                this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
-
-                this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
-
-                return;
-
-            } else {
-
-                this.getView().getModel("appView").setProperty("/newPassValueState", "None");
-
-                this.getView().getModel("appView").setProperty("/VSTNewPass", "");
-
-            }
-
+			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+			if (newValue === "") {
+				this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+			} else if (!passwordRegex.test(newValue)) {
+				// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+				this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+				this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+				return;
+			} else {
+				this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+			}
 		},
-		
 
-		openUpdateDialog : function(){
+
+		openUpdateDialog: function () {
 			var oView = this.getView();
-            var that = this;
-			
-            if (!this.passUpdateDialog) {
-                this.passUpdateDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "ent.ui.ecommerce.fragments.updateTempPass",
-                    controller: this
-                }).then(function (oDialog) {    
-                    // Add dialog to view hierarchy
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                }.bind(this));
-               
-            }
-            this.passUpdateDialog.then(function (oDialog) {
-					oDialog.open();
-            });
+			var that = this;
+
+			if (!this.passUpdateDialog) {
+				this.passUpdateDialog = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.loginScreenFragment.updateTempPass",
+					controller: this
+				}).then(function (oDialog) {
+					// Add dialog to view hierarchy
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+
+			}
+			this.passUpdateDialog.then(function (oDialog) {
+				oDialog.open();
+			});
 		},
 
-		onUpdatePassOk : function(){
+		onUpdatePassOk: function () {
 			// Regular expression to check for password validation
- 			//  var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-			 var oModel = this.getView().getModel("appView");
-			 var that = this;
-			 var prevPass = this.getView().getModel("appView").getProperty("/prevPassword");
-			 var passValue =  this.getView().getModel("appView").getProperty("/newPassword");
-			 var conPassValue = this.getView().getModel("appView").getProperty("/confirmPassword");
-			 var userName = this.getView().byId("userid").getValue();
+			//  var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+			var oModel = this.getView().getModel("appView");
+			var that = this;
+			var prevPass = this.getView().getModel("appView").getProperty("/prevPassword");
+			var passValue = this.getView().getModel("appView").getProperty("/newPassword");
+			var conPassValue = this.getView().getModel("appView").getProperty("/confirmPassword");
+			var userName = this.getView().byId("userid").getValue();
 
 			//  if (!passwordRegex.test(passValue) || !passwordRegex.test(conPassValue)) {
 			// 	MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 			// 	return;
 			//   }
-			
-			if(!conPassValue || !passValue) {
+
+			if (!conPassValue || !passValue) {
 				MessageToast.show("Enter the Password");
 			}
-			else if(conPassValue !== passValue){
+			else if (conPassValue !== passValue) {
 				MessageToast.show("Your Entered Password is not similar");
 			}
 			var payload = {
-				email:userName, 
-				password:prevPass, 
-				newPassword:conPassValue
+				email: userName,
+				password: prevPass,
+				newPassword: conPassValue
 			}
-	
+
 			this.middleWare.callMiddleWare("updatePassword", "POST", payload)
-				.then( function (data, status, xhr) {
-					
+				.then(function (data, status, xhr) {
+
 					MessageToast.show(" Success");
 					that.passUpdateDialog.then(function (oDialog) {
 						oDialog.close();
-				});
+					});
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 
-					
+
 
 		},
-        onRejectCan: function(){
+		onRejectCan: function () {
 			this.passUpdateDialog.then(function (oDialog) {
 				oDialog.close();
-		});
+			});
 		},
-		
-		openDialog : function(){
+
+		openDialog: function () {
 			var oView = this.getView();
 			var that = this;
 			if (!this.signupDialog) {
 				this.signupDialog = Fragment.load({
 					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.Signup",
+					name: "ent.ui.ecommerce.fragments.loginScreenFragment.Signup",
 					controller: this
 				}).then(function (oDialog) {
 					oView.addDependent(oDialog);
@@ -257,82 +227,82 @@ sap.ui.define([
 
 		onReject: function () {
 			var oModel = this.getView().getModel('appView');
-            this.openDialog().then(function (oDialog) {
+			this.openDialog().then(function (oDialog) {
 				oDialog.close();
-				oModel.setProperty("/Email","");
-				oModel.setProperty("/showError",false);
-				oModel.setProperty("/EmailEditable",true);
+				oModel.setProperty("/Email", "");
+				oModel.setProperty("/showError", false);
+				oModel.setProperty("/EmailEditable", true);
 				// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
-				oModel.setProperty("/ResendStatusSignup",false);
-				oModel.setProperty("/submitEnable",true);
+				oModel.setProperty("/ResendStatusSignup", false);
+				oModel.setProperty("/submitEnable", true);
 				oModel.setProperty("/signUpValueState", 'None');
 			})
-        },
+		},
 
-		SignUp : function (){
-			var that=this;
+		SignUp: function () {
+			var that = this;
 			var oModel = that.getView().getModel('appView');
 			this.openDialog().then(function (oDialog) {
 				oDialog.open();
-				oModel.setProperty("/Title","Signup");
-				isSignupButton =true;
+				oModel.setProperty("/Title", "Signup");
+				isSignupButton = true;
 			})
-        },
+		},
 
-		ForgotPasswprd : function(){
+		ForgotPasswprd: function () {
 			var oModel = this.getView().getModel('appView');
-			var that=this;
+			var that = this;
 			this.openDialog().then(function (oDialog) {
-				oModel.setProperty("/ResendStatusSignup",false);
+				oModel.setProperty("/ResendStatusSignup", false);
 				oDialog.open();
-				oModel.setProperty("/Title","Forgot Password");
+				oModel.setProperty("/Title", "Forgot Password");
 				oModel.setProperty("/ResendStatusSignup", false);
 				isSignupButton = false;
 			})
-        },
+		},
 
-		onSignupEmailVerifyCall : function(){
-			var that = this; 
+		onSignupEmailVerifyCall: function () {
+			var that = this;
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
 			var oModel = that.getView().getModel('appView');
-			oModel.setProperty("/showError",false);
-			oModel.setProperty("/submitEnable",true);
+			oModel.setProperty("/showError", false);
+			oModel.setProperty("/submitEnable", true);
 
 			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if (oEmail && !oEmail.match(emailRegex)) {
 				MessageToast.show("Please enter a valid email address");
 				return;
 			}
-			else if(!oEmail) {
+			else if (!oEmail) {
 				MessageToast.show("Please enter a email address");
 				return;
 			};
 
 			var payload = {
-				"email" : oEmail
-			}; 	
+				"email": oEmail
+			};
 			this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
-				.then( function (data, status, xhr) {
-					
-					MessageToast.show("Verfication Email Sent to Your Mail");
-					oModel.setProperty("/ResendStatusSignup",true);
-					oModel.setProperty("/submitEnable",false)
+				.then(function (data, status, xhr) {
 
-                    oModel.setProperty("/EmailEditable",false)
+					MessageToast.show("Verfication Email Sent to Your Mail");
+					oModel.setProperty("/ResendStatusSignup", true);
+					oModel.setProperty("/submitEnable", false)
+
+					oModel.setProperty("/EmailEditable", false)
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
-					
+
 					// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
-					oModel.setProperty("/submitEnable",false);
+					oModel.setProperty("/submitEnable", false);
 					that.ResendEmailSend();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-					
+
 					that.middleWare.errorHandler(jqXhr, that);
-			});
+				});
 		},
 
-		onForgotPasswordEmailVerfiyCall : function(){
-			var that = this; 
+		onForgotPasswordEmailVerfiyCall: function () {
+			var that = this;
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
 			var oModel = this.getView().getModel('appView')
 
@@ -341,40 +311,40 @@ sap.ui.define([
 				MessageToast.show("Please enter a valid email address");
 				return;
 			}
-			else if(!oEmail) {
+			else if (!oEmail) {
 				MessageToast.show("Please enter a email address");
 				return;
 			};
 			var payload = {
-				"email" : oEmail
+				"email": oEmail
 			};
 			this.middleWare.callMiddleWare("forgotPasswordEmailVerify", "POST", payload)
-				.then( function (data, status, xhr) {
-					
+				.then(function (data, status, xhr) {
+
 					// MessageToast.show("forgot Password Email Sent to Your Mail");
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
-					oModel.setProperty("/ResendStatusSignup",false);
-					oModel.setProperty("/showError",true);
-					oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
-					oModel.setProperty("/submitEnable",false);
-					
+					oModel.setProperty("/ResendStatusSignup", false);
+					oModel.setProperty("/showError", true);
+					oModel.setProperty("/errorMessage", "You will receive a Email to update your Password.");
+					oModel.setProperty("/submitEnable", false);
+
 					// MessageBox.information("You will receive a Email to update your Password.")
 					// that.onReject();
 					// that.OtpSend();
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-					
+
 					that.middleWare.errorHandler(jqXhr, that);
-			});
+				});
 		},
 
-		onEmailLiveChange : function(oEvent){
+		onEmailLiveChange: function (oEvent) {
 			var emailInput = oEvent.getSource();
 			var email = emailInput.getValue();
 			var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            if (!emailPattern.test(email)) {
+			if (!emailPattern.test(email)) {
 				// Invalid email format
 				emailInput.setValueState('Error');
 				emailInput.setValueStateText("Enter a valid email address");
@@ -384,66 +354,75 @@ sap.ui.define([
 			}
 		},
 
-		onSubmit : function () {
-			if(isSignupButton == true){
+		OnEnter : function (oEvent) {  //* this function is call onEnter event in signup fragment and forgot password fragment.
+			if (isSignupButton == true) {
 				this.onSignupEmailVerifyCall();
 			}
-			else{
+			else {
 				this.onForgotPasswordEmailVerfiyCall();
 			}
 		},
 
-		
-
-		resetFrag:function(){
-			var oView = this.getView();
-            var that = this;
-			
-            if (!this.oDialog) {
-                this.oDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "ent.ui.ecommerce.fragments.Reset",
-                    controller: this
-                }).then(function (oDialog) {    
-                    // Add dialog to view hierarchy
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                }.bind(this));
-               
-            }
-            this.oDialog.then(function (oDialog) {
-                oDialog.open();
-            });
+		onSubmit: function () {
+			if (isSignupButton == true) {
+				this.onSignupEmailVerifyCall();
+			}
+			else {
+				this.onForgotPasswordEmailVerfiyCall();
+			}
 		},
-		onResetPassword:function(){
+
+
+
+		resetFrag: function () {
+			var oView = this.getView();
+			var that = this;
+
+			if (!this.oDialog) {
+				this.oDialog = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.loginScreenFragment.Reset",
+					controller: this
+				}).then(function (oDialog) {
+					// Add dialog to view hierarchy
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+
+			}
+			this.oDialog.then(function (oDialog) {
+				oDialog.open();
+			});
+		},
+
+		onResetPassword: function () {
 			this.resetFrag();
 		},
-		resendOTP:function(){
+		resendOTP: function () {
 			this.onSubmit();
 		},
 		ResendEmailSend: function () {
-            
-            this.emailCount += 1;
-            var that = this;
-            var countDownDate = new Date().getTime() + 10000; 
-            var x = setInterval(function () {
-                var now = new Date().getTime();
-                var distance = countDownDate - now;
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                var timerText = "Resend OTP in " + seconds + "s";
+			this.emailCount += 1;
+			var that = this;
+			var countDownDate = new Date().getTime() + 60000;
+			var x = setInterval(function () {
+				var now = new Date().getTime();
+				var distance = countDownDate - now;
+				var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+				var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+				var timerText = "Resend OTP in " + seconds + "s";
 
-                // Display the timer
-                that.getView().getModel('appView').setProperty("/timerText", timerText);
-                if (distance < 0) {
-                    clearInterval(x);
-                    that.getView().getModel('appView').setProperty("/timerText", "Resend");
-                    that.getView().getModel('appView').setProperty("/onResendOTP", true);
-                    // that.getView().getModel('local').setProperty("/ResendMsg", "If OTP not Received ");
-                }
-            }, 1000);
+				// Display the timer
+				that.getView().getModel('appView').setProperty("/timerText", timerText);
+				if (distance < 0) {
+					clearInterval(x);
+					that.getView().getModel('appView').setProperty("/timerText", "Resend");
+					that.getView().getModel('appView').setProperty("/onResendOTP", true);
+					// that.getView().getModel('local').setProperty("/ResendMsg", "If OTP not Received ");
+				}
+			}, 1000);
 
-        },
+		},
 	});
 
 });

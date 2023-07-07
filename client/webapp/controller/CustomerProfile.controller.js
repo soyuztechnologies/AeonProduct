@@ -94,23 +94,6 @@ sap.ui.define([
 				this.lightBox.open();
 			}
 		},
-		// getImageUrlFromContent: function (base64Stream) {
-		// 	if (base64Stream) {
-		// 		var b64toBlob = function (dataURI) {
-		// 			var byteString = atob(dataURI.split(',')[1]);
-		// 			var ab = new ArrayBuffer(byteString.length);
-		// 			var ia = new Uint8Array(ab);
-		// 			for (var i = 0; i < byteString.length; i++) {
-		// 				ia[i] = byteString.charCodeAt(i);
-		// 			}
-		// 			return new Blob([ab], {
-		// 				type: 'image/jpeg'
-		// 			});
-		// 		};
-		// 		var x = b64toBlob(base64Stream);
-		// 		return URL.createObjectURL(x);
-		// 	}
-		// },
 		getImageUrlFromContent: function(base64Stream) {
 			if (base64Stream) {
 			  var b64toBlob = function(dataURI) {

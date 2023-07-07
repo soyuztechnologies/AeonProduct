@@ -18,7 +18,7 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("allPrinters").attachPatternMatched(this._matchedHandler, this);
-			this.oViewSettingsDialog = sap.ui.xmlfragment("ent.ui.ecommerce.fragments.Jobstatuspopup", this);
+			this.oViewSettingsDialog = sap.ui.xmlfragment("ent.ui.ecommerce.fragments.allPrinterScreenFragment.Jobstatuspopup", this);
 			this.getView().addDependent(this.oViewSettingsDialog);
 		},
 
@@ -46,7 +46,7 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/visibility", true);
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
-			// this.getCompanyName()
+			this.getCompanyName();
 			// this.getUserName();
 			// this.getJobAccordingCustomer();
 		},
@@ -276,7 +276,7 @@ sap.ui.define([
 		if (!this.oExportData) {
 			this.oExportData = Fragment.load({
 				id: oView.getId(),
-				name: "ent.ui.ecommerce.fragments.ExportExcel",
+				name: "ent.ui.ecommerce.fragments.allPrinterScreenFragment.ExportExcel",
 				controller: this
 			}).then(function (oDialog) {
 				oView.addDependent(oDialog);
@@ -294,27 +294,38 @@ sap.ui.define([
 	},
 	handleChange: function (oEvent) {
 		debugger;
-		var selectedDate = oEvent.getParameter("value")
+		var selectedFromDate = oEvent.getParameter("from");
+		var selectedtoDate = oEvent.getParameter("to");
 		// const formattedDate = selectedDate.toISOString().split('T')[0];
-		this.getView().getModel("appView").setProperty("/selectedDate",selectedDate)
+		this.getView().getModel("appView").setProperty("/selectedDate",selectedFromDate)
+		this.getView().getModel("appView").setProperty("/selectedFromDate",selectedFromDate)
+		this.getView().getModel("appView").setProperty("/selectedToDate",selectedtoDate)
 	},
-	formatDate: function (){
-		var date = this.getView().getModel("appView").getProperty("/selectedDate")
-		const dates = date.split(" - ");
-		var dateString = dates[0];	
+	// formatDate: function (){
+	// 	var date = this.getView().getModel("appView").getProperty("/selectedDate")
+	// 	// const dates = date.split(" - ");
+	// 	// var dateString = dates[0];	
+	// },
+	selectCompanyName : function (oEvent) {
+		debugger
+		var selectedCompanyName = oEvent.getSource().getSelectedItem().getKey();
+		this.getView().getModel("appView").setProperty("/selectedCompanyName",selectedCompanyName);
 	},
 	onSubmit:function(){
 		debugger;
-		this.formatDate();
+		// this.formatDate();
 		var that = this
-		var date = this.getView().getModel("appView").getProperty("/selectedDate")
-		const dates = date.split(" - ");
-		var startDate = dates[0];
-		var endDate = dates[1];
+		var startDate = this.getView().getModel("appView").getProperty("/selectedFromDate")
+		var endDate = this.getView().getModel("appView").getProperty("/selectedToDate")
+		var company = this.getView().getModel("appView").getProperty("/selectedCompanyName");
+		// const dates = date.split(" - ");
+		// var startDate = dates[0];
+		// var endDate = dates[1];
 		
 		var payload = {
 			"CreatedOnStart":startDate,
-			"CreatedOnEnd":endDate
+			"CreatedOnEnd":endDate,
+			"cId": company
 		}
 		this.middleWare.callMiddleWare("selectedDateJobStatus", "POST" , payload)
 			.then(function (data, status, xhr) {

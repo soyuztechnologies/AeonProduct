@@ -59,7 +59,7 @@ sap.ui.define([
 			if (!this.userAdd) {
 				this.userAdd = Fragment.load({
 					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.Adduser",
+					name: "ent.ui.ecommerce.fragments.userDetailScreenFragment.Adduser",
 					controller: this
 				}).then(function (oDialog) {
 					oView.addDependent(oDialog);
@@ -321,7 +321,7 @@ sap.ui.define([
 
 		// * this funciton handle the validation on the add user and open the password fragment to make call.
 		openPassdialog: function () {
-
+			debugger;
 			var oModel = this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
 
@@ -401,6 +401,7 @@ sap.ui.define([
 
 		// * this fucntion will do a update call when admin edit the user data.
 		updateRowData: function () {
+			debugger;
 			var oModel = this.getView().getModel("appView");
 			var dModel = this.getView().getModel();
 			var dataModel = oModel.getProperty("/userData");
@@ -439,7 +440,7 @@ sap.ui.define([
 			if (!this.passDialog) {
 				this.passDialog = Fragment.load({
 					id: oView.getId(),
-					name: "ent.ui.ecommerce.fragments.AddUserPass",
+					name: "ent.ui.ecommerce.fragments.userDetailScreenFragment.AddUserPass",
 					controller: this
 				}).then(function (oPassDialog) {
 					oView.addDependent(oPassDialog);
