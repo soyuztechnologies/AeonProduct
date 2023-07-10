@@ -409,25 +409,35 @@ sap.ui.define([
 	},
 
 	onExport: function() {
-		var aCols, oBinding, oSettings, oSheet, oTable;
+		debugger
+		var aCols, oBinding, oSettings, oSheet, oTable,data;
+		var newArr = [];
 
 		oTable = this.byId('exportTable');
-		oBinding = this.getView().getModel("appView").getProperty("/jobStatusDate")
-		aCols = this.createColumnConfig();
+		data = this.getView().getModel("appView").getProperty("/jobStatusDate");
 
-		oSettings = {
-			workbook: { columns: aCols },
-			dataSource: oBinding
-		};
+		for(var i =0 ; i<data.length;i++){
+			oBinding = data[i].JobStatus;
+			aCols = this.createColumnConfig();
+			
+			oSettings = {
+				workbook: { columns: aCols },
+				dataSource: oBinding,
+				// __filename : oBinding.jobCardNo
+			};
+			
+			
+		}
+			// newArr.push(oSheet);
+			oSheet = new Spreadsheet(oSettings);
+			oSheet.build()
+				.then(function() {
+					MessageToast.show('Spreadsheet export has finished');
+				}).finally(function() {
+					oSheet.destroy();
+				});
+		}
 
-		oSheet = new Spreadsheet(oSettings);
-		oSheet.build()
-			.then(function() {
-				MessageToast.show('Spreadsheet export has finished');
-			}).finally(function() {
-				oSheet.destroy();
-			});
-	}
 
 
 });

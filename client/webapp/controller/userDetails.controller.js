@@ -322,6 +322,7 @@ sap.ui.define([
 		// * this funciton handle the validation on the add user and open the password fragment to make call.
 		openPassdialog: function () {
 			debugger;
+			
 			var oModel = this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
 
