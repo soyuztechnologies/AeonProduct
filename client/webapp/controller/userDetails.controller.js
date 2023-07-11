@@ -510,27 +510,35 @@ sap.ui.define([
 		AddCustomers: function () {
 
 			var that = this;
+			var oModel = this.getView().getModel("appView")
+			var newPassword = oModel.getProperty("/newPassValue");
+			var conNewPassword = oModel.getProperty("/confirmPassValue");
 
 			var payload = this.oFormData;
-
-			this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
-				.then(function (data, status, xhr) {
-					// debugger
-					MessageToast.show("User Created Successfully");
-					that.onReject();
-					that.onRejectPass();
-					that.getUserData();
-				})
-				.catch(function (jqXhr, textStatus, errorMessage) {
-					that.middleWare.errorHandler(jqXhr, that);
-				});
+			if(newPassword === conNewPassword){
+				if(newPassword != "" || newPassword != undefined){
+					this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
+						.then(function (data, status, xhr) {
+							// debugger
+							MessageToast.show("User Created Successfully");
+							that.onReject();
+							that.onRejectPass();
+							that.getUserData();
+						})
+						.catch(function (jqXhr, textStatus, errorMessage) {
+							that.middleWare.errorHandler(jqXhr, that);
+						});
+				}
+			}	else{
+				MessageToast.show("Please Check Your Fields")
+			}
 		},
 
 		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
 		onAddUserViaAdmin: function (oEvent) {
 
 
-
+debugger;
 			var oModel = this.getView().getModel("appView");
 
 			var checkSwitchStatus = oModel.getProperty("/newPass");
@@ -539,9 +547,9 @@ sap.ui.define([
 
 			if (checkSwitchStatus) {
 
-				var pass = oModel.getProperty("/conPassWord");
+				var pass = oModel.getProperty("/newPassValue");
 
-				var Conpass = oModel.getProperty("/NewPassword");
+				var Conpass = oModel.getProperty("/confirmPassValue");
 
 				if (!pass && !Conpass) {
 
@@ -578,10 +586,6 @@ sap.ui.define([
 					}
 
 				}
-
-
-
-
 				if (pass != Conpass) {
 
 					this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
@@ -603,10 +607,6 @@ sap.ui.define([
 					this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
 
 				}
-
-
-
-
 				this.getView().getModel("appView").updateBindings();
 
 
@@ -644,6 +644,8 @@ sap.ui.define([
 			debugger;
 			var oSelectedCompanyName = oEvent.getParameter("selectedItem").getText();
 			var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
+            var rowData = oEvent.getSource().getParent().getBindingContext("appView").getObject();
+            rowData.CompanyName = oSelectedCompanyName;
 			var oModel = this.getView().getModel();
 			var that = this;
 			var id = oEvent.getSource().getBindingContext("appView").getObject().id;
@@ -665,20 +667,31 @@ sap.ui.define([
 		},
 		//this update call for set company data to appUser tabel
 		resetPassExistingUser: function (pass) {
-			debugger
+			debugger;
+			var oModel = this.getView().getModel("appView")
+			var newPassword = oModel.getProperty("/newPassValue");
+			var conNewPassword = oModel.getProperty("/confirmPassValue");
 			var that = this;
 			var password = pass;
 			this.payload.password = password;
-			this.middleWare.callMiddleWare("sendEmailExistUser", "POST", this.payload)
-				.then(function (data, status, xhr) {
-					// debugger
-					MessageToast.show("Mail Sent Succefully");
-					that.onRejectPass();
+			if(newPassword === conNewPassword){
+				if(!newPassword){
 
-				})
-				.catch(function (jqXhr, textStatus, errorMessage) {
-					that.middleWare.errorHandler(jqXhr, that);
-				});
+					this.middleWare.callMiddleWare("sendEmailExistUser", "POST", this.payload)
+						.then(function (data, status, xhr) {
+							// debugger
+							MessageToast.show("Mail Sent Succefully");
+							that.onRejectPass();
+		
+						})
+						.catch(function (jqXhr, textStatus, errorMessage) {
+							that.middleWare.errorHandler(jqXhr, that);
+						});
+				}
+			}
+			else{
+				MessageToast.show("Please Check Your Fields")
+			}
 
 		},
 
@@ -719,17 +732,17 @@ sap.ui.define([
 			// });
 		},
 		onLiveChnageNewPassValidation: function (oEvent) {
-			var newValue = oEvent.getParameter("newValue");
-
+			var newValueNewPass = oEvent.getParameter("newValue");
+            this.getView().getModel("appView").setProperty("/newPassValue", newValueNewPass);
 			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 
-			if (newValue === "") {
+			if (newValueNewPass === "") {
 
 				this.getView().getModel("appView").setProperty("/newPassValueState", "None");
 
 				this.getView().getModel("appView").setProperty("/VSTNewPass", "");
 
-			} else if (!passwordRegex.test(newValue)) {
+			} else if (!passwordRegex.test(newValueNewPass)) {
 
 				// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 
@@ -752,12 +765,16 @@ sap.ui.define([
 		},
 
 		onLiveChnageConfirmPassValidation: function (oEvent) {
-
-			var newValue = oEvent.getParameter("newValue");
-
+            var valueOfNewPass = this.getView().getModel("appView").getProperty("/newPassValue");
+			var newValueConfirmPass = oEvent.getParameter("newValue");
+			this.getView().getModel("appView").setProperty("/confirmPassValue" , newValueConfirmPass);
 			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+            if(newValueConfirmPass === ""){
+				this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/VSTConfirmPass","");
 
-			if (!passwordRegex.test(newValue)) {
+            }
+			else if (!passwordRegex.test(newValueConfirmPass)) {
 
 				// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 
@@ -767,7 +784,14 @@ sap.ui.define([
 
 				return;
 
-			} else {
+			}else if (newValueConfirmPass !== valueOfNewPass) {
+				this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+
+				this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Value is not Matched");
+				return;
+
+			}
+			 else {
 
 				this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
 

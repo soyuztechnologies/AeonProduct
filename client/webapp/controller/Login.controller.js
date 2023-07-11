@@ -121,8 +121,9 @@ sap.ui.define([
 				});
 
 		},
-		onLiveChnagePassValidationForUpdateTempPassward: function (oEvent) {
+		onLiveChnagePassValidationForUpdateNewPassward: function (oEvent) {
 			var newValue = oEvent.getParameter("newValue");
+			this.getView().getModel("appView").setProperty("/updateNewPassValue" , newValue);
 			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			if (newValue === "") {
 				this.getView().getModel("appView").setProperty("/newPassValueState", "None");
@@ -132,9 +133,32 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
 				this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
 				return;
-			} else {
+			}else {
 				this.getView().getModel("appView").setProperty("/newPassValueState", "None");
 				this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+			}
+		},
+		onLiveChnagePassValidationForUpdateComfPassward: function (oEvent) {
+			var newPassValue = this.getView().getModel("appView").getProperty("/updateNewPassValue");
+			var newValue = oEvent.getParameter("newValue");
+			this.getView().getModel("appView").setProperty("/updateComfPassValue" , newValue);
+			var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+			if (newValue === "") {
+				this.getView().getModel("appView").setProperty("/confPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/VSTConfPass", "");
+			} else if (!passwordRegex.test(newValue)) {
+				// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+				this.getView().getModel("appView").setProperty("/confPassValueState", "Error");
+				this.getView().getModel("appView").setProperty("/VSTConfPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+				return;
+			} else if (newPassValue !== newValue){
+				this.getView().getModel("appView").setProperty("/confPassValueState", "Error");
+			    this.getView().getModel("appView").setProperty("/VSTConfPass", "Value is not Matching");
+			return;
+			}
+			else {
+				this.getView().getModel("appView").setProperty("/confPassValueState", "None");
+				this.getView().getModel("appView").setProperty("/VSTConfPass", "");
 			}
 		},
 
@@ -161,6 +185,7 @@ sap.ui.define([
 		},
 
 		onUpdatePassOk: function () {
+			debugger
 			// Regular expression to check for password validation
 			//  var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			var oModel = this.getView().getModel("appView");
@@ -175,19 +200,27 @@ sap.ui.define([
 			// 	return;
 			//   }
 
-			if (!conPassValue || !passValue) {
+			
+			if (conPassValue !== passValue) {
+				MessageToast.show("Your Entered Password is not Matched");
+				return;
+			}
+			else if (!conPassValue){
+				MessageToast.show("Enter the confirm password");
+				return;
+			}
+			else if(!passValue){
 				MessageToast.show("Enter the Password");
+				return;
 			}
-			else if (conPassValue !== passValue) {
-				MessageToast.show("Your Entered Password is not similar");
-			}
+			// else if (!conPassValue)
 			var payload = {
 				email: userName,
 				password: prevPass,
 				newPassword: conPassValue
 			}
-
-			this.middleWare.callMiddleWare("updatePassword", "POST", payload)
+			if(passValue===conPassValue){
+				this.middleWare.callMiddleWare("updatePassword", "POST", payload)
 				.then(function (data, status, xhr) {
 
 					MessageToast.show(" Success");
@@ -199,6 +232,12 @@ sap.ui.define([
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
+			}
+			else{
+				MessageToast.show("please check your fields")
+			}
+
+			
 
 
 

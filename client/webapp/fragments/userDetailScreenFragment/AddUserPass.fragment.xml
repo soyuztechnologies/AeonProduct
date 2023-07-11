@@ -36,7 +36,7 @@
 
                 <Label text="Confirm New Password"/>
 
-                <Input value ="{appView>/conPassWord}" valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" visible="{appView>/conPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnageConfirmPassValidation"/>
+                <Input type="Password" value ="{appView>/conPassWord}" valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" visible="{appView>/conPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnageConfirmPassValidation"/>
 
             </f:content>
 
