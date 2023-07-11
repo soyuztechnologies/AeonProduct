@@ -195,9 +195,10 @@ sap.ui.define([
 			var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
 			var oFilter3 = new Filter("jobCode", FilterOperator.Contains, sValue);
 			var oFilter4 = new Filter("Company/CompanyName", FilterOperator.Contains, sValue);
+			var oFilter5 = new Filter("status", FilterOperator.Contains, sValue);
 			// var oFilter4 = new Filter("userName", FilterOperator.Contains, sValue);
 			// var oFilter5 = new Filter("LastName", FilterOperator.Contains, sValue);
-			var aFilters = [oFilter1, oFilter2, oFilter3, oFilter4];
+			var aFilters = [oFilter1, oFilter2, oFilter3, oFilter4,oFilter5];
 			var oFilter = new Filter({
 				filters: aFilters,
 				and: false
@@ -288,8 +289,12 @@ sap.ui.define([
 		});
 	},
 	onReject: function () {
+		debugger;
+		this.getView().byId("DRS1").setDateValue(null);
+		this.getView().byId("selectedCompanyId").setSelectedKey("")
 		this.oExportData.then(function (oDialog) {
 			oDialog.close();
+			
 		})
 	},
 	handleChange: function (oEvent) {

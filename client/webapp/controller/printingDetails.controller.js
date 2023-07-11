@@ -403,6 +403,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.poAttachment)
 					var oModel = that.getView().getModel("appView");
 					oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
+					oModel.setProperty("/btnVisibility", false);
 					that.oDialogOpen().then(function (oDialog) {
 					oDialog.open();
 					// var sUserRole = oModel.getProperty('/UserRole');
@@ -420,6 +421,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.artworkAttachment)
 					var oModel = that.getView().getModel("appView");
 					oModel.setProperty("/uploadDocumnetTitle", " Artwork Attachment");
+					oModel.setProperty("/btnVisibility", false);
 					that.oDialogOpen().then(function (oDialog) {
 					oDialog.open();
 					// var sUserRole = oModel.getProperty('/UserRole');
@@ -522,7 +524,7 @@ sap.ui.define([
 					var incFile = oData.incAttachment;
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
 					oModel.setProperty("/btnVisibility", false);
-					oModel.setProperty("/browseVisArtwork", false);
+					// oModel.setProperty("/browseVisArtwork", false);
 					if (incFile) {
 						oModel.setProperty("/buttonText", "Update");
 					}
@@ -537,8 +539,20 @@ sap.ui.define([
 					oDialog.open();
 					var sUserRole = oModel.getProperty('/UserRole');
 					if (sUserRole === 'Customer') {
-						
 						oModel.setProperty('/browseVis', false);
+						oModel.setProperty("/btnVisibility", false);
+					}
+					if (sUserRole === "Admin") {
+						oModel.setProperty('/uploadDocBrowseVis', false);
+						oModel.setProperty("/btnVisibility", true);
+					}
+					if (sUserRole === "Dispatch Head" || "Accounts Head") {
+						// oModel.setProperty('/browseVis', false);
+						oModel.setProperty("/btnVisibility", false);
+					}
+					if (sUserRole === "Artwork Head") {
+						// oModel.setProperty('/browseVis', false);
+						oModel.setProperty("/btnVisibility", true);
 					}
 	
 				});
@@ -927,6 +941,7 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
+			oModel.setProperty("/btnVisibility", true);
 			// oModel.setProperty("/newJob", JSON.parse(JSON.stringify(rowdata)));
 			// oModel.setProperty("/oldJobs",JSON.parse(JSON.stringify(rowdata)))
 			var invNoEditGrag = rowdata.InvNo;

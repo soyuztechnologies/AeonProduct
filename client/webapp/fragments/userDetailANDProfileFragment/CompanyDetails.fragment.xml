@@ -24,7 +24,7 @@
             <Input required ="{=${appView>/selectedrole} ? true : false}" value = "{appView>EmailId}"  editable="{appView>/EmailVisible}"/>
 
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Company Name"/>
-            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyName}" editable="{appView>/editCompName}"/>
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyName}" editable="false"/>
 
             <Label text="Gst Number"/>
             <Input value = "{appView>GSTNO}"   editable="{appView>/editableFields}"/>

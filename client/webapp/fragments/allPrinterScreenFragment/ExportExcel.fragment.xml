@@ -11,6 +11,7 @@
 			change="handleChange"/>
             <ToolbarSpacer/>
             <ComboBox 
+                id="selectedCompanyId"
                 items="{appView>/companyDetails}"
                 placeholder="Company Name"
                 change="selectCompanyName"
