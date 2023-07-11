@@ -692,7 +692,7 @@ app.start = function () {
 			var name = email.substring(0, email.indexOf("@"));
 			var requestPass = newCustomer.PassWord;
 			var Role = newCustomer.Role;
-			if (requestPass == "") {
+			if (!requestPass) {
 				var password = generateRandomPassword();
 			}
 			else {

@@ -418,11 +418,13 @@ sap.ui.define([
 
 		for(var i =0 ; i<data.length;i++){
 			oBinding = data[i].JobStatus;
+			var myJobStatusData = oBinding[0]
+			newArr.push(myJobStatusData)
 			aCols = this.createColumnConfig();
 			
 			oSettings = {
 				workbook: { columns: aCols },
-				dataSource: oBinding,
+				dataSource: newArr,
 				// __filename : oBinding.jobCardNo
 			};
 			
