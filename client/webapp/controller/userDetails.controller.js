@@ -675,7 +675,7 @@ debugger;
 			var password = pass;
 			this.payload.password = password;
 			if(newPassword === conNewPassword){
-				if(!newPassword){
+				
 
 					this.middleWare.callMiddleWare("sendEmailExistUser", "POST", this.payload)
 						.then(function (data, status, xhr) {
@@ -687,7 +687,7 @@ debugger;
 						.catch(function (jqXhr, textStatus, errorMessage) {
 							that.middleWare.errorHandler(jqXhr, that);
 						});
-				}
+				
 			}
 			else{
 				MessageToast.show("Please Check Your Fields")
