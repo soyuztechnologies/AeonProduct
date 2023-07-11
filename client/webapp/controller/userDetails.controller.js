@@ -401,38 +401,40 @@ sap.ui.define([
 		},
 
 		// * this fucntion will do a update call when admin edit the user data.
-		updateRowData: function () {
+		updateRowData: function() {
 			debugger;
 			var oModel = this.getView().getModel("appView");
 			var dModel = this.getView().getModel();
-			var dataModel = oModel.getProperty("/userData");
+			var that = this;
+			var dataModel = this.getView().getModel("appView").getProperty("/userData");
 			var logoProperty = this.getView().getModel("appView").getProperty("/LogoAvonUserProfile");
+			delete dataModel.Company;
+			delete dataModel.__metadata;
 			if (!logoProperty) {
 				var Companylogo = dataModel.Companylogo;
 				dataModel.Companylogo = Companylogo;
-			}
-			else {
+			} else {
 				var base64String = logoProperty.split(",")[1];
 				dataModel.Companylogo = base64String;
 			}
-
+		
 			var userId = dataModel.id;
 			const sEntityPath = `/AppUsers('${userId}')`; // Replace with the appropriate entity set name and ID
-
+		
 			dModel.update(sEntityPath, dataModel, {
-				success: function (data) {
-				       MessageToast.show("Customer updated successfully");
-					// that.getModel('appView').setProperty('/SaCaVisible', false);
-					// that.getModel('appView').setProperty('/editVisible', true);
-					// that.getModel('appView').setProperty('/editableFields', false);
+				success: function(data) {
+					MessageToast.show("Customer updated successfully");
+					that.getUserData();
 					that.onReject();
 					oModel.updateBindings();
 				},
-				error: function (error) {
-					console.error("PATCH request failed");
+				error: function(error) {
+					console.error("PATCH request failed", error);
+					MessageToast.show("Failed to update customer");
 				}
 			});
 		},
+		
 
 		// * this fucntion load and open the Adduserpass fragment dialog at here.
 		openDialog: function () {
@@ -517,6 +519,7 @@ sap.ui.define([
 					MessageToast.show("User Created Successfully");
 					that.onReject();
 					that.onRejectPass();
+					that.getUserData();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
