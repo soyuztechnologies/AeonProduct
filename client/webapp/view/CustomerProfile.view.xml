@@ -20,7 +20,7 @@
                     <FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
                         <FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
                             <f:Avatar src="data:image/jpeg;base64,{appView>Companylogo}" displaySize="S" displayShape="Square"/>
-                            <Title text="{appView>FirstName}" wrapping="true" class="sapUiTinyMarginEnd"/>
+                            <Title text="{appView>FirstName}" wrapping="true" class="sapUiTinyMarginBegin"/>
                         </FlexBox>
                     </FlexBox>
                 </ux:snappedHeading>

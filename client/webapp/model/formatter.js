@@ -1131,6 +1131,12 @@ debugger;
       var allJobData = this.getView().getModel("appView").getProperty("/jobsData");
 
     },
+    formatMaxDate: function() {
+      var currentDate = new Date();
+      // Adjust the formatting as per your requirements
+      var formattedDate = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
+      return formattedDate;
+    }
 
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];

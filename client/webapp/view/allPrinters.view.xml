@@ -3,34 +3,38 @@
 	  <subHeader>
 		<Toolbar>
 				<content>
-					<Title text="Welcome Printer"/>
+					<Title text="Printers  [ {appView>/countJobs} ]"/>
+						<ToolbarSpacer/>
+						<SearchField liveChange="onSearchJob" width="30%"/>
+						<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
+						<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin' ? true :false}"/>    
 				</content>
 		</Toolbar>
 	  </subHeader>
-		<Toolbar>
+		<!-- <Toolbar>
 		   <content>
 				<SearchField liveChange="onSearchJob" width="50%"/>
 				<ToolbarSpacer/>
 				<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
 				<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin' ? true :false}"/>     
 			</content>
-		</Toolbar>
-      <List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
-			<items>
-				<custom:customListItem type="Navigation" backgroundColor="{=${appView>status} === 'Value Mismatched' ? 'ff6666' : 'FFFFFF'}" >
-					
-					<HBox>
-						<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
-							<Label text="{appView>Company/CompanyName}" class ="sapUiTinyMarginBottom"/>
-							<Text text="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"/>
-
-							<ObjectStatus class="sapUiSmallMarginTop" text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
+		</Toolbar> -->
+				<List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
+					<items>
+						<custom:customListItem type="Navigation" backgroundColor="{=${appView>status} === 'Value Mismatched' ? 'ff6666' : 'FFFFFF'}" >
 							
-						</VBox>
-						<ObjectMarker class="sapUiMediumMargin"  type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
-					</HBox>
-				</custom:customListItem>
-			</items>	
-	  </List>
+							<HBox>
+								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
+									<Label text="{appView>Company/CompanyName}" class ="sapUiTinyMarginBottom"/>
+									<Text text="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"/>
+		
+									<ObjectStatus class="sapUiSmallMarginTop" text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
+									
+								</VBox>
+								<ObjectMarker class="sapUiMediumMargin"  type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
+							</HBox>
+						</custom:customListItem>
+					</items>	
+			  </List>
   </Page>
 </mvc:View>

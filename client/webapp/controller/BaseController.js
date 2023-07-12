@@ -56,50 +56,50 @@ sap.ui.define([
 		},
 
 		userRole: function () {
-			debugger;
+			// debugger;
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if (sUserRole === "Admin") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				// this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
 			this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 			}
 			else if (sUserRole === "Customer") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
+				// this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', true);
 				this.getView().getModel("appView").setProperty('/addJobStatusVis', false);
 				this.getView().getModel('appView').setProperty('/modifybtnvis', false);
 			}
 			else if (sUserRole === "Factory Manager") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
-				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb',true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/asUrgentVis', false);
+				// this.getView().getModel("appView").setProperty('/welPrintNavVisb',true);
+				// this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);
 				this.getView().getModel("appView").setProperty('/profilNavVisb',true);
 				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
 			this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 			}
 			else if (sUserRole === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
+				// this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
 			this.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 
 			}
 			if(sUserRole === "Artwork Head") {
-				this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
-				this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
-				this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
-				this.getView().getModel("appView").setProperty('/profilNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/upDocNavVisb', false);
+				// this.getView().getModel("appView").setProperty('/welPrintNavVisb', true);
+				// this.getView().getModel("appView").setProperty('/useDeltNavVisb', false);
+				// this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 				this.getView().getModel("appView").setProperty('/asUrgentVis', false);
 				this.getView().getModel("appView").setProperty("/asUrgentVis", false);
@@ -1578,7 +1578,7 @@ sap.ui.define([
 			var that = this;
 			oModel.read('/Company', {
 			  success: function (data) {
-				debugger;
+				// debugger;
 				that.CompanyData = data;
 				//   const results = results.filter(obj => {
 				//    return obj.id === "64913ea67f0ea353ac20a390";
