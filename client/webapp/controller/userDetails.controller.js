@@ -201,7 +201,7 @@ sap.ui.define([
 
 		// * this function is make the update call for block and unblock the customer.
 		onBlockCustomer: function (oEvent) {
-			debugger;
+			
 			var state = oEvent.getParameter('state');
 			var that = this;
 			this.getView().getModel("appView").setProperty("/state", state)
@@ -228,7 +228,7 @@ sap.ui.define([
 				}
 			});
 			this.getView().getModel("appView").updateBindings();
-			debugger;
+			
 			this.getView().byId("idProductsTable").getBinding("items").update;
 		},
 
@@ -269,7 +269,7 @@ sap.ui.define([
 
 		// * this function works to show the logo when user clicks on the show logo button
 		onLogo: function () {
-			debugger;
+			
 			var oLogo = this.getModel("appView").getProperty("/streamUrlLogo");
 			var stream = this.formatter.getImageUrlFromContent(oLogo);
 			if (!this.lightBox) {
@@ -321,7 +321,7 @@ sap.ui.define([
 
 		// * this funciton handle the validation on the add user and open the password fragment to make call.
 		openPassdialog: function () {
-			debugger;
+			
 			
 			var oModel = this.getView().getModel('appView');
 			var bExistingData = oModel.getProperty('/existingData');
@@ -336,7 +336,7 @@ sap.ui.define([
 
 		// * At here we are getting  the companies all the app.  
 		getCompanyName: function () {
-            debugger;
+            
 			var oModel = this.getView().getModel();
 			var that = this;
 			oModel.read('/Company', {
@@ -402,7 +402,7 @@ sap.ui.define([
 
 		// * this fucntion will do a update call when admin edit the user data.
 		updateRowData: function() {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView");
 			var dModel = this.getView().getModel();
 			var that = this;
@@ -474,7 +474,7 @@ sap.ui.define([
 
 		// * this fucntion will get the entity data and bind the data into the edit user fragment.
 		rowItemsPressUser: function (oEvent) {
-            debugger;
+            
 			var oParameter = oEvent.getParameter('listItem');
 			var oPath = oEvent.getParameter("listItem").getBindingContextPath();
             this.bindingPath = oPath;
@@ -485,7 +485,7 @@ sap.ui.define([
 			var that = this;
 
 			this.openUserDialog().then(function (userAddFrag) {
-				debugger;
+				
 				userAddFrag.bindElement('appView>/userData');
 				omodel.setProperty('/existingData', true);
 				omodel.setProperty('/TitleUserAdd', "Edit User");
@@ -538,7 +538,7 @@ sap.ui.define([
 		onAddUserViaAdmin: function (oEvent) {
 
 
-debugger;
+
 			var oModel = this.getView().getModel("appView");
 
 			var checkSwitchStatus = oModel.getProperty("/newPass");
@@ -641,7 +641,7 @@ debugger;
 		},
 		//when select comapny this function trigger
 		onSelectComPany: function (oEvent) {
-			debugger;
+			
 			var oSelectedCompanyName = oEvent.getParameter("selectedItem").getText();
 			var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
             var rowData = oEvent.getSource().getParent().getBindingContext("appView").getObject();
@@ -667,7 +667,7 @@ debugger;
 		},
 		//this update call for set company data to appUser tabel
 		resetPassExistingUser: function (pass) {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView")
 			var newPassword = oModel.getProperty("/newPassValue");
 			var conNewPassword = oModel.getProperty("/confirmPassValue");

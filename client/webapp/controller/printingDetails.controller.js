@@ -50,7 +50,7 @@ sap.ui.define([
 			oModel.setProperty("/addBtnVisible", true);
 			oModel.setProperty("/editableFields", false);
 
-			oModel.setProperty("/btnVisibility", true);
+			// oModel.setProperty("/btnVisibility", true);
 			var sUserRole = oModel.getProperty('/UserRole');
 			if (sUserRole === 'Customer') {
 
@@ -119,13 +119,13 @@ sap.ui.define([
 
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel();
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			oModel.read("/Jobs('" + this.oArgs + "')", {
 				success: function (data) {
-					debugger;
+					
 					if(data.Urgent === "Yes"){
 						that.getView().getModel("appView").setProperty("/asUrgentVis", false);
 						// that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", true);
@@ -403,7 +403,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.poAttachment)
 					var oModel = that.getView().getModel("appView");
 					oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
-					oModel.setProperty("/btnVisibility", false);
+					// oModel.setProperty("/btnVisibility", false);
 					that.oDialogOpen().then(function (oDialog) {
 					oDialog.open();
 					// var sUserRole = oModel.getProperty('/UserRole');
@@ -421,7 +421,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.artworkAttachment)
 					var oModel = that.getView().getModel("appView");
 					oModel.setProperty("/uploadDocumnetTitle", " Artwork Attachment");
-					oModel.setProperty("/btnVisibility", false);
+					// oModel.setProperty("/btnVisibility", false);
 					that.oDialogOpen().then(function (oDialog) {
 					oDialog.open();
 					// var sUserRole = oModel.getProperty('/UserRole');
@@ -463,6 +463,7 @@ sap.ui.define([
 			this.jobStatusPath = oEvent.getSource().getBindingContext("appView").sPath;
 			var oModel = this.getView().getModel("appView");
 			oModel.setProperty("/buttonText", "Update");
+			oModel.setProperty('/uploadBrowse-BtnVis', false);
 
 			var sUserRole = oModel.getProperty('/UserRole');
 			if (sUserRole === 'Customer') {
@@ -482,9 +483,11 @@ sap.ui.define([
 					this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 					var pofile = oData.poAttachment;
-					// if(sUserRole === 'Accounts Head'){
-					// 	oModel.setProperty("/browseVisArtwork", false);
-					// }
+					if(sUserRole === 'Admin'|| sUserRole === "Artwork Head"){
+						oModel.setProperty('/uploadDocBrowseVis', true);
+						oModel.setProperty("/uploadBrowse-BtnVis",true)
+						// oModel.setProperty("/btnVisibility", true);
+					}
 					if (pofile) {
 						oModel.setProperty("/buttonText", "Update");
 					}
@@ -496,6 +499,9 @@ sap.ui.define([
 					this.getModel("appView").setProperty("/attachmentFiles", oData.artworkAttachment)
 					var artfile = oData.artworkAttachment
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Artwork Document");
+					if(sUserRole === "Admin" || sUserRole === "Artwork Head"){
+						oModel.setProperty("/uploadBrowse-BtnVis",true)
+					}
 	
 					if (artfile) {
 						oModel.setProperty("/buttonText", "Update");
@@ -509,7 +515,7 @@ sap.ui.define([
 					this.getModel("appView").setProperty("/attachmentFiles", oData.deliveryAttachment)
 					var Delfile = oData.deliveryAttachment;
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Delivery Document");
-					oModel.setProperty("/btnVisibility", false);
+					// oModel.setProperty("/btnVisibility", false);
 					oModel.setProperty("/browseVisArtwork", false);
 	
 					if (Delfile) {
@@ -523,7 +529,7 @@ sap.ui.define([
 					this.getModel("appView").setProperty("/attachmentFiles", oData.incAttachment)
 					var incFile = oData.incAttachment;
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
-					oModel.setProperty("/btnVisibility", false);
+					// oModel.setProperty("/btnVisibility", false);
 					// oModel.setProperty("/browseVisArtwork", false);
 					if (incFile) {
 						oModel.setProperty("/buttonText", "Update");
@@ -537,22 +543,19 @@ sap.ui.define([
 				var oModel = this.getView().getModel("appView");
 				this.oDialogOpen().then(function (oDialog) {
 					oDialog.open();
+					
 					var sUserRole = oModel.getProperty('/UserRole');
 					if (sUserRole === 'Customer') {
-						oModel.setProperty('/browseVis', false);
-						oModel.setProperty("/btnVisibility", false);
-					}
-					if (sUserRole === "Admin") {
-						oModel.setProperty('/uploadDocBrowseVis', false);
-						oModel.setProperty("/btnVisibility", true);
+						// oModel.setProperty('/browseVis', false);
+						// oModel.setProperty("/btnVisibility", false);
 					}
 					if (sUserRole === "Dispatch Head" || "Accounts Head") {
 						// oModel.setProperty('/browseVis', false);
-						oModel.setProperty("/btnVisibility", false);
+						// oModel.setProperty("/btnVisibility", false);
 					}
 					if (sUserRole === "Artwork Head") {
 						// oModel.setProperty('/browseVis', false);
-						oModel.setProperty("/btnVisibility", true);
+						// oModel.setProperty("/btnVisibility", true);
 					}
 	
 				});
@@ -573,7 +576,7 @@ sap.ui.define([
 			
 				this.getModel("appView").setProperty("/attachmentFiles", oData.attachment)
 				// oModel.setProperty("/uploadDocumnetTitle", "Upload Delivery Document");
-				oModel.setProperty("/btnVisibility", false);
+				// oModel.setProperty("/btnVisibility", false);
 				oModel.setProperty("/browseVisArtwork", false);
 
 			
@@ -598,7 +601,7 @@ sap.ui.define([
 				var sUserRole = oModel.getProperty('/UserRole');
 				if (sUserRole === 'Customer') {
 					
-					oModel.setProperty('/browseVis', false);
+					// oModel.setProperty('/browseVis', false);
 				}
 
 			});
@@ -607,6 +610,7 @@ sap.ui.define([
 
 		// * this fucntion opens the dialog onto the addJobFragmentDialog.
 		onClickAddStatusAttachment: function (oEvent) {
+			
 			this.jobAttachmentId = oEvent.getSource().getId();
 			var that = this;
 			var oModel = this.getView().getModel("appView");
@@ -616,20 +620,10 @@ sap.ui.define([
 				oModel.setProperty("/uploadDocumnetTitle", "Upload  Document");
 				oDialog.open();
 				var sUserRole = oModel.getProperty('/UserRole');
-                 if(sUserRole === 'Accounts Head' || sUserRole === "Admin"){
-					oModel.setProperty("/uploadDocBrowseVis", true)
-				 }else{
-					oModel.setProperty("/uploadDocBrowseVis", false)
-				 }
-				// oDialog.attachAfterClose(function () {
-				// 	
-				// 	oDialog.unbindProperty();
-				// });
-				
-				var sUserRole = oModel.getProperty('/UserRole');
-				if (sUserRole === 'Customer') {
-					oModel.setProperty('/browseVis', false);
+				if(sUserRole === "Admin" || sUserRole === "Accounts Head"){
+					oModel.setProperty("/uploadBrowse-BtnVis",true)
 				}
+                
 
 			});
 		},
@@ -941,7 +935,7 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
-			oModel.setProperty("/btnVisibility", true);
+			// oModel.setProperty("/btnVisibility", true);
 			// oModel.setProperty("/newJob", JSON.parse(JSON.stringify(rowdata)));
 			// oModel.setProperty("/oldJobs",JSON.parse(JSON.stringify(rowdata)))
 			var invNoEditGrag = rowdata.InvNo;
@@ -1359,6 +1353,7 @@ sap.ui.define([
 					.then(function (data, status, xhr) {
 						
 						that.getView().getModel("appView").setProperty("/jobsData", data);
+						that.getView().getModel("appView").setProperty("/countJobs", data.length);
 
 
 
@@ -1372,6 +1367,7 @@ sap.ui.define([
 				this.middleWare.callMiddleWare("getJobsWithCompany", "get")
 					.then(function (data, status, xhr) {
 						that.getView().getModel("appView").setProperty("/jobsData", data);
+						that.getView().getModel("appView").setProperty("/countJobs", data.length);
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
 						that.middleWare.errorHandler(jqXhr, that);

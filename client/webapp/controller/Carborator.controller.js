@@ -33,7 +33,7 @@ sap.ui.define([
       oModel.setProperty("/imgVisibility", false);
       oModel.setProperty("/editableFields", false);
       oModel.setProperty("/messageStripVis", false)
-      oModel.setProperty("/onUpdateJobVis", false)
+      // oModel.setProperty("/onUpdateJobVis", false)
       // this.onPressClear();
 
       var bSystemType = this.getModel("device").getData().system.desktop;
@@ -81,6 +81,8 @@ sap.ui.define([
           that.getModel("appView").setProperty("/simpleFormVisibility", true);
           that.getModel("appView").setProperty("/uploadButtonVisibility", false);
           that.getModel("appView").setProperty("/imgVisibility", false);
+          that.getView().getModel("appView").setProperty("/allJobsCount", files.length);
+
           if (that.count === files.length) {
             that.allJobcardnoToString();
             that.checkInJobs();
@@ -136,7 +138,7 @@ sap.ui.define([
 
     //* This function will check the jobs on the backend and if they are present then it will change the operation accordingly!
     checkInJobs: function () {
-      debugger;
+      
       this.Flag = false;
       // var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
       var jobCardNos = this.getView().getModel("appView").getProperty("/jobCardNoInString");
@@ -223,7 +225,7 @@ sap.ui.define([
 
         })
         .catch(function (jqXhr, textStatus, errorMessage) {
-          debugger;
+          
           that.middleWare.errorHandler(jqXhr, that);
         });
 
@@ -231,7 +233,7 @@ sap.ui.define([
 
     //* This function is used to select the company inside a comboBox
     // selectCompany: function (oEvent) {
-    //   debugger;
+    //   
     //   var oModel = this.getView().getModel();  //default model get at here
     //   var that = this;
     //   if (oEvent) {
@@ -249,16 +251,16 @@ sap.ui.define([
     //   }
     //   // this.middleWare.callMiddleWare("customerNames", "get")
     //   //   .then(function (data, status, xhr) {
-    //   //     debugger;
+    //   //     
     //   //     that.getView().getModel("appView").setProperty("/customerUser", data);
     //   //   })
     //   //   .catch(function (jqXhr, textStatus, errorMessage) {
-    //   //     debugger;
+    //   //     
     //   //     that.middleWare.errorHandler(jqXhr, that);
     //   //   });
     // },
     selectCompany: function (oEvent) {
-      debugger;
+      
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
       var aExcelsWithMissingCompanies = [];
@@ -345,14 +347,18 @@ sap.ui.define([
 
     // * This fucntion is saving the jobs data into the backend for both new and updated jobs!
     onSavePayload: function () {
-      debugger;
+      
       var that = this;
       var oModel = this.getView().getModel();
       var aAllExcelFiles = this.getView().getModel('appView').getProperty("/allExcelData");
+      that.getView().getModel("appView").setProperty("/aAllExcelFilesCount", aAllExcelFiles.length);
       var aNewFetchedExcel = [];
       var aExcelToBeUploaded = [];
+      var date = new Date()
+      var formattedDate = date.toLocaleDateString("en-US");
       for (let i = 0; i < aAllExcelFiles.length; i++) {
         const element = aAllExcelFiles[i];
+        element.CreatedOn = formattedDate;
         if (element.operation === "N") {
           // element.jobCardNo.toString();
           aNewFetchedExcel.push(element)
@@ -366,12 +372,12 @@ sap.ui.define([
       if (aNewFetchedExcel.length > 0) {
         this.middleWare.callMiddleWare("api/Jobs", "post", aNewFetchedExcel)
           .then(function (data, status, xhr) {
-            debugger;
+            
             MessageToast.show("Successfully Uploaded")
             // that.getView().getModel("appView").setProperty("/customerUser", data);
           })
           .catch(function (jqXhr, textStatus, errorMessage) {
-            debugger;
+            
             that.middleWare.errorHandler(jqXhr, that);
           });
         // that.getJobsData();
@@ -381,16 +387,18 @@ sap.ui.define([
 
       if (aExcelToBeUploaded.length > 0) {
         for (let i = 0; i < aExcelToBeUploaded.length; i++) {
+         
           const element = aExcelToBeUploaded[i];
+          element.UpdatedOn = formattedDate;
 
           this.middleWare.callMiddleWare("api/Jobs", "PUT", element)
             .then(function (data, status, xhr) {
-              debugger;
+              
               MessageToast.show("Successfully Uploaded")
               // that.getView().getModel("appView").setProperty("/customerUser", data);
             })
             .catch(function (jqXhr, textStatus, errorMessage) {
-              debugger;
+              
               that.middleWare.errorHandler(jqXhr, that);
             });
         }
@@ -407,7 +415,7 @@ sap.ui.define([
 
     },
     // onUpdateJob: function () {
-    //   debugger;
+    //   
     //   BusyIndicator.show(0);
     //   var that = this;
     //   var userValue = this.getModel("appView").getProperty("/customerId");
@@ -446,7 +454,7 @@ sap.ui.define([
     // },
     onPressClear: function (oEvent) {
       var that = this;
-      debugger;
+      
       var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
       this.getView().getModel('appView').setProperty("/allExcelData", oldData);
       this.getView().byId("fileUploader").setValue("")
@@ -466,14 +474,14 @@ sap.ui.define([
       // this.getView().getModel("appView").setProperty("/allExcelData", dbJobs);
       // this.getView().getModel('appView').updateBindings();
     },
-    onUploadExcelsUpdateFinished: function () {
-      this.getView().getModel('appView').setProperty("/onSavePayloadVis", true);
-    },
+    // onUploadExcelsUpdateFinished: function () {
+    //   this.getView().getModel('appView').setProperty("/onSavePayloadVis", true);
+    // },
 
 
     //* This function will remove the job when click on 'X' button on the fragment, which already have companyID!
     removeJobwithCompId: function (oEvent) {
-      debugger;
+      
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
       var allDataWithId = this.getView().getModel('appView').getProperty("/withCompanyId");
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
@@ -496,7 +504,7 @@ sap.ui.define([
 
     //* This function will remove the job when click on 'X' button on the fragment, which doNot have companyID!
     removeJobwithoutCompId: function (oEvent) {
-      debugger;
+      
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
       var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
@@ -527,7 +535,7 @@ sap.ui.define([
       if (!this.jobdialog) {
         this.jobdialog = Fragment.load({
           id: oView.getId(),
-          name: "ent.ui.ecommerce.fragments.AllJobs",
+          name: "ent.ui.ecommerce.fragments.printingDetailFragment.AllJobs",
           controller: this
         }).then(function (oDialog) {
           // Add dialog to view hierarchy
@@ -544,7 +552,7 @@ sap.ui.define([
       that.oUploadDialogFragment().then(function (oDialog) {
         oDialog.open();
         //  var trvbyu= that.getView().getModel("appView").getProperty("/excelDataUplode");
-        debugger;
+        
         var oSimpleForm = that.getView().byId("allJobDetails")
         oSimpleForm.bindElement('appView>/excelDataUplode');
       });
@@ -580,7 +588,7 @@ sap.ui.define([
       that.ojobValidation().then(function (oDialog) {
         oDialog.open();
         //  var trvbyu= that.getView().getModel("appView").getProperty("/excelDataUplode");
-        debugger;
+        
         // var oSimpleForm = that.getView().byId("allJobDetails")
         // oSimpleForm.bindElement('appView>/excelDataUplode');
       });
@@ -669,9 +677,9 @@ sap.ui.define([
 
       const dbFields = {};
       dbFieldsJSON.forEach(item => {
-        var date = new Date()
-        var formattedDate = date.toLocaleDateString("en-US");
-        dbFields.CreatedOn = formattedDate;
+        // var date = new Date()
+        // var formattedDate = date.toLocaleDateString("en-US");
+        // dbFields.CreatedOn = formattedDate;
         dbFields.operation = "N"
         dbFields.CompanyId = null
         dbFields.Urgent = ""
@@ -689,7 +697,7 @@ sap.ui.define([
       var preData = this.getView().getModel("appView").getProperty("/allExcelData");
       var avalData = that.getView().getModel("appView").getProperty("/newlySelectedData");
       avalData = avalData ? avalData : [];
-      debugger;
+      
       dbFields.jobCardNo = dbFields.jobCardNo.toString()
       avalData.push(dbFields)
       that.getView().getModel("appView").setProperty("/newlySelectedData", avalData)
@@ -802,7 +810,7 @@ sap.ui.define([
     //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", false)
     //   })
     //   .catch(function (jqXhr, textStatus, errorMessage) {
-    //     debugger;
+    //     
     //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", false)
     //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", true)
     //     that.getView().getModel("appView").setProperty("/messageStripVis", false)
@@ -857,7 +865,7 @@ sap.ui.define([
 
     //     //  var trvbyu= that.getView().getModel("appView").getProperty("/excelDataUplode");
 
-    //     debugger;
+    //     
 
     //   });
 

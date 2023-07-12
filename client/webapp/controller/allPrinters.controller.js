@@ -47,6 +47,10 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
 			this.getCompanyName();
+			// var date = new Date();
+			// var formattedDate = date.toLocaleDateString("en-US");
+			// this.getView().getModel("appView").setProperty("/todaysDate",date)
+			
 			// this.getUserName();
 			// this.getJobAccordingCustomer();
 		},
@@ -222,8 +226,9 @@ sap.ui.define([
 		if(sUserRole === "Customer"){
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
 			.then(function (data, status, xhr) {
-			  debugger;
-			  that.getView().getModel("appView").setProperty("/jobsData", data);						
+			  
+			  that.getView().getModel("appView").setProperty("/jobsData", data);
+			  that.getView().getModel("appView").setProperty("/countJobs", data.length);					
 		  })
 			.catch(function (jqXhr, textStatus, errorMessage) {
 			  that.middleWare.errorHandler(jqXhr, that);
@@ -233,6 +238,7 @@ sap.ui.define([
 			this.middleWare.callMiddleWare("getJobsWithCompany", "get")
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);
+				that.getView().getModel("appView").setProperty("/countJobs", data.length);
 				// that.getJobStatus();
 				// var jobData = 
 				// for (let i = 0; i < data.length; i++) {
@@ -281,6 +287,12 @@ sap.ui.define([
 				controller: this
 			}).then(function (oDialog) {
 				oView.addDependent(oDialog);
+				// var dateObject = this.getView().byId('DRS1');
+				// var minDate = new Date("10 February 1900");
+				// var minDate = 'Wed Jan 10 1900 00:00:00 GMT+0530 (India Standard Time)'
+				// dateObject.setMaxDate(new Date());
+				// dateObject.setMinDate(minDate);
+				
 				return oDialog;
 			}.bind(this));
 		}
@@ -289,8 +301,8 @@ sap.ui.define([
 		});
 	},
 	onReject: function () {
-		debugger;
-		this.getView().byId("DRS1").setDateValue(null);
+		
+		// this.getView().byId("DRS1").setDateValue(null);
 		this.getView().byId("selectedCompanyId").setSelectedKey("")
 		this.oExportData.then(function (oDialog) {
 			oDialog.close();
@@ -298,7 +310,7 @@ sap.ui.define([
 		})
 	},
 	handleChange: function (oEvent) {
-		debugger;
+		
 		var selectedFromDate = oEvent.getParameter("from");
 		var selectedtoDate = oEvent.getParameter("to");
 		// const formattedDate = selectedDate.toISOString().split('T')[0];
@@ -317,7 +329,7 @@ sap.ui.define([
 		this.getView().getModel("appView").setProperty("/selectedCompanyName",selectedCompanyName);
 	},
 	onSubmit:function(){
-		debugger;
+		
 		// this.formatDate();
 		var that = this
 		var startDate = this.getView().getModel("appView").getProperty("/selectedFromDate")
@@ -332,15 +344,22 @@ sap.ui.define([
 			"CreatedOnEnd":endDate,
 			"cId": company
 		}
-		this.middleWare.callMiddleWare("selectedDateJobStatus", "POST" , payload)
-			.then(function (data, status, xhr) {
-			  debugger;
-			  that.getView().getModel("appView").setProperty("/jobStatusDate", data);	
-			  that.onExport();					
-		  })
-			.catch(function (jqXhr, textStatus, errorMessage) {
-			  that.middleWare.errorHandler(jqXhr, that);
-			});
+		if( !startDate || !endDate ){
+			MessageToast.show("Please Select the date");
+			return;
+		}
+		else{
+
+			this.middleWare.callMiddleWare("selectedDateJobStatus", "POST" , payload)
+				.then(function (data, status, xhr) {
+				  
+				  that.getView().getModel("appView").setProperty("/jobStatusDate", data);	
+				  that.onExport();					
+			  })
+				.catch(function (jqXhr, textStatus, errorMessage) {
+				  that.middleWare.errorHandler(jqXhr, that);
+				});
+		}
 	},
 	createColumnConfig: function() {
 		return [
@@ -416,7 +435,8 @@ sap.ui.define([
 	onExport: function() {
 		debugger
 		var aCols, oBinding, oSettings, oSheet, oTable,data;
-		var newArr = [];
+		var aAllJobStatus = [];
+		var jobStatusArray = [];
 
 		oTable = this.byId('exportTable');
 		data = this.getView().getModel("appView").getProperty("/jobStatusDate");
@@ -424,18 +444,24 @@ sap.ui.define([
 		for(var i =0 ; i<data.length;i++){
 			oBinding = data[i].JobStatus;
 			var myJobStatusData = oBinding[0]
-			newArr.push(myJobStatusData)
-			aCols = this.createColumnConfig();
-			
-			oSettings = {
-				workbook: { columns: aCols },
-				dataSource: newArr,
-				// __filename : oBinding.jobCardNo
-			};
-			
+			aAllJobStatus.push(myJobStatusData)
+		}
+
+		for (let i = 0; i < aAllJobStatus.length; i++) {
+			const element = aAllJobStatus[i];
+			if(element != undefined){
+				jobStatusArray.push(element)
+			}
 			
 		}
-			// newArr.push(oSheet);
+		aCols = this.createColumnConfig();
+		
+		oSettings = {
+			workbook: { columns: aCols },
+			dataSource: jobStatusArray,
+			// __filename : oBinding.jobCardNo
+		};
+			// aAllJobStatus.push(oSheet);
 			oSheet = new Spreadsheet(oSettings);
 			oSheet.build()
 				.then(function() {
@@ -452,7 +478,7 @@ sap.ui.define([
 });
 	// //  At here we are getting  the company Name. 
 	// 		getCompanyName: function () {
-	// 			debugger;
+	// 			
 	// 			// var ids = oEvent.getSource().getBindingContext("appView").getObject().id;
 	// 			var oModel = this.getView().getModel();
 	// 			var id = "033";

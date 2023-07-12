@@ -19,7 +19,7 @@ sap.ui.define([
 
         onAfterRendering : function() {
             // make sure that onAfterRendering function in VBox is not overwritten
-          debugger;
+          
             if (CustomListItem.prototype.onAfterRendering) {
 
               CustomListItem.prototype.onAfterRendering.apply(this, arguments);

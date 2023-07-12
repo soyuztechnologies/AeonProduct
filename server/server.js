@@ -1149,10 +1149,10 @@ app.start = function () {
 				oFilter = jobs.filter(function (data){
                  return data.CompanyId != null
 				});
-				debugger;
+				
 				res.send(oFilter);
 			} catch (error) {
-				debugger;
+				
 			}
 			
 		})

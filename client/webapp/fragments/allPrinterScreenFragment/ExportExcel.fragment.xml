@@ -2,11 +2,12 @@
     <Dialog title="Export Excel"
     resizable="false" id="captchaDialog">
     <content>
-        <HBox
-        >
-            
+        <HBox>
         <DateRangeSelection
 			id="DRS1"
+            placeholder="Select Min and Max Date"
+            maxDate="{appView>/todaysDate}"
+            minDate="{appView>/todaysDate}"
 			class="DRS1"
 			change="handleChange"/>
             <ToolbarSpacer/>

@@ -56,7 +56,7 @@ sap.ui.define([
 		},
 
 		userRole: function () {
-			// debugger;
+			// 
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
 			if (sUserRole === "Admin") {
 				// this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
@@ -1578,7 +1578,7 @@ sap.ui.define([
 			var that = this;
 			oModel.read('/Company', {
 			  success: function (data) {
-				// debugger;
+				// 
 				that.CompanyData = data;
 				//   const results = results.filter(obj => {
 				//    return obj.id === "64913ea67f0ea353ac20a390";

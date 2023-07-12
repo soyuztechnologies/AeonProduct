@@ -31,7 +31,7 @@
 				type="Warning"
 				showIcon="true">
 			</MessageStrip> -->
-            <Table updateFinished="onUploadExcelsUpdateFinished" items="{appView>/allExcelData}">
+            <Table items="{appView>/allExcelData}">
                 <headerToolbar>
                     <OverflowToolbar>
                         <content>
@@ -185,8 +185,8 @@
         <footer>
             <Toolbar >
                 <ToolbarSpacer/>
-                <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onSavePayloadVis}"  text="Save" press="onSavePayload"></Button>
-                <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onUpdateJobVis}" text="Update" press="onUpdateJob"></Button>
+                <Button type="Emphasized" icon="sap-icon://save" visible="true"  text="Save" press="onSavePayload"></Button>
+                <!-- <Button type="Emphasized" icon="sap-icon://save" visible="{appView>/onUpdateJobVis}" text="Update" press="onUpdateJob"></Button> -->
                 <Button type="Reject" text="Clear"  icon="sap-icon://clear-all" press="onPressClear"></Button>
             </Toolbar>
         </footer>

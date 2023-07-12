@@ -992,7 +992,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     },
 
     formatInvNo: function (InvNo) {
-debugger;
+
       var oModel = this.getView().getModel("appView");
 
       var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
@@ -1126,7 +1126,7 @@ debugger;
       }
     },
     statusFormatter:function(color){
-      debugger;
+      
       var alljobstatus = this.getView().getModel("appView").getProperty("/allJobStatus");
       var allJobData = this.getView().getModel("appView").getProperty("/jobsData");
 

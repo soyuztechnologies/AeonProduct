@@ -5,7 +5,7 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
     <Dialog contentWidth="100%" contentHeight="100%" title="{appView>/uploadDocumnetTitle}" id="uploadDoc">
         <content>
-            <u:FileUploader visible="{appView>/uploadDocBrowseVis}" class="sapUiTinyMargin" sameFilenameAllowed="true" width="99%" style="Emphasized" change="onChangeFileUploader" buttonText="Browse"  fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="false"  />
+            <u:FileUploader visible="{appView>/uploadBrowse-BtnVis}" class="sapUiTinyMargin" sameFilenameAllowed="true" width="99%" style="Emphasized" change="onChangeFileUploader" buttonText="Browse"  fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="false"  />
                 <HBox alignContent="Center" justifyContent="Center">
                     <Text visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getTextVisibility'}" text = "Your Uploaded Files are in the format of Excel,Csv,document.Click on download to see the files."></Text>
                 </HBox>
@@ -19,7 +19,8 @@
             <!-- <Image visible="true" src="{appView>/imageBaseArtwork}" />  -->
         </content>
         <beginButton>
-            <Button visible="{appView>/btnVisibility}" text="{appView>/buttonText}" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/>
+            <Button visible="{appView>/uploadBrowse-BtnVis}" text="{appView>/buttonText}" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/>
+                <!-- {=${appView>/UserRole}==='Admin' || ${appView>/UserRole}==='Artwork Head' || ${appView>/UserRole}==='Accounts Head' ? true :false -->
         </beginButton>
         <endButton>
             <Button text="Close" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>

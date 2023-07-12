@@ -40,6 +40,7 @@ sap.ui.define([
 					// MessageToast.show("Data Reading......."+ data.role);
 					var omodel =  that.getView().getModel('appView');
 					 omodel.setProperty("/CustomerData", data.Appuser);
+					 omodel.setProperty("/companyLogo", data.Appuser.Companylogo);
 					var osimples = that.getView().byId("profile_Id");
 					osimples.bindElement("appView>/CustomerData");
 					that.getModel('appView').setProperty('/editableFields', false);
@@ -81,6 +82,10 @@ sap.ui.define([
 		onLogo: function () {
 			
 			var oLogo = this.getModel("appView").getProperty("/LogoAvonProfile");
+			if(!oLogo){
+				var logo = this.getModel("appView").getProperty("/companyLogo");
+				oLogo = "data:image/webp;base64," + logo;
+			} 
 			var stream = this.formatter.getImageUrlFromContent(oLogo);
 			if (!this.lightBox) {
 				this.lightBox = new sap.m.LightBox("lightBox", {
