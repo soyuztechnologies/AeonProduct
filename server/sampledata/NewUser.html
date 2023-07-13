@@ -1,11 +1,38 @@
-<h2>Welcome to Our Service!</h2>
-  <p>Dear  $$user$$,</p>
-  <p>You have been successfully registered with the following email: <strong>$$user$$</strong></p>
-  <p>To log in, please use the temporary password: <strong>$$password$$</strong></p>
-  <p>Make sure to update your password after logging in for enhanced security.</p>
-  <p>Thank you for choosing our services. If you have any questions or need further assistance, please contact the administrator.</p>
-  <p>Best regards,</p>
-  <p>Team Aeon Products</p>
-<div class="footer">
-    <p>This is an automated email. Please do not reply.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .btn {
+        display: inline-block;
+        background-color: #0bd853;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .btn:hover {
+        background-color: #0dc835;
+    }
+</style>
+</head>
+<body>
+  <h2>Welcome to Our Service!</h2>
+    <p>Dear  $$user$$,</p>
+    <p>You have been successfully registered with the following email: <strong>$$user$$</strong></p>
+    <p>To log in, please use the temporary password: <strong>$$password$$</strong></p>
+    <p><a class="btn" href=$$link$$>Login</a></p>
+    <p>Make sure to update your password after logging in for enhanced security.</p>
+    <p>Thank you for choosing our services. If you have any questions or need further assistance, please contact the administrator.</p>
+    <p>Best regards,</p>
+    <p>Team Aeon Products</p>
+    <div class="footer">
+      <p>This is an automated email. Please do not reply.</p>
+  </div>
+  
+</body>
+</html>

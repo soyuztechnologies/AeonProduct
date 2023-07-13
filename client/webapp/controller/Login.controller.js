@@ -243,6 +243,7 @@ sap.ui.define([
 
 		},
 		onRejectCan: function () {
+			debugger;
 			this.passUpdateDialog.then(function (oDialog) {
 				oDialog.close();
 			});
@@ -265,12 +266,18 @@ sap.ui.define([
 		},
 
 		onReject: function () {
+			debugger;
 			var oModel = this.getView().getModel('appView');
+			var that = this;
+			clearInterval(this.x);
 			this.openDialog().then(function (oDialog) {
 				oDialog.close();
+				that.getView().getModel('appView').setProperty("/timerText", "");
 				oModel.setProperty("/Email", "");
 				oModel.setProperty("/showError", false);
 				oModel.setProperty("/EmailEditable", true);
+				oModel.setProperty("/onResendOTP", false);
+				// that.getView().getModel('appView').setProperty("/onResendOTP", false);
 				// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
 				oModel.setProperty("/ResendStatusSignup", false);
 				oModel.setProperty("/submitEnable", true);
@@ -444,7 +451,7 @@ sap.ui.define([
 			this.emailCount += 1;
 			var that = this;
 			var countDownDate = new Date().getTime() + 60000;
-			var x = setInterval(function () {
+			 this.x= setInterval(function () {
 				var now = new Date().getTime();
 				var distance = countDownDate - now;
 				var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -454,7 +461,7 @@ sap.ui.define([
 				// Display the timer
 				that.getView().getModel('appView').setProperty("/timerText", timerText);
 				if (distance < 0) {
-					clearInterval(x);
+					clearInterval(this.x);
 					that.getView().getModel('appView').setProperty("/timerText", "Resend");
 					that.getView().getModel('appView').setProperty("/onResendOTP", true);
 					// that.getView().getModel('local').setProperty("/ResendMsg", "If OTP not Received ");

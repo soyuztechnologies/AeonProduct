@@ -16,7 +16,7 @@
 
                     <Text text="Do you want to automatically generate the Password "></Text>
 
-                    <Switch state="true" change="showPassField" customTextOn="Yes" customTextOff="No">
+                    <Switch state="{appView>/passSwitchState}" change="showPassField" customTextOn="Yes" customTextOff="No">
 
                         <layoutData>
 

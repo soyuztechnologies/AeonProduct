@@ -30,6 +30,7 @@ sap.ui.define([
 			oModel.setProperty("/newPass", false);
 			oModel.setProperty("/conPass", false);
 			this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+			this.getView().getModel("appView").setProperty("/passSwitchState", true);
 
 			this.getView().getModel("appView").setProperty("/VSTNewPass", "");
 
@@ -126,6 +127,7 @@ sap.ui.define([
 
 		// * this function is close the dialog on add user and edit user.
 		onReject: function () {
+			debugger;
             this.editVis = this.getView().getModel("appView").getProperty("/userEditBtn");
             this.addUserTitle = this.getView().getModel("appView").getProperty("/TitleUserAdd");
             if(this.addUserTitle ==="Add User" ){
@@ -144,6 +146,16 @@ sap.ui.define([
 
 		// * this function is close the dialog which ask for the passwprd when user add.
 		onRejectPass: function () {
+			debugger;
+			this.getView().getModel("appView").setProperty("/NewPassword","")
+			this.getView().getModel("appView").setProperty("/passSwitchState", true);
+			this.getView().getModel("appView").setProperty("/conPass", false);
+			this.getView().getModel("appView").setProperty("/newPass", false);
+			this.getView().getModel("appView").setProperty("/conPassWord","")
+			this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+			this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+			this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+			this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
 			this.openDialog().then(function (oDialog) {
 				// 
 				oDialog.close();
@@ -198,6 +210,103 @@ sap.ui.define([
 				}
 			});
 		},
+		//* For search Company from Combo Box
+
+        onSelectCompanyForSearch: function(oEvent){
+
+            debugger;
+
+            var oSelectedItem = oEvent.getParameter("value");
+
+            if(!oSelectedItem){
+
+                var oFilter = new sap.ui.model.Filter("CompanyName", sap.ui.model.FilterOperator.NEQ, oSelectedItem);
+
+                var oTable = this.getView().byId("idProductsTable");
+
+                var oBinding = oTable.getBinding("items");
+
+                oBinding.filter([oFilter]);
+
+            }else{
+
+                var oFilter = new sap.ui.model.Filter("CompanyName", sap.ui.model.FilterOperator.EQ, oSelectedItem);
+
+                var oTable = this.getView().byId("idProductsTable");
+
+                var oBinding = oTable.getBinding("items");
+
+                oBinding.filter([oFilter]);
+
+            }
+
+            },  
+
+        //* for search Role from Combo Box
+
+         onSelectRoleForSearch: function (oEvent) {
+
+            debugger;
+
+            var oSelectedItem = oEvent.getParameter("value");
+
+            if(!oSelectedItem){
+
+                var oFilter = new sap.ui.model.Filter("Role", sap.ui.model.FilterOperator.NEQ, oSelectedItem);
+
+                var oTable = this.getView().byId("idProductsTable");
+
+                var oBinding = oTable.getBinding("items");
+
+                oBinding.filter([oFilter]);
+
+            }else{
+
+                var oFilter = new sap.ui.model.Filter("Role", sap.ui.model.FilterOperator.EQ, oSelectedItem);
+
+                var oTable = this.getView().byId("idProductsTable");
+
+                var oBinding = oTable.getBinding("items");
+
+                oBinding.filter([oFilter]);
+
+            }
+
+            },
+
+         //* for search name and email
+
+         onSearchNameEmail: function (oEvent) {
+
+            debugger;
+
+            var sValue = oEvent.getParameter("query");
+
+            if (!sValue) {
+
+                var sValue = oEvent.getParameter("newValue")
+
+            }
+
+            var oFilter1 = new sap.ui.model.Filter("UserName", sap.ui.model.FilterOperator.Contains, sValue);
+
+            var oFilter2 = new sap.ui.model.Filter("EmailId", sap.ui.model.FilterOperator.Contains, sValue);
+
+            var oCombinedFilter = new sap.ui.model.Filter({
+
+                filters: [oFilter1, oFilter2],
+
+                and: false
+
+            });
+
+            var oTable = this.getView().byId("idProductsTable");
+
+            var oBinding = oTable.getBinding("items");
+
+            oBinding.filter(oCombinedFilter);
+
+            },
 
 		// * this function is make the update call for block and unblock the customer.
 		onBlockCustomer: function (oEvent) {
@@ -273,7 +382,7 @@ sap.ui.define([
 			var oLogo = this.getModel("appView").getProperty("/streamUrlLogo");
 			var stream = this.formatter.getImageUrlFromContent(oLogo);
 			if (!this.lightBox) {
-				this.lightBox = new sap.m.LightBox("lightBox", {
+				this.lightBox = new sap.m.LightBox("lightBoxx", {
 					imageContent: [new sap.m.LightBoxItem({
 						imageSrc: stream
 					})]
@@ -306,8 +415,9 @@ sap.ui.define([
 
 		// * this onSelect event works to show the passWord field in the Password Fragment.
 		showPassField: function (oEvent) {
-
+			debugger;
 			var passSwitchState = oEvent.getParameter('state');
+			this.getView().getModel("appView").setProperty("/passSwitchState", passSwitchState);
 			var omodel = this.getView().getModel("appView");
 			if (passSwitchState === false) {
 				omodel.setProperty("/newPass", true);
@@ -367,7 +477,10 @@ sap.ui.define([
 			var ShippingCity = this.oFormData.ShippingCity;
 			var phoneRegex = /^\d{10}$/;
 			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
+			var selectedUsername = oModel.getProperty("/selectedUsername");
+			if(!selectedUsername){
+				oModel.setProperty("/selectedUsername",Email)
+			}
 			if (phone && !phone.match(phoneRegex)) {
 				MessageToast.show("Phone number should be 10 digits");
 				return;
@@ -508,15 +621,15 @@ sap.ui.define([
 
 		// * it make a post call to create the user via admin side.
 		AddCustomers: function () {
-
+			debugger;
 			var that = this;
 			var oModel = this.getView().getModel("appView")
 			var newPassword = oModel.getProperty("/newPassValue");
 			var conNewPassword = oModel.getProperty("/confirmPassValue");
 
 			var payload = this.oFormData;
-			if(newPassword === conNewPassword){
-				if(newPassword != "" || newPassword != undefined){
+			
+				
 					this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
 						.then(function (data, status, xhr) {
 							// debugger
@@ -528,16 +641,14 @@ sap.ui.define([
 						.catch(function (jqXhr, textStatus, errorMessage) {
 							that.middleWare.errorHandler(jqXhr, that);
 						});
-				}
-			}	else{
-				MessageToast.show("Please Check Your Fields")
-			}
+				
+			
 		},
 
 		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
 		onAddUserViaAdmin: function (oEvent) {
 
-
+			debugger;
 
 			var oModel = this.getView().getModel("appView");
 
@@ -554,6 +665,7 @@ sap.ui.define([
 				if (!pass && !Conpass) {
 
 					MessageToast.show("Please Enter the Password");
+					return;
 
 				} else {
 
@@ -562,6 +674,8 @@ sap.ui.define([
 						this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
 
 						this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+						MessageToast.show("Password is not Validated");
+						return;
 
 					} else {
 
@@ -576,6 +690,8 @@ sap.ui.define([
 						this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
 
 						this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+						MessageToast.show("Password is not Validated");
+						return;
 
 					} else {
 
@@ -595,17 +711,19 @@ sap.ui.define([
 					this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
 
 					this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password didn't match");
+					MessageToast.show("Password is not Validated");
+						return;
 
 				} else {
-
 					this.getView().getModel("appView").setProperty("/newPassValueState", "None");
-
+					
 					this.getView().getModel("appView").setProperty("/VSTNewPass", "");
-
+					
 					this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
-
+					
 					this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
-
+					
+					// this.AddCustomers();
 				}
 				this.getView().getModel("appView").updateBindings();
 
@@ -630,8 +748,10 @@ sap.ui.define([
 			else {
 
 				this.oFormData.PassWord = Conpass;
-
+				this.oFormData.Status = "Approved";
+				
 				this.AddCustomers();
+				
 
 			}
 
@@ -697,14 +817,20 @@ sap.ui.define([
 
 		isResetPassword: null,
 		SendEmailExistUser: function (oEvent) {
-
+			debugger;
 			var that = this;
 			// var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			var oRow = oEvent.getSource().getBindingContext('appView').getObject();
 			var Email = oRow.EmailId;
 			var id = oRow.TechnicalId;
 			var name = oRow.UserName;
-			this.getView().getModel("appView").setProperty("/selectedUsername", name);
+			if(!name){
+
+				this.getView().getModel("appView").setProperty("/selectedUsername", Email);
+			}else{
+
+				this.getView().getModel("appView").setProperty("/selectedUsername", name);
+			}
 			// if (!passwordRegex.test(password)) {
 			// 	MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 			// 	return;
