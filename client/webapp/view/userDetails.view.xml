@@ -1,19 +1,56 @@
 <mvc:View controllerName="ent.ui.ecommerce.controller.userDetails"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
-	xmlns="sap.m">
+	xmlns="sap.m"
+	xmlns:fb="sap.ui.comp.filterbar">
 	<Page showHeader="false">
-		<Table items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressUser">
-			<headerToolbar>
-				<OverflowToolbar >
-					<content>
-						<Title text="User Details" level="H2"/>
-						<ToolbarSpacer />
-						<Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
-						<Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
-					</content>
-				</OverflowToolbar>
-			</headerToolbar>
+		 <Toolbar>
+			<Title text="User Details" level="H2"/>
+			<ToolbarSpacer />
+			<Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
+			<Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
+		</Toolbar>
+		<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+			<fb:filterGroupItems>
+			  <fb:FilterGroupItem name="Role" label="Role" groupName="Group1" visibleInFilterBar="true">
+				<fb:control>
+				  <ComboBox
+					change="onSelectRoleForSearch">
+					<items>
+					  <core:Item key="Customer" text="Customer" />
+					  <core:Item key="Admin" text="Admin" />
+					  <core:Item key="Factory Manager" text="Factory Manager" />
+					  <core:Item key="Raw Material Head" text="Raw Material Head" />
+					  <core:Item key="Printing Head" text="Printing Head" />
+					  <core:Item key="Post Press Head" text="Post Press Head" />
+					  <core:Item key="Dispatch Head" text="Dispatch Head" />
+					  <core:Item key="Accounts Head" text="Accounts Head" />
+					  <core:Item key="Artwork Head" text="Artwork Head" />
+					</items>
+				  </ComboBox>
+				</fb:control>
+			  </fb:FilterGroupItem>
+			  <fb:FilterGroupItem name="Company" label="Company" groupName="Group1" visibleInFilterBar="true">
+				<fb:control>
+				  <ComboBox
+					items="{appView>/companyNames}"
+					selectedKey="{appView>CompanyId}"
+					change="onSelectCompanyForSearch">
+					<items>
+					  <core:Item text="{appView>CompanyName}" key="{appView>id}" />
+					</items>
+				  </ComboBox>	
+				</fb:control>
+			  </fb:FilterGroupItem>
+			  <fb:FilterGroupItem name="Name and Email" label="Name and Email" groupName="Group1" visibleInFilterBar="true">
+				  <fb:control>
+					<SearchField liveChange="onSearchNameEmail"></SearchField>
+				</fb:control>
+			  </fb:FilterGroupItem>
+			</fb:filterGroupItems>
+		  </fb:FilterBar>
+		  
+		<Table items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressUser">  
 			<columns>
 				<Column width="12em">
 					<Text text="Name" />
@@ -54,14 +91,6 @@
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />
 						</Select>
-						<!-- <ComboBox
-						 items="{appView>/companyNames}"
-						 selectedKey="{appView>CompanyId}" 
-						 forceSelection="false" 
-						 change="onSelectComPany" 
-						 placeholder="Select Company">
-							<core:Item text="{appView>CompanyName}" key="{appView>CompanyId}" />
-						</ComboBox> -->
 						<Select enabled="{parts:[ {path:'appView>Blocked'}, { path: 'appView>Status'}] ,formatter:'.formatter.companyVis'}" editable="{appView>/onBlockSelectBlocked}" items="{appView>/companyNames}" selectedKey="{appView>CompanyId}"  forceSelection="false" change="onSelectComPany"  visible="{=${appView>Role} === 'Customer' ? true : false}">
 							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
 						</Select>

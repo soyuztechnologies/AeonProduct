@@ -21,7 +21,7 @@
         <VBox tooltip="User Personal Details">
             <core:Fragment fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.PersonDetails" type="XML"></core:Fragment>
         </VBox>
-        <VBox tooltip="User Personal Details">
+        <VBox tooltip="User Address Details">
             <core:Fragment fragmentName="ent.ui.ecommerce.fragments.userDetailANDProfileFragment.Address" type="XML"></core:Fragment>
         </VBox>
     </content>

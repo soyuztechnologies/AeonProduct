@@ -6,31 +6,31 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
     <f:SimpleForm id="SimpleFormDisplay480_12120Dual" editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2" singleContainerFullSize="false">
         <f:content>
-            <core:Title text="Bill to" />
-            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Country"/>
-            <Input value = "{appView>BillingCountry}" editable="{appView>/editableFields}"/>
+            <core:Title text="{=${appView>Role} === 'Customer' ? 'Bill to' : ''}" />
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Country" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>BillingCountry}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
 
-            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Billing City"/>
-            <Input value = "{appView>BillingCity}" editable="{appView>/editableFields}"/>
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Billing City" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>BillingCity}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
 
-            <Label text="Zip code"/>
-            <Input value = "{appView>BillingZipCode}" editable="{appView>/editableFields}"/>
+            <Label text="Zip code" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>BillingZipCode}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
 
-            <Label text="Billing Address"/>
-            <Input value = "{appView>BillingAddress}" editable="{appView>/editableFields}" />
+            <Label text="Billing Address" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>BillingAddress}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}" />
 
-            <core:Title text="Ship to" />
-            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Shipping Country"/>
-            <Input value = "{appView>ShippingCountry}" editable="{appView>/editableFields}"/>
+            <core:Title text="{=${appView>Role} === 'Customer' ? 'Ship to' : ''}" />
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Shipping Country" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>ShippingCountry}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
 
-            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Shipping City"/>
-            <Input value = "{appView>ShippingCity}" editable="{appView>/editableFields}"/>
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Shipping City" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>ShippingCity}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
 
-            <Label text="Shipping City Code"/>
-            <Input value = "{appView>ShippingZipCode}" editable="{appView>/editableFields}"/>
+            <Label text="Shipping City Code" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>ShippingZipCode}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
                 
-            <Label text="Shipping Address"/>
-            <Input value = "{appView>ShippingAddress}" editable="{appView>/editableFields}"/>
+            <Label text="Shipping Address" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input value = "{appView>ShippingAddress}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
         </f:content>
     </f:SimpleForm>
 </core:FragmentDefinition>

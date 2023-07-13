@@ -3,7 +3,7 @@
 	  <subHeader>
 		<Toolbar>
 				<content>
-					<Title text="Printers  [ {appView>/countJobs} ]"/>
+					<Title text="Printers  ( {appView>/countJobs} )"/>
 						<ToolbarSpacer/>
 						<SearchField liveChange="onSearchJob" width="30%"/>
 						<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     

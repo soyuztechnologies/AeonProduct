@@ -20,21 +20,21 @@
             <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Last Name"/>
             <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>LastName}" editable="{appView>/editableFields}"/>
 
-            <Label text="{i18n>CurrentCompanyLogo}" visible="{appView>/currentLogo}"/>
-            <Image src="data:image/jpeg;base64,{appView>/userData/Companylogo}" width="50%" height="50%" visible="{appView>/logoImgVis}"/>
+            <!-- <Label text="{i18n>CurrentCompanyLogo}" visible="{appView>/currentLogo}"/>
+            <Image src="data:image/jpeg;base64,{appView>/userData/Companylogo}" width="50%" height="50%" visible="{appView>/logoImgVis}"/> -->
 
                <Label  text="{i18n>NewCompanyLogo}"/>
                 
                    <!-- <f:Avatar src="" displaySize="S" displayShape="Square"/>     -->
-                <u:FileUploader name="myFileUpload" enabled="{appView>/enabledCompanyLogo}" uploadUrl="/upload" visible="true" change="handleUploadPress" tooltip="UploadYourFileToTheLocalServer" uploadComplete="handleUploadComplete">
+                <u:FileUploader name="myFileUpload" enabled="{appView>/enabledCompanyLogo}" uploadUrl="/upload" change="handleUploadPress" tooltip="UploadYourFileToTheLocalServer" uploadComplete="handleUploadComplete" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}">
                 <u:parameters>
                         <u:FileUploaderParameter name="createdBy" />
                     </u:parameters>
                 </u:FileUploader>
-                <Button text="Show Logo"  tooltip="checkLogo" press="onLogo" enabled="{appView>/LogoShowButton}"/>
+                <Button text="Show Logo"  tooltip="checkLogo" press="onLogo" enabled="{appView>/LogoShowButton}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
 
-            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Personal Mail Address"/>
-            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyEmail}" editable="{appView>/editableFields}"/>
+            <Label required="{=${appView>/selectedrole} === 'Customer' ? true : false}" text="Personal Mail Address" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
+            <Input required="{=${appView>/selectedrole} === 'Customer' ? true : false}" value = "{appView>CompanyEmail}" editable="{appView>/editableFields}" visible="{=${appView>/selectedrole} === 'Admin' || ${appView>/selectedrole} === 'Raw Material Head'  || ${appView>/selectedrole} === 'Printing Head'  || ${appView>/selectedrole} === 'Post Press Head'  || ${appView>/selectedrole} === 'Dispatch Head'  || ${appView>/selectedrole} === 'Accounts Head'  || ${appView>/selectedrole} === 'Artwork Head' ? false : true}"/>
         </form:content>
     </form:SimpleForm>
     <!-- </Dialog>	 -->
