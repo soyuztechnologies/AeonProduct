@@ -116,9 +116,15 @@ sap.ui.define([
             var that = this;
             var pass = this.getModel("appView").getProperty('/setNewPass');
             var Conpass = this.getModel("appView").getProperty('/setConPass');
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
             // var oRouteName = oEvent.getParameter("name") === "userVerify";
             if (pass !== Conpass) {
                 MessageToast.show("Password Does not match")
+                return;
+            }
+            if (!passwordRegex.test(pass)||!passwordRegex.test(Conpass)) {
+                MessageToast.show("Password is not Validate")
+                return;
             }
             else {
 

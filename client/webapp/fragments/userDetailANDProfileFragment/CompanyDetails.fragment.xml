@@ -7,7 +7,7 @@
         <form:content>
 
            <Label required="{=${appView>/selectedrole} ? true : false}" text="User Role"/>
-            <Select selectedKey="{appView>/selectedrole}" selectedText="{Customer}" editable="{appView>/editableFields}" visible="{appView>/RoleField}" change="onRoleChange" forceSelection="false">
+            <Select selectedKey="{appView>Role}" editable="{appView>/editableFields}" visible="{appView>/RoleField}" change="onRoleChange" forceSelection="false">
                 <core:Item key="Customer" text="Customer" />
                 <core:Item key="Admin" text="Admin" />
                 <core:Item key="Factory Manager" text="Factory Manager" />

@@ -8,41 +8,40 @@
     <tnt:ToolPage sideExpanded="{appView>/sideNavExpended}">
         
         <tnt:header >
-            <tnt:ToolHeader  visible="true">
-                   <Button   visible="{appView>/hamburgerVisibility}"
+            <OverflowToolbar height="100%" width="100%" id="otb3">
+               
+                   <Button visible="{appView>/hamburgerVisibility}"
                     press="onClickMenuButton"
                     class="sapUiTinyMarginEnd"
                    icon="sap-icon://menu2" >
                    <layoutData>
-
-                    <OverflowToolbarLayoutData priority="Low" />
-    
-                </layoutData>
+                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
                    </Button>
                    <Image src="logo/logo.png" width="4%"/>
                    <Title text="Aeon Products"></Title>
                    <ToolbarSpacer/> 
-                   <FlexBox visible="{appView>/visibility}" alignItems="center">
-                    
                         <core:Icon src="sap-icon://person-placeholder"  class="sapUiTinyMarginEnd"/>
-                        <Text text="{appView>/UserEmail}({appView>/userRole})" >
+                        <Title wrapping="true" text="{appView>/UserEmail}({appView>/userRole})" >
                             <layoutData>
-
-                                <OverflowToolbarLayoutData priority="Low" />
-                
+                                <OverflowToolbarLayoutData priority="AlwaysOverflow" />
                             </layoutData>
-                        </Text>
-                </FlexBox>
-                  <FlexBox visible="{appView>/visibility}">
-                   <Button press="onPressLogout" icon="sap-icon://log" class="sapUiTinyMarginEnd"  visible="{appView>/logoutVisibility}">
+                        </Title>
+                        <Button enabled="false" wrapping="true" text="12345678" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="AlwaysOverflow" />
+                            </layoutData>
+                        </Button>
+               
+                   <Button press="onPressLogout" text="Logout" icon="sap-icon://log" class="sapUiTinyMarginEnd"  visible="{appView>/logoutVisibility}">
                     <layoutData>
 
-                        <OverflowToolbarLayoutData priority="Low" />
+                        <OverflowToolbarLayoutData priority="AlwaysOverflow" />
         
                     </layoutData>
                   </Button>
-                </FlexBox>
-            </tnt:ToolHeader>
+               
+            </OverflowToolbar>
         </tnt:header>
 
         <tnt:mainContents>
