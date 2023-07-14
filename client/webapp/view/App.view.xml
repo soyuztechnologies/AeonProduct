@@ -21,13 +21,14 @@
                    <Image src="logo/logo.png" width="4%"/>
                    <Title text="Aeon Products"></Title>
                    <ToolbarSpacer/> 
-                        <core:Icon src="sap-icon://person-placeholder"  class="sapUiTinyMarginEnd"/>
-                        <Title wrapping="true" text="{appView>/UserEmail}({appView>/userRole})" >
+                        <core:Icon src="sap-icon://person-placeholder"  class="sapUiTinyMarginEnd">
+                        </core:Icon>
+                        <!-- <Title wrapping="true" text="{appView>/UserEmail}({appView>/userRole})" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="AlwaysOverflow" />
                             </layoutData>
-                        </Title>
-                        <Button enabled="false" wrapping="true" text="12345678" >
+                        </Title> -->
+                        <Button enabled="false" wrapping="true" text="{appView>/UserEmail}({appView>/userRole})" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="AlwaysOverflow" />
                             </layoutData>
