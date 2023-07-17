@@ -6,26 +6,26 @@
    
   
     <Label text="Plate Charges"/>
-    <Input value="{path: 'appView>plateCharges'}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>plateCharges',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Pantone Inks"/>
-    <Input value = "{appView>pantoneInks}" editable="{appView>/editableFields}"/>
+    <Input value = "{path :'appView>pantoneInks',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Blanket Charges"/>
-    <Input value = "{appView>blanketCharges}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>blanketCharges',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Foil Blocks"/>
-    <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>foilBlocks',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
     
     <Label text="Positive"/>
-    <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
+    <Input value = "{path: 'appView>positive',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Emboss Block"/>
-    <Input value = "{appView>embossBlock}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>embossBlock',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Punch"/>
-    <Input value = "{appView>punch}" editable="{appView>/editableFields}" />
+    <Input value = "{path:'appView>punch',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
     <Label  design="Bold" text="Total" />
-    <Text text="{appView>total}" />
+    <Text text="{path:'appView>total',formatter: '.formatter.decimalFormatterWithRupee'}" />
    
 </core:FragmentDefinition>

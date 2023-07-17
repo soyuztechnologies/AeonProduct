@@ -42,6 +42,21 @@
                         <Column visible="{path: 'appView>Packing', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Packing" />
                         </Column>
+                        <Column visible="{path: 'appView>noOfBoxPerPieces', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Pieces Per Box." />
+                        </Column>
+                        <Column visible="{path: 'appView>noOfPiecesToSend', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Pieces to be send." />
+                        </Column>
+                        <Column visible="{path: 'appView>SecoundarySuppliers', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Remaining Box" />
+                        </Column>
+                        <Column visible="{path: 'appView>SecoundaryPiecesToSend', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Remaining Pieces" />
+                        </Column>
+                        <Column visible="{path: 'appView>/Jobs/status', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Status" />
+                        </Column>
                         <Column visible="{path: 'appView>InvNo', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Inv. No." />
                         </Column>
@@ -77,6 +92,11 @@
                                 <Text  text="{appView>Punching}"></Text>
                                 <Text  text="{appView>Pasting}"></Text>
                                 <Text  text="{appView>Packing}"></Text>
+                                <Text  text="{appView>noOfBoxPerPieces}"></Text>
+                                <Text  text="{appView>noOfPiecesToSend}"></Text>
+                                <Text  text="{appView>SecoundarySuppliers}"></Text>
+                                <Text  text="{appView>SecoundaryPiecesToSend}"></Text>
+                                <ObjectStatus text="{appView>/Jobs/status}" state="{path: 'appView>/Jobs/status', formatter: '.formatter.getStatusColor'}" />
                                 <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
                                 <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
                                 <Button  press="editJobstatusEntry" visible="false" type="Emphasized" icon="sap-icon://edit"/>

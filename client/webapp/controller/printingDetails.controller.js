@@ -42,6 +42,7 @@ sap.ui.define([
 			var oModel = this.getModel("appView")
 			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
 			oModel.setProperty("/visibleHeader", true);
+			oModel.setProperty("/userRoleVis", true);
 			oModel.setProperty("/visibility", true);
 			oModel.setProperty("/logoutVisibility", true);
 			oModel.setProperty("/inputEditable", true);
@@ -174,12 +175,14 @@ sap.ui.define([
 		},
 
 		onSaveJobStatus: function () {
-
+			debugger;
             var oModel = this.getView().getModel("appView"); // Default model get at here
             var that = this;
             var data = oModel.getProperty("/newJobStatus");
             var oData = this.getView().getModel();
             var pastingValue = oModel.getProperty("/Jobs");
+			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+			
 
             // if(sUserRole === "Raw Material Head"){
 
@@ -187,6 +190,9 @@ sap.ui.define([
                     var jobStatus = data[i];
 					this.getView().getModel("appView").setProperty("/jobStatusRawMaterialValue" , jobStatus);
                     var id = jobStatus.id;
+					// if(selectedjobStatus){
+					// 	jobStatus.status = selectedjobStatus;
+					// }
                     const sEntityPath = `/JobStatus('${id}')`;
                     var parsedPastingValue = parseInt(jobStatus.Pasting)
 
@@ -241,15 +247,15 @@ sap.ui.define([
 
                         // }else{
 
-                        //  this.whenProductionStart();
-
-                        // }
-
-                        oData.update(sEntityPath, jobStatus, {
-
-                            success: function (Data) {
-
-                                MessageToast.show("Successfully Update the Entry");
+							
+							// }
+							
+							oData.update(sEntityPath, jobStatus, {
+								
+								success: function (Data) {
+									
+									MessageToast.show("Successfully Update the Entry");
+									 this.whenProductionStart();
 
                             },
 
@@ -686,6 +692,7 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/selectedKey", selectedText);
 		},
 		onSelectKeyStatus: function (oEvent) {
+			debugger;
 			var selectStatus = oEvent.getParameter("selectedItem").getText();
 			this.getView().getModel("appView").setProperty("/selectStatus", selectStatus);
 		},
@@ -1115,11 +1122,19 @@ sap.ui.define([
 			}
 			this.middleWare.callMiddleWare(endPoint, "POST", payload)
 				.then(function (data) {
+					debugger;
+					oModel.setProperty("/rawMaterialData", "notInstock");
 					if (!data) {
 						return
 					}
 					data.forEach(item => {
 						item.TobeUpdated = false;
+						if(item.rawMaterial === "In Stock"){
+
+							oModel.setProperty("/rawMaterialData", "isInstock");
+							return;
+						}
+						
 					});
 					oModel.setProperty("/readedJobdata", data);
 					
@@ -1242,10 +1257,17 @@ sap.ui.define([
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
-			const sEntityPath = `/Jobs('${ids}')`;
-			const oUpdatedData = {
-				status: "In-Progress"
+			var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+			var oUpdatedData = {
+				status: ""
 			};
+			if(selectedjobStatus){
+						oUpdatedData.status = selectedjobStatus
+					}
+					else{
+						oUpdatedData.status = "In-Progress"
+					}
+			var sEntityPath = `/Jobs('${ids}')`;
 			oModel.update(sEntityPath, oUpdatedData, {
 				success: function (data) {
 					// MessageToast.show("Job Production Started")

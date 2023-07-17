@@ -23,6 +23,7 @@ sap.ui.define([
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
       oModel.setProperty("/visibleHeader", false);
+      oModel.setProperty("/userRoleVis", true);
       oModel.setProperty("/visibility", true);
       oModel.setProperty("/hamburgerVisibility", true);
       oModel.setProperty("/logoutVisibility", true);

@@ -958,7 +958,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       if (PaperGSM === null) {
         return " ";
       }
-      return PaperGSM + " Sheets";
+      return Math.round(PaperGSM) + " Sheets";
 
     },
     equal: function (x, y, z) {
@@ -987,7 +987,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       if (x === null) {
         return " ";
       }
-      return x + " Kg";
+      return Math.round(x) + " Kg";
 
     },
 

@@ -40,13 +40,13 @@
 						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->
 						<Input editable="false" value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}"></Input>
 	                    <Label text="Total No. of Sheets"></Label>
-						<Input editable="false" value = "{appView>noOfSheets1}"></Input>
+						<Input editable="false" value = "{path: 'appView>noOfSheets1' ,formatter:'.formatter.showSheets'}"></Input>
 						<Label text="Artwork"></Label>
 						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 						<Label text="Paper Board"></Label>
 						<Input editable="false" value="{appView>artworkCode} + {appView>color}"></Input>
 
-						<Label text="Coating"></Label>
+						<Label text="Paper GSM"></Label>
 						<Input editable="false" value="{path: 'appView>PaperGSM' ,formatter:'.formatter.showGsm'}"></Input>
 
 						<Label text="No of Ups"/>

@@ -35,7 +35,7 @@
             "default": ""
         },
 		"InvNo": {
-            "type": "number",
+            "type": "string",
             "default": ""
         },
 		"CreatedOn":{
@@ -43,7 +43,7 @@
 			"default":null
 		},
 		"DeliveryNo": {
-            "type": "number",
+            "type": "string",
             "default": ""
         },
 		"Embossing": {

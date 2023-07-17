@@ -19,7 +19,7 @@ resizable="false" >
 				<DatePicker dateValue="{appView>/dateNow}"  visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
 
 				<Label required="true" text="Raw Material"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }"/>
-				<Select forceSelection="false" selectedKey="{appView>rawMaterial}"  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }" >
+				<Select forceSelection="false" selectedKey="{appView>rawMaterial}"  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" enabled="{=${appView>/rawMaterialData} ==='isInstock' ? false : true}"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }" >
 					<items>
 						<core:Item text="In Stock" key="In Stock" />
 						<core:Item text="Pending" key="Pending" />

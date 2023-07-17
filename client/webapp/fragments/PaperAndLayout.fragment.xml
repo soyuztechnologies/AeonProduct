@@ -27,7 +27,7 @@
     
 
     <Label text="Wastage Sheet Available"/>
-    <Input value = "{path: 'appView>noOfSheets2',formatter:'.formatter.decimalFormatterWithSheets'}" editable="false"/>
+    <Input value = "{path: 'appView>noOfSheets2',formatter:'.formatter.showSheets'}" editable="false"/>
     <Input value = "{path: 'appView>wastage',formatter:'.formatter.showPercent'}" editable="false"/>
 
     <Label text="Weight in Kgs"/>

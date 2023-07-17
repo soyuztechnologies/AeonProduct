@@ -6,40 +6,40 @@
    
   
     <Label text="Paper Cost"/>
-    <Input value="{path: 'appView>paperCost' ,formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
-    <Input value="{path: 'appView>paperCost2' ,formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>paperCost' ,formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>paperCost2' ,formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
     
     
 
     <Label text="Printing Charges"/>
-    <Input value = "{appView>printingCharges}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>printingCharges',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Varnish/Lamination"/>
-    <Input value = "{appView>varnishandLamination}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>varnishandLamination',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Foil Blocks"/>
-    <Input value = "{appView>foilBlocks}" editable="{appView>/editableFields}"/>
-    <Input value="{path: 'appView>foilBlocksPerPs'}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>foilBlocks',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Input value="{path: 'appView>foilBlocksPerPs',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
     
     <Label text="Positive"/>
-    <Input value = "{appView>positive}" editable="{appView>/editableFields}"/>
-    <Input value = "{appView>positivePerPs}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>positive',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>positivePerPs',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Embossing"/>
-    <Input value = "{appView>embossing}" editable="{appView>/editableFields}"/>
+    <Input value = "{path:'appView>embossing',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
     <Label text="Punching"/>
-    <Input value = "{appView>punching}" editable="{appView>/editableFields}" />
+    <Input value = "{path:'appView>punching',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
     <Label text="BSO Pasting"/>
-    <Input value = "{appView>bSOPasting}" editable="{appView>/editableFields}" />
+    <Input value = "{path:'appView>bSOPasting',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
     <Label text="LBTO Pasting"/>
-    <Input value = "{appView>lBTOPasting}" editable="{appView>/editableFields}" />
+    <Input value = "{path:'appView>lBTOPasting',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
     <Label text="Packing"/>
-    <Input value = "{path: 'appView>packing' ,formatter:'.formatter.decimalFormatter'}" editable="{appView>/editableFields}" />
-    <Input value = "{appView>packingPerKg}" editable="{appView>/editableFields}" />
+    <Input value = "{path: 'appView>packing' ,formatter:'.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
+    <Input value = "{path:'appView>packingPerKg',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
     <Label text="Transportation"/>
-    <Input value = "{appView>transportation}" editable="{appView>/editableFields}" />
-    <Input value = "{appView>transportationPerKg}" editable="{appView>/editableFields}" />
+    <Input value = "{path:'appView>transportation',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
+    <Input value = "{path:'appView>transportationPerKg',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
                                 
    
 </core:FragmentDefinition>

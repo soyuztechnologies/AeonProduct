@@ -21,6 +21,7 @@ sap.ui.define([
 		_matchedHandler: function (oEvent) {
 			var oModel = this.getView().getModel('appView');
 			oModel.setProperty("/visibleHeader", false);
+			oModel.setProperty("/userRoleVis", false);
 			oModel.setProperty("/visibility", false);
 			oModel.setProperty("/layout", "OneColumn");
 			oModel.setProperty("/hamburgerVisibility", false);
