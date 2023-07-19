@@ -20,7 +20,7 @@
                     change="onUploadExcels"
                     icon="sap-icon://browse-folder"
                     buttonText="Browse"
-                    fileType="xml,xlsx"
+                    fileType="xlx,xlsx,csv"
                     multiple="true" />
 
             
