@@ -213,6 +213,8 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/layout", "OneColumn");
 					that.getModel("appView").setProperty("/logOut", true);
 					that.getRouter().navTo("login");
+					that.getView().getModel("appView").setProperty("/sideNavExpended", true);
+					// window.refresh();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 

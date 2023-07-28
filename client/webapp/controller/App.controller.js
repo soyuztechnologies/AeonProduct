@@ -116,10 +116,19 @@ sap.ui.define(
           });
       },
       onClickMenuButton: function (oEvent) {
-        
-        var oSideNavigation = this.byId("sideNavigation");
-        var bExpanded = oSideNavigation.getExpanded();
-        this.getView().getModel("appView").setProperty("/sideNavExpended", !bExpanded);
+        debugger;
+        // var oSideNavigation = this.byId("sideNavigation");
+        // var bExpanded = oSideNavigation.getExpanded();
+        // this.getView().getModel("appView").setProperty("/sideNavExpended", !bExpanded);
+        var nav = this.getView().getModel("appView").getProperty("/sideNavExpended");
+        if(nav === true){
+
+          this.getView().getModel("appView").setProperty("/sideNavExpended", false);
+        }
+        else{
+
+          this.getView().getModel("appView").setProperty("/sideNavExpended", true);
+        }
       },
 
       onPressLogout:function(){
