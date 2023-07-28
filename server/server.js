@@ -216,9 +216,11 @@ app.start = function () {
 		// * this fucntion is sending the email to user, for forgot the password.
 
 		app.post('/forgotPasswordEmailVerify', async (req, res) => {
+			debugger;
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
+			this.otp = app.models.otp;
 
 			try {
 				const { email } = req.body;
@@ -229,12 +231,14 @@ app.start = function () {
 					return res.status(400).json({ error: 'Email is not Register with us.' });
 				}
 
-
+				var otp = generateOTP();
+				var dateAndTime = generateDateAndTime();
+				var ExpDateAndTIme = generateDateAndTimeWithExtraTime();
 				// Generate JWT token
 				const token = generateToken(email);
-
+				
 				const replacements = {
-					verify: `${req.headers.referer}#/updatePassword/${token}`,
+					"OTP": otp,
 					email: "noreply@aeonproducts.com",
 					user: email,
 				};
@@ -243,6 +247,7 @@ app.start = function () {
 				// Send verification email
 				await sendEmail(email, token, replacements, templateFileName, emailSubject);
 
+				await this.otp.create({  OTP:otp, User:email ,CreatedOn:dateAndTime, ExpDate:ExpDateAndTIme });
 				res.status(200).json({ message: 'Verification email sent successfully' });
 			} catch (error) {
 				console.error(error);
@@ -250,7 +255,7 @@ app.start = function () {
 			}
 		});
 
-		//  this post call is verifiing the token when the user try to reset the password
+		//*  this post call is verifiing the token when the user try to reset the password
 
 		app.post('/Forgot/verifyToken', async (req, res) => {
 			debugger
@@ -271,7 +276,6 @@ app.start = function () {
 				// Verify the token and extract the email
 				//   const decodedToken = jwt.verify(token, 'your_secret_key');
 				//   const email = decodedToken.email;
-
 				// Check if the user already exists
 				const existingUser = await this.User.findOne({ where: { email } });
 				if (!existingUser) {
@@ -350,6 +354,139 @@ app.start = function () {
 			}
 		});
 
+		function generateOTP(length = 6) {
+			const digits = '0123456789';
+			let otp = '';
+		  
+			for (let i = 0; i < length; i++) {
+			  const randomIndex = Math.floor(Math.random() * digits.length);
+			  otp += digits.charAt(randomIndex);
+			}
+		  
+			return otp;
+		  }
+		  
+		  // Example usage:
+		//   const otp = generateOTP();
+		//   console.log("Generated OTP:", otp);
+
+		//*get Date and time
+
+		function generateDateAndTime(){
+			debugger;
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
+            var day = currentDate.getDate();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var seconds = currentDate.getSeconds();
+            // Formatting the output as desired
+            var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
+            var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+            // console.log("Current Date: " + formattedDate);
+            // console.log("Current Time: " + formattedTime);
+			var dateAndTime = formattedDate +" "+ formattedTime;
+            // Helper function to add leading zero if single-digit
+			return dateAndTime;
+            function addLeadingZero(number) {
+            return number < 10 ? "0" + number : number;
+            }
+        }
+
+		//* Date with extra 30 Minutes!
+
+		function generateDateAndTimeWithExtraTime() {
+			var currentDate = new Date();
+		  
+			// Add 30 minutes to the current date and time
+			var extraTime = 30; // 30 minutes
+			currentDate.setMinutes(currentDate.getMinutes() + extraTime);
+		  
+			var year = currentDate.getFullYear();
+			var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
+			var day = currentDate.getDate();
+			var hours = currentDate.getHours();
+			var minutes = currentDate.getMinutes();
+			var seconds = currentDate.getSeconds();
+		  
+			// Formatting the output as desired
+			var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
+			var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+		  
+			// Output the result with an additional 30 minutes
+			// this.getView().getModel("appView").setProperty("/dateAndTimeWithExtraTime", formattedDate + " " + formattedTime);
+			var dateAndTime = formattedDate +" "+ formattedTime;
+            // Helper function to add leading zero if single-digit
+			return dateAndTime;
+			function addLeadingZero(number) {
+			  return number < 10 ? "0" + number : number;
+			}
+		  }
+
+
+
+
+
+		//*Verify otp
+		app.post('/verifyOtp', async (req, res) => {
+			debugger;
+			this.User = app.models.User;
+			this.otp = app.models.otp;
+			var  OTP = req.body;
+			try {
+
+				try{
+					const otp = await this.otp.findOne({ where: { OTP:OTP.inputOtpValue } }); // Retrieve all users
+					if(otp.__data.OTP == OTP.inputOtpValue && otp.__data.User == OTP.email){
+						
+						res.status(200).send('Validate Successfully');
+						
+					}
+					// else{
+					// 	res.status(400).json({ message: 'Not Validate'});
+	
+					// }
+				}
+				catch(error){
+						res.status(400).json({ error: 'OTP not validate' });
+
+				}
+			} 
+			catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
+
+
+
+		//* Delete OTP
+
+
+		app.post('/deleteotp', async (req, res) => {
+			this.User = app.models.User;
+			this.otp = app.models.otp;
+			var OTP = req.body; // Assuming the ID is provided as a property in the request body
+			
+			try {
+			  const otp = await this.otp.findOne({ where: {OTP} }); // Retrieve the user with the specified ID
+			  if (otp) {
+				await otp.remove(); // Remove the user
+				res.status(200).send('OTP Deleted Successfully');
+			  } else {
+				res.status(404).send('OTP Not Found'); // If the user doesn't exist
+			  }
+			} catch (error) {
+			  console.error('Error deleting user:', error);
+			  res.status(500).send('Internal server error');
+			}
+		  });
+
+
+
+
+
 
 		// * this post call is sending the email to the user,when user is registering into the portal.
 
@@ -357,6 +494,7 @@ app.start = function () {
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
+			this.otp = app.models.otp;
 
 			try {
 				const { email } = req.body;
@@ -368,17 +506,23 @@ app.start = function () {
 				}
 
 				// Generate JWT token
+				var otp = generateOTP();
+				var dateAndTime = generateDateAndTime();
+				var ExpDateAndTIme = generateDateAndTimeWithExtraTime();
+				// Generate JWT token
 				const token = generateToken(email);
-
 				const replacements = {
-					verify: `${req.headers.referer}#/userVerify/${token}`,
+					OTP: otp,
 					email: "noreply@aeonproducts.com",
 					// user : email,
 				};
 				const templateFileName = "verifyEmail.html";
 				const emailSubject = "Verfiy Your Registration Email";
+				const date = new Date();
 				// Send verification email
 				await sendEmail(email, token, replacements, templateFileName, emailSubject);
+				await this.otp.create({  OTP:otp, User:email ,CreatedOn:dateAndTime, ExpDate:ExpDateAndTIme });
+				
 
 				res.status(200).json({ message: 'Verification email sent successfully' });
 			} catch (error) {
@@ -411,7 +555,7 @@ app.start = function () {
 
 			// 		for (const element of sParam) {
 			// 			switch (element.Code) {
-			// 				case "user":
+			// 				case "user":.
 			// 					key.user = element.Value;
 			// 					break;
 			// 				case "clientId":
@@ -577,7 +721,6 @@ app.start = function () {
 			this.AppUser = app.models.AppUser;
 			try {
 				const users = await this.User.find(); // Retrieve all users
-
 				res.status(200).json(users);
 			} catch (error) {
 				console.error(error);
@@ -602,6 +745,23 @@ app.start = function () {
 			  res.status(500).send('Internal server error');
 			}
 		  });
+		// app.post('/deleteOTP', async (req, res) => {
+		// 	this.otp = app.models.otp;
+		// 	var id = req.body.id; // Assuming the ID is provided as a property in the request body
+			
+		// 	try {
+		// 	  const otp = await this.otp.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
+		// 	  if (otp) {
+		// 		await otp.remove(); // Remove the user
+		// 		res.status(200).send('OTP deleted successfully');
+		// 	  } else {
+		// 		res.status(404).send('OTP not found'); // If the user doesn't exist
+		// 	  }
+		// 	} catch (error) {
+		// 	  console.error('Error deleting OTP:', error);
+		// 	  res.status(500).send('Internal server error');
+		// 	}
+		//   });
 
 		// * this get call is getting the all AppuserTable users.
 

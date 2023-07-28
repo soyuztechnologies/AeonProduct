@@ -16,8 +16,16 @@ sap.ui.define([
 				//prefilter for ajax to cancel the duplicate calls
 					// $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 					// 	// 
+					// function isCordovaAndroidEnvironment() {
+					// 	return  window.cordova && cordova.platformId === "android";
+					// }
+					if (window.cordova){
+						var endpoint = "http://167.71.234.203:3002/"
+					}
+					else{
+						var endpoint = "/"
 
-
+					}
 					// });
 					var accessToken=``;
 					const getCookie = function (name) {
@@ -55,7 +63,7 @@ sap.ui.define([
 				// sap.ui.core.BusyIndicator.show();
 				switch (sMethod.toUpperCase()) {
 					case "GET":
-						$.ajax("/" + sUrl, {
+						$.ajax(endpoint + sUrl, {
 							async:asyncBol,
 							type: 'GET', // http method
 							contentType: "application/json",
@@ -94,7 +102,7 @@ sap.ui.define([
 
 						break;
 					case "POST":
-						$.ajax("/" + sUrl, {
+						$.ajax(endpoint + sUrl, {
 							type: 'POST', // http method
 							contentType: "application/json",
 							data: JSON.stringify(oPayload), // data to submit
@@ -110,7 +118,7 @@ sap.ui.define([
 
 						break;
 					case "PUT":
-						$.ajax("/" + sUrl, {
+						$.ajax(endpoint + sUrl, {
 							type: 'PUT', // http method
 							headers: {
 								'Accept': 'application/json',
@@ -130,7 +138,7 @@ sap.ui.define([
 
 						break;
 					case "PATCH":
-						$.ajax("/" + sUrl, {
+						$.ajax(endpoint + sUrl, {
 							type: 'PATCH', // http method
 							headers: {
 								'Accept': 'application/json',
@@ -150,7 +158,7 @@ sap.ui.define([
 
 						break;
 					case "DELETE":
-						$.ajax("/" + sUrl, {
+						$.ajax(endpoint + sUrl, {
 							type: 'DELETE', // http method
 							headers: {
 								'Accept': 'application/json',

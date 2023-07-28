@@ -1,7 +1,5 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog title="Set Password"
-  
-     id="captchaDialog">
+    <Dialog title="Set Password">
     <content>
         <f:SimpleForm id="SimpleFormChange471"
         editable="true"
@@ -9,7 +7,7 @@
         <f:content>
             <!-- <HBox></HBox> -->
             <Label text="Email" />
-            <Input  value="{appView>/userEmail}" editable="false" ></Input>
+            <Input  value="{appView>/Email}" editable="false" ></Input>
 
             <Label text=" New Password" />
             <Input placeholder="Password" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" type="Password" valueState="{appView>/newPassValueState}" valueStateText="{appView>/VSTNewPass}" value="{appView>/setNewPass}"  liveChange="onLiveChnagePassValidationForForgotPassward"></Input>
@@ -20,10 +18,10 @@
     </f:SimpleForm>
     </content>
     <beginButton>
-        <Button text="OK" type="Accept" press="onCreateUser" enabled="{appView>/submitEnable}"/>
+        <Button text="OK" type="Accept" press="onSubmitDetails" />
     </beginButton>
     <endButton>
-        <Button text="Cancel" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
+        <Button text="Cancel" type="Reject" press="onClose"/>
     </endButton>
 </Dialog>		
 </core:FragmentDefinition>

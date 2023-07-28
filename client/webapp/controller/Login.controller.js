@@ -23,6 +23,8 @@ sap.ui.define([
 			oModel.setProperty("/visibleHeader", false);
 			oModel.setProperty("/userRoleVis", false);
 			oModel.setProperty("/visibility", false);
+			oModel.setProperty("/otpVis", false);
+			oModel.setProperty("/validateOTPVis", false);
 			oModel.setProperty("/layout", "OneColumn");
 			oModel.setProperty("/hamburgerVisibility", false);
 			oModel.setProperty("/logoutVisibility", false);
@@ -30,6 +32,35 @@ sap.ui.define([
 			oModel.setProperty("/showError", false);
 			this.getUserRoleData();
 		},
+
+
+
+		getCurrentDateAndTimeWithExtraTime: function () {
+			var currentDate = new Date();
+		  
+			// Add 30 minutes to the current date and time
+			var extraTime = 30; // 30 minutes
+			currentDate.setMinutes(currentDate.getMinutes() + extraTime);
+		  
+			var year = currentDate.getFullYear();
+			var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
+			var day = currentDate.getDate();
+			var hours = currentDate.getHours();
+			var minutes = currentDate.getMinutes();
+			var seconds = currentDate.getSeconds();
+		  
+			// Formatting the output as desired
+			var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
+			var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+		  
+			// Output the result with an additional 30 minutes
+			this.getView().getModel("appView").setProperty("/dateAndTimeWithExtraTime", formattedDate + " " + formattedTime);
+			console.log(formattedDate + " " + formattedTime);
+			// Helper function to add leading zero if single-digit
+			function addLeadingZero(number) {
+			  return number < 10 ? "0" + number : number;
+			}
+		  },
 
 		Login: function () {
 
@@ -275,9 +306,12 @@ sap.ui.define([
 				oDialog.close();
 				that.getView().getModel('appView').setProperty("/timerText", "");
 				oModel.setProperty("/Email", "");
+				oModel.setProperty("/otpValue","");
 				oModel.setProperty("/showError", false);
 				oModel.setProperty("/EmailEditable", true);
 				oModel.setProperty("/onResendOTP", false);
+				oModel.setProperty("/validateOTPVis", false);
+				oModel.setProperty("/otpVis", false);
 				// that.getView().getModel('appView').setProperty("/onResendOTP", false);
 				// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
 				oModel.setProperty("/ResendStatusSignup", false);
@@ -333,7 +367,9 @@ sap.ui.define([
 
 					MessageToast.show("Verfication Email Sent to Your Mail");
 					oModel.setProperty("/ResendStatusSignup", true);
+					oModel.setProperty("/validateOTPVis", true);
 					oModel.setProperty("/submitEnable", false)
+					oModel.setProperty("/otpVis", true)
 
 					oModel.setProperty("/EmailEditable", false)
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
@@ -349,6 +385,7 @@ sap.ui.define([
 		},
 
 		onForgotPasswordEmailVerfiyCall: function () {
+			debugger;
 			var that = this;
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
 			var oModel = this.getView().getModel('appView')
@@ -372,7 +409,9 @@ sap.ui.define([
 					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
 					oModel.setProperty("/ResendStatusSignup", false);
 					oModel.setProperty("/showError", true);
-					oModel.setProperty("/errorMessage", "You will receive a Email to update your Password.");
+					oModel.setProperty("/validateOTPVis", true);
+					oModel.setProperty("/otpVis", true);
+					oModel.setProperty("/errorMessage", "OTP sent to your Mail.");
 					oModel.setProperty("/submitEnable", false);
 
 					// MessageBox.information("You will receive a Email to update your Password.")
@@ -402,6 +441,7 @@ sap.ui.define([
 		},
 
 		OnEnter : function (oEvent) {  //* this function is call onEnter event in signup fragment and forgot password fragment.
+			debugger;
 			if (isSignupButton == true) {
 				this.onSignupEmailVerifyCall();
 			}
@@ -411,6 +451,7 @@ sap.ui.define([
 		},
 
 		onSubmit: function () {
+			debugger;
 			if (isSignupButton == true) {
 				this.onSignupEmailVerifyCall();
 			}
@@ -418,8 +459,83 @@ sap.ui.define([
 				this.onForgotPasswordEmailVerfiyCall();
 			}
 		},
+		onVerifyOtp:function(){
+			debugger;
+			var oModel = this.getView().getModel('appView')
+			var inputOtpValue = oModel.getProperty("/otpValue");
+			var email = oModel.getProperty("/Email");
+			var that = this;
+			var payload = {inputOtpValue,email}
+			this.middleWare.callMiddleWare("verifyOtp", "POST", payload)
+				.then(function (data, status, xhr) {
+					MessageToast.show("Success")
+					that.onGetDialog();
+					that.deleteOtp();
+					oModel.setProperty("/otpValue","");
+					// that.onReject();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					MessageToast.show("Please Enter a Valid OTP")
+					oModel.setProperty("/otpValue","");
+					// that.middleWare.errorHandler(jqXhr, that);
+				});
+		},
+
+		deleteOtp:function(){
+			debugger;
+			var oModel = this.getView().getModel('appView')
+			var inputOtpValue = oModel.getProperty("/otpValue");
+			var that = this;
+			var payload = inputOtpValue
+			this.middleWare.callMiddleWare("deleteotp", "POST", payload)
+				.then(function (data, status, xhr) {
+					// MessageToast.show("Success")
+					// that.onReject();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					// MessageToast.show("Please Enter a Valid OTP")
+					// that.middleWare.errorHandler(jqXhr, that);
+				});
+		},
 
 
+		//*-----------------------------------------------------------------------------------------//
+		validateotp: function () {
+			var oView = this.getView();
+			var that = this;
+			if (!this.validatedialog) {
+			  this.validatedialog = Fragment.load({
+				id: oView.getId(),
+				name: "ent.ui.ecommerce.fragments.userVerify",
+				controller: this
+			  }).then(function (oDialog) {
+				// Add dialog to view hierarchy
+				oView.addDependent(oDialog);
+				return oDialog;
+			  }.bind(this));
+			}
+			return this.validatedialog;
+		  },
+		  onGetDialog: function (oEvent) {
+			var that = this;
+			that.validateotp().then(function (oDialog) {
+			  oDialog.open();
+			 
+			});
+		  },
+		  onClose: function () {
+			  this.onReject();
+			  this.getView().getModel("appView").setProperty("/setNewPass","")
+			  this.getView().getModel("appView").setProperty("/setConPass","")
+			  this.getView().getModel("appView").setProperty("/VSTConfirmPass","")
+			  this.getView().getModel("appView").setProperty("/VSTNewPass","")
+			this.validateotp().then(function (oDialog) {
+				var that = this;
+				oDialog.close();
+			})
+		  },
+
+//*------------------------------------------------------------------------------------------------------------
 
 		resetFrag: function () {
 			var oView = this.getView();
@@ -470,6 +586,179 @@ sap.ui.define([
 			}, 1000);
 
 		},
+
+//*-------------USER Verify----------------------------
+
+
+onLiveChnagePassValidationForForgotPassward: function(oEvent){
+	var newValue = oEvent.getParameter("newValue");
+
+	var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+	if (newValue === "") {
+
+		this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+		this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+	} else if (!passwordRegex.test(newValue)) {
+
+		// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+
+		this.getView().getModel("appView").setProperty("/newPassValueState", "Error");
+
+		this.getView().getModel("appView").setProperty("/VSTNewPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+		return;
+
+	} else {
+
+		this.getView().getModel("appView").setProperty("/newPassValueState", "None");
+
+		this.getView().getModel("appView").setProperty("/VSTNewPass", "");
+
+	}
+
+},
+onLiveChnagePassValidationForFrogotConfirmPassValidation: function (oEvent) {
+
+	var newValue = oEvent.getParameter("newValue");
+
+	var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+	if (!passwordRegex.test(newValue)) {
+
+		// MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
+
+		this.getView().getModel("appView").setProperty("/confirmPassValueState", "Error");
+
+		this.getView().getModel("appView").setProperty("/VSTConfirmPass", "Password must be at least 8 characters long and contain at least one capital letter, one small letter, one number, and one special character");
+
+		return;
+
+	} else {
+
+		this.getView().getModel("appView").setProperty("/confirmPassValueState", "None");
+
+		this.getView().getModel("appView").setProperty("/VSTConfirmPass", "");
+
+	}
+
+	this.getView().getModel("appView").updateBindings();
+
+
+
+
+},
+
+onSubmitDetails:function(){
+	if(isSignupButton){
+		this.onCreateUser();
+	}
+	else{
+		this.onUpdateUser();
+	}
+},
+
+onCreateUser: function (oEvent) {
+	var that = this;
+	var email = this.getModel("appView").getProperty('/Email');
+	var pass = this.getModel("appView").getProperty('/setNewPass');
+	var Conpass = this.getModel("appView").getProperty('/setConPass');
+	// var oModel = this.getView("appView").getModel("appView");
+	// var oRouteName = oEvent.getParameter("name") === "userVerify";
+	var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+	if (pass !== Conpass) {
+		MessageToast.show("Password Does not match")
+		return;
+	}
+	if (!passwordRegex.test(pass)||!passwordRegex.test(Conpass)) {
+		MessageToast.show("Password is not Validate")
+		return;
+	}
+	else {
+
+		var payload = {
+			"email": email,
+			"password": Conpass,
+		};
+		this.middleWare.callMiddleWare("signup/createUser", "POST", payload)
+			.then(function (data, status, xhr) {
+				
+				MessageToast.show("User Register Successful");
+				that.onClose();
+				that.onReject();
+				// that.timerText();
+				// oModel.setProperty("/messagePageText","Success....");
+				// oModel.setProperty("/timerText","Redirecting to the login page in ");
+				// oModel.setProperty("/verifyIcon",'sap-icon://message-success');
+
+			})
+			.catch(function (jqXhr, textStatus, errorMessage) {
+				
+				// oModel.setProperty("/messagePageText","Error....");
+				// oModel.setProperty("/timerText","R");
+				// oModel.setProperty("/verifyIcon",'sap-icon://error');
+				// oModel.setProperty("/verifyLogout",true);
+				that.middleWare.errorHandler(jqXhr, that);
+				// that.getRouter().navTo("notFound");
+			});
+	}
+},
+onUpdateUser: function (oEvent) {
+	var oModel = this.getView().getModel("appView");
+	var that = this;
+	var email = this.getModel("appView").getProperty('/Email');
+	var pass = this.getModel("appView").getProperty('/setNewPass');
+	var Conpass = this.getModel("appView").getProperty('/setConPass');
+	var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+	// var oRouteName = oEvent.getParameter("name") === "userVerify";
+	if (pass !== Conpass) {
+		MessageToast.show("Password Does not match")
+		return;
+	}
+	if (!passwordRegex.test(pass)||!passwordRegex.test(Conpass)) {
+		MessageToast.show("Password is not Validate")
+		return;
+	}
+	else {
+
+		var payload = {
+			"email": email,
+			"password": Conpass,
+		};
+		this.middleWare.callMiddleWare("reset/password", "POST", payload)
+			.then(function (data, status, xhr) {
+				
+				MessageToast.show("Password Reset Successful");
+				that.onClose();
+				// that.timerText();
+				// oModel.setProperty("/messagePageTextUpdate","Success....");
+				// oModel.setProperty("/timerTextUpdate","Redirecting to the login page in ");
+				// oModel.setProperty("/verifyIcon",'sap-icon://message-success');
+
+			})
+			.catch(function (jqXhr, textStatus, errorMessage) {
+				
+				// oModel.setProperty("/messagePageTextUpdate","Error....");
+				// oModel.setProperty("/timerTextUpdate","R");
+				// oModel.setProperty("/updateIcon",'sap-icon://error');
+				// oModel.setProperty("/updateLogout",true);
+				that.middleWare.errorHandler(jqXhr, that);
+				// that.getRouter().navTo("notFound");
+			});
+	}
+},
+
+
+
+
+
+
 	});
 
 });
+
+
+
+

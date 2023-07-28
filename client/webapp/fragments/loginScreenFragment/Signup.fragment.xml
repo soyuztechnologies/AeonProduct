@@ -6,17 +6,30 @@
         <f:SimpleForm layout="ResponsiveGridLayout">
             <VBox >
                 <Label text="Mail Address: " visible="{appView>/emailVisible}" />
-                <Input submit="OnEnter"  id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" valueState="{appView>/signUpValueState}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
+                    <Input submit="OnEnter"  id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" valueState="{appView>/signUpValueState}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
+                    <Label text="Otp: " visible="{appView>/otpVis}" />
+                        
+                            <Input submit="OnEnter"  id="otpInput" visible="{appView>/otpVis}" type='Number' value="{appView>/otpValue}" valueState="{appView>/signUpValueState}" editable="true"/>
+                            <!-- <Button  class="sapUiTinyMarginStart" text="OK" type="Accept" press="onVerifyOtp" visible="true" /> -->
+                        
                 <MessageStrip text="{appView>/errorMessage}" type="Information" showIcon="true" visible="{appView>/showError}" />
             </VBox>
             <ObjectStatus  press="ResendEmailSend" title="{appView>/ResendMsg}" active="{appView>/onResendOTP}" id="countdownT" text="{appView>/timerText}" visible="{appView>/ResendStatusSignup}"/>
         </f:SimpleForm>
     </content>
-    <beginButton>
-        <Button text="OK" type="Accept" press="onSubmit" enabled="{appView>/submitEnable}"/>
+    <buttons>
+        <Button  class="sapUiTinyMarginStart" text="Validate" type="Accept" press="onVerifyOtp" visible="{appView>/validateOTPVis}" />
+        <Button text="OK" type="Accept" press="onSubmit" visible="{appView>/submitEnable}" enabled="{appView>/submitEnable}"/>
+        <Button text="Cancel" type="Reject" press="onReject" enabled="{appView>/RajectEnable}"/>
+    </buttons>
+    <!-- <beginButton>
+        
+            <Button text="OK" type="Accept" press="onSubmit" visible="true" enabled="{appView>/submitEnable}"/>
+        
+            
     </beginButton>
     <endButton>
         <Button text="Cancel" type="Reject" press="onReject" enabled="{appView>/RajectEnable}"/>
-    </endButton>
+    </endButton> -->
 </Dialog>		
 </core:FragmentDefinition>

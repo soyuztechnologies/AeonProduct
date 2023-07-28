@@ -155,11 +155,11 @@ sap.ui.define([
             }
         },
 
-        onReject: function () {
-            this.oFixedSizeDialog.then(function (oDialog) {
-                oDialog.close();
-            });
-        },
+        // onReject: function () {
+        //     this.oFixedSizeDialog.then(function (oDialog) {
+        //         oDialog.close();
+        //     });
+        // },
         timerText: function () {
             
             this.emailCount += 1;

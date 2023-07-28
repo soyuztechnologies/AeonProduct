@@ -10,7 +10,7 @@
                     <Text visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getTextVisibility'}" text = "Your Uploaded Files are in the format of Excel,Csv,document.Click on download to see the files."></Text>
                 </HBox>
             <HBox alignContent="Center" justifyContent="Center">
-                <Button icon="sap-icon://download" visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getbuttonVisibility'}" press="downloadAttachments" text="Download"  type="Transparent" />
+                <Button icon="sap-icon://download"  press="downloadAttachments" text="Download"  type="Transparent" />
             </HBox>
 
             <PDFViewer visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getPdfVisibility'}" source="{path: 'appView>/attachmentFiles', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />

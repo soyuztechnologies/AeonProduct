@@ -1021,7 +1021,33 @@ sap.ui.define([
 				}
 			});
 		},
+		onDownloadFiles:function(){
 
+            debugger;
+
+            var pdfBase64 = this.getView().getModel('appView').getProperty("/attachmentFiles");
+
+            // var pdfBase64 = '<your base64 string>'; // Replace with your actual base64 strin
+
+           
+
+            var pdfBlob = new Blob([pdfBase64], { type: 'application/pdf' });
+
+            var pdfURL = URL.createObjectURL(pdfBlob);
+
+ 
+
+            var link = document.createElement('a');
+
+            link.href = pdfURL;
+
+            link.download = 'myfile.pdf';
+
+            link.target = '_blank';
+
+            link.click();
+
+        },
 		onUploadAttachmentfiles: function (attachmentPath) {
 			var oModel = this.getView().getModel(); ///default model get at here
 			var that = this;
@@ -1053,41 +1079,173 @@ sap.ui.define([
 		},
 
 
-		downloadAttachments: function () {
-			var oModel = this.getView().getModel("appView");
-			var jsonPath = '';
-			var files = '';
 
-			var mapping = {
-				"clientpoNo": "/clientPONo",
-				"artworkCode": "/ArtWork",
-				"InvNo": "/InvNo",
-				"DeliveryNo": "/DeliveryNo"
-			};
 
-			if (this.clickedLink && mapping.hasOwnProperty(this.clickedLink)) {
-				jsonPath = mapping[this.clickedLink];
-				files = oModel.getProperty("/attachmentFiles");
+		getCurrentDateAndTime:function(){
+			var currentDate = new Date();
+			var year = currentDate.getFullYear();
+			var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
+			var day = currentDate.getDate();
+			var hours = currentDate.getHours();
+			var minutes = currentDate.getMinutes();
+			var seconds = currentDate.getSeconds();
+			// Formatting the output as desired
+			var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
+			var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+			// console.log("Current Date: " + formattedDate);
+			// console.log("Current Time: " + formattedTime);
+			this.getView().getModel("appView").setProperty("/dateAndTime", formattedDate+formattedTime)
 
-				var mimeType = files.split(';')[0].split(':')[1];
-				var fileExtension = mimeType.split('/')[1];
-				var byteCharacters = atob(files.split(',')[1]);
-				var byteNumbers = new Array(byteCharacters.length);
-
-				for (var i = 0; i < byteCharacters.length; i++) {
-					byteNumbers[i] = byteCharacters.charCodeAt(i);
-				}
-
-				var byteArray = new Uint8Array(byteNumbers);
-				var blob = new Blob([byteArray], { type: "application/octet-stream" });
-				fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
-				// var url = URL.createObjectURL(blob);
-				//  jQuery.sap.addUrlWhitelist("blob");
-				//  window.open(url, "file",fileExtension);
-
-				File.save(blob, 'NewFile', fileExtension);
+			// Helper function to add leading zero if single-digit
+			function addLeadingZero(number) {
+			return number < 10 ? "0" + number : number;
 			}
+
 		},
+		downloadAttachments: function () {
+			debugger;
+			var that = this;
+			that.getCurrentDateAndTime();
+			// Function to check if the code is running in Cordova for Android environment
+			function isCordovaAndroidEnvironment() {
+				return  window.cordova && cordova.platformId === "android";
+			}
+			
+			// Usage
+			if (isCordovaAndroidEnvironment()) {
+				// Cordova for Android environment, use Cordova-specific functionality
+				that.downloadAttachmentCordova();
+			} else {
+				// Web browser environment or other platforms, use browser-specific functionality
+				that.downloadAttachmentWeb();
+			}
+        },
+         downloadAttachmentCordova: function() {
+			debugger;
+			var that = this;
+            that.savebase64AsImageFile(cordova.file.externalRootDirectory);
+
+        },
+          // For Web App (Browser)
+		  downloadAttachmentWeb: function() {
+			debugger;
+			var oModel = this.getView().getModel("appView");
+            var jsonPath = '';
+            var files = '';
+            var mapping = {
+                "clientPONo": "/clientPONo",
+
+                "artworkCode": "/ArtWork",
+
+                "InvNo": "/InvNo",
+
+                "DeliveryNo": "/DeliveryNo"
+            };
+            if (this.clickedLink && mapping.hasOwnProperty(this.clickedLink)) {
+                jsonPath = mapping[this.clickedLink];
+                files = oModel.getProperty("/attachmentFiles");
+                var mimeType = files.split(';')[0].split(':')[1];
+                var fileExtension = mimeType.split('/')[1];
+                var byteCharacters = atob(files.split(',')[1]);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                var blob = new Blob([byteArray], { type: "application/octet-stream" });
+                fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
+                // var url = URL.createObjectURL(blob);
+                //  jQuery.sap.addUrlWhitelist("blob");
+                //  window.open(url, "file",fileExtension);
+                File.save(blob, 'NewFile', fileExtension);
+            }
+			},
+  
+// 		//************ Function to save a Base64 image in the form of File in the Specified Directory  **************//
+        savebase64AsImageFile: function (folderpath, albumName, filename) {
+			debugger;
+							debugger;
+							var date = this.getView().getModel("appView").getProperty("/dateAndTime");
+							var formattedDate = date.replace(/[:-]/g, "");
+            				var albumName = "Download"
+            				var filename = "myTest.png"
+                            var oModel = this.getView().getModel("appView");
+                            var content = oModel.getProperty("/attachmentFiles");
+                            var fileExtension = content.split('/')[1];
+							var ext = fileExtension.split(';')[0];
+							if(ext.startsWith('vnd')){
+								ext = 'xlsx'
+							}else{
+							}
+                            var filename = "myTest.png"
+                            var filename = "File"+formattedDate+"." + ext;
+                            var DataBlob = this.convertFileToUrl(content)
+                            debugger;
+                            window.resolveLocalFileSystemURL(folderpath, function (dirEntry) {
+                                debugger;
+                                console.log("Access to the emulated storage directory granted succesfully");
+                                dirEntry.getDirectory(albumName, {
+                                    create: true,
+                                    exclusive: false
+                                }, function (dir) {
+                                    debugger;
+                                    console.log("Access to the Download directory granted succesfully");
+                                    dir.getFile(filename, {
+                                        create: true,
+                                        exclusive: false
+                                    },
+                                        function (file) {
+                                            debugger;
+                                            // console.log("File created succesfully.");
+                                            file.createWriter(function (fileWriter) {
+                                                debugger;
+                                                // console.log("Writing content to file");
+                                                fileWriter.write(DataBlob);
+                                                console.log("Picture save in Download Directory.");
+                                                MessageToast.show("File saved successfully in download directory")
+                                            }, function (oErr2) {
+                                                debugger;
+                                                console.log("Unable to save picture in Download Due to: " + JSON.stringify(oErr2));
+                                            });
+                                        }, function (oErr1) {
+                                            debugger;
+                                            console.log("File Not created due to: " + JSON.stringify(oErr1));
+                                        });
+                                }, function (oErr) {
+                                    debugger;
+                                    console.log("No Access to the Directory: " + JSON.stringify(oErr));
+                                });
+                            },);
+        },
+// //************ Function to convert a Base64 string to a Blob URL / File URL **************//
+
+        convertFileToUrl: function (b64Data, contentType, sliceSize) {
+            debugger;
+            contentType = contentType || '';
+            sliceSize = sliceSize || 512;
+            var byteCharacters = atob(b64Data.split(",")[1]);
+            var byteArrays = [];
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                    var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            var blob = new Blob(byteArrays, { type: contentType });
+        	return blob;
+        },
+
+
+
+
+
+		
+
+
+
 
 		getFileTypes: function (base64Url) {
 			var mimeType = base64Url.split(';')[0].split(':')[1];
