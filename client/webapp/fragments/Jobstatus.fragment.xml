@@ -48,9 +48,9 @@
                         <Column visible="{path: 'appView>noOfPiecesToSend', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Final Quantity" />
                         </Column>
-                        <Column visible="{path: 'appView>SecoundarySuppliers', formatter: '.formatter.tableEntryVisible'}">
+                        <!-- <Column visible="{path: 'appView>SecoundarySuppliers', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Remaining Box" />
-                        </Column>
+                        </Column> -->
                             <!-- <Column visible="{path: 'appView>SecoundaryPiecesToSend', formatter: '.formatter.tableEntryVisible'}">
                                 <Label text="Remaining Pieces" />
                             </Column> -->
@@ -86,15 +86,15 @@
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input> -->
                                 <Text  text="{path: 'appView>Printing', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Coating', formatter: '.formatter.formatIndianNumber'} Sheets" />
-                                <Text  text="{appView>Foiling}"></Text>
-                                <Text  text="{appView>spotUV}"></Text>
+                                <Text  text="{path : 'appView>Foiling' , formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
+                                <Text  text="{path : 'appView>spotUV' , formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path : 'appView>Embossing' , formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Punching', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Pasting' , formatter: '.formatter.formatIndianNumber'} Pcs"></Text>
-                                <Text  text="{appView>Packing} + 1 Shippers"></Text>
+                                <Text  text="{parts:[ {path:'appView>Packing'}, { path: 'appView>SecoundarySuppliers'}] ,formatter:'.formatter.formatPcsForPacking'}"></Text>
                                 <Text  text="{appView>noOfBoxPerPieces} Pcs "></Text>
                                 <Text  text="{path : 'appView>noOfPiecesToSend' , formatter: '.formatter.formatIndianNumber'} Pcs"></Text>
-                                <Text  text="{appView>SecoundarySuppliers} Box"></Text>
+                                <!-- <Text  text="{appView>SecoundarySuppliers} Box"></Text> -->
                                 <!-- <Text  text="{appView>SecoundaryPiecesToSend} Pcs"></Text> -->
                                 <ObjectStatus text="{appView>/Jobs/status}" state="{path: 'appView>/Jobs/status', formatter: '.formatter.getStatusColor'}" />
                                 <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>

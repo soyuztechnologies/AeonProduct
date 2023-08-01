@@ -681,54 +681,54 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
       return "Warning";
     },
-      getImageUrlFromContent: function (base64Stream) {
-        if (base64Stream) {
-          var b64toBlob = function (dataURI) {
-            var byteString = atob(dataURI.split(',')[1]);
-            var ab = new ArrayBuffer(byteString.length);
-            var ia = new Uint8Array(ab);
-            for (var i = 0; i < byteString.length; i++) {
-              ia[i] = byteString.charCodeAt(i);
-            }
-            return new Blob([ab], {
-              type: 'image/jpeg'
-            });
-          };
-          var x = b64toBlob(base64Stream);
-          return URL.createObjectURL(x);
-        }
-      },
-      // getImageUrlFromContent: function(base64Stream) {
-      //   if (base64Stream) {
-      //     var b64toBlob = function(dataURI) {
-      //       try {
-      //         var byteString;
-      //         var dataURIParts = dataURI.split(',');
-      //         if (dataURIParts.length > 1) {
-      //           byteString = atob(dataURIParts[1]);
-      //         } else {
-      //           byteString = atob(dataURI);
-      //         }
-      //         var ab = new ArrayBuffer(byteString.length);
-      //         var ia = new Uint8Array(ab);
-      //         for (var i = 0; i < byteString.length; i++) {
-      //           ia[i] = byteString.charCodeAt(i);
-      //         }
-      //         return new Blob([ab], { type: 'image/jpeg' });
-      //       } catch (e) {
-      //         console.error("Failed to decode Base64 string:", e);
-      //         return null;
-      //       }
-      //     };
-      
-      //     var x = b64toBlob(base64Stream);
-      //     if (x) {
-      //       return URL.createObjectURL(x);
-      //     }
-      //   }
-      //   return null;
-      // },
-      
+    getImageUrlFromContent: function (base64Stream) {
+      if (base64Stream) {
+        var b64toBlob = function (dataURI) {
+          var byteString = atob(dataURI.split(',')[1]);
+          var ab = new ArrayBuffer(byteString.length);
+          var ia = new Uint8Array(ab);
+          for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+          }
+          return new Blob([ab], {
+            type: 'image/jpeg'
+          });
+        };
+        var x = b64toBlob(base64Stream);
+        return URL.createObjectURL(x);
+      }
+    },
+    // getImageUrlFromContent: function(base64Stream) {
+    //   if (base64Stream) {
+    //     var b64toBlob = function(dataURI) {
+    //       try {
+    //         var byteString;
+    //         var dataURIParts = dataURI.split(',');
+    //         if (dataURIParts.length > 1) {
+    //           byteString = atob(dataURIParts[1]);
+    //         } else {
+    //           byteString = atob(dataURI);
+    //         }
+    //         var ab = new ArrayBuffer(byteString.length);
+    //         var ia = new Uint8Array(ab);
+    //         for (var i = 0; i < byteString.length; i++) {
+    //           ia[i] = byteString.charCodeAt(i);
+    //         }
+    //         return new Blob([ab], { type: 'image/jpeg' });
+    //       } catch (e) {
+    //         console.error("Failed to decode Base64 string:", e);
+    //         return null;
+    //       }
+    //     };
+
+    //     var x = b64toBlob(base64Stream);
+    //     if (x) {
+    //       return URL.createObjectURL(x);
+    //     }
+    //   }
+    //   return null;
+    // },
+
     checkEmailFormat: function (email) {
       if (email) {
         var mailregex = /^\w+[\w-+\.]*\@\w+([-\.]\w+)*\.[a-zA-Z]{2,}$/;
@@ -786,7 +786,17 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return oDate;
     },
     formatIndianNumber(number) {
-      return number.toLocaleString('en-IN');
+      if (number) {
+        return number.toLocaleString('en-IN');
+      }
+    },
+    formatPcsForPacking(Packing, SecoundarySuppliers) {
+      debugger;
+      if (SecoundarySuppliers === 0) {
+        return "Packing";
+      } else {
+        return `${Packing} + ${SecoundarySuppliers}`;
+      }
     },
     DateTimeFormatter: function (oDate) {
       if (oDate) {
@@ -944,13 +954,13 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     //   return formattedValue + " pcs";
     // },
     tableEntryVisible: function (Data) {
-      if(!Data || Data.length === 0){
+      if (!Data || Data.length === 0) {
 
         return false;
 
       }
 
-      else{
+      else {
 
         return true;
 
@@ -971,7 +981,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return x + ' x ' + y + ' = ' + z + " UPS";
 
     },
-    
+
     showmm: function (showmm) {
       if (showmm === null) {
         return " ";
@@ -1001,21 +1011,21 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
 
 
-        if (Array.isArray(InvNo) && InvNo.length > 0) {
+      if (Array.isArray(InvNo) && InvNo.length > 0) {
 
-          var invNoValues = InvNo.map(function (obj) {
+        var invNoValues = InvNo.map(function (obj) {
 
-            return obj.InvNo;
+          return obj.InvNo;
 
-          });
+        });
 
 
 
-          return invNoValues.join(", ");
+        return invNoValues.join(", ");
 
-        }
+      }
 
-      
+
 
 
 
@@ -1033,21 +1043,21 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
       var userName = oModel.getProperty('/UserRole');; // Replace with the appropriate role information
 
-      
-
-        if (Array.isArray(DeliveryNo) && DeliveryNo.length > 0) {
-
-          var invNoValues = DeliveryNo.map(function (obj) {
-
-            return obj.DeliveryNo;
-
-          });
 
 
+      if (Array.isArray(DeliveryNo) && DeliveryNo.length > 0) {
 
-          return invNoValues.join(", ");
+        var invNoValues = DeliveryNo.map(function (obj) {
 
-        
+          return obj.DeliveryNo;
+
+        });
+
+
+
+        return invNoValues.join(", ");
+
+
 
       }
 
@@ -1057,7 +1067,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return DeliveryNo;
 
     },
-    formatFullName: function(userName , firstName, lastName) {
+    formatFullName: function (userName, firstName, lastName) {
 
       // var firstName = appUser.FirstName;
 
@@ -1076,33 +1086,33 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
 
     },
-    highlightFormatter: function(sOperation, sCompany) {
-      
-      if (sOperation === "RU" && !sCompany ) 
-      { return "Warning";
-      } 
-      if (sOperation === "RU" && sCompany ) 
-      { return "Error";
-      } 
+    highlightFormatter: function (sOperation, sCompany) {
+
+      if (sOperation === "RU" && !sCompany) {
+        return "Warning";
+      }
+      if (sOperation === "RU" && sCompany) {
+        return "Error";
+      }
       else if (sOperation === 'N') {
         return 'Indication08';
-      } 
+      }
       else if (sOperation === 'U') {
         return 'Warning';
-      } 
+      }
       else if (sOperation === 'R') {
         return 'Information';
       }
       return 'None';
     },
-    costStructureVis: function(role){
+    costStructureVis: function (role) {
 
       // 
       // var role = this.getView().getModel("appView").getProperty("/UserRole");
-      if(role === "Admin"){
+      if (role === "Admin") {
         return true;
       }
-      else{
+      else {
         return false;
       }
     },
@@ -1116,25 +1126,25 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     //     return false;
     //   }
     // },
-    companyVis:function(blocked, status){
-      if(blocked === "Yes" || status != "Approved"){
+    companyVis: function (blocked, status) {
+      if (blocked === "Yes" || status != "Approved") {
         return false;
-      }else{
+      } else {
         return true;
       }
     },
-    urgentFormatter:function(urgent){
-      if(urgent ==="Yes"){
+    urgentFormatter: function (urgent) {
+      if (urgent === "Yes") {
         return "Favorite"
       }
     },
-    statusFormatter:function(color){
-      
+    statusFormatter: function (color) {
+
       var alljobstatus = this.getView().getModel("appView").getProperty("/allJobStatus");
       var allJobData = this.getView().getModel("appView").getProperty("/jobsData");
 
     },
-    formatMaxDate: function() {
+    formatMaxDate: function () {
       var currentDate = new Date();
       // Adjust the formatting as per your requirements
       var formattedDate = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
