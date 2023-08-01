@@ -40,7 +40,7 @@
 						<!-- "{path: 'appView>sizeL', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeW', formatter: '.formatter.sizeFormatter'} x {path: 'appView>sizeH', formatter: '.formatter.sizeFormatter'}" -->
 						<Input editable="false" value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}"></Input>
 	                    <Label text="Total No. of Sheets"></Label>
-						<Input editable="false" value = "{path: 'appView>noOfSheets1' ,formatter:'.formatter.showSheets'}"></Input>
+						<Input editable="false"  value="{path: 'appView>noOfSheets1',type: 'sap.ui.model.type.Float', formatOptions: {groupingEnabled: true, groupingSeparator: ','}} Sheets"></Input>
 						<Label text="Artwork"></Label>
 						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
 						<Label text="Paper Board"></Label>

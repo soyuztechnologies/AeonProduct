@@ -785,6 +785,9 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
       return oDate;
     },
+    formatIndianNumber(number) {
+      return number.toLocaleString('en-IN');
+    },
     DateTimeFormatter: function (oDate) {
       if (oDate) {
         var value = oDate.toString();
