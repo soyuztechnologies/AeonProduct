@@ -365,7 +365,7 @@ sap.ui.define([
 			this.middleWare.callMiddleWare("signup/verifyEmail", "POST", payload)
 				.then(function (data, status, xhr) {
 
-					MessageToast.show("Verfication Email Sent to Your Mail");
+					MessageToast.show("Verfication Email Sent to Your Mail (If not : Please Check Spam Folder)");
 					oModel.setProperty("/ResendStatusSignup", true);
 					oModel.setProperty("/validateOTPVis", true);
 					oModel.setProperty("/submitEnable", false)
@@ -466,6 +466,10 @@ sap.ui.define([
 			var email = oModel.getProperty("/Email");
 			var that = this;
 			var payload = {inputOtpValue,email}
+			if(!inputOtpValue){
+				MessageToast.show("Please Enter a OTP!");
+				return;
+			}
 			this.middleWare.callMiddleWare("verifyOtp", "POST", payload)
 				.then(function (data, status, xhr) {
 					MessageToast.show("Success")
@@ -475,7 +479,13 @@ sap.ui.define([
 					// that.onReject();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-					MessageToast.show("Please Enter a Valid OTP")
+					if(jqXhr === "OTP has expired"){
+
+						MessageToast.show("OTP has Expired!")
+					}else{
+
+						MessageToast.show("Please Enter a Valid OTP")
+					}
 					oModel.setProperty("/otpValue","");
 					// that.middleWare.errorHandler(jqXhr, that);
 				});
@@ -527,9 +537,9 @@ sap.ui.define([
 			  this.onReject();
 			  this.getView().getModel("appView").setProperty("/setNewPass","")
 			  this.getView().getModel("appView").setProperty("/setConPass","")
-			  this.getView().getModel("appView").setProperty("/VSTConfirmPass","")
-			  this.getView().getModel("appView").setProperty("/VSTNewPass","")
-			this.validateotp().then(function (oDialog) {
+			  this.getView().getModel("appView").setProperty("/newPassValueState","None")
+			  this.getView().getModel("appView").setProperty("/confirmPassValueState","None")
+				this.validateotp().then(function (oDialog) {
 				var that = this;
 				oDialog.close();
 			})

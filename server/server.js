@@ -434,14 +434,17 @@ app.start = function () {
 			this.User = app.models.User;
 			this.otp = app.models.otp;
 			var  OTP = req.body;
+			var currentdateAndTime = generateDateAndTime();
 			try {
 
 				try{
 					const otp = await this.otp.findOne({ where: { OTP:OTP.inputOtpValue } }); // Retrieve all users
 					if(otp.__data.OTP == OTP.inputOtpValue && otp.__data.User == OTP.email){
-						
-						res.status(200).send('Validate Successfully');
-						
+						if (otp.__data.ExpDate > currentdateAndTime) {
+							res.status(200).send('Validation Successful');
+						  } else {
+							res.status(400).send('OTP has expired');
+						  }
 					}
 					// else{
 					// 	res.status(400).json({ message: 'Not Validate'});

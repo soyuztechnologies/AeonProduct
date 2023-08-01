@@ -132,6 +132,9 @@ sap.ui.define([
 				var aFilters = [];
 				aFilterItems.forEach(function (oFilterItem) {
 					var sKey = oFilterItem.getKey();
+					if(sKey === "null"){
+						sKey = null;
+					}
 					var oFilter = new Filter("status", FilterOperator.EQ, sKey);
 					aFilters.push(oFilter);
 				});
@@ -432,9 +435,31 @@ sap.ui.define([
 			
 			];
 	},
+	getCurrentDateAndTime:function(){
+		var currentDate = new Date();
+		var year = currentDate.getFullYear();
+		var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
+		var day = currentDate.getDate();
+		var hours = currentDate.getHours();
+		var minutes = currentDate.getMinutes();
+		var seconds = currentDate.getSeconds();
+		// Formatting the output as desired
+		var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
+		var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+		// console.log("Current Date: " + formattedDate);
+		// console.log("Current Time: " + formattedTime);
+		this.getView().getModel("appView").setProperty("/dateAndTime", formattedDate+formattedTime)
+
+		// Helper function to add leading zero if single-digit
+		function addLeadingZero(number) {
+		return number < 10 ? "0" + number : number;
+		}
+
+	},
 
 	onExport: function() {
-		debugger
+		debugger;
+		var that=this;
 		var aCols, oBinding, oSettings, oSheet, oTable,data;
 		var aAllJobStatus = [];
 		var jobStatusArray = [];
@@ -464,13 +489,116 @@ sap.ui.define([
 		};
 			// aAllJobStatus.push(oSheet);
 			oSheet = new Spreadsheet(oSettings);
+			oSheet.attachBeforeSave(function(oFile) {
+				debugger;
+				if(window.cordova){
+
+					const base64Strings = [];
+					const bufferFiles = oFile.getParameter('data')
+					var base64 = that.arrayBuffer(bufferFiles);
+					var fixedBase64 = "application/octet-stream," + base64
+					that.getView().getModel("appView").setProperty("/arrayBufferToBase64",fixedBase64)
+					that.savebase64AsImageFile(cordova.file.externalRootDirectory);
+				}
+			})
 			oSheet.build()
-				.then(function() {
-					MessageToast.show('Spreadsheet export has finished');
+				.then(function(x,y,z,a) {
+					debugger;
+					if(window.cordova){
+
+					}else{
+
+						MessageToast.show('Spreadsheet export has finished');
+					}
 				}).finally(function() {
 					oSheet.destroy();
 				});
-		}
+		},
+		arrayBuffer:function(buffer){
+			var binary = '';
+			var bytes = new Uint8Array(buffer);
+			var len = bytes.byteLength;
+			for (var i = 0; i < len; i++) {
+				binary += String.fromCharCode(bytes[i]);
+			}
+			return window.btoa(binary);
+		},
+
+
+		savebase64AsImageFile: function (folderpath, albumName, filename) {
+							debugger;
+							// var date = this.getView().getModel("appView").getProperty("/dateAndTime");
+							// var formattedDate = date.replace(/[:-]/g, "");
+            				var albumName = "Download"
+            				var filename = "myTest.xlsx"
+                            var oModel = this.getView().getModel("appView");
+                            var content = oModel.getProperty("/arrayBufferToBase64");
+                            // var fileExtension = content.split('/')[1];
+							// var ext = fileExtension.split(';')[0];
+							// if(ext.startsWith('vnd')){
+							// 	ext = 'xlsx'
+							// }else{
+							// }
+                            var filename = "myTest.xlsx"
+                            // var filename = "File"+formattedDate+"." + ext;
+                            var DataBlob = this.convertFileToUrl(content)
+                            debugger;
+                            window.resolveLocalFileSystemURL(folderpath, function (dirEntry) {
+                                debugger;
+                                console.log("Access to the emulated storage directory granted succesfully");
+                                dirEntry.getDirectory(albumName, {
+                                    create: true,
+                                    exclusive: false
+                                }, function (dir) {
+                                    debugger;
+                                    console.log("Access to the Download directory granted succesfully");
+                                    dir.getFile(filename, {
+                                        create: true,
+                                        exclusive: false
+                                    },
+                                        function (file) {
+                                            debugger;
+                                            // console.log("File created succesfully.");
+                                            file.createWriter(function (fileWriter) {
+                                                debugger;
+                                                // console.log("Writing content to file");
+                                                fileWriter.write(DataBlob);
+                                                console.log("Picture save in Download Directory.");
+                                                MessageToast.show("File saved successfully in download directory")
+                                            }, function (oErr2) {
+                                                debugger;
+                                                console.log("Unable to save picture in Download Due to: " + JSON.stringify(oErr2));
+                                            });
+                                        }, function (oErr1) {
+                                            debugger;
+                                            console.log("File Not created due to: " + JSON.stringify(oErr1));
+                                        });
+                                }, function (oErr) {
+                                    debugger;
+                                    console.log("No Access to the Directory: " + JSON.stringify(oErr));
+                                });
+                            },);
+        },
+// //************ Function to convert a Base64 string to a Blob URL / File URL **************//
+
+        convertFileToUrl: function (b64Data, contentType, sliceSize) {
+            debugger;
+            contentType = contentType || '';
+            sliceSize = sliceSize || 512;
+            var byteCharacters = atob(b64Data.split(",")[1]);
+            var byteArrays = [];
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                    var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            var blob = new Blob(byteArrays, { type: contentType });
+        	return blob;
+        },
 
 
 

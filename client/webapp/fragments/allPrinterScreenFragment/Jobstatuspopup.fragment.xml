@@ -3,13 +3,13 @@
     <filterItems>
       <ViewSettingsFilterItem key="statusFilter" text="Status" multiSelect="true">
         <items>
-          <ViewSettingsItem text="New" key="New" />
+          <ViewSettingsItem text="New" key="null" />
           <ViewSettingsItem text="Partially Completed" key="Partially Completed" />
           <ViewSettingsItem text="In-Progress" key="In-Progress" />
           <ViewSettingsItem text="Completed" key="Completed" />
           <ViewSettingsItem text="Packing" key="Packing" />
           <ViewSettingsItem text="Partially Dispatched" key="Partially Dispatched" />
-          <ViewSettingsItem text="In-Transit" key="In-Transit" />
+          <ViewSettingsItem text="Value Mismatched" key="Value Mismatched" />
           <ViewSettingsItem text="Delivered" key="Delivered" />
           <ViewSettingsItem text="Cancelled" key="Cancelled" />
         </items>
