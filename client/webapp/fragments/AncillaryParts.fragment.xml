@@ -21,7 +21,7 @@
     <Label text="Emboss Block"/>
     <Input value = "{appView>embossBlock}" editable="false"/>
     <Label text="Punch"/>
-    <Input tooltip="{appView>punch}" value = "{appView>punch}" editable="false"/>
+    <!-- <Input tooltip="{appView>punch}" value = "{appView>punch}" editable="false"/> -->
     <Input tooltip="{appView>punch1}" value = "{appView>punch1}" editable="false"/>
     <Input tooltip="{appView>punch2}" value = "{appView>punch2}" editable="false"/>
     <Label text="Reference"/>

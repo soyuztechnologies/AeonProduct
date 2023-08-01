@@ -1837,7 +1837,7 @@ sap.ui.define([
 			if(remainingPieces === null){
 			 var totalRemJobValues = PastingValue;
 			}else{
-				var totalRemJobValues = PastingValue - remainingPieces;
+				var totalRemJobValues = PastingValue;
 				totalRemJobValues = isNaN(totalRemJobValues) ? 0 : totalRemJobValues;
 			}
 			this.getView().getModel("appView").setProperty("/piecesToSendNewValue", intNewValue);
