@@ -4,8 +4,9 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/BusyIndicator",
+	"sap/m/MessageBox"
 
-], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator) {
+], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator,MessageBox) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.userDetails", {
@@ -445,9 +446,45 @@ sap.ui.define([
 			}
 		},
 
+
+		getSelectedUserDetails:function(){
+			debugger;
+			 var that= this;
+			var oItem= this.getView().byId("idProductsTable").getSelectedItem();
+			if(!oItem){
+				MessageToast.show("Please select a user to delete")
+			}else{
+
+				var userDetails = oItem.getBindingContext("appView").getObject();
+				var id = userDetails.id; 
+				var userName = userDetails.UserName;
+				var payload = {"id":id}
+				this.getView().getModel("appView").setProperty("/userIdToDelete",id)
+				MessageBox.confirm("Are you sure you want to delete " + userName + "?", {
+					actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+					onClose: function (sAction) {
+					  if(sAction === "OK"){
+						that.middleWare.callMiddleWare("deleteAppUsersTable", "POST", payload)
+						.then(function (data, status, xhr) {
+							// debugger
+							MessageToast.show("User Deleted Successfully");
+							that.getUserData();
+						})
+						.catch(function (jqXhr, textStatus, errorMessage) {
+							that.middleWare.errorHandler(jqXhr, that);
+						});
+					}
+					else{
+						  
+
+					  }
+					}
+				  });
+			}
+		},
+
 		// * At here we are getting  the companies all the app.  
 		getCompanyName: function () {
-            
 			var oModel = this.getView().getModel();
 			var that = this;
 			oModel.read('/Company', {

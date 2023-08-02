@@ -732,11 +732,30 @@ app.start = function () {
 		});
 		//*Delete user form the user table
 		app.post('/deleteusersTable', async (req, res) => {
+			debugger;
 			this.User = app.models.User;
 			var id = req.body.id; // Assuming the ID is provided as a property in the request body
 			
 			try {
 			  const user = await this.User.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
+			  if (user) {
+				await user.remove(); // Remove the user
+				res.status(200).send('User deleted successfully');
+			  } else {
+				res.status(404).send('User not found'); // If the user doesn't exist
+			  }
+			} catch (error) {
+			  console.error('Error deleting user:', error);
+			  res.status(500).send('Internal server error');
+			}
+		  });
+		app.post('/deleteAppUsersTable', async (req, res) => {
+			debugger;
+			this.AppUser = app.models.AppUser;
+			var id = req.body.id; // Assuming the ID is provided as a property in the request body
+			
+			try {
+			  const user = await this.AppUser.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
 			  if (user) {
 				await user.remove(); // Remove the user
 				res.status(200).send('User deleted successfully');

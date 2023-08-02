@@ -4,12 +4,15 @@
 	xmlns="sap.m"
 	xmlns:fb="sap.ui.comp.filterbar">
 	<Page showHeader="false">
-		 <Toolbar>
-			<Title text="User Details" level="H2"/>
-			<ToolbarSpacer />
-			<Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
-			<Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
-		</Toolbar>
+		<subHeader>
+			<Toolbar>
+			   <Title text="User Details" level="H2"/>
+			   <ToolbarSpacer />
+			   <Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
+			   <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
+			   <Button type="Reject" press="getSelectedUserDetails" icon="sap-icon://delete"/>
+		   </Toolbar>
+		</subHeader>
 		<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>
 			  <fb:FilterGroupItem name="Role" label="Role" groupName="Group1" visibleInFilterBar="true">
@@ -50,7 +53,7 @@
 			</fb:filterGroupItems>
 		  </fb:FilterBar>
 		  
-		<Table items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressUser">  
+		<Table 	mode="SingleSelectLeft" items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressUser">  
 			<columns>
 				<Column width="12em">
 					<Text text="Name" />
