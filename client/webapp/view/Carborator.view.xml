@@ -31,6 +31,7 @@
 				type="Warning"
 				showIcon="true">
 			</MessageStrip> -->
+            <ScrollContainer height="100%" vertical="true">
             <Table items="{appView>/allExcelData}">
                 <headerToolbar>
                     <OverflowToolbar>
@@ -69,6 +70,7 @@
                     </ColumnListItem>
                 </items>
             </Table>
+        </ScrollContainer>
             <!-- <ux:ObjectPageLayout id="ObjectPageLayout" showAnchorBarPopover="false" showTitleInHeaderContent="true" preserveHeaderStateOnScroll="true"  isChildPage="true" upperCaseAnchorBar="false">
                 
         <ux:headerTitle>

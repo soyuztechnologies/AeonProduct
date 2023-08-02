@@ -91,7 +91,7 @@
                                 <Text  text="{path : 'appView>Embossing' , formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Punching', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Pasting' , formatter: '.formatter.formatIndianNumber'} Pcs"></Text>
-                                <Text  text="{parts:[ {path:'appView>Packing'}, { path: 'appView>SecoundarySuppliers'}] ,formatter:'.formatter.formatPcsForPacking'}"></Text>
+                                <Text  text="{parts:[ {path:'appView>Packing'}, { path: 'appView>SecoundarySuppliers'}] ,formatter:'.formatter.formatPcsForPacking'} Shippers"></Text>
                                 <Text  text="{appView>noOfBoxPerPieces} Pcs "></Text>
                                 <Text  text="{path : 'appView>noOfPiecesToSend' , formatter: '.formatter.formatIndianNumber'} Pcs"></Text>
                                 <!-- <Text  text="{appView>SecoundarySuppliers} Box"></Text> -->

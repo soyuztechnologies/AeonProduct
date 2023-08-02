@@ -7,10 +7,11 @@ sap.ui.define([
 	'sap/ui/model/FilterOperator',
 	"sap/ui/core/Fragment",
 	"sap/ui/core/library",
+	"sap/ui/model/Sorter",
 	"sap/ui/core/date/UI5Date",
 	'sap/ui/export/Spreadsheet'
 
-], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment,CoreLibrary,UI5Date, Spreadsheet) {
+], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment,CoreLibrary,UI5Date, Spreadsheet, Sorter) {
 	"use strict";
 	var ValueState = CoreLibrary.ValueState;
 	return BaseController.extend("ent.ui.ecommerce.controller.allPrinters", {
@@ -70,7 +71,27 @@ sap.ui.define([
 			});
 
 		},
-
+		// Ascending Sort Jobs List
+		onSortAscending: function() {
+			debugger;
+			var oList = this.getView().byId("idListAllPrinters");
+			var oBinding = oList.getBinding("items");
+			
+	  
+			// Sort the list in ascending order by the "Name" property
+			var oSorter = new Sorter("jobCardNo", false);
+			oBinding.sort(oSorter);
+		  },
+		// descending Sort Jobs List
+		onSortDescending: function() {
+			debugger;
+			var oList = this.getView().byId("idListAllPrinters");
+			var oBinding = oList.getBinding("items");
+	  
+			// Sort the list in descending order by the "Name" property
+			var oSorter = new Sorter("jobCardNo", true);
+			oBinding.sort(oSorter);
+		  },
 
 		// * this fucntion will get the list of the all jobs in the allPrinters screen.
 		// getJobsData: function () {
@@ -124,7 +145,7 @@ sap.ui.define([
 		},
 
 		onViewSettingsConfirm: function (oEvent) {
-
+			debugger;
 			var aFilterItems = oEvent.getParameter("filterItems");
 			if (aFilterItems.length > 0) {
 				var oTable = this.getView().byId("idListAllPrinters");
@@ -138,12 +159,58 @@ sap.ui.define([
 					var oFilter = new Filter("status", FilterOperator.EQ, sKey);
 					aFilters.push(oFilter);
 				});
+			 	
 				oBinding.filter(aFilters);
-			} else {
+			}else {
 				this.onViewSettingsCancel();
 			}
+			var aSortItems = oEvent.getParameter("sortItem");
+			if (aSortItems && aSortItems.length > 0) {
+			//   var oSortItem = aSortItems[0]; // We assume only one sort item is selected
+			  var sSortKey = aSortItems.getKey();
+			  var bSortDescending = oEvent.getParameter("sortDescending");
+			  var oSorter = new Sorter(sSortKey, bSortDescending);
+			  oBinding.sort(oSorter);
+			}
 		},
-
+		// onViewSettingsConfirm: function (oEvent) {
+		// 	debugger;
+		// 	var oTable = this.getView().byId("idListAllPrinters");
+		// 	var oBinding = oTable.getBinding("items");
+		  
+		// 	var aFilterItems = oEvent.getParameter("filterItems");
+		// 	var aSortItems = oEvent.getParameter("sortItems");
+		// 	var aFilters = [];
+		  
+		// 	// Apply filtering
+		// 	if (aFilterItems.length > 0) {
+		// 	  aFilterItems.forEach(function (oFilterItem) {
+		// 		var sKey = oFilterItem.getKey();
+		// 		if (sKey === "null") {
+		// 		  sKey = null;
+		// 		}
+		// 		var oFilter = new Filter("status", FilterOperator.EQ, sKey);
+		// 		aFilters.push(oFilter);
+		// 	  });
+		// 	}
+		  
+		// 	// Apply sorting
+		// 	if (aSortItems.length > 0) {
+		// 	  var oSortItem = aSortItems[0]; // We assume only one sort item is selected
+		// 	  var sSortKey = oSortItem.getKey();
+		// 	  var bSortDescending = oEvent.getParameter("sortDescending");
+		// 	  var oSorter = new sap.ui.model.Sorter(sSortKey, bSortDescending);
+		// 	  oBinding.sort(oSorter);
+		// 	}
+		  
+		// 	// Apply filters if any
+		// 	if (aFilters.length > 0) {
+		// 	  oBinding.filter(aFilters);
+		// 	} else {
+		// 	  // If no filters are applied, reset the filters
+		// 	  oBinding.filter([]);
+		// 	}
+		//   },		  
 
 		// getJobsData: function () {
 		// 	var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
