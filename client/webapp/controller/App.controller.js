@@ -142,7 +142,7 @@ sap.ui.define(
           .then(function (data, status, xhr) {
             
             userRole = data.role.Role;
-            if(userRole == "Admin"){
+            if(userRole == "Admin"||userRole == "Factory Manager"){
               that.getModel('appView').setProperty('/Passwordfield', false);
             };
           })

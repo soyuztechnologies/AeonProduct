@@ -81,7 +81,7 @@
 			<items>
 				<ColumnListItem vAlign="Middle" type="Active">
 					<cells>
-						<Text text="{appView>UserName}" />
+						<Text text="{=${appView>FirstName} === null ? ${appView>UserName} :${appView>FirstName} }" />
 						<Text text="{appView>EmailId}" />
 						<Text text="{appView>Role}" />
 						<Switch state="{=${appView>Blocked} === 'No' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">

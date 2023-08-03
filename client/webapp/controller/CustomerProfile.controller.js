@@ -46,7 +46,7 @@ sap.ui.define([
 					that.getModel('appView').setProperty('/editableFields', false);
 						userId = data.Appuser.id;
 						userRole = data.Appuser.Role;
-					if (userRole == "Admin") {
+					if (userRole == "Admin"||userRole == "Factory Manager") {
 						that.getModel('appView').setProperty('/Passwordfield', false);
 					};
 					omodel.updateBindings();

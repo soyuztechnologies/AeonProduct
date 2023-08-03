@@ -15,73 +15,73 @@ resizable="false" >
 				<Label text="JobStatusId"/>
 				<Text  text="{appView>JobStatusId}" />
 			
-				<Label text="CreatedOn" visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
-				<DatePicker dateValue="{appView>/dateNow}"  visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
+				<Label text="CreatedOn" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }"/>
+				<DatePicker dateValue="{appView>/dateNow}"  visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }"/>
 
-				<Label required="true" text="Raw Material"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }"/>
-				<Select forceSelection="false" selectedKey="{appView>rawMaterial}"  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" enabled="{=${appView>/rawMaterialData} ==='isInstock' ? false : true}"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }" >
+				<Label required="true" text="Raw Material"  visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }"/>
+				<Select forceSelection="false" selectedKey="{appView>rawMaterial}"  change="onSelectKeyRawMaterial"  id="idRawMaterialPopup" enabled="{=${appView>/rawMaterialData} ==='isInstock' ? false : true}"  visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }" >
 					<items>
 						<core:Item text="In Stock" key="In Stock" />
 						<core:Item text="Pending" key="Pending" />
 					</items>
 				</Select>
-				<Label text="Printing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
-				<Input liveChange="printingLiveChange" valueStateText="{appView>/VSTTPrintingSheets}" valueState="{appView>/valueStateTotalPrintingSheets}" type="Number" value="{appView>Printing}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}"/>
+				<Label text="Printing" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
+				<Input liveChange="printingLiveChange" valueStateText="{appView>/VSTTPrintingSheets}" valueState="{appView>/valueStateTotalPrintingSheets}" type="Number" value="{appView>Printing}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}"/>
 
 
 
-				<Label text="Coating" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
-				<Input liveChange="coatingLiveChange" type="Number" value="{appView>Coating}" valueStateText="{appView>/VSTCoating}" valueState="{appView>/valueStateCoating}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}" />		
+				<Label text="Coating" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
+				<Input liveChange="coatingLiveChange" type="Number" value="{appView>Coating}" valueStateText="{appView>/VSTCoating}" valueState="{appView>/valueStateCoating}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}" />		
 					
 					
 
-				<Label text="Foiling" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" />
-				<Input liveChange="foilingLiveChange" type="Number" value="{appView>Foiling}" valueStateText="{appView>/VSTFoiling}" valueState="{appView>/valueStateFoiling}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/foilingData} === '0' ? false : true}"/>
+				<Label text="Foiling" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" />
+				<Input liveChange="foilingLiveChange" type="Number" value="{appView>Foiling}" valueStateText="{appView>/VSTFoiling}" valueState="{appView>/valueStateFoiling}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/foilingData} === '0' ? false : true}"/>
 
 
 
 
-				<Label text="Spot UV" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input liveChange="spotUVLiveChange" type="Number" value="{appView>spotUV}" valueStateText="{appView>/VSTspotUV}" valueState="{appView>/valueStatespotUV}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/spotUvData} === '0' ? false : true}"/>
+				<Label text="Spot UV" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
+				<Input liveChange="spotUVLiveChange" type="Number" value="{appView>spotUV}" valueStateText="{appView>/VSTspotUV}" valueState="{appView>/valueStatespotUV}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/spotUvData} === '0' ? false : true}"/>
 
 
 
-				<Label text="Embossing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input  liveChange="embossingLiveChange" type="Number" value="{appView>Embossing}" valueStateText="{appView>/VSTEmbossing}" valueState="{appView>/valueStateEmbossing}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/embossingData} === '0' ? false : true}"/>
+				<Label text="Embossing" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
+				<Input  liveChange="embossingLiveChange" type="Number" value="{appView>Embossing}" valueStateText="{appView>/VSTEmbossing}" valueState="{appView>/valueStateEmbossing}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/embossingData} === '0' ? false : true}"/>
 
 
-				<Label text="Punching" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input liveChange="punchingLiveChange" type="Number" value="{appView>Punching}" valueStateText="{appView>/VSTPunching}" valueState="{appView>/valueStatePunching}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-
-
-
-				<Label text="Pasting" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }"/>
-				<Input liveChange="pastingLiveChange" type="Number" value="{appView>Pasting}" valueStateText="{appView>/VSTPasting}" valueState="{appView>/valueStatePasting}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }"/>
+				<Label text="Punching" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
+				<Input liveChange="punchingLiveChange" type="Number" value="{appView>Punching}" valueStateText="{appView>/VSTPunching}" valueState="{appView>/valueStatePunching}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
 
 
 
-				<Label text="Packing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" />
-				<Input type="Number" value="{appView>/totalShippers}"  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }"  placeholder="No. Of Shippers"/>
-				<Input liveChange="onLiveChnagePiecePerBox" type="Number" valueState="{appView>/valueStatePiecePerBox}" valueStateText="{appView>/VSTPiecePerBox}" value="{appView>/piecePerBox}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" placeholder="Piece Per Box"/>
-				<Input liveChange="onLiveChnagePieceToSend" valueState="{appView>/valueStatePieceToSend}" valueStateText="{appView>/VSTPieceToSend}" type="Number" value="{appView>/totalShippingPieces}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" placeholder="Pieces to be Send"/>
+				<Label text="Pasting" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }"/>
+				<Input liveChange="pastingLiveChange" type="Number" value="{appView>Pasting}" valueStateText="{appView>/VSTPasting}" valueState="{appView>/valueStatePasting}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }"/>
+
+
+
+				<Label text="Packing" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" />
+				<Input type="Number" value="{appView>/totalShippers}"  visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }"  placeholder="No. Of Shippers"/>
+				<Input liveChange="onLiveChnagePiecePerBox" type="Number" valueState="{appView>/valueStatePiecePerBox}" valueStateText="{appView>/VSTPiecePerBox}" value="{appView>/piecePerBox}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" placeholder="Piece Per Box"/>
+				<Input liveChange="onLiveChnagePieceToSend" valueState="{appView>/valueStatePieceToSend}" valueStateText="{appView>/VSTPieceToSend}" type="Number" value="{appView>/totalShippingPieces}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" placeholder="Pieces to be Send"/>
 				<!-- <VBox> -->
-				<Label text="Additional Packing" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" />
+				<Label text="Additional Packing" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false }" />
                 <!-- <Input  value="{appView>/remainingNoOfShippers}" visible="{appView>/noOfBoxForRemainingPiece}" placeholder="Remaining Shippers"/>   -->
-                <Input  value="{appView>/remainingPiecesPerBox}" visible="{=${appView>/remainingPiecesToSend} !== 0 ? ${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false  : false}" placeholder="Remaining  Box"/>  
-                <Input  value="{path: 'appView>/remainingPiecesToSend', formatter: '.formatter.decimalFormatterForPieces'}" visible="{=${appView>/remainingPiecesToSend} !== 0 ? ${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head' ? true : false  : false}"	 placeholder="Remaining Piece"/>  
+                <Input  value="{appView>/remainingPiecesPerBox}" visible="{=${appView>/remainingPiecesToSend} !== 0 ? ${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false  : false}" placeholder="Remaining  Box"/>  
+                <Input  value="{path: 'appView>/remainingPiecesToSend', formatter: '.formatter.decimalFormatterForPieces'}" visible="{=${appView>/remainingPiecesToSend} !== 0 ? ${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Dispatch Head' ? true : false  : false}"	 placeholder="Remaining Piece"/>  
 				<!-- </VBox> -->
  
 
-				<Label text="Inv. No." visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
-				<Input  value="{appView>/InvNo}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }" />
-				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
+				<Label text="Inv. No." visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
+				<Input  value="{appView>/InvNo}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }" />
+				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
 
-				<Label text="Delivery No." visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
-				<Input  value="{appView>/DeliveryNo}" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
-				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
+				<Label text="Delivery No." visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
+				<Input  value="{appView>/DeliveryNo}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
+				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
 
-				<Label required="true" text="Status" visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
-				<Select id="idStatus" forceSelection="false" selectedKey="{appView>status}"  change="onSelectKeyStatus" visible="{=${appView>/UserRole} === 'Admin' ? true : false }">
+				<Label required="true" text="Status" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }"/>
+				<Select id="idStatus" forceSelection="false" selectedKey="{appView>status}"  change="onSelectKeyStatus" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }">
 			    	<items>
 						<core:Item text="Partially Completed" key="Partially Completed" />
 						<!-- <core:Item text="In-Progress" key="inprogress" /> -->

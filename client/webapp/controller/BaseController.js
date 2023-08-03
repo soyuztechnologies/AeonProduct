@@ -58,7 +58,7 @@ sap.ui.define([
 		userRole: function () {
 			// 
 			var sUserRole = this.getModel('appView').getProperty('/UserRole');
-			if (sUserRole === "Admin") {
+			if (sUserRole === "Admin"||sUserRole == "Factory Manager") {
 				// this.getView().getModel("appView").setProperty('/upDocNavVisb', true);
 				// this.getView().getModel("appView").setProperty('/profilNavVisb', true);
 				// this.getView().getModel("appView").setProperty('/useDeltNavVisb', true);

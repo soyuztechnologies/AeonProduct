@@ -72,26 +72,26 @@ sap.ui.define([
 
 		},
 		// Ascending Sort Jobs List
-		onSortAscending: function() {
-			debugger;
-			var oList = this.getView().byId("idListAllPrinters");
-			var oBinding = oList.getBinding("items");
+		// onSortAscending: function() {
+		// 	debugger;
+		// 	var oList = this.getView().byId("idListAllPrinters");
+		// 	var oBinding = oList.getBinding("items");
 			
 	  
-			// Sort the list in ascending order by the "Name" property
-			var oSorter = new Sorter("jobCardNo", false);
-			oBinding.sort(oSorter);
-		  },
-		// descending Sort Jobs List
-		onSortDescending: function() {
-			debugger;
-			var oList = this.getView().byId("idListAllPrinters");
-			var oBinding = oList.getBinding("items");
+		// 	// Sort the list in ascending order by the "Name" property
+		// 	var oSorter = new Sorter("jobCardNo", false);
+		// 	oBinding.sort(oSorter);
+		//   },
+		// // descending Sort Jobs List
+		// onSortDescending: function() {
+		// 	debugger;
+		// 	var oList = this.getView().byId("idListAllPrinters");
+		// 	var oBinding = oList.getBinding("items");
 	  
-			// Sort the list in descending order by the "Name" property
-			var oSorter = new Sorter("jobCardNo", true);
-			oBinding.sort(oSorter);
-		  },
+		// 	// Sort the list in descending order by the "Name" property
+		// 	var oSorter = new Sorter("jobCardNo", true);
+		// 	oBinding.sort(oSorter);
+		//   },
 
 		// * this fucntion will get the list of the all jobs in the allPrinters screen.
 		// getJobsData: function () {

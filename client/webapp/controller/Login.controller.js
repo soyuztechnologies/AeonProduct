@@ -99,7 +99,7 @@ sap.ui.define([
 					else if (data.temp === true) {
 						that.openUpdateDialog();
 					}
-					else if (data.Role === "Admin") {
+					else if (data.Role === "Admin" ||data.Role == "Factory Manager") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/userRole", that.UserRole);
 						that.getView().byId("userid").setValueState('None');

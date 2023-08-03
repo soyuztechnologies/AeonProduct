@@ -1109,7 +1109,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
       // 
       // var role = this.getView().getModel("appView").getProperty("/UserRole");
-      if (role === "Admin") {
+      if (role === "Admin" || role === "Factory Manager") {
         return true;
       }
       else {

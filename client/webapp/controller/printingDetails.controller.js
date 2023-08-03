@@ -142,7 +142,7 @@ sap.ui.define([
 					that.loadForm();
 					that.getView().getModel("appView").setProperty("/status", data.status);
 					if (!data.status) {
-						if (sUserRole == "Admin" || sUserRole == "Raw Material Head") {
+						if (sUserRole == "Admin" || sUserRole == "Raw Material Head" ||sUserRole == "Factory Manager") {
 							that.getView().getModel("appView").setProperty("/addBtnVisible", true);
 						} else {
 							that.getView().getModel("appView").setProperty("/addBtnVisible", false);
@@ -337,7 +337,7 @@ sap.ui.define([
 
 			}
 
-			if (sUserRole === "Artwork Head" || sUserRole === "Admin") {
+			if (sUserRole === "Artwork Head" || sUserRole === "Admin"||sUserRole == "Factory Manager") {
             	this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", true);
 			}else{
 				this.getView().getModel("appView").setProperty("/uploadDocBrowseVis", false);		
@@ -489,7 +489,7 @@ sap.ui.define([
 					this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 					var pofile = oData.poAttachment;
-					if(sUserRole === 'Admin'|| sUserRole === "Artwork Head"){
+					if(sUserRole === 'Admin'|| sUserRole === "Artwork Head" ||sUserRole == "Factory Manager"){
 						oModel.setProperty('/uploadDocBrowseVis', true);
 						oModel.setProperty("/uploadBrowse-BtnVis",true)
 						// oModel.setProperty("/btnVisibility", true);
@@ -505,7 +505,7 @@ sap.ui.define([
 					this.getModel("appView").setProperty("/attachmentFiles", oData.artworkAttachment)
 					var artfile = oData.artworkAttachment
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Artwork Document");
-					if(sUserRole === "Admin" || sUserRole === "Artwork Head"){
+					if(sUserRole === "Admin" || sUserRole === "Artwork Head" ||sUserRole == "Factory Manager"){
 						oModel.setProperty("/uploadBrowse-BtnVis",true)
 					}
 	
@@ -626,7 +626,7 @@ sap.ui.define([
 				oModel.setProperty("/uploadDocumnetTitle", "Upload  Document");
 				oDialog.open();
 				var sUserRole = oModel.getProperty('/UserRole');
-				if(sUserRole === "Admin" || sUserRole === "Accounts Head"){
+				if(sUserRole === "Admin" || sUserRole === "Accounts Head" ||sUserRole == "Factory Manager"){
 					oModel.setProperty("/uploadBrowse-BtnVis",true)
 				}
                 
