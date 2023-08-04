@@ -42,6 +42,7 @@ sap.ui.define([
 			var oModel = this.getModel("appView")
 			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
 			oModel.setProperty("/visibleHeader", true);
+			oModel.setProperty("/hamburgerVisibility", true);
 			oModel.setProperty("/userRoleVis", true);
 			oModel.setProperty("/visibility", true);
 			oModel.setProperty("/logoutVisibility", true);
@@ -1534,6 +1535,7 @@ sap.ui.define([
 						
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 						that.getView().getModel("appView").setProperty("/countJobs", data.length);
+						that.onSortDescending();
 
 
 
@@ -1548,12 +1550,61 @@ sap.ui.define([
 					.then(function (data, status, xhr) {
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 						that.getView().getModel("appView").setProperty("/countJobs", data.length);
+						that.onSortDescending();
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
 						that.middleWare.errorHandler(jqXhr, that);
 					});
 			}
 		},
+
+        // Ascending Sort Jobs List
+
+        onSortAscending: function() {
+
+            debugger;
+
+            var oList = this.getView().byId("idListAllPrinters");
+
+            var oBinding = oList.getBinding("items");
+
+            oBinding.oList.sort(function(a, b) {
+
+                return a.jobCardNo.localeCompare(b.jobCardNo, undefined, { numeric: true });
+
+                // return new Date(a.CreatedOn) - new Date(b.CreatedOn);
+
+            });
+
+            this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
+
+            this.getModel("appView").updateBindings();
+
+          },
+
+          // Descending Sort Jobs List
+
+        onSortDescending: function() {
+
+            debugger;
+
+            var oList = this.getView().byId("idListAllPrinters");
+
+            var oBinding = oList.getBinding("items");
+
+            oBinding.oList.sort(function(a, b) {
+
+                return b.jobCardNo.localeCompare(a.jobCardNo, undefined, { numeric: true });
+
+                // return new Date(b.CreatedOn) - new Date(a.CreatedOn); // If you have a date comparison
+
+            });
+
+            this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
+
+            this.getModel("appView").updateBindings();
+
+        },
 		printingLiveChange: function (oEvent) {
 			
 			var newValue1 = oEvent.getParameter("value");

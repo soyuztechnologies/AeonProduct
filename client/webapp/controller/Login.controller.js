@@ -144,6 +144,10 @@ sap.ui.define([
 					});
 
 					uId = data.userId;
+					if(window.cordova){
+
+						Cookies.set("soyuz_session", data.id, { expires: 7 });
+					}
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {

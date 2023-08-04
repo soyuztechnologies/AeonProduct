@@ -45,7 +45,10 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 			this.getModel("appView").setProperty("/visibleHeader", true);
 			this.getModel("appView").setProperty("/userRoleVis", true);
+			this.getModel("appView").setProperty("/sideExpanded", true);
 			this.getModel("appView").setProperty("/visibility", true);
+			this.getModel("appView").setProperty("/hamburgerVisibility", true);
+			
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
 			this.getCompanyName();
@@ -299,7 +302,8 @@ sap.ui.define([
 			.then(function (data, status, xhr) {
 			  
 			  that.getView().getModel("appView").setProperty("/jobsData", data);
-			  that.getView().getModel("appView").setProperty("/countJobs", data.length);					
+			  that.getView().getModel("appView").setProperty("/countJobs", data.length);	
+			  that.onSortDescending();				
 		  })
 			.catch(function (jqXhr, textStatus, errorMessage) {
 			  that.middleWare.errorHandler(jqXhr, that);
@@ -310,6 +314,7 @@ sap.ui.define([
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);
 				that.getView().getModel("appView").setProperty("/countJobs", data.length);
+				that.onSortDescending();
 				// that.getJobStatus();
 				// var jobData = 
 				// for (let i = 0; i < data.length; i++) {
@@ -323,6 +328,54 @@ sap.ui.define([
 			});
 		}
 	   },
+
+        // Ascending Sort Jobs List
+
+        onSortAscending: function() {
+
+            debugger;
+
+            var oList = this.getView().byId("idListAllPrinters");
+
+            var oBinding = oList.getBinding("items");
+
+            oBinding.oList.sort(function(a, b) {
+
+                return a.jobCardNo.localeCompare(b.jobCardNo, undefined, { numeric: true });
+
+                // return new Date(a.CreatedOn) - new Date(b.CreatedOn);
+
+            });
+
+            this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
+
+            this.getModel("appView").updateBindings();
+
+          },
+
+          // Descending Sort Jobs List
+
+        onSortDescending: function() {
+
+            debugger;
+
+            var oList = this.getView().byId("idListAllPrinters");
+
+            var oBinding = oList.getBinding("items");
+
+            oBinding.oList.sort(function(a, b) {
+
+                return b.jobCardNo.localeCompare(a.jobCardNo, undefined, { numeric: true });
+
+                // return new Date(b.CreatedOn) - new Date(a.CreatedOn); // If you have a date comparison
+
+            });
+
+            this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
+
+            this.getModel("appView").updateBindings();
+
+        },
 	   getJobStatus:function(){
 				
 		var oModel = this.getView().getModel();

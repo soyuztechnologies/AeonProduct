@@ -21,13 +21,11 @@ sap.ui.define([
 					// }
 					if (window.cordova){
 						var endpoint = "http://167.71.234.203:3002/"
+						var accessToken= Cookies.get("soyuz_session");
 					}
 					else{
 						var endpoint = "/"
-
-					}
-					// });
-					var accessToken=``;
+						var accessToken=``;
 					const getCookie = function (name) {
 						var value = "; " + document.cookie;
 						var parts = value.split("; " + name + "=");
@@ -35,11 +33,16 @@ sap.ui.define([
 						  return decodeURIComponent(parts.pop().split(";").shift());
 						}
 					  };
+
+					  
 					  if(getCookie("soyuz_session")){
 						  
 						accessToken=getCookie("soyuz_session")
 						  
 					  }
+					}
+					// });
+					
 			
 
 				if (!(sUrl && sMethod)) {

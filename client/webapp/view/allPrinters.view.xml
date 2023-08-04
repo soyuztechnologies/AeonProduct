@@ -8,8 +8,8 @@
 						<SearchField liveChange="onSearchJob" width="30%"/>
 						<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
 						<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}"/>    
-						<!-- <Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
-						<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Srot Descending"/> -->
+						<Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
+						<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Sort Descending"/>
 				</content>
 		</Toolbar>
 	  </subHeader>

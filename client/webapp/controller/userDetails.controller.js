@@ -29,6 +29,7 @@ sap.ui.define([
 				oModel.setProperty('/Passwordfield', true);
 			};
 			oModel.setProperty("/newPass", false);
+			oModel.setProperty("/hamburgerVisibility", true);
 			oModel.setProperty("/conPass", false);
 			oModel.setProperty("/userRoleVis", true);
 			this.getView().getModel("appView").setProperty("/newPassValueState", "None");
@@ -166,7 +167,6 @@ sap.ui.define([
 
 		// * this function is read the all appUsers data.
 		getUserData: function () {
-debugger
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			// var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
@@ -175,9 +175,9 @@ debugger
 				success: function (data) {
 					that.getView().getModel("appView").setProperty("/userDetails", data.results);
 					that.getView().getModel("appView").setProperty("/userName", data.results[0].UserName);
-					if(sUserRole === "Admin"){
-						that.getView().getModel("appView").setProperty("/companyselBoxVis" ,false);
-					}
+					// if(sUserRole === "Admin"){
+					// 	that.getView().getModel("appView").setProperty("/companyselBoxVis" ,false);
+					// }
 					BusyIndicator.hide();
 				},
 				error: function (error) {
