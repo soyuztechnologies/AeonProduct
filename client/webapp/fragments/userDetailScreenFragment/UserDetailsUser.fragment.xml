@@ -1,0 +1,55 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+    <Dialog title="User's" >
+        <content>
+            <Table  items="{appView>/filteredUserData}" id="idUserFragTable">  
+                <columns>
+                    <Column width="12em">
+                        <Text text="Name" />
+                    </Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="Email" />
+                    </Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="Role" />
+                    </Column>
+            
+                    <Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
+                        <Text text="Blocked" />
+                    </Column>
+                    <Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
+                        <Text text="Approval" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem vAlign="Middle" type="Active">
+                        <cells>
+                            <Text text="{appView>UserName}" />
+                            <Text text="{appView>EmailId}" />
+                            <Text text="{appView>Role}" />
+                            <Switch state="{=${appView>Blocked} === 'No' ? true : false}"  type="AcceptReject" enabled="false" customTextOn="Yes" customTextOff="No">
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch>
+                            <Select selectedKey="{appView>Status}"  forceSelection="false" editable="false">
+                                <core:Item text="Pending" key="Pending" />
+                                <core:Item text="Reject" key="Reject" />
+                                <core:Item text="Approved" key="Approved" />
+                            </Select>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+        <endButton>
+            <Button text="Close" type="Reject" press="onCloseUserFrag"/>
+        </endButton>
+    </Dialog>
+                                
+   
+</core:FragmentDefinition>

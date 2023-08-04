@@ -1,19 +1,20 @@
-<mvc:View controllerName="ent.ui.ecommerce.controller.userDetails"
+<mvc:View controllerName="ent.ui.ecommerce.controller.companyDetails"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m"
 	xmlns:fb="sap.ui.comp.filterbar">
 	<Page showHeader="false">
-		<subHeader>
-			<Toolbar>
-			   <Title text="User Details" level="H2"/>
-			   <ToolbarSpacer />
-			   <Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
-			   <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
-			   <Button text="Delete" type="Reject" press="getSelectedUserDetails" icon="sap-icon://delete" tooltip="Delete"/>
-		   </Toolbar>
-		</subHeader>
-		<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+        <subHeader>
+            <Toolbar>
+                <Title text="Company Details" level="H2"/>
+                <ToolbarSpacer />
+                <SearchField liveChange="onSearchCompanyByName" width="auto" placeholder="Company Name"></SearchField>
+                <Button  type="Emphasized" icon="sap-icon://refresh" press="getCompanyName" tooltip="Refresh Company Data"></Button>
+                <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog" tooltip="Add New Company"/>
+                <Button text="Delete" type="Reject" press="getSelectedCompanyDetails" icon="sap-icon://delete" tooltip="Delete Company"/>
+            </Toolbar>
+        </subHeader>
+        <!-- <fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>
 			  <fb:FilterGroupItem name="Role" label="Role" groupName="Group1" visibleInFilterBar="true">
 				<fb:control>
@@ -45,27 +46,32 @@
 				  </ComboBox>	
 				</fb:control>
 			  </fb:FilterGroupItem>
-			  <fb:FilterGroupItem name="Name and Email" label="Name and Email" groupName="Group1" visibleInFilterBar="true">
+			  <fb:FilterGroupItem name="Company Name" label="Company Name" groupName="Group1" visibleInFilterBar="true">
 				  <fb:control>
 					<SearchField liveChange="onSearchNameEmail"></SearchField>
 				</fb:control>
 			  </fb:FilterGroupItem>
 			</fb:filterGroupItems>
-		  </fb:FilterBar>
-		  
-		<Table 	mode="SingleSelectLeft" items="{appView>/userDetails}" id="idProductsTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressUser">  
+		  </fb:FilterBar> -->
+		<Table mode="SingleSelectLeft" items="{appView>/company}" id="idCompanyTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressCompany">  
 			<columns>
 				<Column width="12em">
-					<Text text="Name" />
+					<Text text="Company Name" />
 				</Column>
 				<Column minScreenWidth="Tablet" demandPopin="true">
-					<Text text="Email" />
+					<Text text="Email ID" />
 				</Column>
 				<Column minScreenWidth="Tablet" demandPopin="true">
-					<Text text="Role" />
+					<Text text="Phone Number" />
+				</Column>
+				<Column minScreenWidth="Tablet" demandPopin="true">
+					<Text text="Show Jobs" />
+				</Column>
+				<Column minScreenWidth="Tablet" demandPopin="true">
+					<Text text="Show User's" />
 				</Column>
 		
-				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
+				<!-- <Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
 					<Text text="Blocked" />
 				</Column>
 				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
@@ -76,15 +82,18 @@
 				</Column>
 				<Column hAlign="End">
 					<Text text="Reset Password" />
-				</Column>
+				</Column> -->
 			</columns>
 			<items>
 				<ColumnListItem vAlign="Middle" type="Active">
 					<cells>
-						<Text text="{=${appView>FirstName} === null ? ${appView>UserName} :${appView>FirstName} }" />
-						<Text text="{appView>EmailId}" />
-						<Text text="{appView>Role}" />
-						<Switch state="{=${appView>Blocked} === 'No' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">
+						<Text text="{appView>CompanyName}" />
+						<Text text="Harsh@soyuztechnplogies.com" />
+						<Text text="9610931777" />
+						<Button type="transparent" text="Jobs" press="openAllPrinterJobDialog" icon="sap-icon://document-text"></Button>
+						<Button type="Success"  text="User" press="openUserDetailsDialog" icon="sap-icon://visits"></Button>
+						<!-- <Text text="{appView>Role}" /> -->
+						<!-- <Switch state="{=${appView>Blocked} === 'No' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">
 							<layoutData>
 								<FlexItemData growFactor="1" />
 							</layoutData>
@@ -97,7 +106,7 @@
 						<Select enabled="{parts:[ {path:'appView>Blocked'}, { path: 'appView>Status'}] ,formatter:'.formatter.companyVis'}" editable="{appView>/onBlockSelectBlocked}" items="{appView>/companyNames}" selectedKey="{appView>CompanyId}"  forceSelection="false" change="onSelectComPany"  visible="{=${appView>Role} === 'Customer' ? true : false}">
 							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
 						</Select>
-						<Button type="Reject" text="Password" press="SendEmailExistUser" icon="sap-icon://reset"></Button>
+						<Button type="Reject" text="Password" press="SendEmailExistUser" icon="sap-icon://reset"></Button> -->
 					</cells>
 				</ColumnListItem>
 			</items>

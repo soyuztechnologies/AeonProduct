@@ -7,11 +7,10 @@ sap.ui.define([
 	'sap/ui/model/FilterOperator',
 	"sap/ui/core/Fragment",
 	"sap/ui/core/library",
-	"sap/ui/model/Sorter",
 	"sap/ui/core/date/UI5Date",
 	'sap/ui/export/Spreadsheet'
 
-], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment,CoreLibrary,UI5Date, Spreadsheet, Sorter) {
+], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment,CoreLibrary,UI5Date, Spreadsheet) {
 	"use strict";
 	var ValueState = CoreLibrary.ValueState;
 	return BaseController.extend("ent.ui.ecommerce.controller.allPrinters", {
@@ -166,14 +165,6 @@ sap.ui.define([
 				oBinding.filter(aFilters);
 			}else {
 				this.onViewSettingsCancel();
-			}
-			var aSortItems = oEvent.getParameter("sortItem");
-			if (aSortItems && aSortItems.length > 0) {
-			//   var oSortItem = aSortItems[0]; // We assume only one sort item is selected
-			  var sSortKey = aSortItems.getKey();
-			  var bSortDescending = oEvent.getParameter("sortDescending");
-			  var oSorter = new Sorter(sSortKey, bSortDescending);
-			  oBinding.sort(oSorter);
 			}
 		},
 		// onViewSettingsConfirm: function (oEvent) {

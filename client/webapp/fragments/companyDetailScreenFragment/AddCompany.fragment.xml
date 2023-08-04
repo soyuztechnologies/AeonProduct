@@ -1,0 +1,91 @@
+<core:FragmentDefinition
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 
+    xmlns:f = "sap.ui.layout.form"
+    xmlns:u="sap.ui.unified"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:core="sap.ui.core">
+    <Dialog title="Add Company" showHeader="false" >
+        <content>
+        <!-- <headerToolbar> -->
+            <OverflowToolbar >
+                <content>
+                    <Title text="{appView>/TitleUserAdd}" level="H2"/>
+                    <ToolbarSpacer />
+                </content>
+            </OverflowToolbar>
+        <!-- </headerToolbar> -->
+        <VBox>
+            <form:SimpleForm maxContainerCols="2" id="companySimpleFrom" editable="false" layout="ColumnLayout" labelSpanL="12" labelSpanM="12" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:content>
+                    <core:Title text="Company Details"></core:Title>
+                    <Label required="true" text="Mail Address"/>
+                    <Input required ="true" value ="{appView>EmailId}"  editable="true"/>
+        
+                    <Label required="true" text="Company Name" visible="true"/>
+                    <Input required="true" value = "{appView>CompanyName}" editable="true" visible="true"/>
+        
+                    <Label required="true" text="Company Address" visible="true"/>
+                    <Input required="true" value = "{appView>CompanyAddress}" editable="true" visible="true" />       
+                         
+                    <Label text="Gst Number" visible="true"/>
+                    <Input value = "{appView>GSTNO}"   editable="true" visible="true"/>
+
+                    <Label text="Website" visible="true"/>
+                    <Input value = "{appView>Website}"  editable="true" visible="true"/>
+        
+                    <Label required="true" text="Company Phone Number" visible="true"/>
+                    <Input required="true" type="Number" value = "{appView>phoneNumber}" editable="true" visible="true"/>
+
+                    <core:Title text="Personal Details"></core:Title>
+                    <Label required="true" text="Title"/>
+                        <Select selectedKey="{appView>Title}" editable="true" change="onRoleChange">
+                            <core:Item key="Mr." text="Mr." />
+                            <core:Item key="Mrs." text="Mrs." />
+                        </Select>
+            
+                    <Label required="true" text="First Name"/>
+                    <Input required="true" value = "{appView>FirstName}" editable="true"/>
+            
+                    <Label required="true" text="Last Name"/>
+                    <Input required="true" value = "{appView>LastName}" editable="true"/>
+        
+                     <Label  text="{i18n>NewCompanyLogo}"/>
+                            
+                       <!-- <f:Avatar src="" displaySize="S" displayShape="Square"/>     -->
+                       <u:FileUploader name="myFileUpload" enabled="{appView>/enabledCompanyLogo}" uploadUrl="/upload" change="handleUploadPress" tooltip="UploadYourFileToTheLocalServer" uploadComplete="handleUploadComplete" visible="true">
+                        <u:parameters>
+                         <u:FileUploaderParameter name="createdBy" />                            </u:parameters>
+                            </u:FileUploader>
+                            <Button text="Show Logo"  tooltip="checkLogo" press="onLogo" enabled="{appView>/LogoShowButton}" visible="true"/>
+            
+                    <Label required="true" text="Personal Mail Address" visible="true"/>
+                    <Input required="true" value = "{appView>CompanyEmail}" editable="true" visible="true"/>
+
+    
+                </form:content>
+            </form:SimpleForm>
+        </VBox>
+    </content>
+
+    <footer>
+		<Toolbar>
+			<content>
+                <ToolbarSpacer />
+                <Button text="Edit" type="Emphasized" press="onUserEdit"  icon="sap-icon://edit" visible="{appView>/userEditBtn}"/>
+                <Button text="{=${appView>/existingData} === true ? 'Update' : 'Save'}" type="Accept" press="openPassdialog" icon="sap-icon://save" visible="{appView>/userupdateBtn}"/>
+                <Button text="Cancel" type="Reject" press="onReject"  icon="sap-icon://cancel"  visible="{appView>/userCancelBtn}"/>
+            </content>
+		</Toolbar>
+	</footer>
+
+            <!-- <beginButton>
+                <Button text="{=${appView>/existingData} === true ? 'Update' : 'Save'}" type="Accept" press="openPassdialog" icon="sap-icon://save"/>
+                </beginButton>
+                <Button text="Edit" type="Emphasized" press="onReject"  icon="sap-icon://edit" visible="{appView>/userAdd/EditDialog}"/>
+            <endButton>
+                <Button text="Cancel" type="Reject" press="onReject"  icon="sap-icon://cancel"/>
+            </endButton> -->
+    </Dialog>	
+</core:FragmentDefinition>

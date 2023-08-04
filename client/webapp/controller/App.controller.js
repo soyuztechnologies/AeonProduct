@@ -78,9 +78,10 @@ sap.ui.define(
       onNavigation: function (oEvent) {},
 
       onSelectItem: function (oEvent) {
-        
-        
+        debugger;
+        var that = this;
         var nav = oEvent.getSource().getSelectedKey();
+        that.getView().getModel("appView").setProperty("/navigationKey", nav);
         var okey = this.getModel("device").getData().system.desktop;
         if(okey === false){
           // if device is phone
@@ -100,6 +101,9 @@ sap.ui.define(
         }
         if (nav=== "userDetails"){
           this.getRouter().navTo("userDetails")
+        }
+        if (nav=== "companyDetails"){
+          this.getRouter().navTo("companyDetails")
         }
       },
       getUserId: function () {

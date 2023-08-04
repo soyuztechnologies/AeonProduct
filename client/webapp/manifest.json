@@ -154,6 +154,11 @@
 					"pattern":"userDetails",
 					"name":"userDetails",
 					"target":"userDetails"
+				},
+				{
+					"pattern":"companyDetails",
+					"name":"companyDetails",
+					"target":"companyDetails"
 				}
 			],
 			"targets": {
@@ -205,6 +210,12 @@
 					"viewLevel":1,
 					"controlAggregation": "beginColumnPages",
 					"viewId":"userDetails"
+				},
+				"companyDetails":{
+					"viewName":"companyDetails",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"companyDetails"
 				},
 				"Profile":{
 					"viewName":"CustomerProfile",
