@@ -1561,50 +1561,54 @@ sap.ui.define([
         // Ascending Sort Jobs List
 
         onSortAscending: function() {
-
-            debugger;
-
-            var oList = this.getView().byId("idListAllPrinters");
-
-            var oBinding = oList.getBinding("items");
-
-            oBinding.oList.sort(function(a, b) {
-
-                return a.jobCardNo.localeCompare(b.jobCardNo, undefined, { numeric: true });
-
-                // return new Date(a.CreatedOn) - new Date(b.CreatedOn);
-
-            });
-
-            this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
-
-            this.getModel("appView").updateBindings();
-
-          },
+			debugger;
+		
+			var oModel = this.getView().getModel("appView");
+			if (!oModel) {
+				console.error("Model 'appView' not found.");
+				return;
+			}
+		
+			var oList = oModel.getProperty("/jobsData");
+			if (!Array.isArray(oList)) {
+				console.error("Property 'jobsData' is not an array or is not defined in the model.");
+				return;
+			}
+		
+			oList.sort(function(a, b) {
+				return a.jobCardNo.localeCompare(b.jobCardNo, undefined, { numeric: true });
+			});
+		
+			oModel.setProperty('/jobsData', oList);
+			oModel.updateBindings();
+		},
+		
 
           // Descending Sort Jobs List
 
-        onSortDescending: function() {
-
-            debugger;
-
-            var oList = this.getView().byId("idListAllPrinters");
-
-            var oBinding = oList.getBinding("items");
-
-            oBinding.oList.sort(function(a, b) {
-
-                return b.jobCardNo.localeCompare(a.jobCardNo, undefined, { numeric: true });
-
-                // return new Date(b.CreatedOn) - new Date(a.CreatedOn); // If you have a date comparison
-
-            });
-
-            this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
-
-            this.getModel("appView").updateBindings();
-
-        },
+		  onSortDescending: function() {
+			debugger;
+		
+			var oModel = this.getView().getModel("appView");
+			if (!oModel) {
+				console.error("Model 'appView' not found.");
+				return;
+			}
+		
+			var oList = oModel.getProperty("/jobsData");
+			if (!Array.isArray(oList)) {
+				console.error("Property 'jobsData' is not an array or is not defined in the model.");
+				return;
+			}
+		
+			oList.sort(function(a, b) {
+				return b.jobCardNo.localeCompare(a.jobCardNo, undefined, { numeric: true });
+			});
+		
+			oModel.setProperty('/jobsData', oList);
+			oModel.updateBindings();
+		},
+		
 		printingLiveChange: function (oEvent) {
 			
 			var newValue1 = oEvent.getParameter("value");
