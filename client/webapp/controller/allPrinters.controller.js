@@ -61,6 +61,7 @@ sap.ui.define([
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
+			debugger;
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			this.getView().getModel("appView").setProperty('/datas', datassss);

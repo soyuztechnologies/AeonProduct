@@ -541,7 +541,7 @@ sap.ui.define([
 				return;
 			}
 
-			if (roleUSerSelected === "Factory Manager" && (!Email || !phone)) {
+			if (roleUSerSelected === "Factory Manager" && (!Email)) {
 				MessageToast.show("Please enter the required fields");
 				return;
 			}
