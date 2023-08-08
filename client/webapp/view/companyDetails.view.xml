@@ -5,14 +5,19 @@
 	xmlns:fb="sap.ui.comp.filterbar">
 	<Page showHeader="false">
         <subHeader>
-            <Toolbar>
+            <OverflowToolbar>
                 <Title text="Company Details" level="H2"/>
                 <ToolbarSpacer />
                 <SearchField liveChange="onSearchCompanyByName" width="auto" placeholder="Company Name"></SearchField>
-                <Button  type="Emphasized" icon="sap-icon://refresh" press="getCompanyName" tooltip="Refresh Company Data"></Button>
-                <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog" tooltip="Add New Company"/>
-                <Button text="Delete" type="Reject" press="getSelectedCompanyDetails" icon="sap-icon://delete" tooltip="Delete Company"/>
-            </Toolbar>
+                <!-- <Button  type="Emphasized" icon="sap-icon://refresh" press="getCompanyName" tooltip="Refresh Company Data"></Button> -->
+                <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddCompDialog" tooltip="Add New Company"/>
+                <Button text="Delete" type="Reject" press="getSelectedCompanyDetails" icon="sap-icon://delete" tooltip="Delete Company">
+
+					<layoutData>
+						<OverflowToolbarLayoutData priority="NeverOverflow"/>
+					</layoutData>
+				</Button>
+            </OverflowToolbar>
         </subHeader>
         <!-- <fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>
@@ -53,7 +58,7 @@
 			  </fb:FilterGroupItem>
 			</fb:filterGroupItems>
 		  </fb:FilterBar> -->
-		<Table mode="SingleSelectLeft" items="{appView>/company}" id="idCompanyTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressCompany">  
+		<Table mode="SingleSelectLeft" items="{appView>/companyDetails}" id="idCompanyTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressCompany">  
 			<columns>
 				<Column width="12em">
 					<Text text="Company Name" />
@@ -88,8 +93,8 @@
 				<ColumnListItem vAlign="Middle" type="Active">
 					<cells>
 						<Text text="{appView>CompanyName}" />
-						<Text text="Harsh@soyuztechnplogies.com" />
-						<Text text="9610931777" />
+						<Text text="{appView>EmailAddress}" />
+						<Text text="{appView>PhoneNo}" />
 						<Button type="transparent" text="Jobs" press="openAllPrinterJobDialog" icon="sap-icon://document-text"></Button>
 						<Button type="Success"  text="User" press="openUserDetailsDialog" icon="sap-icon://visits"></Button>
 						<!-- <Text text="{appView>Role}" /> -->

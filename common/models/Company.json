@@ -10,7 +10,43 @@
 		"CompanyName": {
             "type":"string",
 			"default":""
-        }
+        },
+		"EmailAddress":{
+			"type": "string",
+			"default": ""
+		},
+		"FirstName":{
+			"type": "string",
+			"default": ""
+		},
+		"LastName":{
+			"type": "string",
+			"default": ""
+		},
+		"CompanyAddress":{
+			"type": "string",
+			"default": ""
+		},
+		"GstNumber":{
+			"type": "string",
+			"default": ""
+		},
+		"CompanyLogo":{
+			"type": "string",
+			"default": ""
+		},
+		"Website":{
+			"type": "string",
+			"default": ""
+		},
+		"PersonalEmailAddress":{
+			"type": "string",
+			"default": ""
+		},
+		"PhoneNo":{
+			"type": "string",
+			"default": ""
+		}
 		
 	},
 	"scope": {

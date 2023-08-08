@@ -1,10 +1,10 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:custom="ent.ui.ecommerce.controller.controls"  xmlns="sap.m" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
     <Dialog title="Jobs">
     <content>               
-        <List   id="idListAllPrinters" itemPress="onClickItemFrag" 
+        <List   id="idListAllPrinters" 
 				items="{path: 'appView>/filteredData'}">
 					<items>
-						<custom:customListItem type="Navigation" backgroundColor="{=${appView>status} === 'Value Mismatched' ? 'ff6666' : 'FFFFFF'}" >
+						<custom:customListItem  backgroundColor="{=${appView>status} === 'Value Mismatched' ? 'ff6666' : 'FFFFFF'}" >
 							
 							<HBox>
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >

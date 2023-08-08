@@ -1,7 +1,7 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:custom="ent.ui.ecommerce.controller.controls" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="ent.ui.ecommerce.controller.allPrinters" >
   <Page id='idWelcomeP' showHeader="false">
 	  <subHeader>
-		<Toolbar>
+		<OverflowToolbar>
 				<content>
 					<Title text="Printers  ( {appView>/countJobs} )"/>
 						<ToolbarSpacer/>
@@ -11,7 +11,7 @@
 						<Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
 						<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Sort Descending"/>
 				</content>
-		</Toolbar>
+		</OverflowToolbar>
 	  </subHeader>
 		<!-- <Toolbar>
 		   <content>

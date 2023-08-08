@@ -1597,5 +1597,18 @@ sap.ui.define([
 			  }
 			});
 		  },
+getAllJobs:function(){
+	oModel.read("/Jobs", {
+		success: function (data) {
+			that.getView().getModel("appView").setProperty("/jobsData", data.results);
+			BusyIndicator.hide();
+		},
+		error: function (error) {
+			MessageToast.show("Error reading data");
+			BusyIndicator.hide();
+		}
+	});
+}
+		  
 	});
 });

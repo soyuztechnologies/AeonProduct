@@ -5,13 +5,13 @@
 	xmlns:fb="sap.ui.comp.filterbar">
 	<Page showHeader="false">
 		<subHeader>
-			<Toolbar>
+			<OverflowToolbar>
 			   <Title text="User Details" level="H2"/>
 			   <ToolbarSpacer />
 			   <Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
 			   <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
 			   <Button text="Delete" type="Reject" press="getSelectedUserDetails" icon="sap-icon://delete" tooltip="Delete"/>
-		   </Toolbar>
+		   </OverflowToolbar>
 		</subHeader>
 		<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>

@@ -547,6 +547,7 @@ sap.ui.define([
       return this.jobdialog;
     },
     onGetDialog: function (oEvent) {
+      debugger;
       var excelData = oEvent.getSource().getBindingContext("appView").getObject();
       this.getView().getModel("appView").setProperty("/excelDataUplode", excelData);
       var that = this;

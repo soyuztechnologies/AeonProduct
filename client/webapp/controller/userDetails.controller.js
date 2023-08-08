@@ -345,7 +345,7 @@ sap.ui.define([
 
 		// * this function is handling the image and convert into the base64 after that setinto the property.
 		handleUploadPress: function (oEvent) {
-
+			debugger;
 			var files = oEvent.getParameter("files");
 			var that = this;
 			var oModel = this.getView().getModel("appView");
@@ -608,6 +608,7 @@ sap.ui.define([
 		},
 
 		onUserEdit: function () {
+			debugger;
 			var userData = this.getView().getModel("appView").getProperty("/userData");
             this.seledtedUserData = JSON.parse(JSON.stringify(userData));
 			var omodel = this.getView().getModel("appView");
