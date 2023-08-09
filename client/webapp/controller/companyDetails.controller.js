@@ -46,7 +46,7 @@ sap.ui.define([
 		// }, 
 		//     // * this function will get the role form the company details fragment.
 		//     onRoleChange: function (oEvent) {
-		// debugger;
+		// 
 		//         // var keyAlwaysCustomer = "Customer" ;
 		//         var oSelectedKey = "Customer";
 		//         var oModel = this.getView().getModel("appView");
@@ -109,7 +109,7 @@ sap.ui.define([
 		},
 		//  * this fucntion will opne the add user fragment and create the payload too and set into the property.
 		AddCompDialog: function () {
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel('appView');
 			this.oFormData = {
@@ -150,7 +150,7 @@ sap.ui.define([
 			});
 		},
 		onUserEdit: function () {
-			debugger;
+			
 			var userData = this.getView().getModel("appView").getProperty("/userData");
 			this.seledtedUserData = JSON.parse(JSON.stringify(userData));
 			var oModel = this.getView().getModel("appView");
@@ -161,7 +161,7 @@ sap.ui.define([
 		},
 		// * this function is close the dialog on add user and edit user.
 		onReject: function () {
-			debugger;
+			
 			this.getView().getModel("appView").setProperty("/streamUrlLogo", "");
 			this.getView().byId('uploadCompanyLogo').setValue("")
 			this.editVis = this.getView().getModel("appView").getProperty("/userEditBtn");
@@ -181,7 +181,7 @@ sap.ui.define([
 		},
 		//this fragment open when click jobs in company detail
 		onClickJobsShowBtn: function () {
-			debugger;
+			
 			var oView = this.getView();
 			var that = this;
 			if (!this.addComp) {
@@ -213,7 +213,7 @@ sap.ui.define([
 			});
 		},
 		onCloseJobFrag: function () {
-			debugger;
+			
 			this.getView().getModel("appView").setProperty("/filteredData", "");
 			this.onClickJobsShowBtn().then(function (userDialog) {
 				userDialog.close();
@@ -237,7 +237,7 @@ sap.ui.define([
 			return this.showUser;
 		},
 		openUserDetailsDialog: async function (oEvent) {
-			debugger;
+			
 			var details = oEvent.getSource().getBindingContext("appView").getObject();
 			this.getView().getModel('appView').setProperty('/compNameForFilteredUser', details.CompanyName);
 			await this.getUserData();
@@ -262,7 +262,7 @@ sap.ui.define([
 			});
 		},
 		onSaveCompanyDetails: function () {
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel();
 			var selectedButtonTitle = this.getView().getModel('appView').getProperty('/TitleUserAdd');
@@ -329,7 +329,7 @@ sap.ui.define([
 		},
 		// * this function is read the all appUsers data.
 		getUserData: function () {
-			debugger;
+			
 			// BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var filteredUserDatas = [];
@@ -455,7 +455,7 @@ sap.ui.define([
 			return this.showJobDetails;
 		},
 		onClickItemFrag: function (oEvent) {
-			debugger;
+			
 			this.onClickJobInJobAllPrinterFrag().then(function (showJobClickInAllPrintFragDialog) {
 				showJobClickInAllPrintFragDialog.open();
 				// var oSimpleForm = that.getView().byId('allJobDetails')
@@ -471,7 +471,7 @@ sap.ui.define([
 		},
 		// * this fucntion will get the entity data and bind the data into the edit user fragment.
 		rowItemsPressCompany: function (oEvent) {
-			debugger;
+			
 			var oParameter = oEvent.getParameter('listItem');
 			var oPath = oEvent.getParameter("listItem").getBindingContextPath();
 			this.bindingPath = oPath;
@@ -501,7 +501,7 @@ sap.ui.define([
 
 		},
 		onSearchCompanyByName: function (oEvent) {
-			debugger;
+			
 			var sValue = oEvent.getParameter("query");
 			if (!sValue) {
 				var sValue = oEvent.getParameter("newValue")
@@ -518,7 +518,7 @@ sap.ui.define([
 		},
 		// * this function is handling the image and convert into the base64 after that setinto the property.
 		handleUploadPress: function (oEvent) {
-			debugger;
+			
 			var files = oEvent.getParameter("files");
 			var that = this;
 			var oModel = this.getView().getModel("appView");
@@ -553,7 +553,7 @@ sap.ui.define([
 
 		// * this function works to show the logo when user clicks on the show logo button
 		onLogo: function () {
-			debugger;
+			
 			var oLogo = this.getModel("appView").getProperty("/streamUrlLogo");
 			var oModel = this.getView().getModel("appView");
 			if (!oLogo) {

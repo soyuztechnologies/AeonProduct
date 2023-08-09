@@ -8,12 +8,12 @@
 			<OverflowToolbar>
 			   <Title text="User Details" level="H2"/>
 			   <ToolbarSpacer />
-			   <Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button>
+			   <!-- <Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button> -->
 			   <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
 			   <Button text="Delete" type="Reject" press="getSelectedUserDetails" icon="sap-icon://delete" tooltip="Delete"/>
 		   </OverflowToolbar>
 		</subHeader>
-		<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+		<fb:FilterBar class="classFilterBar" id="filterbar" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>
 			  <fb:FilterGroupItem name="Role" label="Role" groupName="Group1" visibleInFilterBar="true">
 				<fb:control>

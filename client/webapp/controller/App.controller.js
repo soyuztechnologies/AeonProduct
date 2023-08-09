@@ -78,7 +78,7 @@ sap.ui.define(
       onNavigation: function (oEvent) {},
 
       onSelectItem: function (oEvent) {
-        debugger;
+        
         var that = this;
         var nav = oEvent.getSource().getSelectedKey();
         that.getView().getModel("appView").setProperty("/navigationKey", nav);
@@ -120,7 +120,7 @@ sap.ui.define(
           });
       },
       onClickMenuButton: function (oEvent) {
-        debugger;
+        
         // var oSideNavigation = this.byId("sideNavigation");
         // var bExpanded = oSideNavigation.getExpanded();
         // this.getView().getModel("appView").setProperty("/sideNavExpended", !bExpanded);

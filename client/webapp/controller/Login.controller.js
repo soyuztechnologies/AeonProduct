@@ -221,7 +221,7 @@ sap.ui.define([
 		},
 
 		onUpdatePassOk: function () {
-			debugger
+			
 			// Regular expression to check for password validation
 			//  var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			var oModel = this.getView().getModel("appView");
@@ -279,7 +279,7 @@ sap.ui.define([
 
 		},
 		onRejectCan: function () {
-			debugger;
+			
 			this.passUpdateDialog.then(function (oDialog) {
 				oDialog.close();
 			});
@@ -302,7 +302,7 @@ sap.ui.define([
 		},
 
 		onReject: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel('appView');
 			var that = this;
 			clearInterval(this.x);
@@ -389,7 +389,7 @@ sap.ui.define([
 		},
 
 		onForgotPasswordEmailVerfiyCall: function () {
-			debugger;
+			
 			var that = this;
 			var oEmail = this.getView().getModel('appView').getProperty("/Email");
 			var oModel = this.getView().getModel('appView')
@@ -445,7 +445,7 @@ sap.ui.define([
 		},
 
 		OnEnter : function (oEvent) {  //* this function is call onEnter event in signup fragment and forgot password fragment.
-			debugger;
+			
 			if (isSignupButton == true) {
 				this.onSignupEmailVerifyCall();
 			}
@@ -455,7 +455,7 @@ sap.ui.define([
 		},
 
 		onSubmit: function () {
-			debugger;
+			
 			if (isSignupButton == true) {
 				this.onSignupEmailVerifyCall();
 			}
@@ -464,7 +464,7 @@ sap.ui.define([
 			}
 		},
 		onVerifyOtp:function(){
-			debugger;
+			
 			var oModel = this.getView().getModel('appView')
 			var inputOtpValue = oModel.getProperty("/otpValue");
 			var email = oModel.getProperty("/Email");
@@ -496,7 +496,7 @@ sap.ui.define([
 		},
 
 		deleteOtp:function(){
-			debugger;
+			
 			var oModel = this.getView().getModel('appView')
 			var inputOtpValue = oModel.getProperty("/otpValue");
 			var that = this;

@@ -61,7 +61,7 @@ sap.ui.define([
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
-			debugger;
+			
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
 			this.getView().getModel("appView").setProperty('/datas', datassss);
@@ -76,7 +76,7 @@ sap.ui.define([
 		},
 		// Ascending Sort Jobs List
 		// onSortAscending: function() {
-		// 	debugger;
+		// 	
 		// 	var oList = this.getView().byId("idListAllPrinters");
 		// 	var oBinding = oList.getBinding("items");
 			
@@ -87,7 +87,7 @@ sap.ui.define([
 		//   },
 		// // descending Sort Jobs List
 		// onSortDescending: function() {
-		// 	debugger;
+		// 	
 		// 	var oList = this.getView().byId("idListAllPrinters");
 		// 	var oBinding = oList.getBinding("items");
 	  
@@ -148,7 +148,7 @@ sap.ui.define([
 		},
 
 		onViewSettingsConfirm: function (oEvent) {
-			debugger;
+			
 			var aFilterItems = oEvent.getParameter("filterItems");
 			if (aFilterItems.length > 0) {
 				var oTable = this.getView().byId("idListAllPrinters");
@@ -169,7 +169,7 @@ sap.ui.define([
 			}
 		},
 		// onViewSettingsConfirm: function (oEvent) {
-		// 	debugger;
+		// 	
 		// 	var oTable = this.getView().byId("idListAllPrinters");
 		// 	var oBinding = oTable.getBinding("items");
 		  
@@ -325,7 +325,7 @@ sap.ui.define([
 
         onSortAscending: function() {
 
-            debugger;
+            
 
             var oList = this.getView().byId("idListAllPrinters");
 
@@ -349,7 +349,7 @@ sap.ui.define([
 
         onSortDescending: function() {
 
-            debugger;
+            
 
             var oList = this.getView().byId("idListAllPrinters");
 
@@ -440,7 +440,7 @@ sap.ui.define([
 	// 	// var dateString = dates[0];	
 	// },
 	selectCompanyName : function (oEvent) {
-		debugger
+		
 		var selectedCompanyName = oEvent.getSource().getSelectedItem().getKey();
 		this.getView().getModel("appView").setProperty("/selectedCompanyName",selectedCompanyName);
 	},
@@ -570,7 +570,7 @@ sap.ui.define([
 	},
 
 	onExport: function() {
-		debugger;
+		
 		var that=this;
 		var aCols, oBinding, oSettings, oSheet, oTable,data;
 		var aAllJobStatus = [];
@@ -602,7 +602,7 @@ sap.ui.define([
 			// aAllJobStatus.push(oSheet);
 			oSheet = new Spreadsheet(oSettings);
 			oSheet.attachBeforeSave(function(oFile) {
-				debugger;
+				
 				if(window.cordova){
 
 					const base64Strings = [];
@@ -615,7 +615,7 @@ sap.ui.define([
 			})
 			oSheet.build()
 				.then(function(x,y,z,a) {
-					debugger;
+					
 					if(window.cordova){
 
 					}else{
@@ -638,7 +638,7 @@ sap.ui.define([
 
 
 		savebase64AsImageFile: function (folderpath, albumName, filename) {
-							debugger;
+							
 							// var date = this.getView().getModel("appView").getProperty("/dateAndTime");
 							// var formattedDate = date.replace(/[:-]/g, "");
             				var albumName = "Download"
@@ -654,39 +654,39 @@ sap.ui.define([
                             var filename = "myTest.xlsx"
                             // var filename = "File"+formattedDate+"." + ext;
                             var DataBlob = this.convertFileToUrl(content)
-                            debugger;
+                            
                             window.resolveLocalFileSystemURL(folderpath, function (dirEntry) {
-                                debugger;
+                                
                                 console.log("Access to the emulated storage directory granted succesfully");
                                 dirEntry.getDirectory(albumName, {
                                     create: true,
                                     exclusive: false
                                 }, function (dir) {
-                                    debugger;
+                                    
                                     console.log("Access to the Download directory granted succesfully");
                                     dir.getFile(filename, {
                                         create: true,
                                         exclusive: false
                                     },
                                         function (file) {
-                                            debugger;
+                                            
                                             // console.log("File created succesfully.");
                                             file.createWriter(function (fileWriter) {
-                                                debugger;
+                                                
                                                 // console.log("Writing content to file");
                                                 fileWriter.write(DataBlob);
                                                 console.log("Picture save in Download Directory.");
                                                 MessageToast.show("File saved successfully in download directory")
                                             }, function (oErr2) {
-                                                debugger;
+                                                
                                                 console.log("Unable to save picture in Download Due to: " + JSON.stringify(oErr2));
                                             });
                                         }, function (oErr1) {
-                                            debugger;
+                                            
                                             console.log("File Not created due to: " + JSON.stringify(oErr1));
                                         });
                                 }, function (oErr) {
-                                    debugger;
+                                    
                                     console.log("No Access to the Directory: " + JSON.stringify(oErr));
                                 });
                             },);
@@ -694,7 +694,7 @@ sap.ui.define([
 // //************ Function to convert a Base64 string to a Blob URL / File URL **************//
 
         convertFileToUrl: function (b64Data, contentType, sliceSize) {
-            debugger;
+            
             contentType = contentType || '';
             sliceSize = sliceSize || 512;
             var byteCharacters = atob(b64Data.split(",")[1]);
@@ -755,7 +755,7 @@ sap.ui.define([
     //         that.middleWare.errorHandler(jqXhr, that);
     //       });
 	// 	// send the payload to backend 
-	// 	// check into the node debugger
+	// 	// check into the node 
 	// 	// if the call hits or not.
 	// 	// if hit then check the appuser is similar to the login user.
 	// 	// if user found then update the call in server for finding jobs.

@@ -176,7 +176,7 @@ sap.ui.define([
 		},
 
 		onSaveJobStatus: function () {
-			debugger;
+			
             var oModel = this.getView().getModel("appView"); // Default model get at here
             var that = this;
             var data = oModel.getProperty("/newJobStatus");
@@ -450,7 +450,7 @@ sap.ui.define([
 		},
 
 		onRejectCustomerDialog: function () {
-			debugger
+			
 			var that = this;
 			this.CustomerAttachment.then(function (oDialog) {
 				// that.getView().getModel("appView").setProperty("/attachmentFiles", "")
@@ -685,7 +685,7 @@ sap.ui.define([
 		},
 
 		getDialogData: function (oEvent) {
-			debugger
+			
 		},
 
 		onSelectKeyRawMaterial: function (oEvent) {
@@ -693,7 +693,7 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/selectedKey", selectedText);
 		},
 		onSelectKeyStatus: function (oEvent) {
-			debugger;
+			
 			var selectStatus = oEvent.getParameter("selectedItem").getText();
 			this.getView().getModel("appView").setProperty("/selectStatus", selectStatus);
 		},
@@ -721,7 +721,7 @@ sap.ui.define([
 		// * this fucntion will opens the dialog, for factory manager and admin to update the data.
 		isEditStatus: null,
 		onPressAdd: function () {
-			debugger
+			
 			var that = this;
 			this.getRemJobsStatus();
 			var date = new Date()
@@ -965,7 +965,7 @@ sap.ui.define([
 		// * these funciton is handling the upload attachment files in backend.
 
 		onUploadDataPress: function () {
-			debugger
+			
 			var idbtn = this.jobAttachmentId;
 			var oModel = this.getView().getModel("appView");
 			if (this.clickedLink == "clientPONo") {
@@ -1024,7 +1024,7 @@ sap.ui.define([
 		},
 		onDownloadFiles:function(){
 
-            debugger;
+            
 
             var pdfBase64 = this.getView().getModel('appView').getProperty("/attachmentFiles");
 
@@ -1104,7 +1104,7 @@ sap.ui.define([
 
 		},
 		downloadAttachments: function () {
-			debugger;
+			
 			var that = this;
 			that.getCurrentDateAndTime();
 			// Function to check if the code is running in Cordova for Android environment
@@ -1122,14 +1122,14 @@ sap.ui.define([
 			}
         },
          downloadAttachmentCordova: function() {
-			debugger;
+			
 			var that = this;
             that.savebase64AsImageFile(cordova.file.externalRootDirectory);
 
         },
           // For Web App (Browser)
 		  downloadAttachmentWeb: function() {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView");
             var jsonPath = '';
             var files = '';
@@ -1164,8 +1164,8 @@ sap.ui.define([
   
 // 		//************ Function to save a Base64 image in the form of File in the Specified Directory  **************//
         savebase64AsImageFile: function (folderpath, albumName, filename) {
-			debugger;
-							debugger;
+			
+							
 							var date = this.getView().getModel("appView").getProperty("/dateAndTime");
 							var formattedDate = date.replace(/[:-]/g, "");
             				var albumName = "Download"
@@ -1181,39 +1181,39 @@ sap.ui.define([
                             var filename = "myTest.png"
                             var filename = "File"+formattedDate+"." + ext;
                             var DataBlob = this.convertFileToUrl(content)
-                            debugger;
+                            
                             window.resolveLocalFileSystemURL(folderpath, function (dirEntry) {
-                                debugger;
+                                
                                 console.log("Access to the emulated storage directory granted succesfully");
                                 dirEntry.getDirectory(albumName, {
                                     create: true,
                                     exclusive: false
                                 }, function (dir) {
-                                    debugger;
+                                    
                                     console.log("Access to the Download directory granted succesfully");
                                     dir.getFile(filename, {
                                         create: true,
                                         exclusive: false
                                     },
                                         function (file) {
-                                            debugger;
+                                            
                                             // console.log("File created succesfully.");
                                             file.createWriter(function (fileWriter) {
-                                                debugger;
+                                                
                                                 // console.log("Writing content to file");
                                                 fileWriter.write(DataBlob);
                                                 console.log("Picture save in Download Directory.");
                                                 MessageToast.show("File saved successfully in download directory")
                                             }, function (oErr2) {
-                                                debugger;
+                                                
                                                 console.log("Unable to save picture in Download Due to: " + JSON.stringify(oErr2));
                                             });
                                         }, function (oErr1) {
-                                            debugger;
+                                            
                                             console.log("File Not created due to: " + JSON.stringify(oErr1));
                                         });
                                 }, function (oErr) {
-                                    debugger;
+                                    
                                     console.log("No Access to the Directory: " + JSON.stringify(oErr));
                                 });
                             },);
@@ -1221,7 +1221,7 @@ sap.ui.define([
 // //************ Function to convert a Base64 string to a Blob URL / File URL **************//
 
         convertFileToUrl: function (b64Data, contentType, sliceSize) {
-            debugger;
+            
             contentType = contentType || '';
             sliceSize = sliceSize || 512;
             var byteCharacters = atob(b64Data.split(",")[1]);
@@ -1281,7 +1281,7 @@ sap.ui.define([
 			}
 			this.middleWare.callMiddleWare(endPoint, "POST", payload)
 				.then(function (data) {
-					debugger;
+					
 					oModel.setProperty("/rawMaterialData", "notInstock");
 					if (!data) {
 						return
@@ -1561,7 +1561,7 @@ sap.ui.define([
         // Ascending Sort Jobs List
 
         onSortAscending: function() {
-			debugger;
+			
 		
 			var oModel = this.getView().getModel("appView");
 			if (!oModel) {
@@ -1587,7 +1587,7 @@ sap.ui.define([
           // Descending Sort Jobs List
 
 		  onSortDescending: function() {
-			debugger;
+			
 		
 			var oModel = this.getView().getModel("appView");
 			if (!oModel) {

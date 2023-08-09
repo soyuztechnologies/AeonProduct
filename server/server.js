@@ -216,7 +216,7 @@ app.start = function () {
 		// * this fucntion is sending the email to user, for forgot the password.
 
 		app.post('/forgotPasswordEmailVerify', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -258,7 +258,7 @@ app.start = function () {
 		//*  this post call is verifiing the token when the user try to reset the password
 
 		app.post('/Forgot/verifyToken', async (req, res) => {
-			debugger
+			
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
@@ -373,7 +373,7 @@ app.start = function () {
 		//*get Date and time
 
 		function generateDateAndTime(){
-			debugger;
+			
             var currentDate = new Date();
             var year = currentDate.getFullYear();
             var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
@@ -430,7 +430,7 @@ app.start = function () {
 
 		//*Verify otp
 		app.post('/verifyOtp', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			this.otp = app.models.otp;
 			var  OTP = req.body;
@@ -732,7 +732,7 @@ app.start = function () {
 		});
 		//*Delete user form the user table
 		app.post('/deleteusersTable', async (req, res) => {
-			debugger;
+			
 			this.User = app.models.User;
 			var id = req.body.id; // Assuming the ID is provided as a property in the request body
 			
@@ -750,7 +750,7 @@ app.start = function () {
 			}
 		  });
 		app.post('/deleteAppUsersTable', async (req, res) => {
-			debugger;
+			
 			this.AppUser = app.models.AppUser;
 			var id = req.body.id; // Assuming the ID is provided as a property in the request body
 			

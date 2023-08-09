@@ -791,7 +791,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
     },
     formatPcsForPacking(Packing, SecoundarySuppliers) {
-      debugger;
+      
       if (SecoundarySuppliers === 0) {
         return "Packing";
       } else {
