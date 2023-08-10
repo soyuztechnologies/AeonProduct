@@ -26,6 +26,7 @@ sap.ui.define([
 				this.getModel('appView').setProperty('/SaCaVisible', false);
 				this.getModel('appView').setProperty('/RoleField', false);
 				this.getModel('appView').setProperty('/enabledCompanyLogo', false);
+				this.getModel('appView').setProperty('/aeonHeaderVis', true);
 			};
 			this.getUserRoleData();
 			this.getUserData();

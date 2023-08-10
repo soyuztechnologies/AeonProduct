@@ -30,6 +30,7 @@ sap.ui.define([
 			oModel.setProperty("/logoutVisibility", false);
 			oModel.setProperty("/ResendStatusSignup", false);
 			oModel.setProperty("/showError", false);
+			oModel.setProperty("/aeonHeaderVis", false);
 			this.getUserRoleData();
 		},
 

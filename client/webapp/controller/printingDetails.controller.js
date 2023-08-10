@@ -51,6 +51,7 @@ sap.ui.define([
 			oModel.setProperty("/onClickModify", false);
 			oModel.setProperty("/addBtnVisible", true);
 			oModel.setProperty("/editableFields", false);
+			oModel.setProperty("/aeonHeaderVis", true);
 
 			// oModel.setProperty("/btnVisibility", true);
 			var sUserRole = oModel.getProperty('/UserRole');

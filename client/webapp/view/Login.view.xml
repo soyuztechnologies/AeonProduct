@@ -10,7 +10,7 @@
 				<HBox alignItems="Center" direction="Row" fitContainer="true" width="100%" height="100%" justifyContent="Center" renderType="Div" visible="true" displayInline="false">
 					<items>
 						<VBox class="logoCss">
-							<Image src="logo/logo.png"/>
+							<Image src="logo/logo.png" width="90%"/>
 							<Text class="loginText" text="Welcome to Aeon Products" />
 						</VBox>
 						<VBox class="loginFormCss">

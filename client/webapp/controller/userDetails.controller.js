@@ -32,6 +32,7 @@ sap.ui.define([
 			oModel.setProperty("/hamburgerVisibility", true);
 			oModel.setProperty("/conPass", false);
 			oModel.setProperty("/userRoleVis", true);
+			oModel.setProperty("/aeonHeaderVis", true);
 			this.getView().getModel("appView").setProperty("/newPassValueState", "None");
 			this.getView().getModel("appView").setProperty("/passSwitchState", true);
 

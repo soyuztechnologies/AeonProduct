@@ -34,6 +34,8 @@ sap.ui.define([
       oModel.setProperty("/imgVisibility", false);
       oModel.setProperty("/editableFields", false);
       oModel.setProperty("/messageStripVis", false)
+      oModel.setProperty("/aeonHeaderVis", true);
+
       // oModel.setProperty("/onUpdateJobVis", false)
       // this.onPressClear();
 

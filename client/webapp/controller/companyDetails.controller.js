@@ -23,6 +23,7 @@ sap.ui.define([
 			oModel.setProperty("/visibleHeader", true);
 			oModel.setProperty("/hamburgerVisibility", true);
 			oModel.setProperty("/sideExpanded", false);
+			oModel.setProperty("/aeonHeaderVis", true);
 			this.getUserRoleData();
 			this.getCompanyName();
 			// this.onSelectItem();

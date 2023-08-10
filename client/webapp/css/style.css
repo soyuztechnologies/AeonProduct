@@ -16,14 +16,16 @@
 }
 .logoCss{
     right: 9%;
+    margin-bottom: 5rem;
 }
 .loginFormCss{
-    margin-bottom: 5rem;
+    width: 30%;
+    margin-bottom: 4rem;
     left: 5%;
 }
 .loginText{
   font-size: 2rem; /* Adjust font size as needed */
-  font-weight: bold;
+  font-weight: 700;
   color: #312c2c; /* Adjust text color */
   text-align: center;
   margin-bottom: 5rem; /* Add margin to separate from other elements */
