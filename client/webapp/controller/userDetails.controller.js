@@ -75,7 +75,7 @@ sap.ui.define([
 
 		//  * this fucntion will opne the add user fragment and create the payload too and set into the property.
 		AddUserDialog: function () {
-			debugger
+			
 			var that = this;
 			var oModel = this.getView().getModel('appView');
 			this.oFormData = {
@@ -130,7 +130,7 @@ sap.ui.define([
 
 		// * this function is close the dialog on add user and edit user.
 		onReject: function () {
-			debugger;
+			
             this.editVis = this.getView().getModel("appView").getProperty("/userEditBtn");
             this.addUserTitle = this.getView().getModel("appView").getProperty("/TitleUserAdd");
             if(this.addUserTitle ==="Add User" ){
@@ -149,7 +149,7 @@ sap.ui.define([
 
 		// * this function is close the dialog which ask for the passwprd when user add.
 		onRejectPass: function () {
-			debugger;
+			
 			this.getView().getModel("appView").setProperty("/NewPassword","")
 			this.getView().getModel("appView").setProperty("/passSwitchState", true);
 			this.getView().getModel("appView").setProperty("/conPass", false);
@@ -216,7 +216,7 @@ sap.ui.define([
 
         onSelectCompanyForSearch: function(oEvent){
 
-            debugger;
+            
 
             var oSelectedItem = oEvent.getParameter("value");
 
@@ -248,7 +248,7 @@ sap.ui.define([
 
          onSelectRoleForSearch: function (oEvent) {
 
-            debugger;
+            
 
             var oSelectedItem = oEvent.getParameter("value");
 
@@ -280,7 +280,7 @@ sap.ui.define([
 
          onSearchNameEmail: function (oEvent) {
 
-            debugger;
+            
 
             var sValue = oEvent.getParameter("query");
 
@@ -345,7 +345,7 @@ sap.ui.define([
 
 		// * this function is handling the image and convert into the base64 after that setinto the property.
 		handleUploadPress: function (oEvent) {
-			debugger;
+			
 			var files = oEvent.getParameter("files");
 			var that = this;
 			var oModel = this.getView().getModel("appView");
@@ -417,7 +417,7 @@ sap.ui.define([
 
 		// * this onSelect event works to show the passWord field in the Password Fragment.
 		showPassField: function (oEvent) {
-			debugger;
+			
 			var passSwitchState = oEvent.getParameter('state');
 			this.getView().getModel("appView").setProperty("/passSwitchState", passSwitchState);
 			var omodel = this.getView().getModel("appView");
@@ -448,7 +448,7 @@ sap.ui.define([
 
 
 		getSelectedUserDetails:function(){
-			debugger;
+			
 			 var that= this;
 			var oItem= this.getView().byId("idProductsTable").getSelectedItem();
 			if(!oItem){
@@ -466,7 +466,7 @@ sap.ui.define([
 					  if(sAction === "OK"){
 						that.middleWare.callMiddleWare("deleteAppUsersTable", "POST", payload)
 						.then(function (data, status, xhr) {
-							// debugger
+							// 
 							MessageToast.show("User Deleted Successfully");
 							that.getUserData();
 						})
@@ -608,7 +608,7 @@ sap.ui.define([
 		},
 
 		onUserEdit: function () {
-			debugger;
+			
 			var userData = this.getView().getModel("appView").getProperty("/userData");
             this.seledtedUserData = JSON.parse(JSON.stringify(userData));
 			var omodel = this.getView().getModel("appView");
@@ -660,7 +660,7 @@ sap.ui.define([
 
 		// * it make a post call to create the user via admin side.
 		AddCustomers: function () {
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel("appView")
 			var newPassword = oModel.getProperty("/newPassValue");
@@ -671,7 +671,7 @@ sap.ui.define([
 				
 					this.middleWare.callMiddleWare("addUserAdmin", "POST", payload)
 						.then(function (data, status, xhr) {
-							// debugger
+							// 
 							MessageToast.show("User Created Successfully");
 							that.onReject();
 							that.onRejectPass();
@@ -687,7 +687,7 @@ sap.ui.define([
 		// * this fucntion will addtheuser via admin side on save button and handle the validation too.
 		onAddUserViaAdmin: function (oEvent) {
 
-			debugger;
+			
 
 			var oModel = this.getView().getModel("appView");
 
@@ -838,7 +838,7 @@ sap.ui.define([
 
 					this.middleWare.callMiddleWare("sendEmailExistUser", "POST", this.payload)
 						.then(function (data, status, xhr) {
-							// debugger
+							// 
 							MessageToast.show("Mail Sent Succefully");
 							that.onRejectPass();
 		
@@ -856,7 +856,7 @@ sap.ui.define([
 
 		isResetPassword: null,
 		SendEmailExistUser: function (oEvent) {
-			debugger;
+			
 			var that = this;
 			// var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 			var oRow = oEvent.getSource().getBindingContext('appView').getObject();
@@ -887,7 +887,7 @@ sap.ui.define([
 
 			// this.middleWare.callMiddleWare("sendEmailExistUser", "POST", payload)
 			// .then( function (data, status, xhr) {
-			// 	// debugger
+			// 	// 
 			// 	MessageToast.show("Mail Sent Succefully");
 			// 	// that.onReject();
 			// 	// that.onRejectPass();
