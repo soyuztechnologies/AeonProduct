@@ -340,6 +340,7 @@ sap.ui.define([
             });
 
             this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
+			this.getView().getModel("appView").setProperty('/isDescending', false);
 
             this.getModel("appView").updateBindings();
 
@@ -364,6 +365,8 @@ sap.ui.define([
             });
 
             this.getView().getModel("appView").setProperty('/jobsData', oBinding.oList);
+            this.getView().getModel("appView").setProperty('/isDescending', true);
+
 
             this.getModel("appView").updateBindings();
 

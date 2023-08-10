@@ -1,14 +1,8 @@
-@media only screen and (min-width: 780px) {
-    .btnText .sapMBtnInner {
-        font-size: x-large;
-        font-weight: bolder;    
-    }
-}
-@media screen and (max-width: 780px) {
-    .btnText .sapMBtnInner {
-        font-size: small;
-        font-weight: bolder;
-    }
+
+
+.background{
+    background-image: url("../img/aeonLogin.png");
+
 }
 
 .columnListItem > .sapMListTblHighlightCell > .sapMLIBHighlightIndication08{
@@ -26,16 +20,12 @@
 .loginText{
   font-size: 2rem; /* Adjust font size as needed */
   font-weight: 700;
-  color: #312c2c; /* Adjust text color */
+  color: #000000; /* Adjust text color */
   text-align: center;
   margin-bottom: 5rem; /* Add margin to separate from other elements */
   padding-left: 10%;
-
 }
 
-/* .background    {
-    background: linear-gradient(to right, #86fde8, #acb6e5);
-} */
 /* .fonts{
     font-family: cursive ;
     color: rgb(44, 44, 44);

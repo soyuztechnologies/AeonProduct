@@ -16,7 +16,7 @@
                     style="Emphasized"
                     id="fileUploader"
                     sameFilenameAllowed="true"
-                    class="sapUiTinyMargin"
+                    class="sapUiTinyMargin fonts"
                     change="onUploadExcels"
                     icon="sap-icon://browse-folder"
                     buttonText="Browse"
@@ -44,23 +44,23 @@
                 </headerToolbar>
                 <columns>
                     <Column>
-                        <Label text="File Name" />
+                        <Label class="fonts" text="File Name" />
                     </Column>
                     <Column hAlign="End" >
-                        <Label text="Company" />
+                        <Label class="fonts" text="Company" />
                     </Column>
                 </columns>
                 <!-- {path: 'appView>operation', formatter: '.formatter.highlightFormatter'} -->
                 <items>
                     <ColumnListItem  highlight="{parts:[ {path:'appView>operation'}, { path: 'appView>CompanyId'}] ,formatter:'.formatter.highlightFormatter'}" class="columnListItem" detailPress="onGetDialog" type="DetailAndActive">
                         <cells>
-                            <Text text="{appView>fileName}">
+                            <Text class="fonts" text="{appView>fileName}">
                             </Text>
                             <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}"
                                 placeholder="Company Name"
                                 change="selectCompany"
                                 editable="{=${appView>status} === 'In-Progress' ? false : true}"
-                                class="sapUiTinyMarginEnd">
+                                class="sapUiTinyMarginEnd fonts">
                                 <items>
                                     <core:Item enabled="true"  text="{appView>CompanyName}" 
                                         key="{appView>id}"/>

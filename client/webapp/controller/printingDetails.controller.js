@@ -51,7 +51,7 @@ sap.ui.define([
 			oModel.setProperty("/onClickModify", false);
 			oModel.setProperty("/addBtnVisible", true);
 			oModel.setProperty("/editableFields", false);
-			oModel.setProperty("/aeonHeaderVis", true);
+			// oModel.setProperty("/aeonHeaderVis", true);
 
 			// oModel.setProperty("/btnVisibility", true);
 			var sUserRole = oModel.getProperty('/UserRole');
@@ -1016,7 +1016,8 @@ sap.ui.define([
 			oData.update(`/JobStatus('${id}')`, oUpdatedData, {
 				success: function (data) {
 					BusyIndicator.hide();
-					MessageToast.show("Successfully Uploaded")
+					MessageToast.show("Successfully Uploaded");
+					that.onReject();
 				},
 				error: function (error) {
 					that.middleWare.errorHandler(error, that);
@@ -1072,7 +1073,9 @@ sap.ui.define([
 			oModel.update(`/Jobs('${ids}')`, oUpdatedData, {
 				success: function (data) {
 					BusyIndicator.hide();
-					MessageToast.show("Successfully Uploaded")
+					MessageToast.show("Successfully Uploaded");
+					that.onReject();
+					
 				},
 				error: function (error) {
 					that.middleWare.errorHandler(error, that);
@@ -1146,6 +1149,10 @@ sap.ui.define([
             if (this.clickedLink && mapping.hasOwnProperty(this.clickedLink)) {
                 jsonPath = mapping[this.clickedLink];
                 files = oModel.getProperty("/attachmentFiles");
+				if(!files){
+					MessageToast.show("No Files Attached");
+					return;
+				}
                 var mimeType = files.split(';')[0].split(':')[1];
                 var fileExtension = mimeType.split('/')[1];
                 var byteCharacters = atob(files.split(',')[1]);
@@ -1536,7 +1543,13 @@ sap.ui.define([
 						
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 						that.getView().getModel("appView").setProperty("/countJobs", data.length);
-						that.onSortDescending();
+						var isDescenting = that.getView().getModel("appView").getProperty('/isDescending');
+						if(isDescenting === true){
+							that.onSortDescending();
+						}
+						else{
+							that.onSortAscending();
+						}
 
 
 
@@ -1551,7 +1564,13 @@ sap.ui.define([
 					.then(function (data, status, xhr) {
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 						that.getView().getModel("appView").setProperty("/countJobs", data.length);
-						that.onSortDescending();
+						var isDescenting = that.getView().getModel("appView").getProperty('/isDescending');
+						if(isDescenting === true){
+							that.onSortDescending();
+						}
+						else{
+							that.onSortAscending();
+						}
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
 						that.middleWare.errorHandler(jqXhr, that);
@@ -1585,7 +1604,7 @@ sap.ui.define([
 		},
 		
 
-          // Descending Sort Jobs List
+          //* Descending Sort Jobs List
 
 		  onSortDescending: function() {
 			

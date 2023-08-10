@@ -786,9 +786,10 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       return oDate;
     },
     formatIndianNumber(number) {
-      if (number) {
-        return number.toLocaleString('en-IN');
-      }
+       if (number) {
+              const roundedNumber = Math.ceil(number);      
+              return roundedNumber.toLocaleString('en-IN');     
+            }
     },
     formatPcsForPacking(Packing, SecoundarySuppliers) {
       

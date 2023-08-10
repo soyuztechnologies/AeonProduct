@@ -63,6 +63,9 @@
 				<Column width="12em">
 					<Text text="Company Name" />
 				</Column>
+				<Column width="12em">
+					<Text text="Name" />
+				</Column>
 				<Column minScreenWidth="Tablet" demandPopin="true">
 					<Text text="Email ID" />
 				</Column>
@@ -93,6 +96,7 @@
 				<ColumnListItem vAlign="Middle" type="Active">
 					<cells>
 						<Text text="{appView>CompanyName}" />
+						<Text text="{appView>FirstName} {appView>LastName}" />
 						<Text text="{appView>EmailAddress}" />
 						<Text text="{appView>PhoneNo}" />
 						<Button type="transparent" text="Jobs" press="openAllPrinterJobDialog" icon="sap-icon://document-text"></Button>

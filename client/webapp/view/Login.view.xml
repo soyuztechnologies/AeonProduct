@@ -4,7 +4,7 @@
 	xmlns="sap.m" controllerName="ent.ui.ecommerce.controller.Login"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 	<!-- <App id="idAppCon"> -->
-	<Page enableScrolling="false" showHeader="false" class="sapUiTinyMargin">
+	<Page enableScrolling="false" showHeader="false" class="sapUiTinyMargin background">
 
 		<content>
 				<HBox alignItems="Center" direction="Row" fitContainer="true" width="100%" height="100%" justifyContent="Center" renderType="Div" visible="true" displayInline="false">

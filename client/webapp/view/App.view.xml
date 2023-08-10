@@ -8,7 +8,7 @@
     <tnt:ToolPage sideExpanded="{appView>/sideNavExpended}">
         
         <tnt:header >
-            <OverflowToolbar height="100%" width="100%" id="otb3" visible="{appView>/aeonHeaderVis}">
+            <OverflowToolbar height="100%" width="100%" id="otb3">
                
                    <Button visible="{appView>/hamburgerVisibility}"
                     press="onClickMenuButton"
