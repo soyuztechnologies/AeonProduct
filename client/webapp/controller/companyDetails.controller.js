@@ -330,7 +330,7 @@ sap.ui.define([
 		// * this function is read the all appUsers data.
 		getUserData: function () {
 			debugger;
-			// BusyIndicator.show(0);
+			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var filteredUserDatas = [];
 			var that = this;
@@ -347,7 +347,7 @@ sap.ui.define([
 						});
 						that.getView().getModel("appView").setProperty("/filteredUserData", filteredUserDatas);
 						resolve(data)
-						// BusyIndicator.hide();
+						BusyIndicator.hide();
 					},
 					error: function (error) {
 						BusyIndicator.hide();

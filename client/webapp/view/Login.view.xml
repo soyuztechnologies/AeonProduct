@@ -7,61 +7,67 @@
 	<Page enableScrolling="false" showHeader="false" class="sapUiTinyMargin">
 
 		<content>
+				<HBox alignItems="Center" direction="Row" fitContainer="true" width="100%" height="100%" justifyContent="Center" renderType="Div" visible="true" displayInline="false">
+					<items>
+						<VBox class="logoCss">
+							<Image src="logo/logo.png"/>
+							<Text class="loginText" text="Welcome to Aeon Products" />
+						</VBox>
+						<VBox class="loginFormCss">
+							<form:Form width="100%" editable="false" visible="true">
+								<form:title>
+									<core:Title id="idTitleLogin" text="{i18n>Login}" level="H1" icon="sap-icon://visits" />
+								</form:title>
+								<form:formContainers>
+									<form:FormContainer visible="true">
+										<form:formElements>
+											<form:FormElement visible="true">
+												<form:label>
+													<Label text="" design="Bold" width="100%" required="false" textAlign="Center" textDirection="Inherit" visible="true" />
+												</form:label>
+												<form:fields>
+													<Input id="userid" placeholder="{i18n>userName}" type="Text" width="auto" />
+												</form:fields>
+											</form:FormElement>
+											<form:FormElement visible="true">
+												<form:label>
+													<Label text="" design="Bold" width="100%" required="false" textAlign="Center" textDirection="Inherit" visible="true" />
+												</form:label>
+												<form:fields>
+													<Input placeholder="{i18n>password}" type="Password" id="pwd" submit="Login" enabled="true" visible="true" width="auto" maxLength="0" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" />
+												</form:fields>
+											</form:FormElement>
+											<form:FormElement visible="true">
+												<form:label>
+													<Label text="" design="Standard" width="100%" required="false" textAlign="Begin" textDirection="Inherit" visible="true" />
+												</form:label>
+												<form:fields>
+													<Button id="idLoginButton" text="{i18n>login}" press="Login" type="Emphasized" icon="sap-icon://feeder-arrow" iconFirst="false" width="auto" iconDensityAware="false" />
+												</form:fields>
+												<form:fields>
+		
+													<Button id="idSignupButtn" text="Sign Up" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="100%" iconDensityAware="false" class="newButtonStyle"/>
+												</form:fields>
+												<HBox alignContent="Center" justifyContent="End">
+		
+													<ObjectStatus press="ForgotPasswprd" state="Information" active="true" icon="" iconDensityAware="true" text="Forgot Password ?" textDirection="Inherit">
+													</ObjectStatus>
+		
+												</HBox>
+											</form:FormElement>
+										</form:formElements>
+										<form:title />
+									</form:FormContainer>
+								</form:formContainers>
+								<form:layout>
+									<form:ResponsiveGridLayout adjustLabelSpan="false" columnsL="2" labelSpanL="3" columnsM="1" labelSpanM="2" labelSpanS="12" />
+								</form:layout>
+							</form:Form>
+						</VBox>
+					</items>
+					<layoutData />
+				</HBox>
 
-			<VBox alignItems="Center" direction="Column" fitContainer="true" width="100%" height="100%" justifyContent="Center" renderType="Div" visible="true" displayInline="false">
-				<items>
-					<form:Form width="100%" editable="false" visible="true">
-						<form:title>
-							<core:Title id="idTitleLogin" text="{i18n>Login}" level="H1" icon="sap-icon://visits" />
-						</form:title>
-						<form:formContainers>
-							<form:FormContainer visible="true">
-								<form:formElements>
-									<form:FormElement visible="true">
-										<form:label>
-											<Label text="" design="Bold" width="100%" required="false" textAlign="Center" textDirection="Inherit" visible="true" />
-										</form:label>
-										<form:fields>
-											<Input id="userid" placeholder="{i18n>userName}" type="Text" width="auto" />
-										</form:fields>
-									</form:FormElement>
-									<form:FormElement visible="true">
-										<form:label>
-											<Label text="" design="Bold" width="100%" required="false" textAlign="Center" textDirection="Inherit" visible="true" />
-										</form:label>
-										<form:fields>
-											<Input placeholder="{i18n>password}" type="Password" id="pwd" submit="Login" enabled="true" visible="true" width="auto" maxLength="0" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" />
-										</form:fields>
-									</form:FormElement>
-									<form:FormElement visible="true">
-										<form:label>
-											<Label text="" design="Standard" width="100%" required="false" textAlign="Begin" textDirection="Inherit" visible="true" />
-										</form:label>
-										<form:fields>
-											<Button id="idLoginButton" text="{i18n>login}" press="Login" type="Emphasized" icon="sap-icon://feeder-arrow" iconFirst="false" width="auto" iconDensityAware="false" />
-										</form:fields>
-										<form:fields>
-
-											<Button id="idSignupButtn" text="Sign Up" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="100%" iconDensityAware="false" class="newButtonStyle"/>
-										</form:fields>
-										<HBox alignContent="Center" justifyContent="End">
-
-											<ObjectStatus press="ForgotPasswprd" state="Information" active="true" icon="" iconDensityAware="true" text="Forgot Password ?" textDirection="Inherit">
-											</ObjectStatus>
-
-										</HBox>
-									</form:FormElement>
-								</form:formElements>
-								<form:title />
-							</form:FormContainer>
-						</form:formContainers>
-						<form:layout>
-							<form:ResponsiveGridLayout adjustLabelSpan="false" columnsL="2" labelSpanL="3" columnsM="1" labelSpanM="2" labelSpanS="12" />
-						</form:layout>
-					</form:Form>
-				</items>
-				<layoutData />
-			</VBox>
 		</content>
 		<footer></footer>
 	</Page>
