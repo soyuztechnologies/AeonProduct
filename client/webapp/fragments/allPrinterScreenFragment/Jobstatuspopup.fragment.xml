@@ -4,14 +4,19 @@
       <ViewSettingsFilterItem key="statusFilter" text="Status" multiSelect="true">
         <items>
           <ViewSettingsItem text="New" key="null" />
-          <ViewSettingsItem text="Partially Completed" key="Partially Completed" />
-          <ViewSettingsItem text="In-Progress" key="In-Progress" />
-          <ViewSettingsItem text="Completed" key="Completed" />
+          <ViewSettingsItem text="Printing" key="Printing"  />
+          <ViewSettingsItem text="Coating" key="Coating" />
+          <ViewSettingsItem text="Foiling" key="Foiling" />
+          <ViewSettingsItem text="SpotUV" key="SpotUV" />
+          <ViewSettingsItem text="Embossing" key="Embossing" />
+          <ViewSettingsItem  text="Punching" key="Punching" />
+          <ViewSettingsItem  text="Pasting" key="Pasting" />
           <ViewSettingsItem text="Packing" key="Packing" />
-          <ViewSettingsItem text="Partially Dispatched" key="Partially Dispatched" />
+          <!-- <ViewSettingsItem text="Completed" key="Completed" /> -->
+          <ViewSettingsItem text="Dispatched" key="Dispatched" />
           <ViewSettingsItem text="Value Mismatched" key="Value Mismatched" />
-          <ViewSettingsItem text="Delivered" key="Delivered" />
-          <ViewSettingsItem text="Cancelled" key="Cancelled" />
+          <ViewSettingsItem text="Delivering" key="Delivering" />
+          <!-- <ViewSettingsItem text="Cancelled" key="Cancelled" /> -->
         </items>
       </ViewSettingsFilterItem>
     </filterItems>

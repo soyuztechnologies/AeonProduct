@@ -105,6 +105,36 @@ sap.ui.define(
         if (nav=== "companyDetails"){
           this.getRouter().navTo("companyDetails")
         }
+        if (nav=== "Printing"){
+          this.getRouter().navTo("Printing")
+        }
+        if (nav=== "Coating"){
+          this.getRouter().navTo("Coating")
+        }
+        if (nav=== "Foiling"){
+          this.getRouter().navTo("Foiling")
+        }
+        if (nav=== "SpotUV"){
+          this.getRouter().navTo("SpotUV")
+        }
+        if (nav=== "Embossing"){
+          this.getRouter().navTo("Embossing")
+        }
+        if (nav=== "Punching"){
+          this.getRouter().navTo("Punching")
+        }
+        if (nav=== "Pasting"){
+          this.getRouter().navTo("Pasting")
+        }
+        if (nav=== "Packing"){
+          this.getRouter().navTo("Packing")
+        }
+        if (nav=== "Dispatched"){
+          this.getRouter().navTo("Dispatched")
+        }
+        if (nav=== "Delivering"){
+          this.getRouter().navTo("Delivering")
+        }
       },
       getUserId: function () {
         

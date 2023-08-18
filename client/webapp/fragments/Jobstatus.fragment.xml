@@ -54,9 +54,9 @@
                             <!-- <Column visible="{path: 'appView>SecoundaryPiecesToSend', formatter: '.formatter.tableEntryVisible'}">
                                 <Label text="Remaining Pieces" />
                             </Column> -->
-                        <Column visible="{path: 'appView>/Jobs/status', formatter: '.formatter.tableEntryVisible'}">
+                        <!-- <Column visible="{path: 'appView>/Jobs/status', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Status" />
-                        </Column>
+                        </Column> -->
                         <Column visible="{path: 'appView>InvNo', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Inv. No." />
                         </Column>
@@ -92,11 +92,11 @@
                                 <Text  text="{path: 'appView>Punching', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Pasting' , formatter: '.formatter.formatIndianNumber'} Pcs"></Text>
                                 <Text  text="{parts:[ {path:'appView>Packing'}, { path: 'appView>SecoundarySuppliers'}] ,formatter:'.formatter.formatPcsForPacking'} Shippers"></Text>
-                                <Text  text="{appView>noOfBoxPerPieces} Pcs "></Text>
+                                <Text  text="{appView>noOfBoxPerPieces} Pcs x {appView>Packing} Box + {appView>SecoundaryPiecesToSend} Pcs x {appView>SecoundarySuppliers} Box "></Text>
                                 <Text  text="{path : 'appView>noOfPiecesToSend' , formatter: '.formatter.formatIndianNumber'} Pcs"></Text>
                                 <!-- <Text  text="{appView>SecoundarySuppliers} Box"></Text> -->
                                 <!-- <Text  text="{appView>SecoundaryPiecesToSend} Pcs"></Text> -->
-                                <ObjectStatus text="{appView>/Jobs/status}" state="{path: 'appView>/Jobs/status', formatter: '.formatter.getStatusColor'}" />
+                                <!-- <ObjectStatus text="{appView>/Jobs/status}" state="{path: 'appView>/Jobs/status', formatter: '.formatter.getStatusColor'}" /> -->
                                 <Link  press="onClickPopup"  text="{path: 'appView>InvNo', formatter: '.formatter.formatInvNo'}" ></Link>
                                 <Link  press="onClickPopup"  text="{path: 'appView>DeliveryNo', formatter: '.formatter.formatDelNo'}" ></Link>
                                 <Button  press="editJobstatusEntry" visible="false" type="Emphasized" icon="sap-icon://edit"/>

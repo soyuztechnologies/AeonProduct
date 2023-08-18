@@ -147,9 +147,150 @@
 				},
 				{
 					"pattern":"allPrinters/{jobId}",
-					"name":"printingDetails",
+					"name":"sideNavallPrinters",
+					"target":["allPrinters","printingDetails"]
+				}, 
+				{
+					"pattern":"Printing/{jobId}",
+					"name":"sideNavPrinting",
 					"target":["allPrinters","printingDetails"]
 				},
+				{
+					"pattern":"Printing",
+					"name":"Printing",
+					"target":["allPrinters"]
+				},
+
+
+
+
+
+
+
+				{
+					"pattern":"Coating/{jobId}",
+					"name":"sideNavCoating",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Coating",
+					"name":"Coating",
+					"target":["allPrinters"]
+				},
+
+
+
+
+
+				{
+					"pattern":"Foiling/{jobId}",
+					"name":"sideNavFoiling",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Foiling",
+					"name":"Foiling",
+					"target":["allPrinters"]
+				},
+
+
+
+
+
+				{
+					"pattern":"SpotUV/{jobId}",
+					"name":"sideNavSpotUV",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"SpotUV",
+					"name":"SpotUV",
+					"target":["allPrinters"]
+				},
+
+
+
+				{
+					"pattern":"Embossing/{jobId}",
+					"name":"sideNavEmbossing",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Embossing",
+					"name":"Embossing",
+					"target":["allPrinters"]
+				},
+
+
+
+
+				{
+					"pattern":"Punching/{jobId}",
+					"name":"sideNavPunching",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Punching",
+					"name":"Punching",
+					"target":["allPrinters"]
+				},
+
+
+
+
+				{
+					"pattern":"Pasting/{jobId}",
+					"name":"sideNavPasting",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Pasting",
+					"name":"Pasting",
+					"target":["allPrinters"]
+				},
+
+
+
+				{
+					"pattern":"Packing/{jobId}",
+					"name":"sideNavPacking",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Packing",
+					"name":"Packing",
+					"target":["allPrinters"]
+				},
+
+
+
+				{
+					"pattern":"Dispatched/{jobId}",
+					"name":"sideNavDispatched",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Dispatched",
+					"name":"Dispatched",
+					"target":["allPrinters"]
+				},
+
+
+
+				{
+					"pattern":"Delivering/{jobId}",
+					"name":"sideNavDelivering",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Delivering",
+					"name":"Delivering",
+					"target":["allPrinters"]
+				},
+
+
+
+
 				{
 					"pattern":"userDetails",
 					"name":"userDetails",
@@ -181,6 +322,74 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId":"allPrinters"
 				},
+
+
+
+
+				"Printing":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Coating":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Foiling":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"SpotUV":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Embossing":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Punching":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Pasting":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Packing":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Dispatched":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				"Delivering":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+
+
+
+
 				"Carborator":{
 					"viewName": "Carborator",
 					"viewLevel": 1,

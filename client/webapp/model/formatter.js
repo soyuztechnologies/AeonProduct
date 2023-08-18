@@ -884,25 +884,34 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         case "New":
           return "None";
           break;
-        case "In-Progress":
+        case "Printing":
           return "Warning";
           break;
-        case "Partially Completed":
+        case "Coating":
+          return "Warning";
+          break;
+        case "Foiling":
+          return "Warning";
+          break;
+        case "SpotUV":
           return "Warning";
           break;
         case "Packing":
           return "Warning";
           break;
-        case "In-Transit":
+        case "Embossing":
           return "Warning";
           break;
-        case "Partially Dispatched":
+        case "Punching":
           return "Warning";
           break;
-        case "Delivered":
+        case "Pasting":
+          return "Warning";
+          break;
+        case "Dispatched":
           return "Success";
           break;
-        case "Completed":
+        case "Delivering":
           return "Success";
           break;
         case "Cancelled":

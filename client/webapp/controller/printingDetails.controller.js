@@ -12,8 +12,79 @@ sap.ui.define([
 
 		onInit: function () {
 			this._oRouter = this.getRouter();
-			this.getRouter().getRoute("printingDetails").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavallPrinters").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavPrinting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavCoating").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavFoiling").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavSpotUV").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavEmbossing").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavPunching").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavPasting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 
+		},
+
+
+		_sideNavPrintingmatchedHandler: async function(oEvent){
+			debugger;
+			
+			var path = this.getRouter().oHashChanger.hash.split("/")[0];
+			this.getView().getModel('appView').setProperty('/path', path);
+			// var that = this;
+			// await this.getUserRoleData().then(
+			// 	function (data) {
+			// 		var role = data.role.Role
+			// 		that.getView().getModel('appView').setProperty('/UserRole', role);
+			// 		that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+			// 		that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+			// 		that.userRole();
+			// 		// that.getCompanyName();
+			// 	},
+			// 	function (oErr) {
+			// 		that.middleWare.errorHandler(jqXhr, that);
+			// 	}
+			// );
+
+			this.oArgs = oEvent.getParameter("arguments").jobId;
+			var that = this;
+
+			await this.getUserRoleData().then(
+				function (data) {
+					var role = data.role.Role
+					that.getView().getModel('appView').setProperty('/UserRole', role);
+					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+					that.userRole();
+					// that.getJobsData();
+					that.getJobsDataByStatusFilter();
+				},
+				function (oErr) {
+					that.middleWare.errorHandler(jqXhr, that);
+				}
+			);
+			const date = new Date();
+			this.getView().getModel("appView").setProperty("/dateNow",date)
+			// that.getView().getModel("appView").setProperty("/asUrgentVis", false);
+			// that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
+			var oModel = this.getModel("appView")
+			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
+			oModel.setProperty("/visibleHeader", true);
+			oModel.setProperty("/hamburgerVisibility", true);
+			oModel.setProperty("/userRoleVis", true);
+			oModel.setProperty("/visibility", true);
+			oModel.setProperty("/logoutVisibility", true);
+			oModel.setProperty("/inputEditable", true);
+			oModel.setProperty("/imgVisibility", false);
+			oModel.setProperty("/onClickModify", false);
+			oModel.setProperty("/addBtnVisible", true);
+			oModel.setProperty("/editableFields", false);
+			oModel.updateBindings();
+			this.getCompanyName();
+			// this.getUserRoleData();
+			this.oGetAgru();
+			this.onReadJobStatus();
 		},
 
 		_matchedHandler: async function (oEvent) {
@@ -122,7 +193,7 @@ sap.ui.define([
 
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
-			
+			debugger;
 			var that = this;
 			var oModel = this.getView().getModel();
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
@@ -141,6 +212,7 @@ sap.ui.define([
 					that.getView().getModel("appView").setProperty("/foilingData", data.foilBlocks);
 					that.getView().getModel("appView").setProperty("/embossingData", data.embossing);
 					that.getView().getModel("appView").setProperty("/spotUvData", data.positive);
+					that.getView().getModel("appView").setProperty("/coatingData", data.varnishandLamination);
 					that.loadForm();
 					that.getView().getModel("appView").setProperty("/status", data.status);
 					if (!data.status) {
@@ -183,6 +255,7 @@ sap.ui.define([
             var data = oModel.getProperty("/newJobStatus");
             var oData = this.getView().getModel();
             var pastingValue = oModel.getProperty("/Jobs");
+
 			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
 			
 
@@ -196,21 +269,13 @@ sap.ui.define([
 					// 	jobStatus.status = selectedjobStatus;
 					// }
                     const sEntityPath = `/JobStatus('${id}')`;
-                    var parsedPastingValue = parseInt(jobStatus.Pasting)
-
-                    if(parseInt(jobStatus.Pasting) < parseInt(pastingValue.qtyPcs) && parsedPastingValue > 0){
-                        this.updateStatusValue();
-                    }
-                    else{
-                        this.whenProductionStart();
-                    }
-                    if(jobStatus.rawMaterial === "In-Stock"){
-
-                        this.whenProductionStart();
-
-                    }
+                    
                     if (jobStatus.TobeUpdated == "X") {
-
+						var selectedKey = this.getView().byId('idStatus').getSelectedKey();
+						if(!selectedKey){
+							MessageToast.show("Please Select The Required Field");
+							return;
+						}
                         delete jobStatus.TobeUpdated;
 
                         oData.create("/JobStatus", jobStatus, {
@@ -218,6 +283,7 @@ sap.ui.define([
                             success: function (data) {
 
                                 MessageToast.show("Successfully Uploaded");
+								
 
                                 // that.onUploadStatus();
 
@@ -228,53 +294,36 @@ sap.ui.define([
                             },
 
                             error: function (error) {
-
                                 // Error callback
-
                                 that.middleWare.errorHandler(error, that);
-
                                 // MessageToast.show("Error reading data");
-
                             }
-
                         });
-
                     } else if (jobStatus.TobeUpdated == true) {
-
+						var selectedKey = this.getView().byId('idStatus').getSelectedKey();
+						if(!selectedKey){
+							MessageToast.show("Please Select The Required Field");
+							return;
+						}
                         delete jobStatus.TobeUpdated;
-
-                        // if(jobStatus.Pasting < parseInt(pastingValue.qtyPcs)){
-
-                        //  this.updateStatusValue();
-
-                        // }else{
-
-							
-							// }
-							
 							oData.update(sEntityPath, jobStatus, {
-								
 								success: function (Data) {
-									
-									MessageToast.show("Successfully Update the Entry");
-									 this.whenProductionStart();
-
+								MessageToast.show("Successfully Update the Entry");
                             },
-
                             error: function (error) {
-
                                 MessageToast.show("Error reading data");
-
-                                // Error callback
-
                                 that.middleWare.errorHandler(error, that);
-
                             }
-
                         });
-
                     }
+					var parsedPastingValue = parseInt(jobStatus.Pasting)
 
+                    if(parseInt(jobStatus.Pasting) < parseInt(pastingValue.qtyPcs) && parsedPastingValue > 0){
+                        this.updateStatusValue();
+                    }
+                    else{
+                        this.whenProductionStart();
+                    }
                 }
 
             },
@@ -753,6 +802,7 @@ sap.ui.define([
 			}
 
 			this.getModel('appView').setProperty('/newJob', oNewJob);
+			this.getModel('appView').setProperty('/oldnewJob', JSON.parse(JSON.stringify(oNewJob)));
 			oModel.updateBindings();
 			// this.getView().getModel("appView").setProperty("/piecePerBoxEdit", false);
 			
@@ -775,12 +825,14 @@ sap.ui.define([
 
 		// * this fucntion will close the dialog of the "onPressAdd" or Add button dialog on status.
 		onClose: function () {
-				
-			// var oSimpleForm2 = this.getView().byId('jobStatusDialog');
-			// 	oSimpleForm2.bindElement('appView>/oldJobs');
+			var oModel = this.getView().getModel("appView");
+			oModel.setProperty("/totalShippers",0)
+				oModel.setProperty("/piecePerBox",0)
+				oModel.setProperty("/totalShippingPieces",0)
+				oModel.setProperty("/remainingPiecesPerBox",0)
+				oModel.setProperty("/remainingPiecesToSend",0)
 			this.openJobstatusDialog().then(function (oDialog) {
 				oDialog.close();
-
 			});
 		},
 
@@ -944,6 +996,11 @@ sap.ui.define([
 
 			// rowdata.TobeUpdated = true;
 			oModel.setProperty("/newJob", rowdata);
+			var Packing = this.getView().getModel("appView").getProperty("/newJob/Packing");
+			var boxPerPiece = this.getView().getModel("appView").getProperty("/newJob/noOfBoxPerPieces");
+			var pieceToSend = this.getView().getModel("appView").getProperty("/newJob/noOfPiecesToSend");
+			var remBox = this.getView().getModel("appView").getProperty("/newJob/SecoundarySuppliers");
+			var remPieces = this.getView().getModel("appView").getProperty("/newJob/SecoundaryPiecesToSend");
 			// oModel.setProperty("/btnVisibility", true);
 			// oModel.setProperty("/newJob", JSON.parse(JSON.stringify(rowdata)));
 			// oModel.setProperty("/oldJobs",JSON.parse(JSON.stringify(rowdata)))
@@ -958,6 +1015,11 @@ sap.ui.define([
 				oDialog.open();
 				var oSimpleForm2 = that.getView().byId('jobStatusDialog');
 				oSimpleForm2.bindElement('appView>/newJob');
+				oModel.setProperty("/totalShippers",Packing,)
+				oModel.setProperty("/piecePerBox",boxPerPiece,)
+				oModel.setProperty("/totalShippingPieces",pieceToSend,)
+				oModel.setProperty("/remainingPiecesPerBox",remBox,)
+				oModel.setProperty("/remainingPiecesToSend",remPieces,)
 			});
 
 		},
@@ -1420,20 +1482,30 @@ sap.ui.define([
 		// Start Production Button Pressed
 
 		whenProductionStart: function () {
-			
+			debugger;
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
 			var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+			var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
 			var oUpdatedData = {
 				status: ""
 			};
 			if(selectedjobStatus){
 						oUpdatedData.status = selectedjobStatus
 					}
-					else{
-						oUpdatedData.status = "In-Progress"
-					}
+					// else if(updatedJobStatus.Printing === 0){
+					// 		oUpdatedData.status = "Printing"
+					
+					// }
+					// else if(updatedJobStatus.Coating === 0){
+					// 		oUpdatedData.status = "Coating"
+					
+					// }
+					// else if(updatedJobStatus.Foiling === 0){
+					// 		oUpdatedData.status = "Foiling"
+					
+					// }
 			var sEntityPath = `/Jobs('${ids}')`;
 			oModel.update(sEntityPath, oUpdatedData, {
 				success: function (data) {
@@ -1640,9 +1712,12 @@ sap.ui.define([
 				this.getView().getModel("appView").setProperty("/valueStateTotalPrintingSheets", "None");
 				// this.getView().getModel("appView").setProperty("/totalPrintingSheets", "");
 				this.getView().getModel("appView").setProperty("/Printing", newValue);
+				this.getView().getModel("appView").setProperty("/newJob/Printing", newValue);
+				// this.getView().getModel("appView").getProperty("/newJob/Printing")
 			} else {
 				this.getView().getModel("appView").setProperty("/valueStateTotalPrintingSheets", "Error");
 				this.getView().getModel("appView").setProperty("/Printing", 0);
+				// this.getView().getModel("appView").setProperty("/newJob/Printing", 0);
 				this.getView().getModel("appView").setProperty("/VSTTPrintingSheets", "Value Can't be More than " + allRemPrinting);
 			}
 		},
@@ -1664,10 +1739,12 @@ sap.ui.define([
 				if (totalRemJobValues >= intNewValue) {
 					this.getView().getModel("appView").setProperty("/valueStateCoating", "None");
 					this.getView().getModel("appView").setProperty("/Coating", newValue);
+					this.getView().getModel("appView").setProperty("/newJob/Coating", newValue);
 
 				} else {
 					this.getView().getModel("appView").setProperty("/valueStateCoating", "Error");
 					this.getView().getModel("appView").setProperty("/Coating", 0);
+					// this.getView().getModel("appView").setProperty("/newJob/Coating", 0);
 					this.getView().getModel("appView").setProperty("/VSTCoating", "Value Can't be More than " + totalRemJobValues);
 				}
 			
@@ -1688,9 +1765,11 @@ sap.ui.define([
 				if (totalRemJobValues >= intNewValue ) {
 					this.getView().getModel("appView").setProperty("/valueStateFoiling", "None");
 					this.getView().getModel("appView").setProperty("/Foiling", newValue);
+					this.getView().getModel("appView").setProperty("/newJob/Foiling", newValue);
 				} else {
 					this.getView().getModel("appView").setProperty("/valueStateFoiling", "Error");
 					this.getView().getModel("appView").setProperty("/Foiling", 0);
+					// this.getView().getModel("appView").setProperty("/newJob/Foiling", 0);
 					this.getView().getModel("appView").setProperty("/VSTFoiling", "Value Can't be More than " + totalRemJobValues);
 				}
 			
@@ -1711,9 +1790,11 @@ sap.ui.define([
 				if (totalRemJobValues >= intNewValue ) {
 					this.getView().getModel("appView").setProperty("/valueStatespotUV", "None");
 					this.getView().getModel("appView").setProperty("/spotUV", newValue);
+					this.getView().getModel("appView").setProperty("/newJob/spotUV", newValue);
 				} else {
 					this.getView().getModel("appView").setProperty("/valueStatespotUV", "Error");
 					this.getView().getModel("appView").setProperty("/spotUV", 0);
+					// this.getView().getModel("appView").setProperty("/newJob/spotUV", 0);
 					this.getView().getModel("appView").setProperty("/VSTspotUV", "Value Can't be More than " + totalRemJobValues);
 				}
 			
@@ -1736,9 +1817,11 @@ sap.ui.define([
 				if (totalRemJobValues >= intNewValue ) {
 					this.getView().getModel("appView").setProperty("/valueStateEmbossing", "None");
 					this.getView().getModel("appView").setProperty("/Embossing", newValue);
+					this.getView().getModel("appView").setProperty("/newJob/Embossing", newValue);
 				} else {
 					this.getView().getModel("appView").setProperty("/valueStateEmbossing", "Error");
 					this.getView().getModel("appView").setProperty("/Embossing", 0);
+					// this.getView().getModel("appView").setProperty("/newJob/Embossing", 0);
 					this.getView().getModel("appView").setProperty("/VSTEmbossing", "Value Can't be More than " + totalRemJobValues);
 				}
 			
@@ -1759,9 +1842,11 @@ sap.ui.define([
 				if (totalRemJobValues >= intNewValue ) {
 					this.getView().getModel("appView").setProperty("/valueStatePunching", "None");
 					this.getView().getModel("appView").setProperty("/Punching", newValue);
+					this.getView().getModel("appView").setProperty("/newJob/Punching", newValue);
 				} else {
 					this.getView().getModel("appView").setProperty("/valueStatePunching", "Error");
 					this.getView().getModel("appView").setProperty("/Punching", 0);
+					// this.getView().getModel("appView").setProperty("/newJob/Punching", 0);
 					this.getView().getModel("appView").setProperty("/VSTPunching", "Value Can't be More than " + totalRemJobValues);
 				}
 			
@@ -1786,6 +1871,7 @@ sap.ui.define([
 				if (totalNoOfPcs > intNewValue || totalNoOfPcs === intNewValue) {
 					this.getView().getModel("appView").setProperty("/valueStatePasting", "Error");
 					this.getView().getModel("appView").setProperty("/Pasting", newValue);
+					this.getView().getModel("appView").setProperty("/newJob/Pasting", newValue);
 					this.getView().getModel("appView").setProperty("/VSTPasting", "Value Can't be less than " + totalNoOfPcs);
 				} else {
 					this.getView().getModel("appView").setProperty("/valueStatePasting", "None");
@@ -1862,6 +1948,7 @@ sap.ui.define([
 		},
 
 		onLiveChnagePieceToSend: function (oEvent) {
+			debugger;
 			// if (oEvent) {
 			// 	var newValue = parseInt(oEvent.getParameter("newValue"));
 			// } else {

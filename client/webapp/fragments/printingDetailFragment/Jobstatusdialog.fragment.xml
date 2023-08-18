@@ -31,7 +31,7 @@ resizable="false" >
 
 
 				<Label text="Coating" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
-				<Input liveChange="coatingLiveChange" type="Number" value="{appView>Coating}" valueStateText="{appView>/VSTCoating}" valueState="{appView>/valueStateCoating}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}" />		
+				<Input liveChange="coatingLiveChange" type="Number" value="{appView>Coating}" valueStateText="{appView>/VSTCoating}" valueState="{appView>/valueStateCoating}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{=${appView>/coatingData} === 0 ? false : true}" />		
 					
 					
 
@@ -81,15 +81,19 @@ resizable="false" >
 				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
 
 				<Label required="true" text="Status" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }"/>
-				<Select id="idStatus" forceSelection="false" selectedKey="{appView>status}"  change="onSelectKeyStatus" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }">
+				<Select id="idStatus" forceSelection="false" selectedKey="{appView>status}"  change="onSelectKeyStatus">
 			    	<items>
-						<core:Item text="Partially Completed" key="Partially Completed" />
+						<core:Item text="Printing" key="Printing" />
 						<!-- <core:Item text="In-Progress" key="inprogress" /> -->
-						<core:Item text="Completed" key="Completed" />
+						<core:Item text="Coating" key="Coating" />
+						<core:Item text="Foiling" key="Foiling" />
+						<core:Item text="SpotUV" key="SpotUV" />
+						<core:Item text="Embossing" key="Embossing" />
+						<core:Item text="Punching" key="Punching" />
+						<core:Item text="Pasting" key="Pasting" />
 						<core:Item text="Packing" key="Packing" />
-						<core:Item text="Partially Dispatched" key="Partially Dispatched" />
-						<core:Item text="In-Transit" key="In-Transit" />
-						<core:Item text="Delivered" key="Delivered" />
+						<core:Item text="Dispatched" key="Dispatched" />
+						<core:Item text="Delivering" key="Delivering" />
 						<!-- <core:Item text="Cancelled" key="cancelled" /> -->
 					</items>
 				</Select>

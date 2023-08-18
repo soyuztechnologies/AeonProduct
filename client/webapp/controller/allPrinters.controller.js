@@ -2,6 +2,7 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageToast",
+	"sap/m/MessageBox",
 	"sap/ui/core/BusyIndicator",
 	'sap/ui/model/Filter',
 	'sap/ui/model/FilterOperator',
@@ -10,7 +11,7 @@ sap.ui.define([
 	"sap/ui/core/date/UI5Date",
 	'sap/ui/export/Spreadsheet'
 
-], function (BaseController, JSONModel, MessageToast, BusyIndicator, Filter, FilterOperator, Fragment,CoreLibrary,UI5Date, Spreadsheet) {
+], function (BaseController, JSONModel, MessageToast, MessageBox, BusyIndicator, Filter, FilterOperator, Fragment,CoreLibrary,UI5Date, Spreadsheet) {
 	"use strict";
 	var ValueState = CoreLibrary.ValueState;
 	return BaseController.extend("ent.ui.ecommerce.controller.allPrinters", {
@@ -18,6 +19,16 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("allPrinters").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Printing").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Coating").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Foiling").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("SpotUV").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Embossing").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Punching").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Pasting").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Packing").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Dispatched").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Delivering").attachPatternMatched(this._printingMatchedHandler, this);
 			this.oViewSettingsDialog = sap.ui.xmlfragment("ent.ui.ecommerce.fragments.allPrinterScreenFragment.Jobstatuspopup", this);
 			this.getView().addDependent(this.oViewSettingsDialog);
 		},
@@ -58,9 +69,279 @@ sap.ui.define([
 			// this.getUserName();
 			// this.getJobAccordingCustomer();
 		},
+   //* Delete Call for jobs with there crossponding job status
+        onDeleteJobs:function(){
+
+            debugger;
+            var that= this;
+            var oModel = this.getView().getModel();
+           var oItem= this.getView().byId("idListAllPrinters").getSelectedItem();
+           if(!oItem){
+               MessageToast.show("Please select a JOB to delete")
+           }else{
+               var Jobs = oItem.getBindingContext("appView").getObject();
+               var id = Jobs.jobCardNo;
+               var payload = id;
+
+               MessageBox.confirm("Are you sure you want to delete this " + id + " Job ?", {
+
+                   actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+
+                   onClose: function (sAction) {
+
+                     if(sAction === "OK"){
+
+                        that.middleWare.callMiddleWare("deleteJobsWithJobStatus", "POST", payload)
+
+                        .then(function (data, status, xhr) {
+
+                            //
+
+                            MessageToast.show("Job Deleted Successfully");
+
+                            that.getJobsDataByCompanyFilter()
+
+                            that.getRouter().navTo("allPrinters");
+
+                            oModel.updateBindings();
+
+                        })
+
+                        .catch(function (jqXhr, textStatus, errorMessage) {
+
+                            that.middleWare.errorHandler(jqXhr, that);
+
+                        });
+
+                   }
+
+                   else{
+
+                         
+
+ 
+
+                     }
+
+                   }
+
+                 });
+
+           }
+
+       },
+		_printingMatchedHandler: async  function(oEvent){
+			var path = this.getRouter().oHashChanger.hash.split("/")[0];
+			this.getView().getModel('appView').setProperty('/path', path);
+			debugger;
+			var that = this;
+			await this.getUserRoleData().then(
+				function (data) {
+					var role = data.role.Role
+					that.getView().getModel('appView').setProperty('/UserRole', role);
+					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+					that.userRole();
+					that.getJobsDataByStatusFilter();
+					// that.getCompanyName();
+				},
+				function (oErr) {
+					that.middleWare.errorHandler(jqXhr, that);
+				}
+			);
+			this.getCompanyName();
+			this.getModel("appView").setProperty("/layout", "OneColumn");
+
+		},
+		// _coatingMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _foilingMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _spotUVMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _embossingMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _punchingMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _pastingMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _packingMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _dispatchedMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
+		// _deliveringMatchedHandler: async  function(oEvent){
+		// 	debugger;
+		// 	var path = oEvent.getParameter('config').pattern;
+		// 	this.getView().getModel('appView').setProperty('/path', path);
+		// 	var that = this;
+		// 	await this.getUserRoleData().then(
+		// 		function (data) {
+		// 			var role = data.role.Role
+		// 			that.getView().getModel('appView').setProperty('/UserRole', role);
+		// 			that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+		// 			that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+		// 			that.userRole();
+		// 			that.getJobsDataByStatusFilter();
+		// 			// that.getCompanyName();
+		// 		},
+		// 		function (oErr) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		}
+		// 	);
+		// },
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
+			debugger;
+			// var route = 'Printing';
+			// 	route = 'sideNav' + route;
+			var route = this.getRouter().oHashChanger.hash.split("/")[0];
+			route = 'sideNav'+route;
+
 			
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
@@ -68,7 +349,7 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty('/jobId', datassss.jobCardNo);
 			
 			this.getModel("appView").updateBindings();
-			this.getRouter().navTo("printingDetails", {
+			this.getRouter().navTo(route, {
 				jobId: datassss.jobCardNo
 
 			});
