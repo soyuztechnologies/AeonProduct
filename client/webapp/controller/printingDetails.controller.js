@@ -28,7 +28,7 @@ sap.ui.define([
 
 
 		_sideNavPrintingmatchedHandler: async function(oEvent){
-			debugger;
+			
 			
 			var path = this.getRouter().oHashChanger.hash.split("/")[0];
 			this.getView().getModel('appView').setProperty('/path', path);
@@ -193,7 +193,7 @@ sap.ui.define([
 
 		// * this funtion is getting the job data in to the page.
 		oGetAgru: function () {
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel();
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
@@ -1482,7 +1482,7 @@ sap.ui.define([
 		// Start Production Button Pressed
 
 		whenProductionStart: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
@@ -1948,7 +1948,7 @@ sap.ui.define([
 		},
 
 		onLiveChnagePieceToSend: function (oEvent) {
-			debugger;
+			
 			// if (oEvent) {
 			// 	var newValue = parseInt(oEvent.getParameter("newValue"));
 			// } else {

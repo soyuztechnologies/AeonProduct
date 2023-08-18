@@ -72,7 +72,7 @@ sap.ui.define([
    //* Delete Call for jobs with there crossponding job status
         onDeleteJobs:function(){
 
-            debugger;
+            
             var that= this;
             var oModel = this.getView().getModel();
            var oItem= this.getView().byId("idListAllPrinters").getSelectedItem();
@@ -133,7 +133,7 @@ sap.ui.define([
 		_printingMatchedHandler: async  function(oEvent){
 			var path = this.getRouter().oHashChanger.hash.split("/")[0];
 			this.getView().getModel('appView').setProperty('/path', path);
-			debugger;
+			
 			var that = this;
 			await this.getUserRoleData().then(
 				function (data) {
@@ -154,7 +154,7 @@ sap.ui.define([
 
 		},
 		// _coatingMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -174,7 +174,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _foilingMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -194,7 +194,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _spotUVMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -214,7 +214,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _embossingMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -234,7 +234,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _punchingMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -254,7 +254,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _pastingMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -274,7 +274,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _packingMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -294,7 +294,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _dispatchedMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -314,7 +314,7 @@ sap.ui.define([
 		// 	);
 		// },
 		// _deliveringMatchedHandler: async  function(oEvent){
-		// 	debugger;
+		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
 		// 	this.getView().getModel('appView').setProperty('/path', path);
 		// 	var that = this;
@@ -336,7 +336,7 @@ sap.ui.define([
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
-			debugger;
+			
 			// var route = 'Printing';
 			// 	route = 'sideNav' + route;
 			var route = this.getRouter().oHashChanger.hash.split("/")[0];

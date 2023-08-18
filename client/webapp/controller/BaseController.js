@@ -1576,7 +1576,7 @@ sap.ui.define([
 				}.bind(this));
 		},
 		getCompanyName: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();
 			var that = this;
 			oModel.read('/Company', {
@@ -1599,7 +1599,7 @@ sap.ui.define([
 			});
 		  },
 		  getJobsDataByStatusFilter: function(){
-			debugger;
+			
 			var path = this.getView().getModel('appView').getProperty('/path');
 			var that = this;
 	

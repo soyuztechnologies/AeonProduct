@@ -329,7 +329,7 @@ sap.ui.define([
 		},
 		// * this function is read the all appUsers data.
 		getUserData: function () {
-			debugger;
+			
 			BusyIndicator.show(0);
 			var oModel = this.getView().getModel();  //default model get at here
 			var filteredUserDatas = [];
