@@ -122,7 +122,6 @@ sap.ui.define([
 				"GstNumber": "",
 				"CompanyLogo": "",
 				"Website": "",
-				"PersonalEmailAddress": "",
 				"PhoneNo": ""
 			},
 				// the whole form data will be set to the  "AddUserData" property in appView model.

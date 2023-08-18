@@ -4,44 +4,44 @@
     xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
    
-    <Label text="Paper PO NO"/>
-    <Input value = "{appView>paperPoNo}" editable="false"/>
+    <Label text="Paper PO NO" 	design="Bold"/>
+    <Text text = "{appView>paperPoNo}" editable="false"/>
     
-    <Label text="Procured No. Of Sheets"/>
-    <Input value = "{path: 'appView>noOfSheets3',formatter:'.formatter.showSheets'}" editable="false"/>
+    <Label text="Procured No. Of Sheets" 	design="Bold"/>
+    <Text text = "{path: 'appView>noOfSheets3',formatter:'.formatter.showSheets'}" editable="false"/>
   
-    <Label text="Procured Sheet Size"/>
-    <Input value = "{parts:[ {path:'appView>printingSheetSizeL2'}, { path: 'appView>printingSheetSizeW2'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
+    <Label text="Procured Sheet Size" 	design="Bold"/>
+    <Text text = "{parts:[ {path:'appView>printingSheetSizeL2'}, { path: 'appView>printingSheetSizeW2'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
         
-    <Label text="Printing Sheet Size"/>
-    <Input value = "{parts:[ {path:'appView>printingSheetSizeL1'}, { path: 'appView>printingSheetSizeW1'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
+    <Label text="Printing Sheet Size" 	design="Bold"/>
+    <Text text = "{parts:[ {path:'appView>printingSheetSizeL1'}, { path: 'appView>printingSheetSizeW1'}] ,formatter:'.formatter.showEqmm'}" editable="false"/>
 
-    <Label text="No of Sheets To Be Printed"/>
-    <Input value = "{path: 'appView>noOfSheets1' ,formatter:'.formatter.showSheets'}" editable="false"/>
+    <Label text="No of Sheets To Be Printed" 	design="Bold"/>
+    <Text text = "{path: 'appView>noOfSheets1' ,formatter:'.formatter.showSheets'}" editable="false"/>
 
-    <Label text="No of Ups"/>
+    <Label text="No of Ups" 	design="Bold"/>
     <!-- ="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.sizeFormatter'}" -->
-    <Input value="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.equal'}" editable="false"/>
+    <Text text="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.equal'}" editable="false"/>
 
 
     
 
-    <Label text="Wastage Sheet Available"/>
-    <Input value = "{path: 'appView>noOfSheets2',formatter:'.formatter.showSheets'}" editable="false"/>
-    <Input value = "{path: 'appView>wastage',formatter:'.formatter.showPercent'}" editable="false"/>
+    <Label text="Wastage Sheet Available" 	design="Bold"/>
+    <Text text = "{path: 'appView>noOfSheets2',formatter:'.formatter.showSheets'}" editable="false"/>
+    <Text text = "{path: 'appView>wastage',formatter:'.formatter.showPercent'}" editable="false"/>
 
-    <Label text="Weight in Kgs"/>
-    <Input value = "{path: 'appView>wtKgs' ,formatter:'.formatter.showKg'}" editable="false" />
+    <Label text="Weight in Kgs" 	design="Bold"/>
+    <Text text = "{path: 'appView>wtKgs' ,formatter:'.formatter.showKg'}" editable="false" />
 
-    <Label text="Lock"/>
-    <Input value = "{appView>lock}" editable="{appView>/editableFields}"/>
+    <Label text="Lock" 	design="Bold"/>
+    <Text text = "{appView>lock}" editable="{appView>/editableFields}"/>
 
-    <Label text="Double Cut"/>
-    <Input value = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
-    <Label text="Trin in TF"/>
-    <Input value = "{path: 'appView>trimTF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
-    <Label text="Trin in PF"/>
-    <Input value = "{path: 'appView>trimPF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
+    <Label text="Double Cut" 	design="Bold"/>
+    <Text text = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
+    <Label text="Trin in TF" 	design="Bold"/>
+    <Text text = "{path: 'appView>trimTF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
+    <Label text="Trin in PF" 	design="Bold"/>
+    <Text textx = "{path: 'appView>trimPF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
                                 
    
 </core:FragmentDefinition>

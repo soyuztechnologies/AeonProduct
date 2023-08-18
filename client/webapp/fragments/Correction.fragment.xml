@@ -4,11 +4,11 @@
     xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
    
-    <Label text="Correction 1"/>
-    <Input value = "{appView>corrections1}" editable="{appView>/editableFields}"/>
-    <Label text="Correction 2"/>
-    <Input value = "{appView>corrections2}" editable="{appView>/editableFields}"/>
-    <Label text="Correction 3"/>
-    <Input value = "{appView>corrections3}" editable="{appView>/editableFields}"/>
+    <Label text="Correction 1" 	design="Bold"/>
+    <Text text = "{appView>corrections1}" editable="{appView>/editableFields}"/>
+    <Label text="Correction 2" 	design="Bold"/>
+    <Text text = "{appView>corrections2}" editable="{appView>/editableFields}"/>
+    <Label text="Correction 3" 	design="Bold"/>
+    <Text text = "{appView>corrections3}" editable="{appView>/editableFields}"/>
                                 
 </core:FragmentDefinition>

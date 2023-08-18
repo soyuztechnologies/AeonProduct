@@ -3,60 +3,61 @@
     <content>               
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
-                                <core:Title text="Machine Details" />
-                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.MachineDetails" type="XML"></core:Fragment>
-                            </f:content>
-                        </f:SimpleForm>
-                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
-                            <f:content>
-                                <core:Title text="Ancillary Parts" />
-                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.AncillaryParts" type="XML"></core:Fragment>
-                            </f:content>
-                        </f:SimpleForm>
-                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
-                            <f:content>
-                                <core:Title text="Product Details" />
+                                <core:Title text="Product Details" level="H2"/>
                                 <core:Fragment fragmentName="ent.ui.ecommerce.fragments.ProductDetails" type="XML"></core:Fragment>
                             </f:content>
                         </f:SimpleForm>
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
-                                <core:Title text="Paper and Layouts" />
+                                <core:Title text="Paper and Layouts" level="H2"/>
                                 <core:Fragment fragmentName="ent.ui.ecommerce.fragments.PaperAndLayout" type="XML"></core:Fragment>
                     
                             </f:content>
                         </f:SimpleForm>
-                        <f:SimpleForm visible="{path: 'appView>/UserRole', formatter: '.formatter.costStructureVis'}" editable="false"   layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
-                            <f:content>
-                                <core:Title text="Cost Structure" />
-                                    
-                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CostStructure" type="XML"></core:Fragment>
-
-                                <core:Title text="Development Cost" />
-
-                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.DevelopmentCost" type="XML"></core:Fragment>
-
-                                <core:Title text="Total" />
-                                    
-                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Total" type="XML"></core:Fragment>               
-                            </f:content>
-                        </f:SimpleForm>
                         <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
                             <f:content>
-                                <core:Title text="Remark" />
+                                <core:Title text="Remark" level="H2" />
                                     
                                 <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Remarks" type="XML"></core:Fragment>
 
-                                <core:Title text="Correction (if any)" />
+                                <core:Title text="Correction (if any)" level="H2"/>
 
                                 <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Correction" type="XML"></core:Fragment>
 
-                                <core:Title text="Batch Details" />
+                                <core:Title text="Batch Details" level="H2"/>
 
                                 <core:Fragment fragmentName="ent.ui.ecommerce.fragments.BatchDetails" type="XML"></core:Fragment>
                     
                             </f:content>
                         </f:SimpleForm>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Machine Details" level="H2"/>
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.MachineDetails" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm editable="false" layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Ancillary Parts" level="H2"/>
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.AncillaryParts" type="XML"></core:Fragment>
+                            </f:content>
+                        </f:SimpleForm>
+                        <f:SimpleForm visible="{path: 'appView>/UserRole', formatter: '.formatter.costStructureVis'}" editable="false"   layout="ColumnLayout"  columnsL="3" singleContainerFullSize="false" >
+                            <f:content>
+                                <core:Title text="Cost Structure" level="H2"/>
+                                    
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.CostStructure" type="XML"></core:Fragment>
+
+                                <core:Title text="Development Cost" level="H2"/>
+
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.DevelopmentCost" type="XML"></core:Fragment>
+
+                                <core:Title text="Total" level="H2" />
+                                    
+                                <core:Fragment fragmentName="ent.ui.ecommerce.fragments.Total" type="XML"></core:Fragment>               
+                            </f:content>
+                        </f:SimpleForm>
+
     </content>
     <endButton>
         <Button text="Close" type="Reject" press="onnReject" enabled="{appView>/submitEnable}"/>

@@ -4,11 +4,11 @@
     xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
    
-    <Label text="Remark 1" />
-    <Input value = "{appView>remarks}" editable="{appView>/editableFields}"  enabled= "true"/>
-    <Label text="Remark 2" />
-    <Input value = "{appView>remarks1}" editable="{appView>/editableFields}"  enabled= "true"/>
-    <Label text="Remark 3" />
-    <Input value = "{appView>remarks2}" editable="{appView>/editableFields}"  enabled= "true"/>
+    <Label text="Remark 1" 	design="Bold"/>
+    <Text text = "{appView>remarks}" editable="{appView>/editableFields}"  enabled= "true"/>
+    <Label text="Remark 2" 	design="Bold"/>
+    <Text text = "{appView>remarks1}" editable="{appView>/editableFields}"  enabled= "true"/>
+    <Label text="Remark 3" 	design="Bold"/>
+    <Text text = "{appView>remarks2}" editable="{appView>/editableFields}"  enabled= "true"/>
                                 
 </core:FragmentDefinition>

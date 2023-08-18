@@ -5,27 +5,27 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
    
 
-    <Label text="Plate"/>
-    <Input value = "{appView>plate}" editable="false"/>
+    <Label	design="Bold" text="Plate" />
+    <Text text = "{appView>plate}" editable="false" />
 
-    <Input tooltip="{appView>plate1}" value = "{appView>plate1}" editable="false"/>
-    <Input tooltip="{appView>plate2}" value = "{appView>plate2}" editable="false"/>
+    <Text tooltip="{appView>plate1}" text = "{appView>plate1}" editable="false"/>
+    <Text text="{appView>plate2}"/>
 
-    <Label text="Pantone Inks"/>
-    <Input value = "{appView>pantoneInks}"  editable="false"/>
+    <Label text="Pantone Inks" 	design="Bold"/>
+    <Text text = "{appView>pantoneInks}"  editable="false" />
 
-    <Label text="Foil Blocks"/>
-    <Input value = "{appView>foilBlocks}" editable="false"/>
-    <Label text="Positive"/>
-    <Input value = "{appView>positive}" editable="false"/>
-    <Label text="Emboss Block"/>
-    <Input value = "{appView>embossBlock}" editable="false"/>
-    <Label text="Punch"/>
-    <!-- <Input tooltip="{appView>punch}" value = "{appView>punch}" editable="false"/> -->
-    <Input tooltip="{appView>punch1}" value = "{appView>punch1}" editable="false"/>
-    <Input tooltip="{appView>punch2}" value = "{appView>punch2}" editable="false"/>
-    <Label text="Reference"/>
-    <Input value = "{appView>reference}" editable="false"/>
+    <Label text="Foil Blocks" 	design="Bold"/>
+    <Text text = "{appView>foilBlocks}" editable="false" />
+    <Label text="Positive" 	design="Bold"/>
+    <Text text = "{appView>positive}" editable="false" />
+    <Label text="Emboss Block" 	design="Bold"/>
+    <Text text = "{appView>embossBlock}" editable="false" />
+    <Label text="Punch" 	design="Bold"/>
+    <!-- <Text tooltip="{appView>punch}" value = "{appView>punch}" editable="false"/> -->
+    <Text tooltip="{appView>punch1}" text = "{appView>punch1}" editable="false" />
+    <Text tooltip="{appView>punch2}" text = "{appView>punch2}" editable="false" />
+    <Label text="Reference" 	design="Bold"/>
+    <Text text = "{appView>reference}" editable="false" />
                                 
    
 </core:FragmentDefinition>

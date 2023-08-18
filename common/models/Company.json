@@ -19,7 +19,31 @@
 			"type": "string",
 			"default": ""
 		},
+		"FirstName1":{
+			"type": "string",
+			"default": ""
+		},
+		"FirstName2":{
+			"type": "string",
+			"default": ""
+		},
+		"FirstName3":{
+			"type": "string",
+			"default": ""
+		},
 		"LastName":{
+			"type": "string",
+			"default": ""
+		},
+		"LastName1":{
+			"type": "string",
+			"default": ""
+		},
+		"LastName2":{
+			"type": "string",
+			"default": ""
+		},
+		"LastName3":{
 			"type": "string",
 			"default": ""
 		},
@@ -39,15 +63,34 @@
 			"type": "string",
 			"default": ""
 		},
-		"PersonalEmailAddress":{
+		"ContactPerson1Email":{
+			"type": "string",
+			"default": ""
+		},
+		"ContactPerson2Email":{
+			"type": "string",
+			"default": ""
+		},
+		"ContactPerson3Email":{
 			"type": "string",
 			"default": ""
 		},
 		"PhoneNo":{
 			"type": "string",
 			"default": ""
+		},
+		"PhoneNo1":{
+			"type": "string",
+			"default": ""
+		},
+		"PhoneNo2":{
+			"type": "string",
+			"default": ""
+		},
+		"PhoneNo3":{
+			"type": "string",
+			"default": ""	
 		}
-		
 	},
 	"scope": {
 		"order": "CreatedOn DESC"

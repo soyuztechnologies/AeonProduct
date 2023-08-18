@@ -19,7 +19,7 @@
         <VBox>
             <form:SimpleForm maxContainerCols="2" id="companySimpleFrom" editable="false" layout="ColumnLayout" labelSpanL="12" labelSpanM="12" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                 <form:content>
-                    <core:Title text="Company Details"></core:Title>
+                    <core:Title text="Company Details" level="H2"></core:Title>
                     <Label required="true" text="Mail Address"/>
                     <Input required ="true" value ="{appView>EmailAddress}"  editable="{appView>/editableFields}"/>
         
@@ -34,11 +34,12 @@
 
                     <Label text="Website" visible="true"/>
                     <Input value = "{appView>Website}"  editable="{appView>/editableFields}" visible="true"/>
-        
-                    <Label text="Company Phone Number" visible="true"/>
-                    <Input type="Number" value = "{appView>PhoneNo}" editable="{appView>/editableFields}" visible="true"/>
 
-                    <core:Title text="Personal Details"></core:Title>
+                    <Label text="Company Phone Number" visible="true"/>
+                    <Input value = "{appView>PhoneNo}"  editable="{appView>/editableFields}" visible="true"/>
+        
+
+                    <core:Title text="Personal Details" level="H2"></core:Title>
                     <Label text="Title"/>
                         <Select selectedKey="{appView>Title}" editable="{appView>/editableFields}" change="onRoleChange">
                             <core:Item key="Mr." text="Mr." />
@@ -55,8 +56,55 @@
                          <u:FileUploaderParameter name="createdBy" />  </u:parameters>
                             </u:FileUploader>
                             <Button text="Show Logo" tooltip="checkLogo" press="onLogo" enabled="{appView>/editableFields}" visible="true"/>
-                    <Label text="Personal Mail Address" visible="true"/>
-                    <Input value = "{appView>PersonalEmailAddress}" editable="{appView>/editableFields}" visible="true"/>
+
+
+                    <core:Title text="Contact Person 1" level="H2"></core:Title>
+                    <Label text="EMail Address" visible="true"/>
+                    <Input value = "{appView>ContactPerson1Email}" editable="{appView>/editableFields}" visible="true"/>
+                    <Label text="Title"/>  
+                    <Select selectedKey="{appView>Title}" editable="{appView>/editableFields}" change="onRoleChange">
+                            <core:Item key="Mr." text="Mr." />
+                            <core:Item key="Mrs." text="Mrs." />
+                    </Select>
+                    <Label  text="First Name"/>
+                    <Input value = "{appView>FirstName1}" editable="{appView>/editableFields}"/>
+                    <Label text="Last Name"/>
+                    <Input value = "{appView>LastName1}" editable="{appView>/editableFields}"/>
+                    <Label text="Phone Number" visible="true"/>
+                    <Input value = "{appView>PhoneNo1}" editable="{appView>/editableFields}" visible="true"/>
+                
+
+                    <core:Title text="Contact Person 2" level="H2"></core:Title>
+                    <Label text="EMail Address" visible="true"/>
+                    <Input value = "{appView>ContactPerson2Email}" editable="{appView>/editableFields}" visible="true"/>
+                    <Label text="Title"/>
+                    <Select selectedKey="{appView>Title}" editable="{appView>/editableFields}" change="onRoleChange">
+                            <core:Item key="Mr." text="Mr." />
+                            <core:Item key="Mrs." text="Mrs." />
+                    </Select>
+                    <Label  text="First Name"/>
+                    <Input value = "{appView>FirstName2}" editable="{appView>/editableFields}"/>
+                    <Label text="Last Name"/>
+                    <Input value = "{appView>LastName2}" editable="{appView>/editableFields}"/>
+                    <Label text="Phone Number" visible="true"/>
+                    <Input value = "{appView>PhoneNo2}" editable="{appView>/editableFields}" visible="true"/>
+
+                        
+                    <core:Title text="Contact Person 3" level="H2"></core:Title>
+                    <Label text="EMail Address" visible="true"/>
+                    <Input value = "{appView>ContactPerson3Email}" editable="{appView>/editableFields}" visible="true"/>
+                    <Label text="Title"/>
+                    <Select selectedKey="{appView>Title}" editable="{appView>/editableFields}" change="onRoleChange">
+                            <core:Item key="Mr." text="Mr." />
+                            <core:Item key="Mrs." text="Mrs." />
+                    </Select>
+                    <Label  text="First Name"/>
+                    <Input value = "{appView>FirstName3}" editable="{appView>/editableFields}"/>
+                    <Label text="Last Name"/>
+                    <Input value = "{appView>LastName3}" editable="{appView>/editableFields}"/>
+                    <Label text="Phone Number" visible="true"/>
+                    <Input value = "{appView>PhoneNo3}" editable="{appView>/editableFields}" visible="true"/>
+            
                 </form:content>
             </form:SimpleForm>
         </VBox>

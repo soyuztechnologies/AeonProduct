@@ -67,7 +67,7 @@
 					<Text text="Name" />
 				</Column>
 				<Column minScreenWidth="Tablet" demandPopin="true">
-					<Text text="Email ID" />
+					<Text text="Email Address" />
 				</Column>
 				<Column minScreenWidth="Tablet" demandPopin="true">
 					<Text text="Phone Number" />
@@ -97,8 +97,8 @@
 					<cells>
 						<Text text="{appView>CompanyName}" />
 						<Text text="{appView>FirstName} {appView>LastName}" />
-						<Text text="{appView>EmailAddress}" />
-						<Text text="{appView>PhoneNo}" />
+						<Text  text="{appView>EmailAddress}"/>		
+						<Text  text="{appView>PhoneNo}"/>		
 						<Button type="transparent" text="Jobs" press="openAllPrinterJobDialog" icon="sap-icon://document-text"></Button>
 						<Button type="Success"  text="User" press="openUserDetailsDialog" icon="sap-icon://visits"></Button>
 						<!-- <Text text="{appView>Role}" /> -->
