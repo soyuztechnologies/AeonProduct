@@ -247,7 +247,7 @@ app.start = function () {
 				// Send verification email
 				await sendEmail(email, token, replacements, templateFileName, emailSubject);
 
-				await this.otp.create({  OTP:otp, User:email ,CreatedOn:dateAndTime, ExpDate:ExpDateAndTIme });
+				await this.otp.create({ OTP: otp, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
 				res.status(200).json({ message: 'Verification email sent successfully' });
 			} catch (error) {
 				console.error(error);
@@ -357,72 +357,99 @@ app.start = function () {
 		function generateOTP(length = 6) {
 			const digits = '0123456789';
 			let otp = '';
-		  
+
 			for (let i = 0; i < length; i++) {
-			  const randomIndex = Math.floor(Math.random() * digits.length);
-			  otp += digits.charAt(randomIndex);
+				const randomIndex = Math.floor(Math.random() * digits.length);
+				otp += digits.charAt(randomIndex);
 			}
-		  
+
 			return otp;
-		  }
-		  
-		  // Example usage:
+		}
+
+		// Example usage:
 		//   const otp = generateOTP();
 		//   console.log("Generated OTP:", otp);
 
 		//*get Date and time
 
-		function generateDateAndTime(){
-			
-            var currentDate = new Date();
-            var year = currentDate.getFullYear();
-            var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
-            var day = currentDate.getDate();
-            var hours = currentDate.getHours();
-            var minutes = currentDate.getMinutes();
-            var seconds = currentDate.getSeconds();
-            // Formatting the output as desired
-            var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
-            var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
-            // console.log("Current Date: " + formattedDate);
-            // console.log("Current Time: " + formattedTime);
-			var dateAndTime = formattedDate +" "+ formattedTime;
-            // Helper function to add leading zero if single-digit
-			return dateAndTime;
-            function addLeadingZero(number) {
-            return number < 10 ? "0" + number : number;
-            }
-        }
+		function generateDateAndTime() {
 
-		//* Date with extra 30 Minutes!
-
-		function generateDateAndTimeWithExtraTime() {
 			var currentDate = new Date();
-		  
-			// Add 30 minutes to the current date and time
-			var extraTime = 30; // 30 minutes
-			currentDate.setMinutes(currentDate.getMinutes() + extraTime);
-		  
 			var year = currentDate.getFullYear();
 			var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
 			var day = currentDate.getDate();
 			var hours = currentDate.getHours();
 			var minutes = currentDate.getMinutes();
 			var seconds = currentDate.getSeconds();
-		  
 			// Formatting the output as desired
 			var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
 			var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
-		  
-			// Output the result with an additional 30 minutes
-			// this.getView().getModel("appView").setProperty("/dateAndTimeWithExtraTime", formattedDate + " " + formattedTime);
-			var dateAndTime = formattedDate +" "+ formattedTime;
-            // Helper function to add leading zero if single-digit
+			// console.log("Current Date: " + formattedDate);
+			// console.log("Current Time: " + formattedTime);
+			var dateAndTime = formattedDate + " " + formattedTime;
+			// Helper function to add leading zero if single-digit
 			return dateAndTime;
 			function addLeadingZero(number) {
-			  return number < 10 ? "0" + number : number;
+				return number < 10 ? "0" + number : number;
 			}
-		  }
+		}
+
+		app.post('/getJobsWithStatusFilter',async function(req,res){
+
+            const status = req.body;
+
+ 
+
+            try {
+
+                const Job = app.models.Job;
+
+                const jobs = await Job.find({ where: { status: status}, include: 'Company' });
+
+                const
+
+                oFilter = jobs.filter(function (data){
+
+                    return data;
+
+                });
+
+               
+
+                res.send(oFilter);
+
+            } catch (error) {
+            }
+        })
+		//* Date with extra 30 Minutes!
+
+		function generateDateAndTimeWithExtraTime() {
+			var currentDate = new Date();
+
+			// Add 30 minutes to the current date and time
+			var extraTime = 30; // 30 minutes
+			currentDate.setMinutes(currentDate.getMinutes() + extraTime);
+
+			var year = currentDate.getFullYear();
+			var month = currentDate.getMonth() + 1; // Note: Months are 0-based, so add 1 to get the correct month
+			var day = currentDate.getDate();
+			var hours = currentDate.getHours();
+			var minutes = currentDate.getMinutes();
+			var seconds = currentDate.getSeconds();
+
+			// Formatting the output as desired
+			var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
+			var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
+
+			// Output the result with an additional 30 minutes
+			// this.getView().getModel("appView").setProperty("/dateAndTimeWithExtraTime", formattedDate + " " + formattedTime);
+			var dateAndTime = formattedDate + " " + formattedTime;
+			// Helper function to add leading zero if single-digit
+			return dateAndTime;
+			function addLeadingZero(number) {
+				return number < 10 ? "0" + number : number;
+			}
+		}
 
 
 
@@ -430,32 +457,32 @@ app.start = function () {
 
 		//*Verify otp
 		app.post('/verifyOtp', async (req, res) => {
-			
+
 			this.User = app.models.User;
 			this.otp = app.models.otp;
-			var  OTP = req.body;
+			var OTP = req.body;
 			var currentdateAndTime = generateDateAndTime();
 			try {
 
-				try{
-					const otp = await this.otp.findOne({ where: { OTP:OTP.inputOtpValue } }); // Retrieve all users
-					if(otp.__data.OTP == OTP.inputOtpValue && otp.__data.User == OTP.email){
+				try {
+					const otp = await this.otp.findOne({ where: { OTP: OTP.inputOtpValue } }); // Retrieve all users
+					if (otp.__data.OTP == OTP.inputOtpValue && otp.__data.User == OTP.email) {
 						if (otp.__data.ExpDate > currentdateAndTime) {
 							res.status(200).send('Validation Successful');
-						  } else {
+						} else {
 							res.status(400).send('OTP has expired');
-						  }
+						}
 					}
 					// else{
 					// 	res.status(400).json({ message: 'Not Validate'});
-	
+
 					// }
 				}
-				catch(error){
-						res.status(400).json({ error: 'OTP not validate' });
+				catch (error) {
+					res.status(400).json({ error: 'OTP not validate' });
 
 				}
-			} 
+			}
 			catch (error) {
 				console.error(error);
 				res.status(500).json({ error: 'Internal server error' });
@@ -471,20 +498,20 @@ app.start = function () {
 			this.User = app.models.User;
 			this.otp = app.models.otp;
 			var OTP = req.body; // Assuming the ID is provided as a property in the request body
-			
+
 			try {
-			  const otp = await this.otp.findOne({ where: {OTP} }); // Retrieve the user with the specified ID
-			  if (otp) {
-				await otp.remove(); // Remove the user
-				res.status(200).send('OTP Deleted Successfully');
-			  } else {
-				res.status(404).send('OTP Not Found'); // If the user doesn't exist
-			  }
+				const otp = await this.otp.findOne({ where: { OTP } }); // Retrieve the user with the specified ID
+				if (otp) {
+					await otp.remove(); // Remove the user
+					res.status(200).send('OTP Deleted Successfully');
+				} else {
+					res.status(404).send('OTP Not Found'); // If the user doesn't exist
+				}
 			} catch (error) {
-			  console.error('Error deleting user:', error);
-			  res.status(500).send('Internal server error');
+				console.error('Error deleting user:', error);
+				res.status(500).send('Internal server error');
 			}
-		  });
+		});
 
 
 
@@ -524,8 +551,8 @@ app.start = function () {
 				const date = new Date();
 				// Send verification email
 				await sendEmail(email, token, replacements, templateFileName, emailSubject);
-				await this.otp.create({  OTP:otp, User:email ,CreatedOn:dateAndTime, ExpDate:ExpDateAndTIme });
-				
+				await this.otp.create({ OTP: otp, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
+
 
 				res.status(200).json({ message: 'Verification email sent successfully' });
 			} catch (error) {
@@ -732,45 +759,73 @@ app.start = function () {
 		});
 		//*Delete user form the user table
 		app.post('/deleteusersTable', async (req, res) => {
-			
+
 			this.User = app.models.User;
 			var id = req.body.id; // Assuming the ID is provided as a property in the request body
-			
+
 			try {
-			  const user = await this.User.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
-			  if (user) {
-				await user.remove(); // Remove the user
-				res.status(200).send('User deleted successfully');
-			  } else {
-				res.status(404).send('User not found'); // If the user doesn't exist
-			  }
+				const user = await this.User.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
+				if (user) {
+					await user.remove(); // Remove the user
+					res.status(200).send('User deleted successfully');
+				} else {
+					res.status(404).send('User not found'); // If the user doesn't exist
+				}
 			} catch (error) {
-			  console.error('Error deleting user:', error);
-			  res.status(500).send('Internal server error');
+				console.error('Error deleting user:', error);
+				res.status(500).send('Internal server error');
 			}
-		  });
+		});
 		app.post('/deleteAppUsersTable', async (req, res) => {
-			
+
 			this.AppUser = app.models.AppUser;
 			var id = req.body.id; // Assuming the ID is provided as a property in the request body
-			
+
 			try {
-			  const user = await this.AppUser.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
-			  if (user) {
-				await user.remove(); // Remove the user
-				res.status(200).send('User deleted successfully');
-			  } else {
-				res.status(404).send('User not found'); // If the user doesn't exist
-			  }
+				const user = await this.AppUser.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
+				if (user) {
+					await user.remove(); // Remove the user
+					res.status(200).send('User deleted successfully');
+				} else {
+					res.status(404).send('User not found'); // If the user doesn't exist
+				}
 			} catch (error) {
-			  console.error('Error deleting user:', error);
-			  res.status(500).send('Internal server error');
+				console.error('Error deleting user:', error);
+				res.status(500).send('Internal server error');
 			}
-		  });
+		});
+
+		//server call for job delete with jobstatus
+		app.post('/deleteJobsWithJobStatus', async (req, res) => {
+
+			this.JobStatus = app.models.JobStatus;
+			this.Job = app.models.Job;
+			var id = req.body; // Assuming the ID is provided as a property in the request body
+
+			try {
+				const job = await this.Job.findOne({ where: { jobCardNo: id } }); 
+				if (job) {
+					job.remove();
+					const jobStatus = await this.JobStatus.findOne({ where: { JobStatusId: id } }); // Retrieve the user with the specified ID
+					if (jobStatus) {
+						jobStatus.remove(); 
+						return res.status(200).send('Job and Job Status Deleted Successfully');
+					} else {
+						return res.status(404).send('Job status Not Found'); // If the user doesn't exist
+					}
+					return res.status(200).send('Job Deleted Successfully');
+				} else {
+					return res.status(404).send('Job not found'); // If the user doesn't exist
+				}
+			} catch (error) {
+				console.error('Error deleting Job:', error);
+				// res.status(500).send('Internal server error');
+			}
+		});
 		// app.post('/deleteOTP', async (req, res) => {
 		// 	this.otp = app.models.otp;
 		// 	var id = req.body.id; // Assuming the ID is provided as a property in the request body
-			
+
 		// 	try {
 		// 	  const otp = await this.otp.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
 		// 	  if (otp) {
@@ -918,7 +973,7 @@ app.start = function () {
 						EmailId: email,
 						UserName: name,
 						CreatedOn: new Date(),
-						Status : status,
+						Status: status,
 						// Blocked : "No",
 						Role: Role
 					});
@@ -1343,20 +1398,20 @@ app.start = function () {
 		});
 		// Relation: Jobs ---> Company >>>> belongsTo >>>> Object
 		// 		Comany ---> Jobs >>>>> hasMany   >>>> Array
-		app.get('/getJobsWithCompany',async function(req,res){
+		app.get('/getJobsWithCompany', async function (req, res) {
 			try {
 				const Job = app.models.Job;
 				const jobs = await Job.find({ include: 'Company' });
-				const 
-				oFilter = jobs.filter(function (data){
-                 return data.CompanyId != null
-				});
-				
+				const
+					oFilter = jobs.filter(function (data) {
+						return data.CompanyId != null
+					});
+
 				res.send(oFilter);
 			} catch (error) {
-				
+
 			}
-			
+
 		})
 		// Relation: Jobs ---> Job status >>>> hasMany  >>>> Array
 		// 		JobStatus ---> Jobs >>>>> Belongs TO >>>> Object
@@ -1389,12 +1444,12 @@ app.start = function () {
 			const Job = app.models.Job;
 			const JobStatus = app.models.JobStatus;
 			const { CreatedOnStart, CreatedOnEnd, cId } = req.body;
-		
+
 			try {
 				const startDate = CreatedOnStart;
 				const endDate = CreatedOnEnd;
-		
-		
+
+
 				let jobStatusSelectedData = await Job.find({
 					where: {
 						and: [
@@ -1405,7 +1460,7 @@ app.start = function () {
 					},
 					include: 'JobStatus' // Include JobStatus relation
 				});
-		
+
 				res.status(200).json(jobStatusSelectedData);
 			} catch (error) {
 				console.error(error);
@@ -1413,31 +1468,31 @@ app.start = function () {
 			}
 		});
 		// app.post('/selectedDateJobStatus', async (req, res) => {
-		
+
 		// 			const Job = app.models.Job;
-		
+
 		// 			const JobStatus = app.models.JobStatus;
-		
+
 		// 			const { CreatedOnStart, CreatedOnEnd ,CompanyId } = req.body;
-		
+
 		// 			try {
-		
+
 		// 				let jobStatusSelectedData = await Job.find(
-		
+
 		// 					// include: 'JobStatus' }
-		
+
 		// 				); // Retrieve job status data
-		
+
 		// 				res.status(200).json(jobStatusSelectedData);
-		
+
 		// 			} catch (error) {
-		
+
 		// 				console.error(error);
-		
+
 		// 				return res.status(500).send('Internal server error');
-		
+
 		// 			}
-		
+
 		// 		});
 		// * this call is sending the emol to the existing user that admin create.
 		// todo need this to optimize 
@@ -1619,7 +1674,7 @@ app.start = function () {
 			// at here you get the id and the make the further process.
 
 		});
-		  
+
 		app.post('/usersRemove', (req, res) => {
 			const userEmail = "dheeraj@soyuztechnologies.com";
 

@@ -5,26 +5,26 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
    
   
-    <Label text="Plate Charges"/>
-    <Input value="{path: 'appView>plateCharges',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Plate Charges" 	design="Bold"/>
+    <Text text="{path: 'appView>plateCharges',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Pantone Inks"/>
-    <Input value = "{path :'appView>pantoneInks',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Pantone Inks" 	design="Bold"/>
+    <Text text = "{path :'appView>pantoneInks',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Blanket Charges"/>
-    <Input value = "{path:'appView>blanketCharges',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Blanket Charges" 	design="Bold"/>
+    <Text text = "{path:'appView>blanketCharges',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Foil Blocks"/>
-    <Input value = "{path:'appView>foilBlocks',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Foil Blocks" 	design="Bold"/>
+    <Text text = "{path:'appView>foilBlocks',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
     
-    <Label text="Positive"/>
-    <Input value = "{path: 'appView>positive',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Positive" 	design="Bold"/>
+    <Text text = "{path: 'appView>positive',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Emboss Block"/>
-    <Input value = "{path:'appView>embossBlock',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Emboss Block" 	design="Bold"/>
+    <Text text = "{path:'appView>embossBlock',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Punch"/>
-    <Input value = "{path:'appView>punch',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
+    <Label text="Punch" 	design="Bold"/>
+    <Text text = "{path:'appView>punch',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}" />
     <Label  design="Bold" text="Total" />
     <Text text="{path:'appView>total',formatter: '.formatter.decimalFormatterWithRupee'}" />
    

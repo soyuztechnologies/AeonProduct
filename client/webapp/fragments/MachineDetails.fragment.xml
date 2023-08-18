@@ -5,14 +5,14 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
    
   
-    <Label text="Printing Machine"/>
-    <Input value = "{appView>printingMachine}" editable="false"/>
+    <Label text="Printing Machine" 	design="Bold"/>
+    <Text text = "{appView>printingMachine}" editable="false"/>
 
-    <Label text="Punching Machine"/>
-    <Input value = "{appView>punchingMachine}" editable="false"/>
+    <Label text="Punching Machine" 	design="Bold"/>
+    <Text text = "{appView>punchingMachine}" editable="false"/>
 
-    <Label text="Pasting Machine"/>
-    <Input value = "{appView>pastingMachine}" editable="false"/>
+    <Label text="Pasting Machine" 	design="Bold"/>
+    <Text text = "{appView>pastingMachine}" editable="false"/>
                                 
    
 </core:FragmentDefinition>

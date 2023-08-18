@@ -10,6 +10,7 @@
 						<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}"/>    
 						<Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
 						<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Sort Descending"/>
+						<Button  text="Delete" type="Reject" icon="sap-icon://delete" press="onDeleteJobs" tooltip="Delete Job" visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
 				</content>
 		</OverflowToolbar>
 	  </subHeader>
@@ -21,7 +22,7 @@
 				<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin' ? true :false}"/>     
 			</content>
 		</Toolbar> -->
-				<List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}">
+				<List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="SingleSelectLeft"> 
 					<items>
 						<custom:customListItem type="Navigation" backgroundColor="{=${appView>status} === 'Value Mismatched' ? 'ff6666' : 'FFFFFF'}" >
 							

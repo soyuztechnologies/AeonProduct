@@ -5,19 +5,19 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
    
   
-    <Label text="Total A+B"/>
-    <Input value="{path: 'appView>totalA+B',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Total A+B" 	design="Bold"/>
+    <Text text="{path: 'appView>totalA+B',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Profit"/>
-    <Input value = "{path: 'appView>profit',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Profit" 	design="Bold"/>
+    <Text text = "{path: 'appView>profit',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Miscellaneous"/>
-    <Input value = "{path: 'appView>miscellaneous',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Miscellaneous" 	design="Bold"/>
+    <Text text = "{path: 'appView>miscellaneous',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
 
-    <Label text="Total Cost of Job"/>
-    <Input value = "{path: 'appView>totalCostOfJob',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Total Cost of Job" 	design="Bold"/>
+    <Text text = "{path: 'appView>totalCostOfJob',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
     
-    <Label text="Cost per Pc"/>
-    <Input value = "{path: 'appView>costPerPc',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
+    <Label text="Cost per Pc" 	design="Bold"/>
+    <Text text = "{path: 'appView>costPerPc',formatter: '.formatter.decimalFormatterWithRupee'}" editable="{appView>/editableFields}"/>
    
 </core:FragmentDefinition>

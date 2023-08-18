@@ -5,45 +5,45 @@
     xmlns:html="http://www.w3.org/1999/xhtml">
    
   
-                                <Label text="Job Card No."/>
-                                <Input  value = "{appView>jobCardNo}" editable="{appView>/editableFields}"/>
-                                <Label text="Name of the Product"/>
-                                <Input tooltip="{appView>nameOFTheProduct}"  value = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
+                                <Label text="Job Card No." 	design="Bold"/>
+                                <Text  text = "{appView>jobCardNo}" editable="{appView>/editableFields}"/>
+                                <Label text="Name of the Product" 	design="Bold"/>
+                                <Text tooltip="{appView>nameOFTheProduct}"  text = "{appView>nameOFTheProduct}" editable="{appView>/editableFields}"/>
                     
-                                <Label text="Carton Type"/>
-                                <Input value = "{appView>cartonType}" editable="{appView>/editableFields}"/>
+                                <Label text="Carton Type" 	design="Bold"/>
+                                <Text text = "{appView>cartonType}" editable="{appView>/editableFields}"/>
                     
-                                <Label text="Quantity (pcs)"/>
-                                <Input value = "{path:'appView>qtyPcs' , formatter: '.formatter.showPcs'}" editable="{appView>/editableFields}"/>
+                                <Label text="Quantity (pcs)" 	design="Bold"/>
+                                <Text text = "{path:'appView>qtyPcs' , formatter: '.formatter.showPcs'}" editable="{appView>/editableFields}"/>
                     
-                                <Label text="Paper GSM"/>
-                                <Input value = "{path:'appView>PaperGSM' , formatter: '.formatter.showGsm'}" editable="{appView>/editableFields}" />
+                                <Label text="Paper GSM" 	design="Bold"/>
+                                <Text text = "{path:'appView>PaperGSM' , formatter: '.formatter.showGsm'}" editable="{appView>/editableFields}" />
                     
                                 
-                                <Label text="Paper Quality"/>
-                                <Input value = "{appView>paperQuality}" editable="{appView>/editableFields}"/>
+                                <Label text="Paper Quality" 	design="Bold"/>
+                                <Text text = "{appView>paperQuality}" editable="{appView>/editableFields}"/>
                     
-                                <Label text="Printing/Color"/>
-                                <Input value = "{appView>color} {appView>printing}" editable="{appView>/editableFields}"/>
+                                <Label text="Printing/Color" 	design="Bold"/>
+                                <Text text = "{appView>color} {appView>printing}" editable="{appView>/editableFields}"/>
 
                                 <!-- <Label text="Color"/>
                                 <Input value = "{appView>color}" editable="{appView>/editableFields}"/> -->
                     
-                                <Label text="Size (L x W x H)"/>
-                                <Input value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
+                                <Label text="Size (L x W x H)" 	design="Bold"/>
+                                <Text text="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}" editable="{appView>/editableFields}"/>
                                
-                                <Label text="Var. Lmt."/>
-                                <Input value = "{appView>varLmt}" editable="{appView>/editableFields}"/>
+                                <Label text="Var. Lmt." 	design="Bold"/>
+                                <Text text = "{appView>varLmt}" editable="{appView>/editableFields}"/>
 
-                                <Label text="Value Addition"/>
-                                <Input value = "{appView>effects}" editable="{appView>/editableFields}"/>
+                                <Label text="Value Addition" 	design="Bold"/>
+                                <Text text = "{appView>effects}" editable="{appView>/editableFields}"/>
 
 
                                
-                                <Label text="TUCK IN FLAP"/>
-                                <Input value = "{appView>tF}" editable="{appView>/editableFields}"/>
-                                <Label text="PASTING FLAP"/>
-                                <Input value = "{appView>pF}" editable="{appView>/editableFields}"/>
+                                <Label text="TUCK IN FLAP" 	design="Bold"/>
+                                <Text text = "{appView>tF}" editable="{appView>/editableFields}"/>
+                                <Label text="PASTING FLAP" 	design="Bold"/>
+                                <Text text = "{appView>pF}" editable="{appView>/editableFields}"/>
                                 
                                 
    
