@@ -810,8 +810,6 @@ app.start = function () {
 					if (jobStatus) {
 						jobStatus.remove(); 
 						return res.status(200).send('Job and Job Status Deleted Successfully');
-					} else {
-						return res.status(404).send('Job status Not Found'); // If the user doesn't exist
 					}
 					return res.status(200).send('Job Deleted Successfully');
 				} else {

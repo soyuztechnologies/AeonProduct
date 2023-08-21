@@ -38,10 +38,10 @@
 
     <Label text="Double Cut" 	design="Bold"/>
     <Text text = "{appView>doubleCut}" editable="{appView>/editableFields}"/>
-    <Label text="Trin in TF" 	design="Bold"/>
+    <Label text="Trim in TF" 	design="Bold"/>
     <Text text = "{path: 'appView>trimTF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
-    <Label text="Trin in PF" 	design="Bold"/>
-    <Text textx = "{path: 'appView>trimPF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
+    <Label text="Trim in PF" 	design="Bold"/>
+    <Text text= "{path: 'appView>trimPF' ,formatter:'.formatter.showmm'}" editable="{appView>/editableFields}"/>
                                 
    
 </core:FragmentDefinition>

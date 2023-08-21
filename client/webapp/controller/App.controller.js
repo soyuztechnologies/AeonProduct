@@ -126,15 +126,15 @@ sap.ui.define(
         if (nav=== "Pasting"){
           this.getRouter().navTo("Pasting")
         }
-        if (nav=== "Packing"){
-          this.getRouter().navTo("Packing")
-        }
+        // if (nav=== "Packing"){
+        //   this.getRouter().navTo("Packing")
+        // }
         if (nav=== "Dispatched"){
           this.getRouter().navTo("Dispatched")
         }
-        if (nav=== "Delivering"){
-          this.getRouter().navTo("Delivering")
-        }
+        // if (nav=== "Delivering"){
+        //   this.getRouter().navTo("Delivering")
+        // }
       },
       getUserId: function () {
         

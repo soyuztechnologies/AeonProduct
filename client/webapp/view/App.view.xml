@@ -65,9 +65,9 @@
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Embossing" key="Embossing"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Punching" key="Punching"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Pasting" key="Pasting"/>
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Packing" key="Packing"/>
+                    <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Packing" key="Packing"/> -->
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Dispatched" key="Dispatched"/>
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Delivering" key="Delivering"/>
+                    <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Delivering" key="Delivering"/> -->
 			        </tnt:NavigationListItem>
                 </tnt:NavigationList>
             </tnt:SideNavigation>

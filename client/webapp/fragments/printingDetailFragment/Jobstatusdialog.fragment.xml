@@ -91,9 +91,9 @@ resizable="false" >
 						<core:Item text="Embossing" key="Embossing" />
 						<core:Item text="Punching" key="Punching" />
 						<core:Item text="Pasting" key="Pasting" />
-						<core:Item text="Packing" key="Packing" />
+						<!-- <core:Item text="Packing" key="Packing" /> -->
 						<core:Item text="Dispatched" key="Dispatched" />
-						<core:Item text="Delivering" key="Delivering" />
+						<!-- <core:Item text="Delivering" key="Delivering" /> -->
 						<!-- <core:Item text="Cancelled" key="cancelled" /> -->
 					</items>
 				</Select>

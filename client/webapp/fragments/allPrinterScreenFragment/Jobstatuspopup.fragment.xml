@@ -11,11 +11,11 @@
           <ViewSettingsItem text="Embossing" key="Embossing" />
           <ViewSettingsItem  text="Punching" key="Punching" />
           <ViewSettingsItem  text="Pasting" key="Pasting" />
-          <ViewSettingsItem text="Packing" key="Packing" />
+          <!-- <ViewSettingsItem text="Packing" key="Packing" /> -->
           <!-- <ViewSettingsItem text="Completed" key="Completed" /> -->
           <ViewSettingsItem text="Dispatched" key="Dispatched" />
           <ViewSettingsItem text="Value Mismatched" key="Value Mismatched" />
-          <ViewSettingsItem text="Delivering" key="Delivering" />
+          <!-- <ViewSettingsItem text="Delivering" key="Delivering" /> -->
           <!-- <ViewSettingsItem text="Cancelled" key="Cancelled" /> -->
         </items>
       </ViewSettingsFilterItem>
