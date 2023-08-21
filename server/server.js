@@ -1399,7 +1399,11 @@ app.start = function () {
 		app.get('/getJobsWithCompany', async function (req, res) {
 			try {
 				const Job = app.models.Job;
-				const jobs = await Job.find({ include: 'Company' });
+				const jobs = await Job.find({ 
+					include: 'Company',
+					fields: {poAttachment: false, artworkAttachment: false},
+					// filter
+				 });
 				const
 					oFilter = jobs.filter(function (data) {
 						return data.CompanyId != null
