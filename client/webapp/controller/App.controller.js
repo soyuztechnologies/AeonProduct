@@ -69,12 +69,12 @@ sap.ui.define(
         });
         if (!sessionStorage.showCartWarning)
           sessionStorage.showCartWarning = false;
-          this.getUserId();
+          // this.getUserId();
       },
 
-      onAfterRendering: function () {
-        this.getUserId();
-      },
+      // onAfterRendering: function () {
+      //   this.getUserId();
+      // },
       onNavigation: function (oEvent) {},
 
       onSelectItem: function (oEvent) {
@@ -136,19 +136,19 @@ sap.ui.define(
         //   this.getRouter().navTo("Delivering")
         // }
       },
-      getUserId: function () {
+      // getUserId: function () {
         
-        var that = this;
-        this.middleWare.callMiddleWare("getUserRole", "get")
-          .then(function (data, status, xhr) {
-            var emailName = data.role.EmailId
-            that.getView().getModel('appView').setProperty('/UserEmail', emailName);
-            that.getView().getModel('appView').setProperty('/userRole', data.role.Role);
-          })
-          .catch(function (jqXhr, textStatus, errorMessage) {
-            that.middleWare.errorHandler(jqXhr, that);
-          });
-      },
+      //   var that = this;
+      //   this.middleWare.callMiddleWare("getUserRole", "get")
+      //     .then(function (data, status, xhr) {
+      //       var emailName = data.role.EmailId
+      //       that.getView().getModel('appView').setProperty('/UserEmail', emailName);
+      //       that.getView().getModel('appView').setProperty('/userRole', data.role.Role);
+      //     })
+      //     .catch(function (jqXhr, textStatus, errorMessage) {
+      //       that.middleWare.errorHandler(jqXhr, that);
+      //     });
+      // },
       onClickMenuButton: function (oEvent) {
         
         // var oSideNavigation = this.byId("sideNavigation");

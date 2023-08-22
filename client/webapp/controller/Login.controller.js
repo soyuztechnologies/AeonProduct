@@ -31,7 +31,7 @@ sap.ui.define([
 			oModel.setProperty("/ResendStatusSignup", false);
 			oModel.setProperty("/showError", false);
 			// oModel.setProperty("/aeonHeaderVis", false);
-			this.getUserRoleData();
+			// this.getUserRoleData();
 		},
 
 
