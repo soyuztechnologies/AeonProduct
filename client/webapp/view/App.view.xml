@@ -28,7 +28,7 @@
                                 <OverflowToolbarLayoutData priority="AlwaysOverflow" />
                             </layoutData>
                         </Title> -->
-                        <Button visible="{appView>/userRoleVis}" enabled="false" wrapping="true" text="{appView>/UserEmail}({appView>/userRole})" >
+                        <Button visible="{appView>/userRoleVis}" enabled="false" wrapping="true" text="{appView>/UserEmail}({appView>/UserRole})" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="High" />
                             </layoutData>

@@ -43,6 +43,7 @@ sap.ui.define([
 						that.getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 						that.getModel('appView').setProperty('/UserRole', data.role.Role);
 						that.getModel('appView').setProperty('/UserId', data.role.id);
+						that.getView().getModel('appView').updateBindings();
 						that.userRole();
 						// };
 					})
