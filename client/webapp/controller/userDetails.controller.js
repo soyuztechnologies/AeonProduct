@@ -173,9 +173,12 @@ sap.ui.define([
 			// var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			var that = this;
 			oModel.read('/AppUsers', {
+				urlParameters: {
+					$select: "id,FirstName,LastName,UserName,EmailId,Role,Blocked,Status,Company,CompanyName,CompanyId,phoneNumber,Website,CompanyLogo,Title,CompanyAddress,GSTNO,__metadata"
+				},
 				success: function (data) {
 					that.getView().getModel("appView").setProperty("/userDetails", data.results);
-					that.getView().getModel("appView").setProperty("/userName", data.results[0].UserName);
+					// that.getView().getModel("appView").setProperty("/userName", data.results[0].UserName); 
 					// if(sUserRole === "Admin"){
 					// 	that.getView().getModel("appView").setProperty("/companyselBoxVis" ,false);
 					// }
@@ -204,7 +207,7 @@ sap.ui.define([
 
 			oModel.update(sEntityPath, oData, {
 				success: function (data) {
-					MessageToast.show("Customer " + selectedItem + " selected successfully");
+					MessageToast.show("User " + selectedItem + " selected successfully");
 
 				},
 				error: function (error) {
