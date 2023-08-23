@@ -1462,6 +1462,7 @@ app.start = function () {
 			}
 		});
 		app.post('/selectedDateJobStatus', async (req, res) => {
+			debugger;
 			const Job = app.models.Job;
 			const JobStatus = app.models.JobStatus;
 			const { CreatedOnStart, CreatedOnEnd, cId } = req.body;
@@ -1472,6 +1473,7 @@ app.start = function () {
 
 
 				let jobStatusSelectedData = await Job.find({
+					order: 'id',
 					where: {
 						and: [
 							{ CreatedOn: { gte: startDate } }, // Filter jobs created on or after CreatedOnStart
@@ -1479,7 +1481,14 @@ app.start = function () {
 							{ CompanyId: cId } // Filter jobs matching the specified CompanyId
 						]
 					},
-					include: 'JobStatus' // Include JobStatus relation
+					field: { JobStatus:true ,jobCardNo: true},
+					include: [{
+						relation: 'JobStatus',
+						scope: {
+							order: 'id',
+							fields:{ "Printing":true , "rawMaterial":true, "Coating":true, "Foiling":true, "Embossing":true,"InvNo" :true,"Pasting":true,"spotUV":true, "Punching":true,"Packing":true,"noOfBoxPerPieces":true,"noOfPiecesToSend":true }
+						},
+					  }] // Include JobStatus relation
 				});
 
 				res.status(200).json(jobStatusSelectedData);
