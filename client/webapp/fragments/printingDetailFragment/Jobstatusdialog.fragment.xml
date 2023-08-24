@@ -25,6 +25,10 @@ resizable="false" >
 						<core:Item text="Pending" key="Pending" />
 					</items>
 				</Select>
+				<Label text="Paper Cutting" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
+				<Input liveChange="paperCuttingLiveChange" valueStateText="{appView>/VSTTPaperCutting}" valueState="{appView>/valueStatePaperCutting}" type="Number" value="{appView>PaperCutting}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}"/>
+
+
 				<Label text="Printing" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
 				<Input liveChange="printingLiveChange" valueStateText="{appView>/VSTTPrintingSheets}" valueState="{appView>/valueStateTotalPrintingSheets}" type="Number" value="{appView>Printing}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}"/>
 
