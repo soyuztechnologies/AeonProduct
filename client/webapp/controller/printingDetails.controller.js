@@ -1,3 +1,4 @@
+
 sap.ui.define([
 	"./BaseController",
 	"sap/m/MessageToast",
@@ -255,6 +256,7 @@ sap.ui.define([
             var data = oModel.getProperty("/newJobStatus");
             var oData = this.getView().getModel();
             var pastingValue = oModel.getProperty("/Jobs");
+			that.getCurrentDateAndTime();
 
 			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
 			
@@ -271,11 +273,11 @@ sap.ui.define([
                     const sEntityPath = `/JobStatus('${id}')`;
                     
                     if (jobStatus.TobeUpdated == "X") {
-						var selectedKey = this.getView().byId('idStatus').getSelectedKey();
-						if(!selectedKey){
-							MessageToast.show("Please Select The Required Field");
-							return;
-						}
+						// var selectedKey = this.getView().byId('idStatus').getSelectedKey();
+						// if(!selectedKey){
+						// 	MessageToast.show("Please Select The Required Field");
+						// 	return;
+						// }
                         delete jobStatus.TobeUpdated;
 
                         oData.create("/JobStatus", jobStatus, {
@@ -300,11 +302,13 @@ sap.ui.define([
                             }
                         });
                     } else if (jobStatus.TobeUpdated == true) {
-						var selectedKey = this.getView().byId('idStatus').getSelectedKey();
-						if(!selectedKey){
-							MessageToast.show("Please Select The Required Field");
-							return;
-						}
+						// var selectedKey = this.getView().byId('idStatus').getSelectedKey();
+						// if(!selectedKey){
+						// 	MessageToast.show("Please Select The Required Field");
+						// 	return;
+						// }
+						
+						jobStatus.UpdatedOn = this.getView().getModel("appView").getProperty("/dateAndTime")
                         delete jobStatus.TobeUpdated;
 							oData.update(sEntityPath, jobStatus, {
 								success: function (Data) {
@@ -780,6 +784,7 @@ sap.ui.define([
 			var oNewJob = {
 				"JobStatusId": this.oArgs,
 				"Coating": "",
+				"PaperCutting": "",
 				"DeliveryNo": "",
 				"Embossing": "",
 				"Printing": "",
@@ -1482,30 +1487,134 @@ sap.ui.define([
 		// Start Production Button Pressed
 
 		whenProductionStart: function () {
-			
+			debugger;
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
-			var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
-			var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
+			var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0");
+			var isCoating = this.getView().getModel('appView').getProperty('/coatingData');
+			var isFoiling = this.getView().getModel('appView').getProperty('/foilingData');
+			var isSpotUV = this.getView().getModel('appView').getProperty('/spotUvData');
+			var isEmbossing = this.getView().getModel('appView').getProperty('/embossingData');
 			var oUpdatedData = {
 				status: ""
 			};
-			if(selectedjobStatus){
-						oUpdatedData.status = selectedjobStatus
-					}
-					// else if(updatedJobStatus.Printing === 0){
-					// 		oUpdatedData.status = "Printing"
-					
-					// }
-					// else if(updatedJobStatus.Coating === 0){
-					// 		oUpdatedData.status = "Coating"
-					
-					// }
-					// else if(updatedJobStatus.Foiling === 0){
-					// 		oUpdatedData.status = "Foiling"
-					
-					// }
+
+
+			//* For select box********************************************
+			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+
+            // var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
+
+            // if(selectedjobStatus){
+
+            //             oUpdatedData.status = selectedjobStatus
+
+            //         }
+
+			//*select box ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+				if(isCoating!=0 && isFoiling!=0 && isSpotUV!=0 &&isEmbossing!=0){
+				if (updatedJobStatus.rawMaterial === "In Stock") {
+					oUpdatedData.status = "Paper Cutting";
+				}
+				if (updatedJobStatus.PaperCutting) {
+					oUpdatedData.status = "Printing";
+				}
+				if (updatedJobStatus.Printing) {
+					oUpdatedData.status = "Coating";
+				}
+		
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Foiling";
+				}
+		
+				if (updatedJobStatus.Foiling) {
+					oUpdatedData.status = "SpotUV";
+				}
+		
+				if (updatedJobStatus.spotUV) {
+					oUpdatedData.status = "Embossing";
+				}
+				if (updatedJobStatus.Embossing) {
+					oUpdatedData.status = "Punching";
+				}
+		
+				if (updatedJobStatus.Punching) {
+					oUpdatedData.status = "Pasting";
+				}
+		
+				if (updatedJobStatus.Pasting) {
+					oUpdatedData.status = "Ready For Dispatch";
+				}
+				if (updatedJobStatus.InvNo) {
+					oUpdatedData.status = "Dispatched";
+				}
+				}
+
+				// if (updatedJobStatus.rawMaterial === "In Stock") {
+				// 	oUpdatedData.status = "Printing";
+				// }
+				// if (updatedJobStatus.Printing) {
+				// 	if (isCoating != 0) {
+				// 		oUpdatedData.status = "Coating";
+				// 	}
+				// 	else if(isFoiling !=0){
+				// 		oUpdatedData.status = "Foiling";
+				// 	}
+				// 	else if(isSpotUV !=0){
+				// 		oUpdatedData.status = "SpotUV";
+				// 	}
+				// 	else if(isEmbossing !=0){
+				// 		oUpdatedData.status = "Embossing";
+				// 	}
+				// 	else{
+				// 		oUpdatedData.status = "Punching";
+				// 	}
+				// }
+		
+				// if ((updatedJobStatus.Coating && isFoiling !== 0)) {
+				// 	oUpdatedData.status = "Foiling";
+				// }
+				// else if(isSpotUV !=0){
+				// 	oUpdatedData.status = "SpotUV";
+				// }
+				// else if(isEmbossing !=0){
+				// 	oUpdatedData.status = "Embossing";
+				// }
+				// else{
+				// 	oUpdatedData.status = "Punching";
+				// }
+		
+				// if ((updatedJobStatus.Foiling && isSpotUV !== 0)) {
+				// 	oUpdatedData.status = "SpotUV";
+				// }
+				// else if(isEmbossing !=0){
+				// 	oUpdatedData.status = "Embossing";
+				// }
+				// else{
+				// 	oUpdatedData.status = "Punching";
+				// }
+		
+				// if ((updatedJobStatus.spotUV && isEmbossing !== 0)) {
+				// 	oUpdatedData.status = "Embossing";
+				// }
+				// else{
+				// 	oUpdatedData.status = "Punching";
+				// }
+		
+				// if (updatedJobStatus.Embossing) {
+				// 	oUpdatedData.status = "Punching";
+				// }
+		
+				// if (updatedJobStatus.Punching) {
+				// 	oUpdatedData.status = "Pasting";
+				// }
+		
+				// if (updatedJobStatus.Pasting) {
+				// 	oUpdatedData.status = "Dispatched";
+				// }
+		
 			var sEntityPath = `/Jobs('${ids}')`;
 			oModel.update(sEntityPath, oUpdatedData, {
 				success: function (data) {
@@ -1701,6 +1810,26 @@ sap.ui.define([
 			oModel.updateBindings();
 		},
 		
+		paperCuttingLiveChange: function (oEvent) {
+			var newValue1 = oEvent.getParameter("value");
+			var newValue = parseInt(newValue1);
+			var intNewValue = newValue;
+			var allRemPrinting = this.getView().getModel("appView").getProperty("/allRemainingDatas").PaperCutting
+			// this.getView().getModel("appView").setProperty("/Printing", intNewValue);
+			if (allRemPrinting >= intNewValue) {
+				this.getView().getModel("appView").setProperty("/valueStatePaperCutting", "None");
+				// this.getView().getModel("appView").setProperty("/totalPrintingSheets", "");
+				this.getView().getModel("appView").setProperty("/PaperCutting", newValue);
+				this.getView().getModel("appView").setProperty("/newJob/PaperCutting", newValue);
+				// this.getView().getModel("appView").getProperty("/newJob/Printing")
+			} else {
+				this.getView().getModel("appView").setProperty("/valueStatePaperCutting", "Error");
+				this.getView().getModel("appView").setProperty("/PaperCutting", 0);
+				// this.getView().getModel("appView").setProperty("/newJob/Printing", 0);
+				this.getView().getModel("appView").setProperty("/VSTTPaperCutting", "Value Can't be More than " + allRemPrinting);
+			}
+		},
+
 		printingLiveChange: function (oEvent) {
 			
 			var newValue1 = oEvent.getParameter("value");
@@ -2036,6 +2165,7 @@ sap.ui.define([
             var oSumOfData = {
 
                 "Coating": 0,
+				"PaperCutting":0,
                 "Printing": 0,
                 "Punching": 0,
                 "Foiling": 0,
@@ -2054,6 +2184,7 @@ sap.ui.define([
             var printingsheet = oModel.getProperty("/newJobStatus");
             for (let i = 0; i < printingsheet.length; i++) {
 
+                var paperCutting = printingsheet[i].PaperCutting;
                 var printing = printingsheet[i].Printing;
                 var coating = printingsheet[i].Coating;
                 var foiling = printingsheet[i].Printing;
@@ -2066,7 +2197,7 @@ sap.ui.define([
                 var SecoundarySuppliers = printingsheet[i].SecoundarySuppliers;
                 var SecoundaryPiecesToSend = printingsheet[i].SecoundaryPiecesToSend;
 
-
+				var parsePaperCutting =parseInt(paperCutting)
                 var integerNumber = parseInt(printing);
                 var noOfCoating = parseInt(coating);
                 var noOfFoiling = parseInt(foiling);
@@ -2079,6 +2210,7 @@ sap.ui.define([
 				noOfBoxPerPieces = isNaN(noOfBoxPerPieces) ? "" : noOfBoxPerPieces;
 
 
+                oSumOfData.PaperCutting += parsePaperCutting;
                 oSumOfData.Printing += integerNumber;
                 oSumOfData.Coating += noOfCoating;
                 oSumOfData.Foiling += noOfFoiling;
@@ -2094,6 +2226,7 @@ sap.ui.define([
 
             var remData = {
                 "Printing": totalprintingsheets ,
+                "PaperCutting": totalprintingsheets ,
 				"Coating": totalprintingsheets ,
 				"Foiling": totalprintingsheets ,
 				"spotUV": totalprintingsheets ,
