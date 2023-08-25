@@ -1502,55 +1502,55 @@ sap.ui.define([
 
 
 			//* For select box********************************************
-			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+			var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
 
-            // var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
+            var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
 
-            // if(selectedjobStatus){
+            if(selectedjobStatus){
 
-            //             oUpdatedData.status = selectedjobStatus
+                        oUpdatedData.status = selectedjobStatus
 
-            //         }
+                    }
 
 			//*select box ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-				if(isCoating!=0 && isFoiling!=0 && isSpotUV!=0 &&isEmbossing!=0){
-				if (updatedJobStatus.rawMaterial === "In Stock") {
-					oUpdatedData.status = "Paper Cutting";
-				}
-				if (updatedJobStatus.PaperCutting) {
-					oUpdatedData.status = "Printing";
-				}
-				if (updatedJobStatus.Printing) {
-					oUpdatedData.status = "Coating";
-				}
+				// if(isCoating!=0 && isFoiling!=0 && isSpotUV!=0 &&isEmbossing!=0){
+				// if (updatedJobStatus.rawMaterial === "In Stock") {
+				// 	oUpdatedData.status = "Paper Cutting";
+				// }
+				// if (updatedJobStatus.PaperCutting) {
+				// 	oUpdatedData.status = "Printing";
+				// }
+				// if (updatedJobStatus.Printing) {
+				// 	oUpdatedData.status = "Coating";
+				// }
 		
-				if (updatedJobStatus.Coating) {
-					oUpdatedData.status = "Foiling";
-				}
+				// if (updatedJobStatus.Coating) {
+				// 	oUpdatedData.status = "Foiling";
+				// }
 		
-				if (updatedJobStatus.Foiling) {
-					oUpdatedData.status = "SpotUV";
-				}
+				// if (updatedJobStatus.Foiling) {
+				// 	oUpdatedData.status = "SpotUV";
+				// }
 		
-				if (updatedJobStatus.spotUV) {
-					oUpdatedData.status = "Embossing";
-				}
-				if (updatedJobStatus.Embossing) {
-					oUpdatedData.status = "Punching";
-				}
+				// if (updatedJobStatus.spotUV) {
+				// 	oUpdatedData.status = "Embossing";
+				// }
+				// if (updatedJobStatus.Embossing) {
+				// 	oUpdatedData.status = "Punching";
+				// }
 		
-				if (updatedJobStatus.Punching) {
-					oUpdatedData.status = "Pasting";
-				}
+				// if (updatedJobStatus.Punching) {
+				// 	oUpdatedData.status = "Pasting";
+				// }
 		
-				if (updatedJobStatus.Pasting) {
-					oUpdatedData.status = "Ready For Dispatch";
-				}
-				if (updatedJobStatus.InvNo) {
-					oUpdatedData.status = "Dispatched";
-				}
-				}
+				// if (updatedJobStatus.Pasting) {
+				// 	oUpdatedData.status = "Ready For Dispatch";
+				// }
+				// if (updatedJobStatus.InvNo) {
+				// 	oUpdatedData.status = "Dispatched";
+				// }
+				// }
 
 				// if (updatedJobStatus.rawMaterial === "In Stock") {
 				// 	oUpdatedData.status = "Printing";

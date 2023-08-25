@@ -1334,6 +1334,7 @@ app.start = function () {
 			try {
 				const Job = app.models.Job;
 				const jobs = await Job.find({
+					order: 'jobCardNo',
 					fields: { 
 							JobName:false,
 							UpdatedOn:false,
@@ -1424,7 +1425,14 @@ app.start = function () {
 							corrections3: false,
 						},
 					where: { "CompanyId": { "neq": null } },
-					include: 'Company',
+					include: [{
+						relation: 'Company',
+						scope: {
+							order: 'id',
+							fields:{ "CompanyName":true }
+						},
+					  }]
+					
 				});
 				// fields: {artworkAttachment:false, poAttachment:false },
 				// jobCardNo: true, nameOFTheProduct:true,jobCode:true, status:true, urgent:true, Company:true
@@ -1486,7 +1494,7 @@ app.start = function () {
 						relation: 'JobStatus',
 						scope: {
 							order: 'id',
-							fields:{ "Printing":true , "rawMaterial":true, "Coating":true, "Foiling":true, "Embossing":true,"InvNo" :true,"Pasting":true,"spotUV":true, "Punching":true,"Packing":true,"noOfBoxPerPieces":true,"noOfPiecesToSend":true }
+							fields:{ "Printing":true , "UpdatedOn":true, "rawMaterial":true, "Coating":true, "Foiling":true, "Embossing":true,"InvNo" :true,"Pasting":true,"spotUV":true, "Punching":true,"Packing":true,"noOfBoxPerPieces":true,"noOfPiecesToSend":true }
 						},
 					  }] // Include JobStatus relation
 				});
