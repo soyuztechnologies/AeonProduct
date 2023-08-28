@@ -23,9 +23,9 @@
 		<f:SimpleForm title="{appView>nameOFTheProduct}" id="jobDetails" editable="true" layout="ColumnLayout"  columnsM="2"  columnsL="2">
 				<f:content>
 					
-
-						<Label visible="{=${appView>/UserRole} === 'Accounts Head' ? true : false}" text="Client PO Number"></Label>
-						<Link visible="{=${appView>/UserRole} === 'Accounts Head' ? true : false}" press="onClickPopup"  text="{appView>clientPONo}" ></Link>
+						<Label text="Client PO Number"></Label>
+						<!-- visible="{=${appView>/UserRole} === 'Accounts Head' ? true : false}" -->
+						<Link press="onClickPopup"  text="{appView>clientPONo}" ></Link>
 
 						<Label text="Reference Number"></Label>
 						<Text text="{appView>poNo}" ></Text>

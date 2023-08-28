@@ -1360,7 +1360,7 @@ app.start = function () {
 		
 				Job.find(
 					{
-					order: 'id',
+					order: 'jobCardNo',
 					where: {
 						and: [
 							{ CreatedOn: { gte: startDate } },
@@ -1368,7 +1368,7 @@ app.start = function () {
 							{ CompanyId: cId }
 						]
 					},
-					field: { JobStatus: true, jobCardNo: true },
+					fields: { "JobStatus": true, "jobCardNo": true, "qtyPcs":true, "jobCode":true, "poNo":true, "nameOFTheProduct":true },
 					include: [{
 						relation: 'JobStatus',
 						scope: {
