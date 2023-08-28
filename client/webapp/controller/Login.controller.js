@@ -30,6 +30,7 @@ sap.ui.define([
 			oModel.setProperty("/logoutVisibility", false);
 			oModel.setProperty("/ResendStatusSignup", false);
 			oModel.setProperty("/showError", false);
+			this.alreadyLogin();
 			// oModel.setProperty("/aeonHeaderVis", false);
 			// this.getUserRoleData();
 		},
@@ -63,8 +64,26 @@ sap.ui.define([
 			}
 		  },
 
-		Login: function () {
+		  alreadyLogin:function(){
+			debugger;
+			var email = localStorage.getItem("email");
+			var pass = localStorage.getItem("pass");
 
+			if(email && pass){
+				
+				// this.isAval = true;
+				this.Login();
+				
+			}
+			else{
+				return;
+			}
+					
+		  },
+
+		Login: function () {
+			var email = localStorage.getItem("email");
+			var pass = localStorage.getItem("pass");
 			// * for cookie session expire.
 			var allCookies = document.cookie.split(';');
 			// The "expire" attribute of every cookie is
@@ -77,10 +96,17 @@ sap.ui.define([
 			var that = this;
 			var userName = this.getView().byId("userid").getValue();
 			var password = this.getView().byId("pwd").getValue();
-			var payload = {
-				"email": userName,
-				"password": password
-			};
+			if(email && pass){
+				var payload = {
+					"email": localStorage.getItem("email"),
+					"password": localStorage.getItem("pass")
+				};
+			}else{
+				var payload = {
+					"email": userName,
+					"password": password
+				};
+			}
 			if (userName === password) {
 				that.getRouter().navTo("");
 			};
@@ -145,6 +171,13 @@ sap.ui.define([
 					});
 
 					uId = data.userId;
+					var oEmail = localStorage.getItem("email");
+							var oPass = localStorage.getItem("pass");
+							if(!oEmail && !oPass){
+								localStorage.setItem("email",userName);
+								localStorage.setItem("pass",password);
+
+							}
 					if(window.cordova){
 
 						Cookies.set("soyuz_session", data.id, { expires: 7 });

@@ -287,6 +287,16 @@
 					"name":"Delivering",
 					"target":["allPrinters"]
 				},
+				{
+					"pattern":"Others/{jobId}",
+					"name":"sideNavOthers",
+					"target":["allPrinters","printingDetails"]
+				},
+				{
+					"pattern":"Others",
+					"name":"Others",
+					"target":["allPrinters"]
+				},
 
 
 
@@ -381,6 +391,13 @@
 					"viewId":"allPrinters"
 				},
 				"Delivering":{
+					"viewName":"allPrinters",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"allPrinters"
+				},
+				
+				"Others":{
 					"viewName":"allPrinters",
 					"viewLevel":1,
 					"controlAggregation": "beginColumnPages",

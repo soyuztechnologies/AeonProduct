@@ -50,24 +50,26 @@
         </tnt:mainContents>
 
         <tnt:sideContent>
-            <tnt:SideNavigation bindingContexts="true"  expanded="{appView>/sideNavExpended}" id="sideNavigation" visible="{appView>/visibility}"  itemSelect="onSelectItem">
+            <!-- expanded="{appView>/sideNavExpended}" -->
+            <tnt:SideNavigation bindingContexts="true"  expanded="true" id="sideNavigation" visible="{appView>/visibility}"  itemSelect="onSelectItem">
                 <tnt:NavigationList>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' ? true : false}" text="Upload / Manage Documents" icon="sap-icon://upload"  key="UploadXml"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' ? true : false }" text="Jobs" icon="sap-icon://business-card" key="allPrinters"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false }" text="User Details" icon="sap-icon://family-care" key="userDetails"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Company Details" icon="sap-icon://manager" key="companyDetails"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' ? true : false }" text="Profile" icon="sap-icon://customer" key="Profile"/>
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Status" icon="sap-icon://in-progress">
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Printing" key="Printing" />
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Coating" key="Coating" />
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Foiling" key="Foiling" />
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="SpotUV" key="SpotUV" />
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Embossing" key="Embossing"/>
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Punching" key="Punching"/>
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Pasting" key="Pasting"/>
-                    <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Packing" key="Packing"/> -->
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Dispatched" key="Dispatched"/>
-                    <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Delivering" key="Delivering"/> -->
+                    <tnt:NavigationListItem expanded="false" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Status" icon="sap-icon://in-progress">
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Printing" key="Printing" />
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Coating" key="Coating" />
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Foiling" key="Foiling" />
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="SpotUV" key="SpotUV" />
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Embossing" key="Embossing"/>
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Punching" key="Punching"/>
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Pasting" key="Pasting"/>
+                        <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Packing" key="Packing"/> -->
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Dispatched" key="Dispatched"/>
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Others" key="Others"/>
+                        <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Delivering" key="Delivering"/> -->
 			        </tnt:NavigationListItem>
                 </tnt:NavigationList>
             </tnt:SideNavigation>

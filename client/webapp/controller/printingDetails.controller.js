@@ -5,8 +5,10 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/BusyIndicator",
-	"sap/ui/core/util/File"
-], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator, File) {
+	"sap/ui/core/util/File",
+	"sap/ui/unified/FileUploader",
+	
+], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator, File,FileUploader) {
 	"use strict";
 	var isPono;
 	return BaseController.extend("ent.ui.ecommerce.controller.printingDetails", {
@@ -24,6 +26,7 @@ sap.ui.define([
 			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavOthers").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 
 		},
 
@@ -82,7 +85,7 @@ sap.ui.define([
 			oModel.setProperty("/addBtnVisible", true);
 			oModel.setProperty("/editableFields", false);
 			oModel.updateBindings();
-			this.getCompanyName();
+			// this.getCompanyName();
 			// this.getUserRoleData();
 			this.oGetAgru();
 			this.onReadJobStatus();
@@ -155,7 +158,7 @@ sap.ui.define([
 			}
 			// oModel.setProperty("/visiblePdfViewer", false);
 			oModel.updateBindings();
-			this.getCompanyName();
+			// this.getCompanyName();
 			// this.getUserRoleData();
 			this.oGetAgru();
 			this.onReadJobStatus();
@@ -163,6 +166,506 @@ sap.ui.define([
 
 
 		},
+		
+		//this fragment open when click on remark
+
+        openRemarkJobStatus: function () {
+
+            var oView = this.getView();
+
+            var that = this;
+
+            if (!this.remarkJobStatus) {
+
+                this.remarkJobStatus = Fragment.load({
+
+                    id: oView.getId(),
+
+                    name: "ent.ui.ecommerce.fragments.printingDetailFragment.RemarkJobStatus",
+
+                    controller: this
+
+                }).then(function (oDialog) {
+
+                    // Add dialog to view hierarch
+
+                    oView.addDependent(oDialog);
+
+                    return oDialog;
+
+                }.bind(this));
+
+            }
+
+            return this.remarkJobStatus;
+
+        },
+
+        onRemarkClick: function(){
+
+            debugger;
+
+            var that = this;
+
+            that.openRemarkJobStatus().then(function (remarkDialog) {
+
+                remarkDialog.open();
+
+                that.getView().byId("idRemarkDialog").bindElement("appView>/newJobStatus/0");
+
+            });
+
+        },
+
+        //this function hits when we click on update
+
+        onRemarkFragupdate: function(){
+
+            debugger;
+
+            var that = this;
+
+            var dModel = this.getView().getModel();
+
+            var oModel = this.getView().getModel("appView");
+
+            var remark1Img = oModel.getProperty("/logoRemark1");
+
+            var remark2Img = oModel.getProperty("/logoRemark2");
+
+            var remark3Img = oModel.getProperty("/logoRemark3");
+
+            var jobStatusData = oModel.getProperty("/newJobStatus/0");
+
+            var id = jobStatusData.id;
+
+            const sEntityPath = `/JobStatus('${id}')`;
+
+            const payload = {
+
+                "remark1": jobStatusData.remark1,
+
+                "remark2": jobStatusData.remark2,
+
+                "remark3": jobStatusData.remark3,
+
+                "remark1Img": remark1Img,              
+
+                "remark2Img": remark2Img,              
+
+                "remark3Img": remark3Img                
+
+            };
+
+ 
+
+            dModel.update(sEntityPath, payload, {
+
+                success: function (data) {
+
+                    MessageToast.show("successfully Remark uploaded");
+
+                    that.getView().byId("idRemarkDialog").bindElement("appView>/newJobStatus/0");
+
+                    that.onRemarkFragClose();
+
+                },
+
+                error: function (error) {
+
+                    that.middleWare.errorHandler(error, that);
+
+                    // console.error("PATCH request failed");
+
+                }
+
+            });
+
+        },
+
+        //this function hits when we click on close
+
+        onRemarkFragClose: function(){
+
+            this.openRemarkJobStatus().then(function (remarkDialog) {
+
+                remarkDialog.close();
+
+            });
+
+        },
+
+        //this function hits when click on browse to upload remark img
+
+        // handleUploadRemark: function (oEvent) {
+
+        //  debugger;
+
+        //  var files = oEvent.getParameter("files");
+
+        //  var that = this;
+
+        //  var oModel = this.getView().getModel("appView");
+
+        //  var Data = oModel.getProperty("/newJobStatus/0");
+
+         
+
+        //  var reader = new FileReader();
+
+        //  var currentIndex = 0;
+
+         
+
+        //  reader.onload = function (e) {
+
+        //     try {
+
+        //        var vContent = e.currentTarget.result;
+
+                 
+
+        //        // Update the appropriate property in your data model
+
+        //        if (Data) {
+
+        //           if (currentIndex === 0) {
+
+        //              oModel.setProperty("/streamUrlRemark1", vContent);
+
+        //           } else if (currentIndex === 1) {
+
+        //              oModel.setProperty("/streamUrlRemark2", vContent);
+
+        //           } else if (currentIndex === 2) {
+
+        //              oModel.setProperty("/streamUrlRemark3", vContent);
+
+        //           }
+
+        //           oModel.updateBindings();
+
+        //        }
+
+         
+
+        //        currentIndex++;
+
+        //        if (currentIndex < files.length) {
+
+        //           // Read the next file
+
+        //           reader.readAsDataURL(files[currentIndex]);
+
+        //        }
+
+        //     } catch (jqXhr) {
+
+        //        that.middleWare.errorHandler(jqXhr, that);
+
+        //     }
+
+        //  };
+
+         
+
+        //  // Start reading the first file
+
+        //  reader.readAsDataURL(files[0]);
+
+        //  },
+
+         
+
+        handleUploadRemark: function (oEvent) {
+
+            debugger;
+
+            var files = oEvent.getParameter("files");
+
+            var that = this;
+
+            var oModel = this.getView().getModel("appView");
+
+            var Data = oModel.getProperty("/newJobStatus/0");
+
+            var selectedButtonName = oEvent.getSource().getName();
+
+            // if(Data){
+
+            //  oModel.setProperty("/remark1", Data.remark1Img);
+
+            // }
+
+            if (!files.length) {
+
+            } else {
+
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    try {
+
+                        var vContent = e.currentTarget.result; //.result.replace("data:image/jpeg;base64,", "");
+
+                        // that.img.Content = vContent;
+
+                        var stream = that.getImageUrlFromContent(vContent);
+
+                        if(selectedButtonName === "remarkupload1"){
+
+                            oModel.setProperty("/logoRemark1", vContent)
+
+                        }
+
+                        if(selectedButtonName === "remarkupload2"){
+
+                            oModel.setProperty("/logoRemark2", vContent)
+
+                        }
+
+                        if(selectedButtonName === "remarkupload3"){
+
+                            oModel.setProperty("/logoRemark3", vContent)
+
+                        }
+
+ 
+
+ 
+
+                        // that.getModel("appView").setProperty("/companyLogo", stream);
+
+                        // oModel.setProperty("/LogoAvonUserProfile", vContent);
+
+                        // var logo = oModel.getProperty("logoUpdate")  
+
+                        // var logoProperty = oModel.getProperty("/LogoAvonUserProfile");
+
+                        // var base64String = logoProperty.split(",")[1];
+
+                        // logo = base64String;
+
+                        oModel.updateBindings();
+
+                    } catch (jqXhr) {
+
+                        that.middleWare.errorHandler(jqXhr, that);
+
+                    }
+
+                };
+
+                reader.readAsDataURL(files[0]);
+
+            }
+
+         },
+
+         
+
+        getImageUrlFromContent: function (base64Stream) {
+
+            debugger;
+
+            if (base64Stream) {
+
+                var b64toBlob = function (dataURI) {
+
+                    var byteString = atob(dataURI.split(',')[1]);
+
+                    var ab = new ArrayBuffer(byteString.length);
+
+                    var ia = new Uint8Array(ab);
+
+                    for (var i = 0; i < byteString.length; i++) {
+
+                        ia[i] = byteString.charCodeAt(i);
+
+                    }
+
+                    return new Blob([ab], {
+
+                        type: 'image/jpeg'
+
+                    });
+
+                };
+
+                var x = b64toBlob(base64Stream);
+
+                return URL.createObjectURL(x);
+
+            }
+
+        },
+
+        // This function hits when click on show logo
+
+        onShowRemark: function (oEvent) {
+
+            debugger;
+
+            var selectedButtonId = oEvent.getParameter('id').split('--')[2]
+
+            if(selectedButtonId ==="showRemark1"){
+
+                var oLogo = this.getModel("appView").getProperty("/logoRemark1");
+
+            }
+
+            if(selectedButtonId ==="showRemark2"){
+
+                var oLogo = this.getModel("appView").getProperty("/logoRemark2");
+
+            }
+
+            if(selectedButtonId ==="showRemark3"){
+
+                var oLogo = this.getModel("appView").getProperty("/logoRemark3");
+
+            }
+
+            var stream = this.formatter.getImageUrlFromContent(oLogo);
+
+            if (!this.lightBox) {
+
+                this.lightBox = new sap.m.LightBox("lightBoxx", {  
+
+                    imageContent: [new sap.m.LightBoxItem({
+
+                        imageSrc: stream
+
+                    })]
+
+                });
+
+                this.lightBox.open();
+
+            } else {
+
+                this.lightBox.getImageContent()[0].setImageSrc(stream);
+
+                this.lightBox.open();
+
+            }
+
+        },      
+
+ 
+
+        //this function hits when we click on download remark
+
+        onDownlodeRemark: function(){
+
+            debugger;
+
+            var that = this;
+
+            that.getCurrentDateAndTime();
+
+            // Function to check if the code is running in Cordova for Android environment
+
+            function isCordovaAndroidEnvironment() {
+
+                return  window.cordova;
+
+            }
+
+           
+
+            // Usage
+
+            if (isCordovaAndroidEnvironment()) {
+
+                // Cordova for Android environment, use Cordova-specific functionality
+
+                that.downloadAttachmentCordova();
+
+            } else {
+
+                // Web browser environment or other platforms, use browser-specific functionality
+
+                that.downloadRemarkWeb();
+
+            }
+
+        },
+
+ 
+
+        //this function is for download the remark for web
+
+        downloadRemarkWeb: function(){
+
+                       
+
+            var oModel = this.getView().getModel("appView");
+
+            var jsonPath = '';
+
+            var files = '';
+
+            var mapping = {
+
+                "remark1Img": "/logoRemark1",
+
+ 
+
+                "remark1Img": "/logoRemark2",
+
+ 
+
+                "remark1Img": "/logoRemark3"
+
+            };
+
+            if (this.clickedLink && mapping.hasOwnProperty(this.clickedLink)) {
+
+                jsonPath = mapping[this.clickedLink];
+
+                files = oModel.getProperty("/attachmentFiles");
+
+                if(!files){
+
+                    MessageToast.show("No Files Attached");
+
+                    return;
+
+                }
+
+                var mimeType = files.split(';')[0].split(':')[1];
+
+                var fileExtension = mimeType.split('/')[1];
+
+                var byteCharacters = atob(files.split(',')[1]);
+
+                var byteNumbers = new Array(byteCharacters.length);
+
+                for (var i = 0; i < byteCharacters.length; i++) {
+
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+
+                }
+
+                var byteArray = new Uint8Array(byteNumbers);
+
+                var blob = new Blob([byteArray], { type: "application/octet-stream" });
+
+                fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
+
+                // var url = URL.createObjectURL(blob);
+
+                //  jQuery.sap.addUrlWhitelist("blob");
+
+                //  window.open(url, "file",fileExtension);
+
+                File.save(blob, 'NewFile', fileExtension);
+
+            }
+
+        },
 
 		showAddedFields: function () {
 			var oTable = this.getView().byId("jobStatusTable");
@@ -985,6 +1488,8 @@ sap.ui.define([
 			if(sUserRole === "Customer" || sUserRole === "Artwork Head"){
 				return;
 			}
+
+			this.getView().getModel("appView").setProperty("/selectStatus",undefined);
 			this.getRemJobsStatus();
 				
 			this.isEditStatus = true;
@@ -1502,9 +2007,179 @@ sap.ui.define([
 
 
 			//* For select box********************************************
-			var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
 
-            var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
+            // var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
+
+            // if(selectedjobStatus){
+
+            //             oUpdatedData.status = selectedjobStatus
+
+            //         }
+			//*select box ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				if(isCoating!=0 && isFoiling!=0 && isSpotUV!=0 &&isEmbossing!=0){
+				if (updatedJobStatus.rawMaterial === "In Stock") {
+					oUpdatedData.status = "Paper Cutting";
+				}
+				if (updatedJobStatus.PaperCutting) {
+					oUpdatedData.status = "Printing";
+				}
+				if (updatedJobStatus.Printing) {
+					oUpdatedData.status = "Coating";
+				}
+		
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Foiling";
+				}
+		
+				if (updatedJobStatus.Foiling) {
+					oUpdatedData.status = "SpotUV";
+				}
+		
+				if (updatedJobStatus.spotUV) {
+					oUpdatedData.status = "Embossing";
+				}
+				if (updatedJobStatus.Embossing) {
+					oUpdatedData.status = "Punching";
+				}
+		
+				if (updatedJobStatus.Punching) {
+					oUpdatedData.status = "Pasting";
+				}
+		
+				if (updatedJobStatus.Pasting) {
+					oUpdatedData.status = "Ready For Dispatch";
+				}
+				if (updatedJobStatus.InvNo) {
+					oUpdatedData.status = "Dispatched";
+				}
+				}
+				if(isCoating!=0 && isFoiling!=0 && isSpotUV==0 &&isEmbossing!=0){
+				if (updatedJobStatus.rawMaterial === "In Stock") {
+					oUpdatedData.status = "Paper Cutting";
+				}
+				if (updatedJobStatus.PaperCutting) {
+					oUpdatedData.status = "Printing";
+				}
+				if (updatedJobStatus.Printing) {
+					oUpdatedData.status = "Coating";
+				}
+		
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Foiling";
+				}
+		
+				if (updatedJobStatus.Foiling) {
+					oUpdatedData.status = "Embossing";
+				}
+				if (updatedJobStatus.Embossing) {
+					oUpdatedData.status = "Punching";
+				}
+		
+				if (updatedJobStatus.Punching) {
+					oUpdatedData.status = "Pasting";
+				}
+		
+				if (updatedJobStatus.Pasting) {
+					oUpdatedData.status = "Ready For Dispatch";
+				}
+				if (updatedJobStatus.InvNo) {
+					oUpdatedData.status = "Dispatched";
+				}
+				}
+				if(isCoating!=0 && isFoiling==0 && isSpotUV==0 &&isEmbossing!=0){
+				if (updatedJobStatus.rawMaterial === "In Stock") {
+					oUpdatedData.status = "Paper Cutting";
+				}
+				if (updatedJobStatus.PaperCutting) {
+					oUpdatedData.status = "Printing";
+				}
+				if (updatedJobStatus.Printing) {
+					oUpdatedData.status = "Coating";
+				}
+		
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Embossing";
+				}
+		
+				if (updatedJobStatus.Embossing) {
+					oUpdatedData.status = "Punching";
+				}
+		
+				if (updatedJobStatus.Punching) {
+					oUpdatedData.status = "Pasting";
+				}
+		
+				if (updatedJobStatus.Pasting) {
+					oUpdatedData.status = "Ready For Dispatch";
+				}
+				if (updatedJobStatus.InvNo) {
+					oUpdatedData.status = "Dispatched";
+				}
+				}
+				if(isCoating!=0 && isFoiling!=0 && isSpotUV!=0 &&isEmbossing==0){
+				if (updatedJobStatus.rawMaterial === "In Stock") {
+					oUpdatedData.status = "Paper Cutting";
+				}
+				if (updatedJobStatus.PaperCutting) {
+					oUpdatedData.status = "Printing";
+				}
+				if (updatedJobStatus.Printing) {
+					oUpdatedData.status = "Coating";
+				}
+		
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Foiling";
+				}
+		
+				if (updatedJobStatus.Foiling) {
+					oUpdatedData.status = "SpotUV";
+				}
+		
+				if (updatedJobStatus.spotUV) {
+					oUpdatedData.status = "Punching";
+				}
+		
+				if (updatedJobStatus.Punching) {
+					oUpdatedData.status = "Pasting";
+				}
+		
+				if (updatedJobStatus.Pasting) {
+					oUpdatedData.status = "Ready For Dispatch";
+				}
+				if (updatedJobStatus.InvNo) {
+					oUpdatedData.status = "Dispatched";
+				}
+				}
+				if(isCoating!=0 && isFoiling==0 && isSpotUV==0 &&isEmbossing==0){
+				if (updatedJobStatus.rawMaterial === "In Stock") {
+					oUpdatedData.status = "Paper Cutting";
+				}
+				if (updatedJobStatus.PaperCutting) {
+					oUpdatedData.status = "Printing";
+				}
+				if (updatedJobStatus.Printing) {
+					oUpdatedData.status = "Coating";
+				}
+		
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Punching";
+				}
+		
+				if (updatedJobStatus.Punching) {
+					oUpdatedData.status = "Pasting";
+				}
+		
+				if (updatedJobStatus.Pasting) {
+					oUpdatedData.status = "Ready For Dispatch";
+				}
+				if (updatedJobStatus.InvNo) {
+					oUpdatedData.status = "Dispatched";
+				}
+				}
+				var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
+
+            // var updatedJobStatus = this.getView().getModel("appView").getProperty("/newJobStatus/0")
 
             if(selectedjobStatus){
 
@@ -1512,108 +2187,6 @@ sap.ui.define([
 
                     }
 
-			//*select box ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-				// if(isCoating!=0 && isFoiling!=0 && isSpotUV!=0 &&isEmbossing!=0){
-				// if (updatedJobStatus.rawMaterial === "In Stock") {
-				// 	oUpdatedData.status = "Paper Cutting";
-				// }
-				// if (updatedJobStatus.PaperCutting) {
-				// 	oUpdatedData.status = "Printing";
-				// }
-				// if (updatedJobStatus.Printing) {
-				// 	oUpdatedData.status = "Coating";
-				// }
-		
-				// if (updatedJobStatus.Coating) {
-				// 	oUpdatedData.status = "Foiling";
-				// }
-		
-				// if (updatedJobStatus.Foiling) {
-				// 	oUpdatedData.status = "SpotUV";
-				// }
-		
-				// if (updatedJobStatus.spotUV) {
-				// 	oUpdatedData.status = "Embossing";
-				// }
-				// if (updatedJobStatus.Embossing) {
-				// 	oUpdatedData.status = "Punching";
-				// }
-		
-				// if (updatedJobStatus.Punching) {
-				// 	oUpdatedData.status = "Pasting";
-				// }
-		
-				// if (updatedJobStatus.Pasting) {
-				// 	oUpdatedData.status = "Ready For Dispatch";
-				// }
-				// if (updatedJobStatus.InvNo) {
-				// 	oUpdatedData.status = "Dispatched";
-				// }
-				// }
-
-				// if (updatedJobStatus.rawMaterial === "In Stock") {
-				// 	oUpdatedData.status = "Printing";
-				// }
-				// if (updatedJobStatus.Printing) {
-				// 	if (isCoating != 0) {
-				// 		oUpdatedData.status = "Coating";
-				// 	}
-				// 	else if(isFoiling !=0){
-				// 		oUpdatedData.status = "Foiling";
-				// 	}
-				// 	else if(isSpotUV !=0){
-				// 		oUpdatedData.status = "SpotUV";
-				// 	}
-				// 	else if(isEmbossing !=0){
-				// 		oUpdatedData.status = "Embossing";
-				// 	}
-				// 	else{
-				// 		oUpdatedData.status = "Punching";
-				// 	}
-				// }
-		
-				// if ((updatedJobStatus.Coating && isFoiling !== 0)) {
-				// 	oUpdatedData.status = "Foiling";
-				// }
-				// else if(isSpotUV !=0){
-				// 	oUpdatedData.status = "SpotUV";
-				// }
-				// else if(isEmbossing !=0){
-				// 	oUpdatedData.status = "Embossing";
-				// }
-				// else{
-				// 	oUpdatedData.status = "Punching";
-				// }
-		
-				// if ((updatedJobStatus.Foiling && isSpotUV !== 0)) {
-				// 	oUpdatedData.status = "SpotUV";
-				// }
-				// else if(isEmbossing !=0){
-				// 	oUpdatedData.status = "Embossing";
-				// }
-				// else{
-				// 	oUpdatedData.status = "Punching";
-				// }
-		
-				// if ((updatedJobStatus.spotUV && isEmbossing !== 0)) {
-				// 	oUpdatedData.status = "Embossing";
-				// }
-				// else{
-				// 	oUpdatedData.status = "Punching";
-				// }
-		
-				// if (updatedJobStatus.Embossing) {
-				// 	oUpdatedData.status = "Punching";
-				// }
-		
-				// if (updatedJobStatus.Punching) {
-				// 	oUpdatedData.status = "Pasting";
-				// }
-		
-				// if (updatedJobStatus.Pasting) {
-				// 	oUpdatedData.status = "Dispatched";
-				// }
 		
 			var sEntityPath = `/Jobs('${ids}')`;
 			oModel.update(sEntityPath, oUpdatedData, {
@@ -1739,7 +2312,8 @@ sap.ui.define([
 					.catch(function (jqXhr, textStatus, errorMessage) {
 						that.middleWare.errorHandler(jqXhr, that);
 					});
-			} else {
+			} 
+			else {
 
 				this.middleWare.callMiddleWare("getJobsWithCompany", "get")
 					.then(function (data, status, xhr) {
@@ -1750,7 +2324,7 @@ sap.ui.define([
 							that.onSortDescending();
 						}
 						else{
-							that.onSortAscending();
+							that.onSortDescending();
 						}
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
@@ -1762,8 +2336,6 @@ sap.ui.define([
         // Ascending Sort Jobs List
 
         onSortAscending: function() {
-			
-		
 			var oModel = this.getView().getModel("appView");
 			if (!oModel) {
 				console.error("Model 'appView' not found.");

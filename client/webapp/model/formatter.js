@@ -887,6 +887,9 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         case "Printing":
           return "Warning";
           break;
+        case "Paper Cutting":
+          return "Warning";
+          break;
         case "Coating":
           return "Warning";
           break;
@@ -914,7 +917,13 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
         case "Delivering":
           return "Success";
           break;
+        case "Ready For Dispatch":
+          return "Success";
+          break;
         case "Cancelled":
+          return "Error";
+          break;
+        case "Others":
           return "Error";
           break;
         default:
@@ -938,6 +947,54 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
       return parts.join(' x ');
     },
+    getImageUrlsFromContentForRemarks: function (base64Streams) {
+
+      var imageUrls = [];
+
+     
+
+      for (var i = 0; i < base64Streams.length; i++) {
+
+         var base64Stream = base64Streams[i];
+
+         if (base64Stream) {
+
+            imageUrls.push("data:image/jpeg;base64," + base64Stream);
+
+         }
+
+      }
+
+     
+
+      return imageUrls;
+
+   },
+   artworkVisAccordingToProcess: function(status, UserRole) {
+
+    if (status === "Printing" || status === "Paper Cutting" || status === "Coating") {
+
+        return UserRole === "Printing Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+
+    } else if (status === "Foiling" || status === "SpotUV" || status === "Embossing" || status === "Punching") {
+
+        return UserRole === "Post Press Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+
+    } else if (status === "Pasting" || status === "Ready For Dispatch") {
+
+        return UserRole === "Dispatch Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+
+    } else if (status === "Dispatched") {
+
+        return UserRole === "Accounts Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+
+    }else if(status === null || status === "Value Mismatched"){
+
+        return UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+
+    }
+
+},
 
     // showPcs: function (qtyPcs) {
     //   if (qtyPcs || qtyPcs === null) {

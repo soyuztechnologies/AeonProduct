@@ -3,6 +3,16 @@
         <!-- <Toolbar> -->
             <Title text="Job Status" />
             <ToolbarSpacer/>
+            <Button
+                 visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head'|| ${appView>/UserRole} === 'Factory Manager' ? true : ${appView>/selectedKey} !== 'In Stock' ? ${appView>/UserRole} === 'Raw Material Head' ? true : false  : true}"
+
+                   text="Remark"
+
+                   type="Emphasized"
+
+                   icon="sap-icon://add-activity"
+
+                   press="onRemarkClick"/>
                 <Button
                    visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head'|| ${appView>/UserRole} === 'Factory Manager' ? true : ${appView>/selectedKey} !== 'In Stock' ? ${appView>/UserRole} === 'Raw Material Head' ? true : false  : true}"
                    icon="sap-icon://add"
@@ -17,6 +27,9 @@
                     <columns>
                         <Column visible="{path: 'appView>rawMaterial', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Raw Material" />
+                        </Column>
+                        <Column visible="{path: 'appView>PaperCutting', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="Paper Cutting" />
                         </Column>
                         <Column visible="{path: 'appView>Printing', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Printing" />
@@ -84,6 +97,7 @@
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input> -->
+                                <Text  text="{path: 'appView>PaperCutting', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Printing', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Coating', formatter: '.formatter.formatIndianNumber'} Sheets" />
                                 <Text  text="{path : 'appView>Foiling' , formatter: '.formatter.formatIndianNumber'} Sheets"></Text>

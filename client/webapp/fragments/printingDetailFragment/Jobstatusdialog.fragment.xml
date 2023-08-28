@@ -87,18 +87,7 @@ resizable="false" >
 				<Label required="true" text="Status" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }"/>
 				<Select id="idStatus" forceSelection="false" selectedKey="{appView>status}"  change="onSelectKeyStatus">
 			    	<items>
-						<core:Item text="Printing" key="Printing" />
-						<!-- <core:Item text="In-Progress" key="inprogress" /> -->
-						<core:Item text="Coating" key="Coating" />
-						<core:Item text="Foiling" key="Foiling" />
-						<core:Item text="SpotUV" key="SpotUV" />
-						<core:Item text="Embossing" key="Embossing" />
-						<core:Item text="Punching" key="Punching" />
-						<core:Item text="Pasting" key="Pasting" />
-						<!-- <core:Item text="Packing" key="Packing" /> -->
-						<core:Item text="Dispatched" key="Dispatched" />
-						<!-- <core:Item text="Delivering" key="Delivering" /> -->
-						<!-- <core:Item text="Cancelled" key="cancelled" /> -->
+						<core:Item text="Others" key="Others"/>
 					</items>
 				</Select>
 			</f:content>

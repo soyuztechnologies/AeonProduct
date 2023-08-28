@@ -24,8 +24,8 @@
 				<f:content>
 					
 
-						<Label text="Client PO Number"></Label>
-						<Link  press="onClickPopup"  text="{appView>clientPONo}" ></Link>
+						<Label visible="{=${appView>/UserRole} === 'Accounts Head' ? true : false}" text="Client PO Number"></Label>
+						<Link visible="{=${appView>/UserRole} === 'Accounts Head' ? true : false}" press="onClickPopup"  text="{appView>clientPONo}" ></Link>
 
 						<Label text="Reference Number"></Label>
 						<Text text="{appView>poNo}" ></Text>
@@ -41,8 +41,8 @@
 						<Input editable="false" value="{parts:[ {path:'appView>sizeL'}, { path: 'appView>sizeW'}, {path: 'appView>sizeH'} ] ,formatter:'.formatter.sizeFormatter'}"></Input>
 	                    <Label text="Total No. of Sheets"></Label>
 						<Input editable="false"  value="{path: 'appView>noOfSheets1',formatter: '.formatter.formatIndianNumber'} Sheets"></Input>
-						<Label text="Artwork"></Label>
-						<Link press="onClickPopup" text="{appView>artworkCode}"></Link>
+						<Label visible="{parts:[ {path: 'appView>status'}, {path: 'appView>/UserRole'} ] ,formatter:'.formatter.artworkVisAccordingToProcess'}" text="Artwork"></Label>
+						<Link  visible="{parts:[ {path: 'appView>status'}, {path: 'appView>/UserRole'} ] ,formatter:'.formatter.artworkVisAccordingToProcess'}"	 press="onClickPopup" text="{appView>artworkCode}"></Link>
 						<Label text="Paper Board"></Label>
 						<Input editable="false" value="{appView>paperQuality}"></Input>
 

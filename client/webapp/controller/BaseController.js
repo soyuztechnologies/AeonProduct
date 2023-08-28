@@ -216,6 +216,7 @@ sap.ui.define([
 					that.getRouter().navTo("login");
 					that.getView().getModel("appView").setProperty("/sideNavExpended", true);
 					// window.refresh();
+					localStorage.clear();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 

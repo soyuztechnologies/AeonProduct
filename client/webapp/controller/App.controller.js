@@ -132,9 +132,9 @@ sap.ui.define(
         if (nav=== "Dispatched"){
           this.getRouter().navTo("Dispatched")
         }
-        // if (nav=== "Delivering"){
-        //   this.getRouter().navTo("Delivering")
-        // }
+        if (nav=== "Others"){
+          this.getRouter().navTo("Others")
+        }
       },
       // getUserId: function () {
         

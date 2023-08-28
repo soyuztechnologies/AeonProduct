@@ -50,10 +50,6 @@ function myMiddleware(options) {
 				originalSend.call(this, body);
 			};
 		}
-		//   if(req.url.includes("/api") || req.url.includes("/odata") ){
-		// 	req.headers.Authorization=req.cookies.soyuz_session;
-		// 	req.headers.authorization=req.cookies.soyuz_session;
-		//   }
 		next();
 
 	}
@@ -62,9 +58,6 @@ app.use(myMiddleware());
 app.use(loopback.token({
 	model: app.models.accessToken,
 	currentUserLiteral: 'me',
-	// cookies: ['soyuz_session'],
-	// headers: ['soyuz_session', 'X-Access-Token'],
-	// params: ['soyuz_session']
 }));
 // app.use(cookieParser());
 app.start = function () {
@@ -117,7 +110,6 @@ app.start = function () {
 
 		// * this function is send the email to the user in secenerio like signup,forgot password,admin add user etc.
 		async function sendEmail(email, token, replacements, templateFileName, emailSubject) {
-
 			var nodemailer = require('nodemailer');
 			var smtpTransport = require('nodemailer-smtp-transport');
 			this.Param = app.models.Param;
@@ -195,8 +187,100 @@ app.start = function () {
 				res.status(500).send('Internal server error');
 			}
 		}
+		// function sendEmail(email, token, replacements, templateFileName, emailSubject, callback) {
+		// 	var nodemailer = require('nodemailer');
+		// 	var smtpTransport = require('nodemailer-smtp-transport');
+		// 	this.Param = app.models.Param;
+		// 	const xoauth2 = require('xoauth2');
+		// 	const fs = require('fs');
+		
+		// 	try {
+		// 		const array = ["user", "clientId", "clientSecret", "refreshToken"];
+		// 		const Param = this.Param;
+		// 		const key = {};
+		// 		Param.find({
+		// 			where: {
+		// 				and: [{
+		// 					Code: {
+		// 						inq: array
+		// 					}
+		// 				}]
+		// 			}
+		// 		}, function (err, sParam) {
+		// 			if (err) {
+		// 				console.error(err);
+		// 				callback('Internal server error');
+		// 				return;
+		// 			}
+		
+		// 			sParam.forEach(function (element) {
+		// 				switch (element.Code) {
+		// 					case "user":
+		// 						key.user = element.Value;
+		// 						break;
+		// 					case "clientId":
+		// 						key.clientId = element.Value;
+		// 						break;
+		// 					case "clientSecret":
+		// 						key.clientSecret = element.Value;
+		// 						break;
+		// 					case "refreshToken":
+		// 						key.refreshToken = element.Value;
+		// 						break;
+		// 				}
+		// 			});
+		
+		// 			const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + templateFileName, 'utf8');
+		// 			replaceTemplatePlaceholders(mailContent, replacements, function (err, mailBody) {
+		// 				if (err) {
+		// 					console.error(err);
+		// 					callback('Internal server error');
+		// 					return;
+		// 				}
+		
+		// 				const transporter = nodemailer.createTransport(smtpTransport({
+		// 					service: 'gmail',
+		// 					host: 'smtp.gmail.com',
+		// 					auth: {
+		// 						xoauth2: xoauth2.createXOAuth2Generator({
+		// 							user: key.user,
+		// 							clientId: key.clientId,
+		// 							clientSecret: key.clientSecret,
+		// 							refreshToken: key.refreshToken
+		// 						})
+		// 					}
+		// 				}));
+		
+		// 				const emailContent = {
+		// 					to: email,
+		// 					subject: emailSubject,
+		// 					html: mailBody
+		// 				};
+		
+		// 				transporter.sendMail(emailContent, function (error, info) {
+		// 					if (error) {
+		// 						console.log(error);
+		// 						if (error.code === "EAUTH") {
+		// 							callback('Username and Password not accepted, Please try again.');
+		// 						} else {
+		// 							callback('Internal Error while Sending the email, Please try again.');
+		// 						}
+		// 					} else {
+		// 						console.log('Email sent: ' + info.response);
+		// 						callback(null, 'Email sent successfully');
+		// 					}
+		// 				});
+		// 			});
+		// 		});
+		// 	} catch (error) {
+		// 		console.error(error);
+		// 		callback('Internal server error');
+		// 	}
+		// }
+		
 
 		// * this fucntion working to replace the dynamic characters in the email body,like usernameand and emaol etc.
+		
 		async function replaceTemplatePlaceholders(content, replacements) {
 			let replacedContent = content;
 			for (const placeholder in replacements) {
@@ -214,147 +298,105 @@ app.start = function () {
 		}
 
 		// * this fucntion is sending the email to user, for forgot the password.
-
-		app.post('/forgotPasswordEmailVerify', async (req, res) => {
-
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			this.otp = app.models.otp;
-
-			try {
-				const { email } = req.body;
-
-				// Check if the user already exists
-				const existingUser = await this.User.findOne({ where: { email } });
-				if (!existingUser) {
-					return res.status(400).json({ error: 'Email is not Register with us.' });
+		app.post('/forgotPasswordEmailVerify', (req, res) => {
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
+			const otp = app.models.otp;
+		
+			const { email } = req.body;
+		
+			User.findOne({ where: { email } }, (userError, existingUser) => {
+				if (userError) {
+					console.error(userError);
+					return res.status(500).json({ error: 'Internal server error' });
 				}
-
-				var otp = generateOTP();
-				var dateAndTime = generateDateAndTime();
-				var ExpDateAndTIme = generateDateAndTimeWithExtraTime();
-				// Generate JWT token
+		
+				if (!existingUser) {
+					return res.status(400).json({ error: 'Email is not registered with us.' });
+				}
+		
+				const otpValue = generateOTP();
+				const dateAndTime = generateDateAndTime();
+				const ExpDateAndTIme = generateDateAndTimeWithExtraTime();
 				const token = generateToken(email);
-
 				const replacements = {
-					"OTP": otp,
+					OTP: otpValue,
 					email: "noreply@aeonproducts.com",
 					user: email,
 				};
-				const templateFileName = "Forgot.html"
+				const templateFileName = "Forgot.html";
 				const emailSubject = "Reset Your Password";
-				// Send verification email
-				await sendEmail(email, token, replacements, templateFileName, emailSubject);
-
-				await this.otp.create({ OTP: otp, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
-				res.status(200).json({ message: 'Verification email sent successfully' });
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
+		
+				sendEmail(email, token, replacements, templateFileName, emailSubject)
+					.then(async () => {
+						try {
+							await otp.create({ OTP: otpValue, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
+							res.status(200).json({ message: 'Verification email sent successfully' });
+						} catch (createOtpError) {
+							console.error(createOtpError);
+							res.status(500).json({ error: 'Internal server error' });
+						}
+					})
+					.catch(sendEmailError => {
+						console.error(sendEmailError);
+						res.status(500).json({ error: 'Internal server error' });
+					});
+			});
 		});
+		
+		// Verify the token when the user tries to reset the password
+		app.post('/Forgot/verifyToken', (req, res) => {
+			const User = app.models.User;
+			const { token } = req.body;
+			let email;
 
-		//*  this post call is verifiing the token when the user try to reset the password
-
-		app.post('/Forgot/verifyToken', async (req, res) => {
-
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			try {
-				const { token } = req.body;
-				var email;
-				jwt.verify(token, 'your_secret_key', function (err, decoded) {
-					if (err) {
-						res.status(500).send('Token is Expired');
-					}
-					else {
-						email = decoded.email;
-					}
-				});
-				// Verify the token and extract the email
-				//   const decodedToken = jwt.verify(token, 'your_secret_key');
-				//   const email = decodedToken.email;
-				// Check if the user already exists
-				const existingUser = await this.User.findOne({ where: { email } });
-				if (!existingUser) {
-					return res.status(400).json({ error: 'User with this email already exists' });
+			jwt.verify(token, 'your_secret_key', function (err, decoded) {
+				if (err) {
+					return res.status(500).send('Token is Expired');
+				} else {
+					email = decoded.email;
+					User.findOne({ where: { email } }, (findUserError, existingUser) => {
+						if (findUserError) {
+							console.error(findUserError);
+							return res.status(500).json({ error: 'Internal server error' });
+						}
+						if (!existingUser) {
+							return res.status(400).json({ error: 'User with this email does not exist' });
+						}
+						let msg = "Token verified";
+						res.status(200).json({ msg, email });
+					});
 				}
-				let msg = "token verfied"
-				res.status(200).json({ msg, email });
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
+			});
 		});
 
-		// * this post call is update the password into the appuser table and the user table of the user.
+		// Reset the password in the appuser and user tables
+		app.post('/reset/password', (req, res) => {
+			const User = app.models.User;
+			const { email, password } = req.body;
 
-		app.post('/reset/password', async (req, res) => {
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			try {
-				const { email, password } = req.body;
-
-				const User = await this.User.findOne({ where: { email } });
-				if (User) {
-					// Update the password in both tables
-					User.updateAttributes({ password: password }, (err, updatedUser) => {
-						if (err) {
-							console.error('Error updating password:', err);
+			User.findOne({ where: { email } }, (userError, user) => {
+				if (userError) {
+					console.error(userError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+				if (user) {
+					user.updateAttributes({ password: password }, (updateError) => {
+						if (updateError) {
+							console.error('Error updating password:', updateError);
 							return res.status(500).send('Internal server error');
 						}
-
-						// // Update the password in the AppUser table
-						// AppUser.updateAttributes({ TechnicalId: user.id }, { password: newPassword }, (err) => {
-						//   if (err) {
-						// 	console.error('Error updating password in AppUser table:', err);
-						// 	return res.status(500).send('Internal server error');
-						//   }
-
-						return res.status(200).send('Password updated successfully');
+						res.status(200).send('Password updated successfully');
 					});
-					//   });
+				} else {
+					res.status(400).json({ error: 'User not found' });
 				}
-
-
-
-				// // Verify the token
-				// const decodedToken = jwt.verify(token, 'your_secret_key');
-				// const email = decodedToken.email;
-
-				// Find the user
-				// const Appuser = await this.AppUser.findOne({ where: { EmailId:email } });
-				// const  user = await this.User.findOne({ where: {email}});	
-				// if (!Appuser) {
-				//     return res.status(404).json({ error: 'User not found' });
-				// };
-
-				// if(!user) {
-				// 	return res.status(404).json({ error: 'User not found' });
-				// };
-				// user.updateAttributes({ password: password }, (err, updatedUser) => {
-				// 	if (err) {
-				// 	  console.error('Error updating password:', err);
-				// 	  return res.status(500).send('Internal server error');
-				// 	}
-				// });
-				// // Update the user's password
-				// user.password = password;
-				// await user.save();
-				// // Update the user's password
-				// Appuser.password = password;
-				// await Appuser.save();
-				// res.status(200).json({ message: 'Password reset successful' });
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
+			});
 		});
 
+
 		function generateOTP(length = 6) {
+		debugger;
 			const digits = '0123456789';
 			let otp = '';
 
@@ -365,10 +407,6 @@ app.start = function () {
 
 			return otp;
 		}
-
-		// Example usage:
-		//   const otp = generateOTP();
-		//   console.log("Generated OTP:", otp);
 
 		//*get Date and time
 		function generateDateAndTime() {
@@ -391,109 +429,116 @@ app.start = function () {
 			}
 		}
 
-		app.post('/getJobsWithStatusFilter', async function (req, res) {
+		app.post('/getJobsWithStatusFilter', function (req, res) {
 			const status = req.body;
+			const Job = app.models.Job;
+		
 			try {
-				const Job = app.models.Job;
-				const jobs = await Job.find({
+				Job.find({
 					fields: { 
-							JobName:false,
-							UpdatedOn:false,
-							CreatedOn:false,
-							date:false,
-							poAttachment: false,
-							artworkAttachment: false,
-							poNo: false,
-							artworkCode: false,
-							clientPONo: false,
-							industry: false,
-							cartonType: false,
-							qtyPcs: false,
-							PaperGSM: false,
-							paperPoNo: false,
-							paperQuality: false,
-							printing: false,
-							color: false,
-							sizeL: false,
-							sizeW: false,
-							sizeH: false,
-							varLmt: false,
-							effects: false,
-							lock: false,
-							tF: false,
-							pF: false,
-							doubleCut: false,
-							trimTF: false,
-							trimPF: false,
-							noOfUps1: false,
-							noOfUps2: false,
-							noOfUps3: false,
-							noOfSheets1: false,
-							noOfSheets2: false,
-							wastage: false,
-							wtKgs: false,
-							printingSheetSizeL1: false,
-							printingSheetSizeW1: false,
-							printingSheetSizeL2: false,
-							printingMachine: false,
-							punchingMachine: false,
-							pastingMachine: false,
-							ref: false,
-							old: false,
-							none: false,
-							b2A: false,
-							none1: false,
-							none2: false,
-							batchNo: false,
-							mfgDate: false,
-							expDate: false,
-							correctionsInArtwork: false,
-							remarks: false,
-							totalAB: false,
-							profit: false,
-							totalCostOfJob: false,
-							costPerPc: false,
-							plate: false,
-							plate1: false,
-							plate2: false,
-							pantoneInks: false,
-							foilBlocks: false,
-							positive: false,
-							embossBlock: false,
-							punch: false,
-							punch1: false,
-							punch2: false,
-							reference: false,
-							cartonLength: false,
-							cartonWidth: false,
-							paperCost: false,
-							printingCharges: false,
-							varnishLamination: false,
-							embossing: false,
-							punching: false,
-							bSOPasting: false,
-							lBTOPasting: false,
-							packing: false,
-							transportation: false,
-							total: false,
-							plateCharges: false,
-							blanketCharges: false,
-							userName: false,
-							remarks1: false,
-							remarks2: false,
-							corrections1: false,
-							corrections2: false,
-							corrections3: false,
-						},
+						JobName:false,
+						UpdatedOn:false,
+						CreatedOn:false,
+						date:false,
+						poAttachment: false,
+						artworkAttachment: false,
+						poNo: false,
+						artworkCode: false,
+						clientPONo: false,
+						industry: false,
+						cartonType: false,
+						qtyPcs: false,
+						PaperGSM: false,
+						paperPoNo: false,
+						paperQuality: false,
+						printing: false,
+						color: false,
+						sizeL: false,
+						sizeW: false,
+						sizeH: false,
+						varLmt: false,
+						effects: false,
+						lock: false,
+						tF: false,
+						pF: false,
+						doubleCut: false,
+						trimTF: false,
+						trimPF: false,
+						noOfUps1: false,
+						noOfUps2: false,
+						noOfUps3: false,
+						noOfSheets1: false,
+						noOfSheets2: false,
+						wastage: false,
+						wtKgs: false,
+						printingSheetSizeL1: false,
+						printingSheetSizeW1: false,
+						printingSheetSizeL2: false,
+						printingMachine: false,
+						punchingMachine: false,
+						pastingMachine: false,
+						ref: false,
+						old: false,
+						none: false,
+						b2A: false,
+						none1: false,
+						none2: false,
+						batchNo: false,
+						mfgDate: false,
+						expDate: false,
+						correctionsInArtwork: false,
+						remarks: false,
+						totalAB: false,
+						profit: false,
+						totalCostOfJob: false,
+						costPerPc: false,
+						plate: false,
+						plate1: false,
+						plate2: false,
+						pantoneInks: false,
+						foilBlocks: false,
+						positive: false,
+						embossBlock: false,
+						punch: false,
+						punch1: false,
+						punch2: false,
+						reference: false,
+						cartonLength: false,
+						cartonWidth: false,
+						paperCost: false,
+						printingCharges: false,
+						varnishLamination: false,
+						embossing: false,
+						punching: false,
+						bSOPasting: false,
+						lBTOPasting: false,
+						packing: false,
+						transportation: false,
+						total: false,
+						plateCharges: false,
+						blanketCharges: false,
+						userName: false,
+						remarks1: false,
+						remarks2: false,
+						corrections1: false,
+						corrections2: false,
+						corrections3: false,
+					},
 					where: { status: status },
-					include: 'Company' 
-					});
-				res.send(jobs);
+					include: 'Company'
+				}, function (error, jobs) {
+					if (error) {
+						console.error(error);
+						return res.status(500).send(error);
+					}
+					res.send(jobs);
+				});
 			} catch (error) {
+				console.error(error);
 				return res.status(500).send(error);
-
 			}
-		})
+		});
+
 		//* Date with extra 30 Minutes!
 		function generateDateAndTimeWithExtraTime() {
 			var currentDate = new Date();
@@ -523,413 +568,416 @@ app.start = function () {
 
 
 		//*Verify otp
-		app.post('/verifyOtp', async (req, res) => {
+		app.post('/verifyOtp', (req, res) => {
 
-			this.User = app.models.User;
-			this.otp = app.models.otp;
-			var OTP = req.body;
-			var currentdateAndTime = generateDateAndTime();
+			const User = app.models.User;
+			const otpModel = app.models.otp;
+			const OTP = req.body;
+			const currentdateAndTime = generateDateAndTime();
+		
 			try {
-
-				try {
-					const otp = await this.otp.findOne({ where: { OTP: OTP.inputOtpValue } }); // Retrieve all users
-					if (otp.__data.OTP == OTP.inputOtpValue && otp.__data.User == OTP.email) {
+				otpModel.findOne({ where: { OTP: OTP.inputOtpValue } }, (otpError, otp) => {
+					if (otpError) {
+						res.status(400).json({ error: 'OTP not validate' });
+					} else if (otp && otp.__data.OTP == OTP.inputOtpValue && otp.__data.User == OTP.email) {
 						if (otp.__data.ExpDate > currentdateAndTime) {
 							res.status(200).send('Validation Successful');
 						} else {
 							res.status(400).send('OTP has expired');
 						}
+					} else {
+						res.status(400).json({ error: 'OTP not validate' });
 					}
-					// else{
-					// 	res.status(400).json({ message: 'Not Validate'});
-
-					// }
-				}
-				catch (error) {
-					res.status(400).json({ error: 'OTP not validate' });
-
-				}
-			}
-			catch (error) {
+				});
+			} catch (error) {
 				console.error(error);
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+		
 
 		//* Delete OTP
-		app.post('/deleteotp', async (req, res) => {
-			this.User = app.models.User;
-			this.otp = app.models.otp;
-			var OTP = req.body; // Assuming the ID is provided as a property in the request body
-
+		app.post('/deleteotp', (req, res) => {
+			const User = app.models.User;
+			const otpModel = app.models.otp;
+			const OTP = req.body;
+		
 			try {
-				const otp = await this.otp.findOne({ where: { OTP } }); // Retrieve the user with the specified ID
-				if (otp) {
-					await otp.remove(); // Remove the user
-					res.status(200).send('OTP Deleted Successfully');
-				} else {
-					res.status(404).send('OTP Not Found'); // If the user doesn't exist
-				}
+				otpModel.findOne({ where: { OTP } }, (otpError, otp) => {
+					if (otpError) {
+						console.error('Error deleting OTP:', otpError);
+						res.status(500).send('Internal server error');
+					} else if (otp) {
+						otp.remove((removeError) => {
+							if (removeError) {
+								console.error('Error deleting OTP:', removeError);
+								res.status(500).send('Internal server error');
+							} else {
+								res.status(200).send('OTP Deleted Successfully');
+							}
+						});
+					} else {
+						res.status(404).send('OTP Not Found');
+					}
+				});
 			} catch (error) {
-				console.error('Error deleting user:', error);
+				console.error('Error deleting OTP:', error);
 				res.status(500).send('Internal server error');
 			}
 		});
+		
 
 		// * this post call is sending the email to the user,when user is registering into the portal.
-
-		app.post('/signup/verifyEmail', async (req, res) => {
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			this.otp = app.models.otp;
-
-			try {
-				const { email } = req.body;
-
-				// Check if the user already exists
-				const existingUser = await this.User.findOne({ where: { email } });
+		app.post('/signup/verifyEmail', (req, res) => {
+			debugger;
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
+			const otp = app.models.otp;
+		
+			const { email } = req.body;
+		
+			User.findOne({ where: { email } }, (userError, existingUser) => {
+				if (userError) {
+					console.error(userError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+		
 				if (existingUser) {
 					return res.status(400).json({ error: 'User with this email already exists' });
 				}
-
-				// Generate JWT token
-				var otp = generateOTP();
-				var dateAndTime = generateDateAndTime();
-				var ExpDateAndTIme = generateDateAndTimeWithExtraTime();
-				// Generate JWT token
+		
+				const otpValue = generateOTP();
+				const dateAndTime = generateDateAndTime();
+				const ExpDateAndTIme = generateDateAndTimeWithExtraTime();
 				const token = generateToken(email);
 				const replacements = {
-					OTP: otp,
+					OTP: otpValue,
 					email: "noreply@aeonproducts.com",
-					// user : email,
 				};
 				const templateFileName = "verifyEmail.html";
-				const emailSubject = "Verfiy Your Registration Email";
+				const emailSubject = "Verify Your Registration Email";
 				const date = new Date();
-				// Send verification email
-				await sendEmail(email, token, replacements, templateFileName, emailSubject);
-				await this.otp.create({ OTP: otp, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
-
-
-				res.status(200).json({ message: 'Verification email sent successfully' });
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
+		
+				sendEmail(email, token, replacements, templateFileName, emailSubject)
+					.then(async () => {
+						try {
+							await otp.create({ OTP: otpValue, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
+							res.status(200).json({ message: 'Verification email sent successfully' });
+						} catch (createOtpError) {
+							console.error(createOtpError);
+							res.status(500).json({ error: 'Internal server error' });
+						}
+					})
+					.catch(sendEmailError => {
+						console.error(sendEmailError);
+						res.status(500).json({ error: 'Internal server error' });
+					});
+			});
 		});
+		
 
-		// * this post call verify the token when user is register in the portal.
-		app.post('/signup/verifyToken', async (req, res) => {
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			try {
-				const { token } = req.body;
-				var email;
-
-				jwt.verify(token, 'your_secret_key', function (err, decoded) {
-					if (err) {
-						res.status(500).send('Token is Expired');
-					}
-					else {
-						email = decoded.email;
-					}
-				});
-
-				const existingUser = await this.User.findOne({ where: { email } });
-				if (existingUser) {
-					return res.status(400).json({ error: 'User with this email already exists' });
-				}
-				let msg = "token verfied"
-				res.status(200).json({ msg, email });
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
-		});
-
-
-		// * this post call create the user instance into the database
-		app.post('/signup/createUser', async (req, res) => {
-			try {
-				this.User = app.models.User;
-				this.Param = app.models.Param;
-				this.AppUser = app.models.AppUser;
-				const { email, password } = req.body;
-				const role = 'Customer'; // Hardcoded role as 'Customer'
-				const name = email.substring(0, email.indexOf("@"));
-
-				// Create the user in User table
-				const existingUser = await this.User.findOne({ where: { email } });
-				if (existingUser) {
-					return res.status(400).json({ error: 'User with this email already exists' });
-				}
-
-				const newUser = await this.User.create({ email, password, Role: role, CreatedOn: new Date(), status: "Pending" });
-
-				// Create the user in AppUser table
-				await this.AppUser.create({
-					TechnicalId: newUser.id,
-					EmailId: email,
-					UserName: name,
-					CreatedOn: new Date(),
-					// Status : "Pending",
-					// Blocked : "No",
-					Role: role
-				});
-
-				console.log(`App User created: ${JSON.stringify(newUser.toJSON())}`);
-
-				res.status(200).json({ message: 'User created successfully' });
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
-		});
-
-
-		// * this get call is getting the all userTable users.
-
-		app.get('/usersTable', async (req, res) => {
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			try {
-				const users = await this.User.find(); // Retrieve all users
-				res.status(200).json(users);
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
-		});
-		//*Delete user form the user table
-		app.post('/deleteusersTable', async (req, res) => {
-
-			this.User = app.models.User;
-			var id = req.body.id; // Assuming the ID is provided as a property in the request body
-
-			try {
-				const user = await this.User.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
-				if (user) {
-					await user.remove(); // Remove the user
-					res.status(200).send('User deleted successfully');
-				} else {
-					res.status(404).send('User not found'); // If the user doesn't exist
-				}
-			} catch (error) {
-				console.error('Error deleting user:', error);
-				res.status(500).send('Internal server error');
-			}
-		});
-		app.post('/deleteAppUsersTable', async (req, res) => {
-
-			this.AppUser = app.models.AppUser;
-			var id = req.body.id; // Assuming the ID is provided as a property in the request body
-
-			try {
-				const user = await this.AppUser.findOne({ where: { id: id } }); // Retrieve the user with the specified ID
-				if (user) {
-					await user.remove(); // Remove the user
-					res.status(200).send('User deleted successfully');
-				} else {
-					res.status(404).send('User not found'); // If the user doesn't exist
-				}
-			} catch (error) {
-				console.error('Error deleting user:', error);
-				res.status(500).send('Internal server error');
-			}
-		});
-
-		//server call for job delete with jobstatus
-		app.post('/deleteJobsWithJobStatus', async (req, res) => {
-
-			this.JobStatus = app.models.JobStatus;
-			this.Job = app.models.Job;
-			var id = req.body; // Assuming the ID is provided as a property in the request body
-
-			try {
-				const job = await this.Job.findOne({ where: { jobCardNo: id } });
-				if (job) {
-					job.remove();
-					const jobStatus = await this.JobStatus.findOne({ where: { JobStatusId: id } }); // Retrieve the user with the specified ID
-					if (jobStatus) {
-						jobStatus.remove();
-						return res.status(200).send('Job and Job Status Deleted Successfully');
-					}
-					return res.status(200).send('Job Deleted Successfully');
-				} else {
-					return res.status(404).send('Job not found'); // If the user doesn't exist
-				}
-			} catch (error) {
-				console.error('Error deleting Job:', error);
-				// res.status(500).send('Internal server error');
-			}
-		});
-
-		// * this get call is getting the all AppuserTable users.
-
-		app.get('/Appusers', async (req, res) => {
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			try {
-				const users = await this.AppUser.find(); // Retrieve all users
-
-				res.status(200).json(users);
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
-		});
-
-		// * this post call is responsble for login the registered user into the portal.
-
-		app.post('/login', async (req, res) => {
-
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-
+		app.post('/signup/createUser', (req, res) => {
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
 			const { email, password } = req.body;
-
-			if (!email || !password) {
-				return res.status(400).json({ error: 'Email and password are required' });
-			}
-
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-			if (!emailRegex.test(email)) {
-				return res.status(400).json({ error: 'Invalid email format' });
-			}
-
-			data = {
-				email,
-				password
-			};
-			try {
-				const [user, appUser] = await Promise.all([
-					this.User.login(data),
-					this.AppUser.findOne({ where: { EmailId: email } })
-				]);
-
-				let tempPass = null;
-				let temp = false;
-
-				const tempUser = await this.User.findOne({ where: { email, TempPass: password } });
-				if (tempUser) {
-					tempPass = tempUser.TempPass;
-					temp = true;
+			const role = 'Customer'; // Hardcoded role as 'Customer'
+			const name = email.substring(0, email.indexOf("@"));
+		
+			User.findOne({ where: { email } }, (userError, existingUser) => {
+				if (userError) {
+					console.error(userError);
+					return res.status(500).json({ error: 'Internal server error' });
 				}
-
-				// Extract the required data from the user object
-				const { id, ttl, created, userId } = user;
-
-				// Retrieve the status and role of the user from the appUsers table
-				const { Status, Blocked, Role } = appUser;
-
-				return res.status(200).json({ id, Status, Role, ttl, created, userId, Blocked, temp, tempPass });
-			} catch (error) {
-				return res.status(400).json({ error: 'Invalid email or password' });
-			}
-
-
-			// try {
-			// const tempUser = await this.User.findOne({ where: { email, TempPass: password } });
-			// const {TempPass} = tempUser
-			//   const temp = tempUser ? true : false;
-
-			//   const user = await this.User.login(data);
-			//   // Extract the required data from the user object
-			//   const { id, ttl, created, userId } = user;
-
-			//   // Retrieve the status and role of the user from the appUsers table
-			//   const appUser = await this.AppUser.findOne({ where: { EmailId: email } });
-			//   const { Status, Blocked, Role } = appUser;
-
-
-
-
-			//   return res.status(200).json({ id, Status, Role, ttl, created, userId, Blocked, temp ,TempPass});
-			// } catch (error) {
-			//   return res.status(400).json({ error: 'Invalid email or password' });
-			// }
-		});
-
-		// * this post call is use to create the new user via the admin side in the portal.
-
-		app.post('/addUserAdmin', async (req, res) => {
-
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			this.Customer = app.models.Customer;
-
-			const newCustomer = {};
-			for (const field in req.body) {
-				newCustomer[field] = req.body[field];
-			}
-
-			var email = newCustomer.EmailId;
-			var name = email.substring(0, email.indexOf("@"));
-			var requestPass = newCustomer.PassWord;
-			var Role = newCustomer.Role;
-			var status = newCustomer.Status;
-			if (!requestPass) {
-				var password = generateRandomPassword();
-			}
-			else {
-				var password = requestPass;
-			}
-
-			try {
-				let userTable = await this.User.findOne({ where: { email: email } });
-				if (!userTable) {
-					var newUser = await this.User.create({ email, TempPass: password, password, Role, CreatedOn: new Date(), status: status });
-
+		
+				if (existingUser) {
+					return res.status(400).json({ error: 'User with this email already exists' });
 				}
-				else {
-					res.status(400).json("User Already Exists with this email address");
-				}
-
-				let AppUuser = await this.AppUser.findOne({ where: { EmailId: email } });
-
-				if (!AppUuser) {
-					await this.AppUser.create({
+		
+				User.create({ email, password, Role: role, CreatedOn: new Date(), status: "Pending" }, (createUserError, newUser) => {
+					if (createUserError) {
+						console.error(createUserError);
+						return res.status(500).json({ error: 'Internal server error' });
+					}
+		
+					AppUser.create({
 						TechnicalId: newUser.id,
 						EmailId: email,
 						UserName: name,
 						CreatedOn: new Date(),
-						Status: status,
-						// Blocked : "No",
-						Role: Role
+						Role: role
+					}, (createAppUserError) => {
+						if (createAppUserError) {
+							console.error(createAppUserError);
+							return res.status(500).json({ error: 'Internal server error' });
+						}
+		
+						console.log(`App User created: ${JSON.stringify(newUser.toJSON())}`);
+						res.status(200).json({ message: 'User created successfully' });
 					});
-				}
-				else {
-					res.status(400).json("User Already Exists with this email address");
-				}
-				// Create the user in AppUser table
+				});
+			});
+		});
+		
+		//* Get all users from the User table
+		app.get('/usersTable', (req, res) => {
+			const User = app.models.User;
 
-				// await sendEmailPass(email, password);
-				const replacements = {
-					// verify : `${req.headers.referer}#/updatePassword/${token}`,
-					email: "noreply@aeonproducts.com",
-					user: email,
-					link: `${req.headers.referer}`,
-					password: password,
-				};
-				const templateFileName = "NewUser.html"
-				const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
-				const token = "";
-				// Send verification email
-				await sendEmail(email, token, replacements, templateFileName, emailSubject);
+			User.find((error, users) => {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+				res.status(200).json(users);
+			});
+		});
 
-				// Return a response indicating successful creation
-				return res.status(200).json('Customer created successfully');
-			} catch (error) {
-				// Handle error
-				return res.status(500).json({ error: 'Failed to create customer' });
+		//* Delete user from the User table
+		app.post('/deleteusersTable', (req, res) => {
+			const User = app.models.User;
+			const id = req.body.id;
+
+			User.findOne({ where: { id: id } }, (userError, user) => {
+				if (userError) {
+					console.error('Error finding user:', userError);
+					return res.status(500).send('Internal server error');
+				}
+
+				if (user) {
+					user.remove((removeError) => {
+						if (removeError) {
+							console.error('Error deleting user:', removeError);
+							return res.status(500).send('Internal server error');
+						}
+						res.status(200).send('User deleted successfully');
+					});
+				} else {
+					res.status(404).send('User not found');
+				}
+			});
+		});
+
+		//* Delete user from the AppUser table
+		app.post('/deleteAppUsersTable', (req, res) => {
+			const AppUser = app.models.AppUser;
+			const id = req.body.id;
+
+			AppUser.findOne({ where: { id: id } }, (appUserError, user) => {
+				if (appUserError) {
+					console.error('Error finding user:', appUserError);
+					return res.status(500).send('Internal server error');
+				}
+
+				if (user) {
+					user.remove((removeError) => {
+						if (removeError) {
+							console.error('Error deleting user:', removeError);
+							return res.status(500).send('Internal server error');
+						}
+						res.status(200).send('User deleted successfully');
+					});
+				} else {
+					res.status(404).send('User not found');
+				}
+			});
+		});
+
+		//* Delete job and job status using jobCardNo
+		app.post('/deleteJobsWithJobStatus', (req, res) => {
+			const JobStatus = app.models.JobStatus;
+			const Job = app.models.Job;
+			const id = req.body;
+
+			Job.findOne({ where: { jobCardNo: id } }, (jobError, job) => {
+				if (jobError) {
+					console.error('Error finding job:', jobError);
+					return res.status(500).send('Internal server error');
+				}
+
+				if (job) {
+					job.remove((removeJobError) => {
+						if (removeJobError) {
+							console.error('Error deleting job:', removeJobError);
+							return res.status(500).send('Internal server error');
+						}
+
+						JobStatus.findOne({ where: { JobStatusId: id } }, (jobStatusError, jobStatus) => {
+							if (jobStatusError) {
+								console.error('Error finding job status:', jobStatusError);
+								return res.status(500).send('Internal server error');
+							}
+
+							if (jobStatus) {
+								jobStatus.remove((removeJobStatusError) => {
+									if (removeJobStatusError) {
+										console.error('Error deleting job status:', removeJobStatusError);
+										return res.status(500).send('Internal server error');
+									}
+									res.status(200).send('Job and Job Status Deleted Successfully');
+								});
+							} else {
+								res.status(200).send('Job Deleted Successfully');
+							}
+						});
+					});
+				} else {
+					res.status(404).send('Job not found');
+				}
+			});
+		});
+
+		//* Get all users from the AppUser table
+		app.get('/Appusers', (req, res) => {
+			const AppUser = app.models.AppUser;
+
+			AppUser.find((error, users) => {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+				res.status(200).json(users);
+			});
+		});
+
+
+		// * this post call is responsble for login the registered user into the portal.
+
+		app.post('/login', (req, res) => {
+			const User = app.models.User;
+			const Param = app.models.Param;
+			const AppUser = app.models.AppUser;
+		
+			const { email, password } = req.body;
+		
+			if (!email || !password) {
+				return res.status(400).json({ error: 'Email and password are required' });
 			}
+		
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		
+			if (!emailRegex.test(email)) {
+				return res.status(400).json({ error: 'Invalid email format' });
+			}
+		
+			const data = {
+				email,
+				password
+			};
+		
+			User.login(data, (loginError, user) => {
+				if (loginError) {
+					return res.status(400).json({ error: 'Invalid email or password' });
+				}
+		
+				AppUser.findOne({ where: { EmailId: email } }, (appUserError, appUser) => {
+					if (appUserError) {
+						return res.status(400).json({ error: 'Invalid email or password' });
+					}
+		
+					let tempPass = null;
+					let temp = false;
+		
+					User.findOne({ where: { email, TempPass: password } }, (tempUserError, tempUser) => {
+						if (tempUserError) {
+							return res.status(400).json({ error: 'Invalid email or password' });
+						}
+		
+						if (tempUser) {
+							tempPass = tempUser.TempPass;
+							temp = true;
+						}
+		
+						const { id, ttl, created, userId } = user;
+		
+						const { Status, Blocked, Role } = appUser;
+		
+						return res.status(200).json({ id, Status, Role, ttl, created, userId, Blocked, temp, tempPass });
+					});
+				});
+			});
+		});
+		
+		// * this post call is use to create the new user via the admin side in the portal.
+		app.post('/addUserAdmin', (req, res) => {
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
+		
+			const newCustomer = {};
+			for (const field in req.body) {
+				newCustomer[field] = req.body[field];
+			}
+		
+			const email = newCustomer.EmailId;
+			const name = email.substring(0, email.indexOf("@"));
+			const requestPass = newCustomer.PassWord;
+			const Role = newCustomer.Role;
+			const status = newCustomer.Status;
+		
+			let password = requestPass;
+			if (!requestPass) {
+				password = generateRandomPassword();
+			}
+		
+			User.findOne({ where: { email } }, (userFindError, userTable) => {
+				if (userFindError) {
+					console.error(userFindError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+		
+				if (!userTable) {
+					User.create({ email, TempPass: password, password, Role, CreatedOn: new Date(), status }, (createUserError, newUser) => {
+						if (createUserError) {
+							console.error(createUserError);
+							return res.status(500).json({ error: 'Failed to create customer' });
+						}
+		
+						AppUser.findOne({ where: { EmailId: email } }, (appUserFindError, AppUuser) => {
+							if (appUserFindError) {
+								console.error(appUserFindError);
+								return res.status(500).json({ error: 'Internal server error' });
+							}
+		
+							if (!AppUuser) {
+								AppUser.create({
+									TechnicalId: newUser.id,
+									EmailId: email,
+									UserName: name,
+									CreatedOn: new Date(),
+									Status: status,
+									Role: Role
+								}, (createAppUserError) => {
+									if (createAppUserError) {
+										console.error(createAppUserError);
+										return res.status(500).json({ error: 'Failed to create customer' });
+									}
+		
+									const replacements = {
+										email: "noreply@aeonproducts.com",
+										user: email,
+										link: `${req.headers.referer}`,
+										password: password,
+									};
+									const templateFileName = "NewUser.html";
+									const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
+									const token = "";
+		
+									sendEmail(email, token, replacements, templateFileName, emailSubject)
+										.then(() => {
+											return res.status(200).json('Customer created successfully');
+										})
+										.catch(sendEmailError => {
+											console.error(sendEmailError);
+											return res.status(500).json({ error: 'Failed to create customer' });
+										});
+								});
+							} else {
+								return res.status(400).json("User Already Exists with this email address");
+							}
+						});
+					});
+				} else {
+					return res.status(400).json("User Already Exists with this email address");
+				}
+			});
 		});
 
 		// * this fucntion is generating the Random password for the user if admin doesn't set any password.
@@ -944,206 +992,126 @@ app.start = function () {
 			return password;
 		}
 
-		// * this function is not working properly work is pending on this.
-		app.post('/clearData', async (req, res) => {
-			const Model = app.models.User; // Replace 'YourModel' with your actual model name
 
-			// const filter = req.body; // The filter object provided in the request body
-			const filter = { where: { email: "harsh@soyuztechnologies.com" } };
-
-			try {
-				const deleteResult = await Model.deleteAll(filter);
-
-				if (deleteResult.count > 0) {
-					return res.status(200).json({ message: 'Data cleared successfully' });
-				} else {
-					return res.status(404).json({ error: 'No data found matching the filter' });
-				}
-			} catch (error) {
-				return res.status(500).json({ error: 'Failed to clear data' });
-			}
-		});
-
-		// * this post call is use to hanlde the uploaded attachments in loopback.
-		app.post('/UploadAttachment', async (req, res) => {
-
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			this.Attachments = app.models.Attachments;
-			try {
-				const { id, attachment, po } = req.body;
-				var ids = req.body.id;
-				var dd = req.body.attachment;
-				var PO = req.body.po;
-				// Create the user in User table
-				const Attachments = await this.AppUser.findOne({ where: { id } });
-				if (!Attachments) {
-					return res.status(400).json({ error: 'Customer is not Available' });
-				}
-
-				await this.Attachments.create({
-					customerId: ids,
-					attachment: dd
-				});
-				return res.status(200).json({ error: 'Customer is  Available' })
-
-			} catch (error) {
-
-				console.error(error);
-
-				res.status(500).json({ error: 'Internal server error' });
-
-			}
-
-		});
-		app.post('/uploadjob', async (req, res) => {
-
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			this.Attachments = app.models.Attachments;
-			this.Job = app.models.Job;
-			var key = req.body.jobCardNo;
-			try {
-				// 	const newJob = {};
-				// for (const field in req.body) {
-				// 	newJob[field] = req.body[field];
-				// }
-				var value = await this.Job.findOne({ where: { jobCardNo: key } });
-				if (value) {
-					let msg = "Job is already exist."
-					return res.status(200).json({ success: msg, value });
-				} else {
-					return res.status(500).json({ error: 'Not Available' });
-				}
-
-			} catch (error) {
-
-				console.error(error);
-
-				res.status(500).json({ error: 'Internal server error' });
-
-			}
-
-		});
-
-		// * this fucntion is finding the user data and  role from the session id.
-		app.get('/getUserRole', async (req, res) => {
+		app.get('/getUserRole', (req, res) => {
 			debugger;
 			// models data
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
 			this.AccessToken = app.models.AccessToken;
-
+		
 			const cookieHeader = req.headers.cookie;
 			// Parse the cookie string and extract the value of 'soyuz_session'
 			const cookies = cookie.parse(cookieHeader);
 			const sessionCookie = cookies.soyuz_session;
+		
 			if (!sessionCookie) {
 				return res.status(404).json({ error: 'Session not found' });
-
 			}
-
-			try {
-
-				// Retrieve the access token based on the session cookie
-				const accessToken = await this.AccessToken.findOne({ where: { id: sessionCookie } });
-
+		
+			this.AccessToken.findOne({ where: { id: sessionCookie } }, (tokenError, accessToken) => {
+				if (tokenError) {
+					console.error('Error fetching access token:', tokenError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+		
 				if (!accessToken) {
-					// Handle case when access token is not found
 					return res.status(404).json({ error: 'Session not found' });
 				}
+		
 				const { ttl, created, userId } = accessToken;
-
 				let userID = accessToken.userId;
-
-				// Retrieve the user based on the access token user ID
-				const user = await this.User.findOne({ where: { id: userID } });
-				if (!user) {
-					// Handle case when user is not found
-					return res.status(404).json({ error: 'User not found' });
-				}
-				//   const ID = user.id;
-
-				const Appuser = await this.AppUser.findOne({ where: { EmailId: user.email } });
-				if (!Appuser) {
-					// Handle case when user is not found
-					return res.status(404).json({ error: 'User not found' });
-				}
-
-				// Retrieve the user's role or any other relevant data
-				const { Status, TechnicalId, Role, EmailId, id, CompanyId } = Appuser;
-				const responseData = {
-					role: { Status, TechnicalId, Role, EmailId, id, CompanyId },
-					// Include other relevant data if needed
-				};
-
-				// Send the response
-				res.status(200).json(responseData);
-			} catch (error) {
-				// Handle any errors that occur during the process
-				console.error('Error fetching user role:', error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
+		
+				this.User.findOne({ where: { id: userID } }, (userError, user) => {
+					if (userError) {
+						console.error('Error fetching user:', userError);
+						return res.status(500).json({ error: 'Internal server error' });
+					}
+		
+					if (!user) {
+						return res.status(404).json({ error: 'User not found' });
+					}
+		
+					this.AppUser.findOne({ where: { EmailId: user.email } }, (appUserError, Appuser) => {
+						if (appUserError) {
+							console.error('Error fetching AppUser:', appUserError);
+							return res.status(500).json({ error: 'Internal server error' });
+						}
+		
+						if (!Appuser) {
+							return res.status(404).json({ error: 'User not found' });
+						}
+		
+						const { Status, TechnicalId, Role, EmailId, id, CompanyId } = Appuser;
+						const responseData = {
+							role: { Status, TechnicalId, Role, EmailId, id, CompanyId },
+							// Include other relevant data if needed
+						};
+		
+						res.status(200).json(responseData);
+					});
+				});
+			});
 		});
-		app.get('/getUserProfileData', async (req, res) => {
+		
+
+		app.get('/getUserProfileData', (req, res) => {
 			// models data
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
 			this.AccessToken = app.models.AccessToken;
-
+		
 			const cookieHeader = req.headers.cookie;
 			// Parse the cookie string and extract the value of 'soyuz_session'
 			const cookies = cookie.parse(cookieHeader);
 			const sessionCookie = cookies.soyuz_session;
-
-			try {
-
-				// Retrieve the access token based on the session cookie
-				const accessToken = await this.AccessToken.findOne({ where: { id: sessionCookie } });
-
+		
+			this.AccessToken.findOne({ where: { id: sessionCookie } }, (tokenError, accessToken) => {
+				if (tokenError) {
+					console.error('Error fetching access token:', tokenError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+		
 				if (!accessToken) {
-					// Handle case when access token is not found
 					return res.status(404).json({ error: 'Session not found' });
 				}
+		
 				const { ttl, created, userId } = accessToken;
-
 				let userID = accessToken.userId;
-
-				// Retrieve the user based on the access token user ID
-				const user = await this.User.findOne({ where: { id: userID } });
-				if (!user) {
-					// Handle case when user is not found
-					return res.status(404).json({ error: 'User not found' });
-				}
-				//   const ID = user.id;
-
-				const Appuser = await this.AppUser.findOne({ where: { EmailId: user.email } });
-				if (!Appuser) {
-					// Handle case when user is not found
-					return res.status(404).json({ error: 'User not found' });
-				}
-
-				// Retrieve the user's role or any other relevant data
-				// const {appUser} = Appuser;
-				const responseData = {
-					Appuser
-					// Include other relevant data if needed
-				};
-
-				// Send the response
-				res.status(200).json(responseData);
-			} catch (error) {
-				// Handle any errors that occur during the process
-				console.error('Error fetching user role:', error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
+		
+				this.User.findOne({ where: { id: userID } }, (userError, user) => {
+					if (userError) {
+						console.error('Error fetching user:', userError);
+						return res.status(500).json({ error: 'Internal server error' });
+					}
+		
+					if (!user) {
+						return res.status(404).json({ error: 'User not found' });
+					}
+		
+					this.AppUser.findOne({ where: { EmailId: user.email } }, (appUserError, Appuser) => {
+						if (appUserError) {
+							console.error('Error fetching AppUser:', appUserError);
+							return res.status(500).json({ error: 'Internal server error' });
+						}
+		
+						if (!Appuser) {
+							return res.status(404).json({ error: 'User not found' });
+						}
+		
+						const responseData = {
+							Appuser
+							// Include other relevant data if needed
+						};
+		
+						res.status(200).json(responseData);
+					});
+				});
+			});
 		});
-
-
+		
 
 		// * this is the logout callback. 
 		app.post('/logout', (req, res) => {
@@ -1156,70 +1124,61 @@ app.start = function () {
 
 
 		// * this call is for update the password of the user when he login with the temp password.
-		app.post('/updatePassword', async (req, res) => {
+
+		app.post('/updatePassword', (req, res) => {
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
-
+		
 			const { email, password, newPassword } = req.body;
+		
+			this.User.findOne({ where: { email, TempPass: password } }, (findError, tempUser) => {
+				if (findError) {
+					console.error('Error finding user:', findError);
+					return res.status(500).send('Internal server error');
+				}
+		
+				if (tempUser) {
+					tempUser.updateAttributes({ password: newPassword }, (updateError, updatedUser) => {
+						if (updateError) {
+							console.error('Error updating password:', updateError);
+							return res.status(500).send('Internal server error');
+						}
+		
+						return res.status(200).send('Password updated successfully');
+					});
+				} else {
+					return res.status(400).send('Invalid email or password');
+				}
+			});
+		});
+		
 
-			const tempUser = await this.User.findOne({ where: { email, TempPass: password } });
-			if (tempUser) {
-				// Update the password in both tables
-				tempUser.updateAttributes({ password: newPassword }, (err, updatedUser) => {
-					if (err) {
-						console.error('Error updating password:', err);
-						return res.status(500).send('Internal server error');
+		app.post('/jobStatusData', (req, res) => {
+			const JobStatus = app.models.JobStatus;
+			const { jobId } = req.body;
+		
+			try {
+				JobStatus.find({ where: { JobStatusId: jobId } }, (jobStatusError, jobStatusData) => {
+					if (jobStatusError) {
+						console.error(jobStatusError);
+						return res.status(500).json({ error: 'Internal server error' });
 					}
-
-					// // Update the password in the AppUser table
-					// AppUser.updateAttributes({ TechnicalId: user.id }, { password: newPassword }, (err) => {
-					//   if (err) {
-					// 	console.error('Error updating password in AppUser table:', err);
-					// 	return res.status(500).send('Internal server error');
-					//   }
-
-					return res.status(200).send('Password updated successfully');
+		
+					res.status(200).json(jobStatusData);
 				});
-				//   });
-			}
-
-		});
-		app.get('/customerNames', async (req, res) => {
-
-			const appUsers = app.models.AppUser;
-			try {
-				const customerData = await appUsers.find({ where: { Role: "Customer", Status: "Approved" } }); // Retrieve job status data
-				// var data = JSON.stringify(customerData);
-				res.status(200).json(customerData);
 			} catch (error) {
 				console.error(error);
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+		
 
-		// * this call is gettting the jobstatus data.
-		app.post('/jobStatusData', async (req, res) => {
-
-			const JobStatus = app.models.JobStatus;
-			const { jobId } = req.body;
-			try {
-				const jobStatusData = await JobStatus.find({ where: { JobStatusId: jobId } }); // Retrieve job status data
-
-				//   res.status(200).json(jobStatusData);
-				// var data = JSON.stringify(jobStatusData);
-				res.status(200).json(jobStatusData);
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
-		});
-		app.post('/getSumOfJobStatus', async (req, res) => {
-
+		app.post('/getSumOfJobStatus', (req, res) => {
 			const JobStatus = app.models.JobStatus;
 			const Job = app.models.Job;
 			const { jobId } = req.body;
-			var oSumOfData = {
+			const oSumOfData = {
 				"Coating": 0,
 				"Printing": 0,
 				"Punching": 0,
@@ -1231,555 +1190,439 @@ app.start = function () {
 				"rawMaterial": "",
 				"InvNo": [],
 				"DeliveryNo": []
-			}
+			};
+		
 			try {
-				const jobStatusData = await JobStatus.find({ where: { JobStatusId: jobId } }); // Retrieve job status data
-
-				for (let i = 0; i < jobStatusData.length; i++) { //5
-					oSumOfData.Coating += jobStatusData[i].Coating;
-					oSumOfData.Printing += jobStatusData[i].Printing;
-					oSumOfData.Punching += jobStatusData[i].Punching;
-					oSumOfData.Foiling += jobStatusData[i].Foiling;
-					oSumOfData.Embossing += jobStatusData[i].Embossing;
-					oSumOfData.Pasting += jobStatusData[i].Pasting;
-					oSumOfData.spotUV += jobStatusData[i].spotUV;
-					oSumOfData.Packing += jobStatusData[i].Packing;
-					oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
-					if (jobStatusData[i].InvNo) {
-						oSumOfData.InvNo.push({
-							InvNo: jobStatusData[i].InvNo,
-							attachment: jobStatusData[i].incAttachment
-						})
+				JobStatus.find({ where: { JobStatusId: jobId } }, (jobStatusError, jobStatusData) => {
+					if (jobStatusError) {
+						console.error(jobStatusError);
+						return res.status(500).json({ error: 'Internal server error' });
 					}
-					if (jobStatusData[i].DeliveryNo) {
-						oSumOfData.DeliveryNo.push({
-							DeliveryNo: jobStatusData[i].DeliveryNo,
-							attachment: jobStatusData[i].deliveryAttachment
-						})
+		
+					for (let i = 0; i < jobStatusData.length; i++) {
+						oSumOfData.Coating += jobStatusData[i].Coating;
+						oSumOfData.Printing += jobStatusData[i].Printing;
+						oSumOfData.Punching += jobStatusData[i].Punching;
+						oSumOfData.Foiling += jobStatusData[i].Foiling;
+						oSumOfData.Embossing += jobStatusData[i].Embossing;
+						oSumOfData.Pasting += jobStatusData[i].Pasting;
+						oSumOfData.spotUV += jobStatusData[i].spotUV;
+						oSumOfData.Packing += jobStatusData[i].Packing;
+						oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
+						
+						if (jobStatusData[i].InvNo) {
+							oSumOfData.InvNo.push({
+								InvNo: jobStatusData[i].InvNo,
+								attachment: jobStatusData[i].incAttachment
+							});
+						}
+						if (jobStatusData[i].DeliveryNo) {
+							oSumOfData.DeliveryNo.push({
+								DeliveryNo: jobStatusData[i].DeliveryNo,
+								attachment: jobStatusData[i].deliveryAttachment
+							});
+						}
 					}
-				}
-
-				var array = [oSumOfData]
-
-				res.status(200).json(array);
+		
+					const array = [oSumOfData];
+					res.status(200).json(array);
+				});
 			} catch (error) {
 				console.error(error);
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
+		
 
-		app.post('/getRemJobStatus', async (req, res) => {
-
-			const JobStatus = app.models.JobStatus;
-			const Job = app.models.Job;
-			const { jobId } = req.body;
-			var oSumOfData = {
-				"Coating": 0,
-				"Printing": 0,
-				"Punching": 0,
-				"Foiling": 0,
-				"Embossing": 0,
-				"Pasting": 0,
-				"spotUV": 0,
-				"Packing": 0,
-				"rawMaterial": "",
-				"InvNo": [],
-				"DeliveryNo": []
-			}
-			try {
-				const jobStatusData = await JobStatus.find({ where: { JobStatusId: jobId } }); // Retrieve job status data
-
-				for (let i = 0; i < jobStatusData.length; i++) { //5
-					oSumOfData.Coating += jobStatusData[i].Coating;
-					oSumOfData.Printing += jobStatusData[i].Printing;
-					oSumOfData.Punching += jobStatusData[i].Punching;
-					oSumOfData.Foiling += jobStatusData[i].Foiling;
-					oSumOfData.Embossing += jobStatusData[i].Embossing;
-					oSumOfData.Pasting += jobStatusData[i].Pasting;
-					oSumOfData.spotUV += jobStatusData[i].spotUV;
-					oSumOfData.Packing += jobStatusData[i].Packing;
-					oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
-					if (jobStatusData[i].InvNo) {
-						oSumOfData.InvNo.push({
-							invNo: jobStatusData[i].InvNo,
-							attachment: jobStatusData[i].incAttachment
-						})
-					}
-					if (jobStatusData[i].DeliveryNo) {
-						oSumOfData.DeliveryNo.push({
-							DeliveryNo: jobStatusData[i].DeliveryNo,
-							attachment: jobStatusData[i].deliveryAttachment
-						})
-					}
-
-				}
-				const totalJobDetails = await Job.findOne({ where: { jobCardNo: jobId } })
-
-				var remainingData = {
-					"RemainingCoating": totalJobDetails.__data.noOfSheets1 - oSumOfData.Printing,
-
-				};
-
-				var array = array = [remainingData]
-
-				res.status(200).json(array);
-			} catch (error) {
-				console.error(error);
-				res.status(500).json({ error: 'Internal server error' });
-			}
-		});
-		// Relation: Jobs ---> Company >>>> belongsTo >>>> Object
-		// 		Comany ---> Jobs >>>>> hasMany   >>>> Array
-		app.get('/getJobsWithCompany', async function (req, res) {
+		app.get('/getJobsWithCompany', function (req, res) {
 			try {
 				const Job = app.models.Job;
-				const jobs = await Job.find({
+				Job.find({
 					order: 'jobCardNo',
 					fields: { 
-							JobName:false,
-							UpdatedOn:false,
-							CreatedOn:false,
-							date:false,
-							poAttachment: false,
-							artworkAttachment: false,
-							poNo: false,
-							artworkCode: false,
-							clientPONo: false,
-							industry: false,
-							cartonType: false,
-							qtyPcs: false,
-							PaperGSM: false,
-							paperPoNo: false,
-							paperQuality: false,
-							printing: false,
-							color: false,
-							sizeL: false,
-							sizeW: false,
-							sizeH: false,
-							varLmt: false,
-							effects: false,
-							lock: false,
-							tF: false,
-							pF: false,
-							doubleCut: false,
-							trimTF: false,
-							trimPF: false,
-							noOfUps1: false,
-							noOfUps2: false,
-							noOfUps3: false,
-							noOfSheets1: false,
-							noOfSheets2: false,
-							wastage: false,
-							wtKgs: false,
-							printingSheetSizeL1: false,
-							printingSheetSizeW1: false,
-							printingSheetSizeL2: false,
-							printingMachine: false,
-							punchingMachine: false,
-							pastingMachine: false,
-							ref: false,
-							old: false,
-							none: false,
-							b2A: false,
-							none1: false,
-							none2: false,
-							batchNo: false,
-							mfgDate: false,
-							expDate: false,
-							correctionsInArtwork: false,
-							remarks: false,
-							totalAB: false,
-							profit: false,
-							totalCostOfJob: false,
-							costPerPc: false,
-							plate: false,
-							plate1: false,
-							plate2: false,
-							pantoneInks: false,
-							foilBlocks: false,
-							positive: false,
-							embossBlock: false,
-							punch: false,
-							punch1: false,
-							punch2: false,
-							reference: false,
-							cartonLength: false,
-							cartonWidth: false,
-							paperCost: false,
-							printingCharges: false,
-							varnishLamination: false,
-							embossing: false,
-							punching: false,
-							bSOPasting: false,
-							lBTOPasting: false,
-							packing: false,
-							transportation: false,
-							total: false,
-							plateCharges: false,
-							blanketCharges: false,
-							userName: false,
-							remarks1: false,
-							remarks2: false,
-							corrections1: false,
-							corrections2: false,
-							corrections3: false,
-						},
+						JobName:false,
+						UpdatedOn:false,
+						CreatedOn:false,
+						date:false,
+						poAttachment: false,
+						artworkAttachment: false,
+						poNo: false,
+						artworkCode: false,
+						clientPONo: false,
+						industry: false,
+						cartonType: false,
+						qtyPcs: false,
+						PaperGSM: false,
+						paperPoNo: false,
+						paperQuality: false,
+						printing: false,
+						color: false,
+						sizeL: false,
+						sizeW: false,
+						sizeH: false,
+						varLmt: false,
+						effects: false,
+						lock: false,
+						tF: false,
+						pF: false,
+						doubleCut: false,
+						trimTF: false,
+						trimPF: false,
+						noOfUps1: false,
+						noOfUps2: false,
+						noOfUps3: false,
+						noOfSheets1: false,
+						noOfSheets2: false,
+						wastage: false,
+						wtKgs: false,
+						printingSheetSizeL1: false,
+						printingSheetSizeW1: false,
+						printingSheetSizeL2: false,
+						printingMachine: false,
+						punchingMachine: false,
+						pastingMachine: false,
+						ref: false,
+						old: false,
+						none: false,
+						b2A: false,
+						none1: false,
+						none2: false,
+						batchNo: false,
+						mfgDate: false,
+						expDate: false,
+						correctionsInArtwork: false,
+						remarks: false,
+						totalAB: false,
+						profit: false,
+						totalCostOfJob: false,
+						costPerPc: false,
+						plate: false,
+						plate1: false,
+						plate2: false,
+						pantoneInks: false,
+						foilBlocks: false,
+						positive: false,
+						embossBlock: false,
+						punch: false,
+						punch1: false,
+						punch2: false,
+						reference: false,
+						cartonLength: false,
+						cartonWidth: false,
+						paperCost: false,
+						printingCharges: false,
+						varnishLamination: false,
+						embossing: false,
+						punching: false,
+						bSOPasting: false,
+						lBTOPasting: false,
+						packing: false,
+						transportation: false,
+						total: false,
+						plateCharges: false,
+						blanketCharges: false,
+						userName: false,
+						remarks1: false,
+						remarks2: false,
+						corrections1: false,
+						corrections2: false,
+						corrections3: false,
+					},
 					where: { "CompanyId": { "neq": null } },
 					include: [{
 						relation: 'Company',
 						scope: {
 							order: 'id',
-							fields:{ "CompanyName":true }
-						},
-					  }]
-					
+							fields: { "CompanyName": true }
+						}
+					}]
+				}, function (err, jobs) {
+					if (err) {
+						return res.status(500).send(err);
+					}
+					res.send(jobs);
 				});
-				// fields: {artworkAttachment:false, poAttachment:false },
-				// jobCardNo: true, nameOFTheProduct:true,jobCode:true, status:true, urgent:true, Company:true
-				res.send(jobs);
 			} catch (error) {
 				return res.status(500).send(error);
 			}
-
 		});
-		// Relation: Jobs ---> Job status >>>> hasMany  >>>> Array
-		// 		JobStatus ---> Jobs >>>>> Belongs TO >>>> Object
 
-		// To be done by harsh
 
-		app.get('/getJobsData', async (req, res) => {
-			try {
-				const Job = app.models.Job;
-				const AppUser = app.models.AppUser;
-				// Fetch jobs data with associated appUser
-				const jobs = await Job.find({ include: 'appUser' })
-				const jobsWithData = jobs.map(job => {
-
-					const fullName = `${job.appUser.FirstName} ${job.appUser.LastName}`;
-					return {
-						...job.toJSON(),
-						appUserFullName: fullName
-					};
-
-				});
-				return res.status(200).json(jobsWithData);
-			} catch (error) {
-				console.error(error);
-				return res.status(500).json({ error: 'An error occurred' });
-
-			}
-		});
-		app.post('/selectedDateJobStatus', async (req, res) => {
+		app.post('/selectedDateJobStatus', (req, res) => {
 			debugger;
 			const Job = app.models.Job;
 			const JobStatus = app.models.JobStatus;
 			const { CreatedOnStart, CreatedOnEnd, cId } = req.body;
-
+		
 			try {
 				const startDate = CreatedOnStart;
 				const endDate = CreatedOnEnd;
-
-
-				let jobStatusSelectedData = await Job.find({
+		
+				Job.find(
+					{
 					order: 'id',
 					where: {
 						and: [
-							{ CreatedOn: { gte: startDate } }, // Filter jobs created on or after CreatedOnStart
-							{ CreatedOn: { lte: endDate } }, // Filter jobs created on or before CreatedOnEnd
-							{ CompanyId: cId } // Filter jobs matching the specified CompanyId
+							{ CreatedOn: { gte: startDate } },
+							{ CreatedOn: { lte: endDate } },
+							{ CompanyId: cId }
 						]
 					},
-					field: { JobStatus:true ,jobCardNo: true},
+					field: { JobStatus: true, jobCardNo: true },
 					include: [{
 						relation: 'JobStatus',
 						scope: {
 							order: 'id',
-							fields:{ "Printing":true , "UpdatedOn":true, "rawMaterial":true, "Coating":true, "Foiling":true, "Embossing":true,"InvNo" :true,"Pasting":true,"spotUV":true, "Punching":true,"Packing":true,"noOfBoxPerPieces":true,"noOfPiecesToSend":true }
-						},
-					  }] // Include JobStatus relation
+							fields: { "Printing": true, "UpdatedOn": true, "rawMaterial": true, "Coating": true, "Foiling": true, "Embossing": true, "InvNo": true, "Pasting": true, "spotUV": true, "Punching": true, "Packing": true, "noOfBoxPerPieces": true, "noOfPiecesToSend": true }
+						}
+					}]
+				},
+				 (jobError, jobStatusSelectedData) => {
+					if (jobError) {
+						console.error(jobError);
+						return res.status(500).send('Internal server error');
+					}
+					res.status(200).json(jobStatusSelectedData);
 				});
-
-				res.status(200).json(jobStatusSelectedData);
 			} catch (error) {
 				console.error(error);
 				return res.status(500).send('Internal server error');
 			}
 		});
-	
-		// * this call is sending the emol to the existing user that admin create.
-		// todo need this to optimize 
-		app.post('/sendEmailExistUser', async (req, res) => {
 
-			this.User = app.models.User;
-			this.Param = app.models.Param;
-			this.AppUser = app.models.AppUser;
-			this.Customer = app.models.Customer;
-
+		app.post('/sendEmailExistUser', (req, res) => {
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
+		
 			const newCustomer = {};
 			for (const field in req.body) {
 				newCustomer[field] = req.body[field];
 			}
-
-			var EmailId = newCustomer.EmailId;
-			var id = newCustomer.TechnicalId;
-			if (!newCustomer.password) {
-				var password = generateRandomPassword();
-			} else {
-				var password = newCustomer.password;
-			}
-			try {
-				let userTableUser = await this.User.findOne({ where: { email: EmailId, id: id } });
-				let AppUser = await this.AppUser.findOne({ where: { EmailId, TechnicalId: id } });
-				// let TempPassW = userTableUser.TempPass;
-				if (userTableUser) {
-					// Update the password in both tables
-					userTableUser.updateAttributes({ password: password, TempPass: password }, (err, updatedUser) => {
-						if (err) {
-							console.error('Error updating password:', err);
-							return res.status(500).send('Internal server error');
-						}
-					});
-
-					// // Update the password in the AppUser table
-					// AppUser.updateAttributes({ TechnicalId: user.id }, { password: password,TempPass:password }, (err) => {
-					//   if (err) {
-					// 	console.error('Error updating password in AppUser table:', err);
-					// 	return res.status(500).send('Internal server error');
-					//   }
-					// });
-				};
-				// if (!TempPassW) {
-				// 	res.status(404).json("this user doesn't exist with the temporary password");
-				// 	return;
-				// }
-				// const { email, TempPass } = userTableUser;
-				const token = "";
-				const replacements = {
-					// 	// verify : `${req.headers.referer}#/updatePassword/${token}`,
-					email: "noreply@aeonproducts.com",
-					user: EmailId,
-					password: password,
-				};
-				const templateFileName = "NewUser.html"
-				const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
-				// Send verification email
-				await sendEmail(EmailId, token, replacements, templateFileName, emailSubject);
-
-				return res.status(200).json('Email send successfully');
-			} catch (error) {
-				// Handle error
-				return res.status(500).json({ error: 'Failed to Send Email' });
-			}
+		
+			const EmailId = newCustomer.EmailId;
+			const id = newCustomer.TechnicalId;
+			let password = newCustomer.password || generateRandomPassword();
+		
+			User.findOne({ where: { email: EmailId, id: id } }, (userFindError, userTableUser) => {
+				if (userFindError) {
+					console.error(userFindError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+		
+				AppUser.findOne({ where: { EmailId, TechnicalId: id } }, (appUserFindError, AppUser) => {
+					if (appUserFindError) {
+						console.error(appUserFindError);
+						return res.status(500).json({ error: 'Internal server error' });
+					}
+		
+					if (userTableUser) {
+						userTableUser.updateAttributes({ password: password, TempPass: password }, (updateError, updatedUser) => {
+							if (updateError) {
+								console.error('Error updating password:', updateError);
+								return res.status(500).send('Internal server error');
+							}
+		
+							const token = "";
+							const replacements = {
+								email: "noreply@aeonproducts.com",
+								user: EmailId,
+								password: password,
+							};
+							const templateFileName = "NewUser.html"
+							const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
+		
+							sendEmail(EmailId, token, replacements, templateFileName, emailSubject)
+								.then(() => {
+									return res.status(200).json('Email sent successfully');
+								})
+								.catch(sendEmailError => {
+									console.error(sendEmailError);
+									return res.status(500).json({ error: 'Failed to Send Email' });
+								});
+						});
+					} else {
+						return res.status(400).json('User not found');
+					}
+				});
+			});
 		});
+		
 
-		// ! right now this call is not useful bus may be in future.
-		// app.post('/uploadJobData', async (req, res) => {
-		// 	
-		// 	 this.User = app.models.User;
-		// 	this.Param = app.models.Param;
-		// 	this.AppUser = app.models.AppUser;
-		// 	this.Job = app.models.Job;
-
-		// 	const newJob = {};
-		// 	for (const field in req.body) {
-		// 		newJob[field] = req.body[field];
-		// 	}
-
-		// 	try {
-		// 	  let jobId = newJob.jobCardNo;
-		// 	   var jobs = await this.Job.findOne({ where: { jobCardNo: jobId} });
-		// 		if (!jobs) {
-		// 			var job = await this.Job.create(newJob);
-		// 		}
-		// 		else{
-		// 			res.status(404).json("Job is already exists with this job card no.")
-		// 		}
-
-		// 	  // Fetch only firstname and lastname from the appusers table using the customer ID
-		// 	  const customerId = newJob.CustomerId; // Assuming the customer ID field is 'customerId'
-		// 	  const appUser = await this.AppUser.findOne({where: { id:customerId } });
-
-		// 	  if (!appUser) {
-		// 		res.status(404).json("Customer id Is not Valid");
-		// 	  }
-		// 		const { FirstName, LastName } = appUser;
-
-		// 		job.userName = FirstName + " " + LastName;
-
-		// 	  res.status(200).json(job);
-		// 	} catch (error) {
-		// 	  console.error(error);
-		// 	  res.status(500).json({ error: 'An error occurred while processing the request' });
-		// 	}
-		//   });
-
-		// app.post('/uploadJobData', async (req, res) => {
-		// 	
 		// 	this.User = app.models.User;
 		// 	this.Param = app.models.Param;
 		// 	this.AppUser = app.models.AppUser;
-		// 	this.Job = app.models.Job;
+		// 	this.Customer = app.models.Customer;
 
-		// 	const newJob = {};
+		// 	const newCustomer = {};
 		// 	for (const field in req.body) {
-		// 		newJob[field] = req.body[field];
+		// 		newCustomer[field] = req.body[field];
 		// 	}
 
+		// 	var EmailId = newCustomer.EmailId;
+		// 	var id = newCustomer.TechnicalId;
+		// 	if (!newCustomer.password) {
+		// 		var password = generateRandomPassword();
+		// 	} else {
+		// 		var password = newCustomer.password;
+		// 	}
 		// 	try {
-		// 		// Create the job entry in the job table
-		// 		//   const job = await Job.create(newCustomer);
-		// 		let jobId = newJob.jobCardNo;
-		// 		var jobs = await this.Job.findOne({ where: { jobCardNo: jobId } });
-		// 		if (!jobs) {
-		// 			var job = await this.Job.create(newJob);
-		// 		}
-		// 		else {
-		// 			res.status(404).json("Job is already exists with this job card no.")
-		// 		}
+		// 		let userTableUser = await this.User.findOne({ where: { email: EmailId, id: id } });
+		// 		let AppUser = await this.AppUser.findOne({ where: { EmailId, TechnicalId: id } });
+		// 		// let TempPassW = userTableUser.TempPass;
+		// 		if (userTableUser) {
+		// 			// Update the password in both tables
+		// 			userTableUser.updateAttributes({ password: password, TempPass: password }, (err, updatedUser) => {
+		// 				if (err) {
+		// 					console.error('Error updating password:', err);
+		// 					return res.status(500).send('Internal server error');
+		// 				}
+		// 			});
+		// 		};
+		// 		const token = "";
+		// 		const replacements = {
+		// 			// 	// verify : `${req.headers.referer}#/updatePassword/${token}`,
+		// 			email: "noreply@aeonproducts.com",
+		// 			user: EmailId,
+		// 			password: password,
+		// 		};
+		// 		const templateFileName = "NewUser.html"
+		// 		const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
+		// 		// Send verification email
+		// 		await sendEmail(EmailId, token, replacements, templateFileName, emailSubject);
 
-		// 		// Fetch only firstname and lastname from the appusers table using the customer ID
-		// 		const customerId = newJob.CustomerId; // Assuming the customer ID field is 'customerId'
-		// 		const appUser = await this.AppUser.findOne({ where: { id: customerId } });
-
-		// 		if (!appUser) {
-		// 			res.status(404).json("Customer id Is not Valid");
-		// 		}
-		// 		// Include the fetched firstname and lastname in the response
-		// 		// job.FirstName = appUser.FirstName;
-		// 		// job.LastName = appUser.LastName;
-
-		// 		const { FirstName, LastName } = appUser;
-
-		// 		job.userName = FirstName + " " + LastName;
-
-		// 		res.status(200).json(job);
+		// 		return res.status(200).json('Email send successfully');
 		// 	} catch (error) {
-		// 		console.error(error);
-		// 		res.status(500).json({ error: 'An error occurred while processing the request' });
+		// 		// Handle error
+		// 		return res.status(500).json({ error: 'Failed to Send Email' });
 		// 	}
 		// });
 
-
-
-		app.post('/JobsCustomer', async (req, res) => {
-
-			this.AppUser = app.models.AppUser;
-			this.Job = app.models.Job;
+		
+		app.post('/JobsCustomer', (req, res) => {
+			const AppUser = app.models.AppUser;
+			const Job = app.models.Job;
 			const { id } = req.body;
-
-			let AppUser = await this.AppUser.findOne({ where: { id } });
-			if (AppUser) {
-				const CompanyId = AppUser.CompanyId;
-				if (CompanyId) {
-					let Jobs = await this.Job.find(
-						{ 
-							where: { CompanyId },
-							fields: { 
-							JobName:false,
-							UpdatedOn:false,
-							CreatedOn:false,
-							date:false,
-							poAttachment: false,
-							artworkAttachment: false,
-							poNo: false,
-							artworkCode: false,
-							clientPONo: false,
-							industry: false,
-							cartonType: false,
-							qtyPcs: false,
-							PaperGSM: false,
-							paperPoNo: false,
-							paperQuality: false,
-							printing: false,
-							color: false,
-							sizeL: false,
-							sizeW: false,
-							sizeH: false,
-							varLmt: false,
-							effects: false,
-							lock: false,
-							tF: false,
-							pF: false,
-							doubleCut: false,
-							trimTF: false,
-							trimPF: false,
-							noOfUps1: false,
-							noOfUps2: false,
-							noOfUps3: false,
-							noOfSheets1: false,
-							noOfSheets2: false,
-							wastage: false,
-							wtKgs: false,
-							printingSheetSizeL1: false,
-							printingSheetSizeW1: false,
-							printingSheetSizeL2: false,
-							printingMachine: false,
-							punchingMachine: false,
-							pastingMachine: false,
-							ref: false,
-							old: false,
-							none: false,
-							b2A: false,
-							none1: false,
-							none2: false,
-							batchNo: false,
-							mfgDate: false,
-							expDate: false,
-							correctionsInArtwork: false,
-							remarks: false,
-							totalAB: false,
-							profit: false,
-							totalCostOfJob: false,
-							costPerPc: false,
-							plate: false,
-							plate1: false,
-							plate2: false,
-							pantoneInks: false,
-							foilBlocks: false,
-							positive: false,
-							embossBlock: false,
-							punch: false,
-							punch1: false,
-							punch2: false,
-							reference: false,
-							cartonLength: false,
-							cartonWidth: false,
-							paperCost: false,
-							printingCharges: false,
-							varnishLamination: false,
-							embossing: false,
-							punching: false,
-							bSOPasting: false,
-							lBTOPasting: false,
-							packing: false,
-							transportation: false,
-							total: false,
-							plateCharges: false,
-							blanketCharges: false,
-							userName: false,
-							remarks1: false,
-							remarks2: false,
-							corrections1: false,
-							corrections2: false,
-							corrections3: false,
-						}, 
-						include: 'Company',
-					}
-						);
-					return res.status(200).send(Jobs);
-				} else {
-					return res.status(200).send([]);
+		
+			AppUser.findOne({ where: { id } }, (appUserError, AppUser) => {
+				if (appUserError) {
+					console.error('Error finding user:', appUserError);
+					return res.status(500).send('Internal server error');
 				}
-			} else {
-				return res.status(400).send('user not found');
-			}
-
-			// at above we find the appuser from the id.
-			// if user exiest then take smae process to find the jobs accoring to user 
-			// for this use the company id form {AppUser.compnayId}
-			// at here you get the id and the make the further process.
-
+		
+				if (AppUser) {
+					const CompanyId = AppUser.CompanyId;
+					if (CompanyId) {
+						Job.find(
+							{ 
+								where: { CompanyId },
+								fields: { 
+								JobName:false,
+								UpdatedOn:false,
+								CreatedOn:false,
+								date:false,
+								poAttachment: false,
+								artworkAttachment: false,
+								poNo: false,
+								artworkCode: false,
+								clientPONo: false,
+								industry: false,
+								cartonType: false,
+								qtyPcs: false,
+								PaperGSM: false,
+								paperPoNo: false,
+								paperQuality: false,
+								printing: false,
+								color: false,
+								sizeL: false,
+								sizeW: false,
+								sizeH: false,
+								varLmt: false,
+								effects: false,
+								lock: false,
+								tF: false,
+								pF: false,
+								doubleCut: false,
+								trimTF: false,
+								trimPF: false,
+								noOfUps1: false,
+								noOfUps2: false,
+								noOfUps3: false,
+								noOfSheets1: false,
+								noOfSheets2: false,
+								wastage: false,
+								wtKgs: false,
+								printingSheetSizeL1: false,
+								printingSheetSizeW1: false,
+								printingSheetSizeL2: false,
+								printingMachine: false,
+								punchingMachine: false,
+								pastingMachine: false,
+								ref: false,
+								old: false,
+								none: false,
+								b2A: false,
+								none1: false,
+								none2: false,
+								batchNo: false,
+								mfgDate: false,
+								expDate: false,
+								correctionsInArtwork: false,
+								remarks: false,
+								totalAB: false,
+								profit: false,
+								totalCostOfJob: false,
+								costPerPc: false,
+								plate: false,
+								plate1: false,
+								plate2: false,
+								pantoneInks: false,
+								foilBlocks: false,
+								positive: false,
+								embossBlock: false,
+								punch: false,
+								punch1: false,
+								punch2: false,
+								reference: false,
+								cartonLength: false,
+								cartonWidth: false,
+								paperCost: false,
+								printingCharges: false,
+								varnishLamination: false,
+								embossing: false,
+								punching: false,
+								bSOPasting: false,
+								lBTOPasting: false,
+								packing: false,
+								transportation: false,
+								total: false,
+								plateCharges: false,
+								blanketCharges: false,
+								userName: false,
+								remarks1: false,
+								remarks2: false,
+								corrections1: false,
+								corrections2: false,
+								corrections3: false,
+							}, 
+							include: 'Company',
+						},
+							(jobError, Jobs) => {
+								if (jobError) {
+									console.error('Error finding jobs:', jobError);
+									return res.status(500).send('Internal server error');
+								}
+								return res.status(200).send(Jobs);
+							}
+						);
+					} else {
+						return res.status(200).send([]);
+					}
+				} else {
+					return res.status(400).send('User not found');
+				}
+			});
 		});
+		
 
 		app.post('/usersRemove', (req, res) => {
 			const userEmail = "dheeraj@soyuztechnologies.com";

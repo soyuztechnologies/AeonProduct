@@ -29,6 +29,7 @@ sap.ui.define([
 			this.getRouter().getRoute("Packing").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Dispatched").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Delivering").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Others").attachPatternMatched(this._printingMatchedHandler, this);
 			this.oViewSettingsDialog = sap.ui.xmlfragment("ent.ui.ecommerce.fragments.allPrinterScreenFragment.Jobstatuspopup", this);
 			this.getView().addDependent(this.oViewSettingsDialog);
 		},
@@ -61,7 +62,7 @@ sap.ui.define([
 			
 			this.getModel("appView").setProperty("/logoutVisibility", true);
 			this.getModel("appView").updateBindings();
-			this.getCompanyName();
+			// this.getCompanyName();
 			// var date = new Date();
 			// var formattedDate = date.toLocaleDateString("en-US");
 			// this.getView().getModel("appView").setProperty("/todaysDate",date)
@@ -752,7 +753,7 @@ sap.ui.define([
 
 			this.middleWare.callMiddleWare("selectedDateJobStatus", "POST" , payload)
 				.then(function (data, status, xhr) {
-				  
+				  debugger;
 				  that.getView().getModel("appView").setProperty("/jobStatusDate", data);	
 				  that.onExport();					
 			  })
@@ -764,24 +765,44 @@ sap.ui.define([
 	createColumnConfig: function() {
 		return [
 			{
-				label: 'Job Card No.',
+				label: 'Job No',
 				property: 'JobStatusId',
 				scale: 0
 			},
 			{
-				label: 'Raw Material',
-				property: 'rawMaterial',
-				width: '25'
+				label: 'Job Code',
+				property: 'jobCode',
+				width: '23'
 			},
 			{
-				label: 'Printing',
+				label: 'Printing No. of sheets',
 				property: 'Printing',
 				width: '25'
 			},
 			{
-				label: 'Coating',
-				property: 'Coating',
+				label: 'Quantity Required',
+				property: 'qtyPcs',
 				width: '25'
+			},
+			{
+				label: 'Reference No.',
+				property: 'poNo',
+				width: '25'
+			},
+			{
+				label: 'Paper Order No.',
+				property: 'paperordereno',
+				width: '25'
+			},
+			{
+				label: 'Partys Name',
+				property: 'partysname',
+				width: '25'
+			},
+			{
+				label: 'Name Of The Product',
+				property: 'nameOFTheProduct',
+				width: '45'
 			},
 			{
 				label: 'Inc No.',
@@ -789,32 +810,17 @@ sap.ui.define([
 				width: '25'
 			},
 			{
-				label: 'Foiling',
-				property: 'Foiling',
-				width: '18'
+				label: 'Dispatch Date',
+				property: 'UpdatedOn',
+				width: '25'
 			},
 			{
-				label: 'Embossing',
-				property: 'Embossing',
-				width: '18'
-			},
-			{
-				label: 'Pasting',
+				label: 'Pasting Quantity',
 				property: 'Pasting',
 				width: '18'
 			},
 			{
-				label: 'SpotUV',
-				property: 'spotUV',
-				width: '18'
-			},
-			{
-				label: 'Punching',
-				property: 'Punching',
-				width: '18'
-			},
-			{
-				label: 'Packing',
+				label: 'Packing List',
 				property: 'Packing',
 				width: '18'
 			},
@@ -828,6 +834,46 @@ sap.ui.define([
 				property: 'noOfPiecesToSend',
 				width: '18'
 			},
+			{
+				label: 'Raw Material',
+				property: 'rawMaterial',
+				width: '25'
+			},
+			{
+				label: 'Printing',
+				property: 'Printing',
+				width: '25'
+			},
+			
+			{
+				label: 'Coating',
+				property: 'Coating',
+				width: '25'
+			},
+			
+			{
+				label: 'Foiling',
+				property: 'Foiling',
+				width: '18'
+			},
+			{
+				label: 'SpotUV',
+				property: 'spotUV',
+				width: '18'
+			},
+			{
+				label: 'Embossing',
+				property: 'Embossing',
+				width: '18'
+			},
+			
+			{
+				label: 'Punching',
+				property: 'Punching',
+				width: '18'
+			},
+			
+			
 			
 			];
 	},
@@ -854,7 +900,7 @@ sap.ui.define([
 	},
 
 	onExport: function() {
-		
+		debugger;
 		var that=this;
 		var aCols, oBinding, oSettings, oSheet, oTable,data;
 		var aAllJobStatus = [];
@@ -862,17 +908,26 @@ sap.ui.define([
 
 		oTable = this.byId('exportTable');
 		data = this.getView().getModel("appView").getProperty("/jobStatusDate");
-
+		
 		for(var i =0 ; i<data.length;i++){
 			oBinding = data[i].JobStatus;
 			var myJobStatusData = oBinding[0]
 			aAllJobStatus.push(myJobStatusData)
 		}
-
+		
 		for (let i = 0; i < aAllJobStatus.length; i++) {
 			const element = aAllJobStatus[i];
 			if(element != undefined){
+				var filterWithJobs = data.filter((job) => {
+					return job.jobCardNo === element.JobStatusId
+					
+				});
+				element.qtyPcs = filterWithJobs[0].qtyPcs;
+				element.jobCode = filterWithJobs[0].jobCode;
+				element.poNo = filterWithJobs[0].poNo;
+				element.nameOFTheProduct = filterWithJobs[0].nameOFTheProduct;
 				jobStatusArray.push(element)
+				
 			}
 			
 		}
