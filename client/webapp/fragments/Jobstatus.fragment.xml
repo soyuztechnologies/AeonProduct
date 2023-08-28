@@ -3,7 +3,7 @@
         <!-- <Toolbar> -->
             <Title text="Job Status" />
             <ToolbarSpacer/>
-            <Button
+            <!-- <Button
                  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head'|| ${appView>/UserRole} === 'Factory Manager' ? true : ${appView>/selectedKey} !== 'In Stock' ? ${appView>/UserRole} === 'Raw Material Head' ? true : false  : true}"
 
                    text="Remark"
@@ -12,7 +12,7 @@
 
                    icon="sap-icon://add-activity"
 
-                   press="onRemarkClick"/>
+                   press="onRemarkClick"/> -->
                 <Button
                    visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head'|| ${appView>/UserRole} === 'Factory Manager' ? true : ${appView>/selectedKey} !== 'In Stock' ? ${appView>/UserRole} === 'Raw Material Head' ? true : false  : true}"
                    icon="sap-icon://add"
