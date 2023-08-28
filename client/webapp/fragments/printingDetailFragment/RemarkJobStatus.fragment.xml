@@ -1,0 +1,65 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:u="sap.ui.unified"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+
+    <Dialog title="Add Remark"  showHeader="true">
+
+        <f:SimpleForm editable="false" layout="ResponsiveGridLayout" id="idRemarkDialog">
+            <f:content>
+                    <core:Title text="Remark 1" level="H3"></core:Title>
+                    <Input value="{appView>remark1}"/>
+                        <HBox>
+                            <u:FileUploader id="idRemark1" name="remarkupload1" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
+                                <u:parameters>
+                                    <u:FileUploaderParameter name="createdBy" />
+                                </u:parameters>
+                            </u:FileUploader>
+                            <Button class="sapUiTinyMarginBegin" id="showRemark1" name="showRemark1" text="Show"  tooltip="check Remark" press="onShowRemark"/>
+                            <Button class="sapUiTinyMarginBegin" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
+                        </HBox>
+
+
+                    <core:Title text="Remark 2" level="H3"></core:Title>
+                    <Input value="{appView>remark2}"/>
+                        <HBox>
+                            <u:FileUploader id="idRemark2" value="{appView>/logoRemark2}" name="remarkupload2" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
+                                <u:parameters>
+                                    <u:FileUploaderParameter name="createdBy" />
+                                </u:parameters>
+                            </u:FileUploader>
+                            <Button class="sapUiTinyMarginBegin" id="showRemark2" text="Show"  tooltip="check Remark" press="onShowRemark"/>
+                            <Button class="sapUiTinyMarginBegin" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
+
+                        </HBox>
+
+
+                    <core:Title text="Remark 3" level="H3"></core:Title>
+                    <Input value="{appView>remark3}"/>
+                        <HBox>
+                            <u:FileUploader id="idRemark3" value="{appView>remark3Img}" name="remarkupload3" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
+                                <u:parameters>
+                                    <u:FileUploaderParameter name="createdBy" />
+                                </u:parameters>
+                            </u:FileUploader>
+                            <Button class="sapUiTinyMarginBegin" id="showRemark3" text="Show"  tooltip="check Remark" press="onShowRemark"/>
+                            <Button class="sapUiTinyMarginBegin" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
+
+                        </HBox>                   
+                    </f:content>
+                    
+        </f:SimpleForm>
+        <footer>
+            <Toolbar>
+                <content>
+                    <ToolbarSpacer />
+                    <Button icon="sap-icon://paper-plane" text="update" press="onRemarkFragupdate" class="sapUiTinyMarginEnd"/>
+                    <Button text="Close" type="Reject" press="onRemarkFragClose"/>
+                </content>
+            </Toolbar>
+        </footer>
+    </Dialog>
+        
+</core:FragmentDefinition>

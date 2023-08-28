@@ -12,6 +12,10 @@
 			"default": "",
 			"required": false
 		},
+		"UpdatedOn": {
+            "type": "string",
+            "default": null
+        },
 		"JobStatusId": {
 			"type": "string",
 			"default": null,
@@ -23,6 +27,10 @@
             "default": ""
         },
 		"Printing": {
+            "type": "number",
+            "default": ""
+        },
+		"PaperCutting": {
             "type": "number",
             "default": ""
         },
@@ -87,6 +95,30 @@
 			"default":null
 		},
 		"deliveryAttachment":{
+			"type":"string",
+			"default":null
+		},
+		"remark1":{
+			"type":"string",
+			"default":null
+		},
+		"remark2":{
+			"type":"string",
+			"default":null
+		},
+		"remark3":{
+			"type":"string",
+			"default":null
+		},
+		"remark1Img":{
+			"type":"string",
+			"default":null
+		},
+		"remark2Img":{
+			"type":"string",
+			"default":null
+		},
+		"remark3Img":{
 			"type":"string",
 			"default":null
 		}
