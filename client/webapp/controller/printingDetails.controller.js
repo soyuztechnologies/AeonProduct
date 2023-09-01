@@ -16,6 +16,7 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("sideNavallPrinters").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavPaperCutting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavPrinting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavCoating").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavFoiling").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
@@ -23,6 +24,7 @@ sap.ui.define([
 			this.getRouter().getRoute("sideNavEmbossing").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavPunching").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavPasting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavReadyForDispatch").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
 			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
@@ -103,7 +105,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
-					// that.getJobsData();
+					// that.x();
 					that.getJobsDataByCompanyFilter();
 				},
 				function (oErr) {
@@ -220,67 +222,45 @@ sap.ui.define([
         //this function hits when we click on update
 
         onRemarkFragupdate: function(){
-
             debugger;
-
             var that = this;
-
             var dModel = this.getView().getModel();
-
             var oModel = this.getView().getModel("appView");
-
+			var allJobsData = this.getView().getModel("appView").getProperty("/jobsData");
             var remark1Img = oModel.getProperty("/logoRemark1");
-
             var remark2Img = oModel.getProperty("/logoRemark2");
-
             var remark3Img = oModel.getProperty("/logoRemark3");
-
             var jobStatusData = oModel.getProperty("/newJobStatus/0");
-
+			var filterWithRemark = allJobsData.filter((job) => {
+				return job.remark1 !== null ;
+			  });
             var id = jobStatusData.id;
-
             const sEntityPath = `/JobStatus('${id}')`;
-
             const payload = {
-
                 "remark1": jobStatusData.remark1,
-
                 "remark2": jobStatusData.remark2,
-
                 "remark3": jobStatusData.remark3,
-
                 "remark1Img": remark1Img,              
-
                 "remark2Img": remark2Img,              
-
                 "remark3Img": remark3Img                
-
             };
-
- 
-
+			if(!payload.remark1 && !payload.remark1Img && !payload.remark2 && !payload.remark2Img && !payload.remark3 && !payload.remark3Img){
+				MessageToast.show("Please Add Any Remark");
+				return;
+			}
             dModel.update(sEntityPath, payload, {
-
                 success: function (data) {
-
                     MessageToast.show("successfully Remark uploaded");
-
                     that.getView().byId("idRemarkDialog").bindElement("appView>/newJobStatus/0");
-
                     that.onRemarkFragClose();
+                    that.onReadJobStatus();
 
                 },
-
                 error: function (error) {
-
                     that.middleWare.errorHandler(error, that);
-
                     // console.error("PATCH request failed");
-
                 }
-
             });
-
         },
 
         //this function hits when we click on close
@@ -294,108 +274,21 @@ sap.ui.define([
             });
 
         },
-
-        //this function hits when click on browse to upload remark img
-
-        // handleUploadRemark: function (oEvent) {
-
-        //  debugger;
-
-        //  var files = oEvent.getParameter("files");
-
-        //  var that = this;
-
-        //  var oModel = this.getView().getModel("appView");
-
-        //  var Data = oModel.getProperty("/newJobStatus/0");
-
-         
-
-        //  var reader = new FileReader();
-
-        //  var currentIndex = 0;
-
-         
-
-        //  reader.onload = function (e) {
-
-        //     try {
-
-        //        var vContent = e.currentTarget.result;
-
-                 
-
-        //        // Update the appropriate property in your data model
-
-        //        if (Data) {
-
-        //           if (currentIndex === 0) {
-
-        //              oModel.setProperty("/streamUrlRemark1", vContent);
-
-        //           } else if (currentIndex === 1) {
-
-        //              oModel.setProperty("/streamUrlRemark2", vContent);
-
-        //           } else if (currentIndex === 2) {
-
-        //              oModel.setProperty("/streamUrlRemark3", vContent);
-
-        //           }
-
-        //           oModel.updateBindings();
-
-        //        }
-
-         
-
-        //        currentIndex++;
-
-        //        if (currentIndex < files.length) {
-
-        //           // Read the next file
-
-        //           reader.readAsDataURL(files[currentIndex]);
-
-        //        }
-
-        //     } catch (jqXhr) {
-
-        //        that.middleWare.errorHandler(jqXhr, that);
-
-        //     }
-
-        //  };
-
-         
-
-        //  // Start reading the first file
-
-        //  reader.readAsDataURL(files[0]);
-
-        //  },
-
-         
-
         handleUploadRemark: function (oEvent) {
 
             debugger;
-
             var files = oEvent.getParameter("files");
+			this.getView().getModel("appView").setProperty("/remarkFileAttached", files);
 
             var that = this;
 
             var oModel = this.getView().getModel("appView");
 
-            var Data = oModel.getProperty("/newJobStatus/0");
-
-            var selectedButtonName = oEvent.getSource().getName();
-
-            // if(Data){
-
-            //  oModel.setProperty("/remark1", Data.remark1Img);
-
-            // }
+			var selectedButtonName = oEvent.getSource().getId().split('--')[2];
+            // var Data = oModel.getProperty("/newJobStatus/0");
+            //   this.remark1AlreadyThere =  Data.remark1Img;
+			//   this.remark2AlreadyThere =  Data.remark2Img;
+			//   this.remark3AlreadyThere =  Data.remark3Img;
 
             if (!files.length) {
 
@@ -407,45 +300,21 @@ sap.ui.define([
 
                     try {
 
-                        var vContent = e.currentTarget.result; //.result.replace("data:image/jpeg;base64,", "");
+                        var vContent = e.currentTarget.result;
 
-                        // that.img.Content = vContent;
+                        var stream = that.getImageUrlFromContentforRemark(vContent);
 
-                        var stream = that.getImageUrlFromContent(vContent);
-
-                        if(selectedButtonName === "remarkupload1"){
-
-                            oModel.setProperty("/logoRemark1", vContent)
-
+						if(selectedButtonName === "idRemark1"){
+                              oModel.setProperty("/logoRemark1", vContent)
                         }
 
-                        if(selectedButtonName === "remarkupload2"){
+						if(selectedButtonName === "idRemark2"){
+                              oModel.setProperty("/logoRemark2", vContent)
+                        } 
 
-                            oModel.setProperty("/logoRemark2", vContent)
-
+						if(selectedButtonName === "idRemark3"){
+                             oModel.setProperty("/logoRemark3", vContent)
                         }
-
-                        if(selectedButtonName === "remarkupload3"){
-
-                            oModel.setProperty("/logoRemark3", vContent)
-
-                        }
-
- 
-
- 
-
-                        // that.getModel("appView").setProperty("/companyLogo", stream);
-
-                        // oModel.setProperty("/LogoAvonUserProfile", vContent);
-
-                        // var logo = oModel.getProperty("logoUpdate")  
-
-                        // var logoProperty = oModel.getProperty("/LogoAvonUserProfile");
-
-                        // var base64String = logoProperty.split(",")[1];
-
-                        // logo = base64String;
 
                         oModel.updateBindings();
 
@@ -465,7 +334,7 @@ sap.ui.define([
 
          
 
-        getImageUrlFromContent: function (base64Stream) {
+        getImageUrlFromContentforRemark: function (base64Stream) {
 
             debugger;
 
@@ -506,25 +375,53 @@ sap.ui.define([
         onShowRemark: function (oEvent) {
 
             debugger;
-
+			var oModel = this.getView().getModel('appView')
+			this.getRemark1Img = oModel.getProperty("/readedJobdata/0/remark1Img")
+			this.getRemark2Img = oModel.getProperty("/readedJobdata/0/remark2Img")
+			this.getRemark3Img = oModel.getProperty("/readedJobdata/0/remark3Img")
             var selectedButtonId = oEvent.getParameter('id').split('--')[2]
 
-            if(selectedButtonId ==="showRemark1"){
+			var newImgBrowsed1 = this.getModel("appView").getProperty("/logoRemark1");
+			var newImgBrowsed2 = this.getModel("appView").getProperty("/logoRemark2");
+			var newImgBrowsed3 = this.getModel("appView").getProperty("/logoRemark3");
 
-                var oLogo = this.getModel("appView").getProperty("/logoRemark1");
+            if(selectedButtonId === "showRemark1"){
+				if(this.getRemark1Img != null){
+					if(newImgBrowsed1){
+						var oLogo = this.getModel("appView").getProperty("/logoRemark1");
+					}else{
+						var oLogo = this.getRemark1Img;
+					}
+				}else{
 
+					var oLogo = this.getModel("appView").getProperty("/logoRemark1");
+				}
             }
 
-            if(selectedButtonId ==="showRemark2"){
+            if(selectedButtonId === "showRemark2"){
+				if(this.getRemark2Img != null){
+					if(newImgBrowsed2){
+						var oLogo = this.getModel("appView").getProperty("/logoRemark2");
+					}else{
+						var oLogo = this.getRemark2Img;
+					}
+				}else{
 
-                var oLogo = this.getModel("appView").getProperty("/logoRemark2");
-
+					var oLogo = this.getModel("appView").getProperty("/logoRemark2");
+				}
             }
 
-            if(selectedButtonId ==="showRemark3"){
+            if(selectedButtonId === "showRemark3"){
+				if(this.getRemark3Img != null){
+					if(newImgBrowsed3){
+						var oLogo = this.getModel("appView").getProperty("/logoRemark3");
+					}else{
+						var oLogo = this.getRemark3Img;
+					}
+				}else{
 
-                var oLogo = this.getModel("appView").getProperty("/logoRemark3");
-
+					var oLogo = this.getModel("appView").getProperty("/logoRemark3");
+				}  
             }
 
             var stream = this.formatter.getImageUrlFromContent(oLogo);
@@ -557,11 +454,12 @@ sap.ui.define([
 
         //this function hits when we click on download remark
 
-        onDownlodeRemark: function(){
+        onDownlodeRemark: function(oEvent){
 
             debugger;
 
             var that = this;
+			this.remarkoEvent = oEvent.getParameter('id').split('--')[2]
 
             that.getCurrentDateAndTime();
 
@@ -598,74 +496,81 @@ sap.ui.define([
         //this function is for download the remark for web
 
         downloadRemarkWeb: function(){
+            debugger;
+			var oModel = this.getView().getModel("appView");
+			this.backendRemark1 = oModel.getProperty("/readedJobdata/0/remark1Img");
+			this.backendRemark2 = oModel.getProperty("/readedJobdata/0/remark2Img");
+			this.backendRemark3 = oModel.getProperty("/readedJobdata/0/remark3Img");
 
-                       
-
-            var oModel = this.getView().getModel("appView");
-
-            var jsonPath = '';
-
-            var files = '';
-
-            var mapping = {
-
-                "remark1Img": "/logoRemark1",
-
- 
-
-                "remark1Img": "/logoRemark2",
-
- 
-
-                "remark1Img": "/logoRemark3"
-
-            };
-
-            if (this.clickedLink && mapping.hasOwnProperty(this.clickedLink)) {
-
-                jsonPath = mapping[this.clickedLink];
-
-                files = oModel.getProperty("/attachmentFiles");
-
-                if(!files){
-
-                    MessageToast.show("No Files Attached");
-
-                    return;
-
-                }
-
-                var mimeType = files.split(';')[0].split(':')[1];
-
+			var newUploadImgDown1 = oModel.getProperty("/logoRemark1");
+			var newUploadImgDown2 = oModel.getProperty("/logoRemark2");
+			var newUploadImgDown3 = oModel.getProperty("/logoRemark3");
+			
+			if(this.remarkoEvent === "downloadRemark1"){
+				if(this.backendRemark1 != null){
+					if(newUploadImgDown1){
+						var remark1Download = oModel.getProperty("/logoRemark1");
+					}else{
+						var remark1Download = this.backendRemark1;
+					}
+				}else{
+					var remark1Download = oModel.getProperty("/logoRemark1");
+				}
+			}
+			if(this.remarkoEvent === "downloadRemark2"){
+				if(this.backendRemark2 != null){
+					if(newUploadImgDown2){
+						var remark2Download = oModel.getProperty("/logoRemark2");
+					}else{
+						var remark2Download = this.backendRemark2;
+					}
+				}else{
+					var remark2Download = oModel.getProperty("/logoRemark2");
+				}
+			}
+			if(this.remarkoEvent === "downloadRemark3"){
+				if(this.backendRemark3 != null){
+					if(newUploadImgDown3){
+						var remark3Download = oModel.getProperty("/logoRemark3");
+					}else{
+						var remark3Download = this.backendRemark3;
+					}
+				}else{
+					var remark3Download = oModel.getProperty("/logoRemark3");
+				}
+			}
+			
+			var mapping = {
+				"remark1Img": remark1Download,
+				"remark2Img": remark2Download,	
+				"remark3Img": remark3Download
+			};
+            
+			if(mapping.remark1Img!= undefined){
+				var files = mapping.remark1Img;
+			}
+			else if(mapping.remark2Img!= undefined){
+				var files = mapping.remark2Img;
+			}
+			else if(mapping.remark3Img!= undefined){
+				var files = mapping.remark3Img;
+			}
+				
+					// Determine the file extension based on the file name or other logic
+				var mimeType = files.split(';')[0].split(':')[1];
                 var fileExtension = mimeType.split('/')[1];
-
                 var byteCharacters = atob(files.split(',')[1]);
-
                 var byteNumbers = new Array(byteCharacters.length);
-
                 for (var i = 0; i < byteCharacters.length; i++) {
-
                     byteNumbers[i] = byteCharacters.charCodeAt(i);
-
                 }
-
                 var byteArray = new Uint8Array(byteNumbers);
-
                 var blob = new Blob([byteArray], { type: "application/octet-stream" });
-
                 fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
 
-                // var url = URL.createObjectURL(blob);
-
-                //  jQuery.sap.addUrlWhitelist("blob");
-
-                //  window.open(url, "file",fileExtension);
-
                 File.save(blob, 'NewFile', fileExtension);
-
-            }
-
-        },
+				
+			},
 
 		showAddedFields: function () {
 			var oTable = this.getView().byId("jobStatusTable");
@@ -702,6 +607,12 @@ sap.ui.define([
 			var oModel = this.getView().getModel();
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			oModel.read("/Jobs('" + this.oArgs + "')", {
+				urlParameters:
+                            {
+
+                                "$expand" : 'PoAttachment,ArtworkAttachment'
+
+                            },
 				success: function (data) {
 					
 					if(data.Urgent === "Yes"){
@@ -713,6 +624,7 @@ sap.ui.define([
 						that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 					}
 					that.getView().getModel("appView").setProperty("/Jobs", data);
+					that.getView().getModel("appView").setProperty("/JobStatusForRemark", data.status);
 					that.getView().getModel("appView").setProperty("/foilingData", data.foilBlocks);
 					that.getView().getModel("appView").setProperty("/embossingData", data.embossing);
 					that.getView().getModel("appView").setProperty("/spotUvData", data.positive);
@@ -753,7 +665,7 @@ sap.ui.define([
 		},
 
 		onSaveJobStatus: function () {
-			
+			debugger;
             var oModel = this.getView().getModel("appView"); // Default model get at here
             var that = this;
             var data = oModel.getProperty("/newJobStatus");
@@ -1044,7 +956,7 @@ sap.ui.define([
 			}
 			else{
 				if (this.clickedLink == "clientPONo") {
-					this.getModel("appView").setProperty("/attachmentFiles", oData.poAttachment)
+					this.getModel("appView").setProperty("/attachmentFiles", oData.PoAttachment.Attachment)
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 					var pofile = oData.poAttachment;
 					if(sUserRole === 'Admin'|| sUserRole === "Artwork Head" ||sUserRole == "Factory Manager"){
@@ -1060,7 +972,7 @@ sap.ui.define([
 					}
 				}
 				else if (this.clickedLink == "artworkCode") {
-					this.getModel("appView").setProperty("/attachmentFiles", oData.artworkAttachment)
+					this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
 					var artfile = oData.artworkAttachment
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Artwork Document");
 					if(sUserRole === "Admin" || sUserRole === "Artwork Head" ||sUserRole == "Factory Manager"){
@@ -1846,6 +1758,7 @@ sap.ui.define([
 
 		// * this fucntion will read the data for job status and shows into the table.
 		onReadJobStatus: function () {
+			debugger;
 			var oModel = this.getView().getModel("appView");  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
@@ -2825,7 +2738,7 @@ sap.ui.define([
 
         },
 		onClickMarkAsUrgent:function(){
-			
+			debugger;
 			var customerAllJobs = this.getView().getModel("appView").getProperty("/jobsData");
 			var that = this;
 			var selectedJob = this.getView().getModel("appView").getProperty("/Jobs");

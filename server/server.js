@@ -1335,7 +1335,18 @@ app.start = function () {
 							order: 'id',
 							fields: { "CompanyName": true }
 						}
-					}]
+					},{
+						relation:'JobStatus',
+						scope:{	
+							order: 'id',
+							fields:{
+								"remark1": true,
+								"remark2": true,
+								"remark3": true
+							}
+						}
+					}
+				]
 				}, function (err, jobs) {
 					if (err) {
 						return res.status(500).send(err);

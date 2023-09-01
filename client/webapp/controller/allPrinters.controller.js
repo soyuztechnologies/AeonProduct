@@ -19,6 +19,7 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("allPrinters").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Paper Cutting").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Printing").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Coating").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Foiling").attachPatternMatched(this._printingMatchedHandler, this);
@@ -26,6 +27,7 @@ sap.ui.define([
 			this.getRouter().getRoute("Embossing").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Punching").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Pasting").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("Ready For Dispatch").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Packing").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Dispatched").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Delivering").attachPatternMatched(this._printingMatchedHandler, this);
@@ -132,6 +134,7 @@ sap.ui.define([
 
        },
 		_printingMatchedHandler: async  function(oEvent){
+			debugger;
 			var path = this.getRouter().oHashChanger.hash.split("/")[0];
 			this.getView().getModel('appView').setProperty('/path', path);
 			
@@ -337,7 +340,7 @@ sap.ui.define([
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
-			
+			debugger;	
 			// var route = 'Printing';
 			// 	route = 'sideNav' + route;
 			var route = this.getRouter().oHashChanger.hash.split("/")[0];
@@ -503,9 +506,6 @@ sap.ui.define([
 		// 	var that = this;
 		// 	var oModel = this.getView().getModel();
 		// 	oModel.read(sPath, {
-				// urlParameters: {
-				// 	"$expand": "appUser"
-				// },
 		// 		success: function (data) {
 		// 			that.getView().getModel("appView").setProperty("/jobsData", data.results);
 		// 			// MessageToast.show("Jobs Data Successfully Uploded");
@@ -588,6 +588,7 @@ sap.ui.define([
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);
 				that.getView().getModel("appView").setProperty("/countJobs", data.length);
+				
 				that.onSortDescending();
 				// that.getJobStatus();
 				// var jobData = 
@@ -653,25 +654,6 @@ sap.ui.define([
             this.getModel("appView").updateBindings();
 
         },
-	   getJobStatus:function(){
-				
-		var oModel = this.getView().getModel();
-		var that = this;
-		const sEntityPath = `/JobStatus`;
-		oModel.read(sEntityPath,{
-			success: function (data) {
-				// MessageToast.show("success")
-				// that.getJobsDataByCompanyFilter();
-				that.getView().getModel("appView").setProperty("/allJobStatus", data.results);
-			},
-
-			error: function (error) {
-				// Error callback
-				that.middleWare.errorHandler(error, that);
-				// MessageToast.show("Something is Wrong");
-			}
-		});
-	   },
 
 
 	   

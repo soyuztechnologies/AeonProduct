@@ -681,23 +681,25 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       }
       return "Warning";
     },
-    getImageUrlFromContent: function (base64Stream) {
-      if (base64Stream) {
-        var b64toBlob = function (dataURI) {
-          var byteString = atob(dataURI.split(',')[1]);
-          var ab = new ArrayBuffer(byteString.length);
-          var ia = new Uint8Array(ab);
-          for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-          }
-          return new Blob([ab], {
-            type: 'image/jpeg'
-          });
-        };
-        var x = b64toBlob(base64Stream);
-        return URL.createObjectURL(x);
-      }
-    },
+      getImageUrlFromContent: function (base64Stream) {
+        debugger;
+        if (base64Stream) {
+          var b64toBlob = function (dataURI) {
+            var dataURIParts = dataURI.split(',');
+            var byteString = atob(dataURIParts[1]);
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], {
+              type: 'image/jpeg'
+            });
+          };
+          var x = b64toBlob(base64Stream);
+          return URL.createObjectURL(x);
+        }
+      },
     // getImageUrlFromContent: function(base64Stream) {
     //   if (base64Stream) {
     //     var b64toBlob = function(dataURI) {
@@ -995,6 +997,22 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     }
 
 },
+   RemarkButtonVisibility: function(rawMaterial, UserRole) {
+    if (rawMaterial === 'In Stock' ) {
+        return UserRole === "Admin" || UserRole === "Factory Manager";
+    }    
+
+},
+   ValueMisAndOtherStatusColor: function(status) {
+    if (status === 'Value Mismatched' ) {
+      return 'ffff5c'
+    }else if (status === 'Others') {
+      return 'ff6666'
+    }  else{
+      return 'ffffff'
+    }
+
+},
 
     // showPcs: function (qtyPcs) {
     //   if (qtyPcs || qtyPcs === null) {
@@ -1203,6 +1221,17 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
     urgentFormatter: function (urgent) {
       if (urgent === "Yes") {
         return "Favorite"
+      }
+    },
+    RemarkStarFormatter: function (remark1, remark2, remark3) {
+      if (remark1 !== null  && remark1 !== undefined) {
+        return "Flagged"
+      }
+      else if (remark2 !== null && remark2 !== undefined) {
+        return "Flagged"
+      }
+      else if (remark3 !== null && remark3 !== undefined) {
+        return "Flagged"
       }
     },
     statusFormatter: function (color) {

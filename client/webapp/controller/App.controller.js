@@ -99,43 +99,74 @@ sap.ui.define(
         if (nav === "UploadXml") {
           this.getRouter().navTo("Carborator");
         }
-        if (nav=== "userDetails"){
+        if (nav === "PoNo") {
+          this.getRouter().navTo("PONumber")
+        }
+        if (nav === "Artwork") {
+
+          this.getRouter().navTo("ArtworkNumber");
+
+        }
+
+        if (nav === "InvNo") {
+
+          this.getRouter().navTo("InvNumber");
+
+        }
+
+        if (nav === "DelNo") {
+
+          this.getRouter().navTo("DelNumber");
+
+        }
+        if (nav === "userDetails"){
           this.getRouter().navTo("userDetails")
         }
-        if (nav=== "companyDetails"){
+        if (nav === "companyDetails"){
           this.getRouter().navTo("companyDetails")
         }
-        if (nav=== "Printing"){
+        if (nav === "vendorDetails"){
+          this.getRouter().navTo("vendorDetails")
+        }
+        if (nav === "PaperCutting"){
+          this.getRouter().navTo("Paper Cutting")
+        }
+        if (nav === "Printing"){
           this.getRouter().navTo("Printing")
         }
-        if (nav=== "Coating"){
+        if (nav === "Coating"){
           this.getRouter().navTo("Coating")
         }
-        if (nav=== "Foiling"){
+        if (nav === "Foiling"){
           this.getRouter().navTo("Foiling")
         }
-        if (nav=== "SpotUV"){
+        if (nav === "SpotUV"){
           this.getRouter().navTo("SpotUV")
         }
-        if (nav=== "Embossing"){
+        if (nav === "Embossing"){
           this.getRouter().navTo("Embossing")
         }
-        if (nav=== "Punching"){
+        if (nav === "Punching"){
           this.getRouter().navTo("Punching")
         }
-        if (nav=== "Pasting"){
+        if (nav === "Pasting"){
           this.getRouter().navTo("Pasting")
+        }
+        if (nav === "ReadyForDispatch"){
+          this.getRouter().navTo("Ready For Dispatch")
         }
         // if (nav=== "Packing"){
         //   this.getRouter().navTo("Packing")
         // }
-        if (nav=== "Dispatched"){
+        if (nav === "Dispatched"){
           this.getRouter().navTo("Dispatched")
         }
-        if (nav=== "Others"){
+        if (nav === "Others"){
           this.getRouter().navTo("Others")
         }
       },
+      
+
       // getUserId: function () {
         
       //   var that = this;

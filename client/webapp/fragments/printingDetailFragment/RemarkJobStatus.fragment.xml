@@ -12,26 +12,26 @@
                     <core:Title text="Remark 1" level="H3"></core:Title>
                     <Input value="{appView>remark1}"/>
                         <HBox>
-                            <u:FileUploader id="idRemark1" name="remarkupload1" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
+                            <u:FileUploader id="idRemark1"  name="remarkupload1" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
                                 <u:parameters>
                                     <u:FileUploaderParameter name="createdBy" />
                                 </u:parameters>
                             </u:FileUploader>
                             <Button class="sapUiTinyMarginBegin" id="showRemark1" name="showRemark1" text="Show"  tooltip="check Remark" press="onShowRemark"/>
-                            <Button class="sapUiTinyMarginBegin" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
+                            <Button class="sapUiTinyMarginBegin" id="downloadRemark1" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
                         </HBox>
 
 
                     <core:Title text="Remark 2" level="H3"></core:Title>
                     <Input value="{appView>remark2}"/>
                         <HBox>
-                            <u:FileUploader id="idRemark2" value="{appView>/logoRemark2}" name="remarkupload2" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
+                            <u:FileUploader id="idRemark2" name="remarkupload2" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
                                 <u:parameters>
                                     <u:FileUploaderParameter name="createdBy" />
                                 </u:parameters>
                             </u:FileUploader>
                             <Button class="sapUiTinyMarginBegin" id="showRemark2" text="Show"  tooltip="check Remark" press="onShowRemark"/>
-                            <Button class="sapUiTinyMarginBegin" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
+                            <Button class="sapUiTinyMarginBegin" id="downloadRemark2" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
 
                         </HBox>
 
@@ -39,13 +39,13 @@
                     <core:Title text="Remark 3" level="H3"></core:Title>
                     <Input value="{appView>remark3}"/>
                         <HBox>
-                            <u:FileUploader id="idRemark3" value="{appView>remark3Img}" name="remarkupload3" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
+                            <u:FileUploader id="idRemark3" name="remarkupload3" uploadUrl="/upload" change="handleUploadRemark" tooltip="Upload Your Remark" uploadComplete="handleUploadComplete">
                                 <u:parameters>
                                     <u:FileUploaderParameter name="createdBy" />
                                 </u:parameters>
                             </u:FileUploader>
                             <Button class="sapUiTinyMarginBegin" id="showRemark3" text="Show"  tooltip="check Remark" press="onShowRemark"/>
-                            <Button class="sapUiTinyMarginBegin" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
+                            <Button class="sapUiTinyMarginBegin" id="downloadRemark3" icon="sap-icon://download"  tooltip="Download" press="onDownlodeRemark"/>
 
                         </HBox>                   
                     </f:content>

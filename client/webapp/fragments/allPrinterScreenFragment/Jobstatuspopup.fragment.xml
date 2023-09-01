@@ -4,6 +4,7 @@
       <ViewSettingsFilterItem key="statusFilter" text="Status" multiSelect="true">
         <items>
           <ViewSettingsItem text="New" key="null" />
+          <ViewSettingsItem text="Paper Cutting" key="Paper Cutting"  />
           <ViewSettingsItem text="Printing" key="Printing"  />
           <ViewSettingsItem text="Coating" key="Coating" />
           <ViewSettingsItem text="Foiling" key="Foiling" />
@@ -11,6 +12,7 @@
           <ViewSettingsItem text="Embossing" key="Embossing" />
           <ViewSettingsItem  text="Punching" key="Punching" />
           <ViewSettingsItem  text="Pasting" key="Pasting" />
+          <ViewSettingsItem  text="Ready For Dispatch" key="Ready For Dispatch" />
           <!-- <ViewSettingsItem text="Packing" key="Packing" /> -->
           <!-- <ViewSettingsItem text="Completed" key="Completed" /> -->
           <ViewSettingsItem text="Dispatched" key="Dispatched" />

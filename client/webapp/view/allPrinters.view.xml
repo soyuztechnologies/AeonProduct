@@ -24,7 +24,7 @@
 		</Toolbar> -->
 				<List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}"> 
 					<items>
-						<custom:customListItem type="Navigation" backgroundColor="{=${appView>status} === 'Value Mismatched' ? 'ff6666' : 'FFFFFF'}" >
+						<custom:customListItem type="Navigation" backgroundColor="{path : 'appView>status', formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
 							
 							<HBox>
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
@@ -35,6 +35,7 @@
 									
 								</VBox>
 								<ObjectMarker class="sapUiMediumMargin"  type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
+								<ObjectMarker class="sapUiMediumMargin"  type="{parts:[{path: 'appView>JobStatus/0/remark1'},{path: 'appView>JobStatus/0/remark2'},{path: 'appView>JobStatus/0/remark3'}],formatter:'.formatter.RemarkStarFormatter'}" />
 							</HBox>
 						</custom:customListItem>
 					</items>	

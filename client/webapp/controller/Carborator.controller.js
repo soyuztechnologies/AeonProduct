@@ -234,6 +234,15 @@ sap.ui.define([
 
     },
 
+    //this function hits when year is selected from DRS
+    DRSForJobWhenYearChange: function(oEvent){
+      debugger;
+      var oModel = this.getView().getModel("appView");
+      var getSelectedYear = oEvent.getParameter("newValue");
+      var getYear = oEvent.getParameter("from").getFullYear();
+      oModel.setProperty("/getYear",getYear);   
+     },
+
     //* This function is used to select the company inside a comboBox
     // selectCompany: function (oEvent) {
     //   
@@ -370,7 +379,15 @@ sap.ui.define([
           aExcelToBeUploaded.push(element)
         }
       }
+      for (let i = 0; i < aNewFetchedExcel.length; i++) {
 
+        const element = aNewFetchedExcel[i];
+
+        element.ArtworkAttach = element.artworkCode.split("_")[0]
+
+        element.PoAttach = element.clientPONo.split("_")[0]
+
+      }
       //*This call is used to Upload the data that was not already present on the backend!
       if (aNewFetchedExcel.length > 0) {
         this.middleWare.callMiddleWare("api/Jobs", "post", aNewFetchedExcel)
@@ -392,7 +409,9 @@ sap.ui.define([
         for (let i = 0; i < aExcelToBeUploaded.length; i++) {
          
           const element = aExcelToBeUploaded[i];
-          element.UpdatedOn = formattedDate;
+          // element.UpdatedOn = formattedDate;
+          element.ArtworkAttach = element.artworkCode.split("_")[0]
+          element.PoAttach = element.clientPONo.split("_")[0]
 
           this.middleWare.callMiddleWare("api/Jobs", "PUT", element)
             .then(function (data, status, xhr) {
@@ -674,7 +693,9 @@ sap.ui.define([
     // },
 
     extracDbFields: function (data) {
+      debugger;
       var that = this;
+      var uploadYear = that.getView().getModel("appView").getProperty("/getYear");
       const arrayToJSON = this.arrayToJSON(data);
 
       const dbFieldsJSON = Object.values(this.fieldsJSON);
@@ -703,6 +724,7 @@ sap.ui.define([
       avalData = avalData ? avalData : [];
       
       dbFields.jobCardNo = dbFields.jobCardNo.toString()
+      dbFields.jobCardNo = dbFields.jobCardNo+"_"+uploadYear;
       avalData.push(dbFields)
       that.getView().getModel("appView").setProperty("/newlySelectedData", avalData)
       return dbFields;
