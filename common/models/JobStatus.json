@@ -13,9 +13,12 @@
 			"required": false
 		},
 		"UpdatedOn": {
-            "type": "string",
-            "default": null
+            "type": "date"
         },
+		"CreatedBy":{
+			"type": "string",
+            "default": ""
+		},
 		"JobStatusId": {
 			"type": "string",
 			"default": null,
@@ -47,8 +50,7 @@
             "default": ""
         },
 		"CreatedOn":{
-			"type":"date",
-			"default":null
+			"type":"date"
 		},
 		"DeliveryNo": {
             "type": "string",

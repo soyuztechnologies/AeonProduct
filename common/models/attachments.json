@@ -2,35 +2,34 @@
 	"name": "Attachments",
 	"plural": "Attachments",
 	"base": "PersistedModel",
-	"idInjection": true,
+	"idInjection": false,
 	"options": {
 		"validateUpsert": true
 	},
 	"properties": {
-		"customerId": {
+		"Key": {
 			"type": "string",
 			"required": true,
-			"default": "null"
+			"id": true
 		},
-		"attachemntName": {
+		"Label": {
 			"type": "string",
-			"default": "null",
 			"required": false
 		},
-		"attachmentType": {
-			"type": "date",
-			"default": "null",
+		"Attachment": {
+			"type": "string",
 			"required": false
 		},
-		"mimeType":{
+		"UpdatedOn": {
+			"type": "date"
+		},
+		"CreatedOn": {
+			"type": "date"
+		},
+		"Type":{
 			"type": "String",
-			"default": "null",
-			"required": false
-		},
-		"attachment":{
-			"type": "String",
-			"default": "null",
-			"required": false
+			"required": true,
+			"id":true
 		}
 	},
 	"scope": {

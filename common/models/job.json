@@ -13,9 +13,16 @@
 			"required": true,
 			"id": true
 		},
+		"UploadYear": {
+			"type": "string",
+			"default": null
+		},
 		"status": {
 			"type": "string",
 			"default": null
+		},
+		"Urgent": {
+			"type": "string"
 		},
 		"fileName":{
 			"type": "string",
@@ -40,12 +47,10 @@
 			"default": null
 		},
 		"CreatedOn": {
-			"type": "date",
-			"default": null
+			"type": "date"
 		},
 		"UpdatedOn": {
-			"type": "date",
-			"default": null
+			"type": "date"
 		},
 		"poNo": {
 			"type": "string",
@@ -367,6 +372,14 @@
 			"type": "string",
 			"default": null
 		},
+		"PoAttach":{
+			"type":"string",
+			"default":null
+		},
+		"ArtworkAttach":{
+			"type":"string",
+			"default":null
+		},
 		"userName": {
 			"type": "string"
 		},
@@ -374,9 +387,6 @@
 			"type": "string"
 		},
 		"remarks2": {
-			"type": "string"
-		},
-		"Urgent": {
 			"type": "string"
 		},
 		"corrections1": {
@@ -398,6 +408,16 @@
 			"type": "belongsTo",
 			"model": "Company",
 			"foreignKey": "CompanyId"
+		},
+		"PoAttachment": {
+			"type": "belongsTo",
+			"model": "Attachments",
+			"foreignKey": "PoAttach"
+		},
+		"ArtworkAttachment": {
+			"type": "belongsTo",
+			"model": "Attachments",
+			"foreignKey": "ArtworkAttach"
 		},
 		"JobStatus": {
 			"type": "hasMany",

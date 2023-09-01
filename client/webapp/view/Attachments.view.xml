@@ -1,0 +1,33 @@
+<mvc:View controllerName="ent.ui.ecommerce.controller.Attachments"
+    xmlns:mvc="sap.ui.core.mvc" xmlns:u="sap.ui.unified" displayBlock="true"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"  
+    xmlns:core.h="sap.ui.core.HTML"  
+    xmlns="sap.m"
+    xmlns:ux="sap.uxap">
+    <Page enableScrolling="false"  showHeader="{appView>/visibleHeader}" id="SimpleForm-1">
+        <content>
+            <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
+                <u:FileUploader
+                    width="98%"
+                    style="Emphasized"
+                    id="fileUploader"
+                    sameFilenameAllowed="true"
+                    class="sapUiTinyMargin fonts"
+                    change="onUploadChange"
+                    icon="sap-icon://browse-folder"
+                    buttonText="Browse"
+                    fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv"
+                    multiple="true" />
+            <ScrollContainer height="100%" vertical="true">
+        </ScrollContainer>
+        </content>
+        <footer>
+            <Toolbar >
+                <ToolbarSpacer/>
+                <Button type="Emphasized" icon="sap-icon://save" visible="true" text="Save" press="onSaveDocuments"></Button>
+                <Button type="Reject" text="Clear" icon="sap-icon://clear-all" press="onPressClear"></Button>
+            </Toolbar>
+        </footer>
+    </Page>
+</mvc:View>

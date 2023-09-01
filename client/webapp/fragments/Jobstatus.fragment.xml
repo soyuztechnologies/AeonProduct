@@ -13,6 +13,14 @@
                    icon="sap-icon://add-activity"
 
                    press="onRemarkClick"/> -->
+
+
+                   <Button
+                visible="{=${appView>/UserRole} !== 'Customer' ? ${appView>/JobStatusForRemark} !==  null ? true : false : false}"
+                   text="Remark"
+                   type="Emphasized"
+                   icon="sap-icon://add-activity"
+                   press="onRemarkClick"/>
                 <Button
                    visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head'|| ${appView>/UserRole} === 'Factory Manager' ? true : ${appView>/selectedKey} !== 'In Stock' ? ${appView>/UserRole} === 'Raw Material Head' ? true : false  : true}"
                    icon="sap-icon://add"
@@ -28,9 +36,19 @@
                         <Column visible="{path: 'appView>rawMaterial', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Raw Material" />
                         </Column>
+                        <Column visible="{path: 'appView>CreatedOn', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="CreatedOn" />
+                        </Column>
+                        <Column visible="{path: 'appView>UpdatedOn', formatter: '.formatter.tableEntryVisible'}">
+                            <Label text="UpdatedOn" />
+                        </Column>
+                        <Column  visible="{path: 'appView>CreatedBy', formatter: '.formatter.tableEntryVisible'}" >
+                            <Label text="Updated By"/>
+                        </Column>
                         <Column visible="{path: 'appView>PaperCutting', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Paper Cutting" />
                         </Column>
+                        
                         <Column visible="{path: 'appView>Printing', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Printing" />
                         </Column>
@@ -97,6 +115,9 @@
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Punching}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Pasting}"></Input>
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input> -->
+                                <Text  text="{path: 'appView>CreatedOn', formatter: '.formatter.formatMaxDate'}"></Text>
+                                <Text  text="{path: 'appView>UpdatedOn', formatter: '.formatter.formatMaxDate'}"></Text>
+                                <Text  text="{path: 'appView>CreatedBy'}"></Text>
                                 <Text  text="{path: 'appView>PaperCutting', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Printing', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Coating', formatter: '.formatter.formatIndianNumber'} Sheets" />

@@ -12,8 +12,10 @@
 			"default":null
 		},
 		"CreatedOn":{
-			"type":"string",
-			"default":null
+			"type":"date"
+		},
+		"UpdatedOn":{
+			"type":"date"
 		},
 		"User":{
 			"type":"string",

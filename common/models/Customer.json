@@ -49,6 +49,12 @@
             "type":"string",
             "default":null
         },
+        "UpdatedOn": {
+            "type": "date"
+        },
+        "CreatedOn": {
+            "type": "date"
+        },
         "Website": {
             "type":"string",
             "default":null

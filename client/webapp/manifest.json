@@ -141,6 +141,50 @@
 					"target":"Carborator"
 				},
 				{
+					"pattern": "UploadAttachments",
+					"name":"Attachments",
+					"target":"Attachments"
+				},
+				{
+					"pattern": "PoNo",
+					"name":"PONumber",
+					"target":"Attachments"
+				},
+				{
+					"pattern": "ArtworkNo",
+					"name":"ArtworkNumber",
+					"target":"Attachments"
+				},
+				{
+					"pattern": "InvNo",
+					"name":"InvNumber",
+					"target":"Attachments"
+				},
+				{
+					"pattern": "DelNo",
+					"name":"DelNumber",
+					"target":"Attachments"
+				},
+				{
+
+                    "pattern":"PaperCutting/{jobId}",
+
+                    "name":"sideNavPaperCutting",
+
+                    "target":["allPrinters","printingDetails"]
+
+                },
+
+                {
+
+                    "pattern":"Paper Cutting",
+
+                    "name":"Paper Cutting",
+
+                    "target":["allPrinters"]
+
+                },
+				{
 					"pattern": "Profile",
 					"name":"Profile",
 					"target":"Profile"
@@ -248,6 +292,25 @@
 					"name":"Pasting",
 					"target":["allPrinters"]
 				},
+           {
+
+                    "pattern":"ReadyForDispatch/{jobId}",
+
+                    "name":"sideNavReadyForDispatch",
+
+                    "target":["allPrinters","printingDetails"]
+
+                },
+
+                {
+
+                    "pattern":"Ready For Dispatch",
+
+                    "name":"Ready For Dispatch",
+
+                    "target":["allPrinters"]
+
+                },
 
 
 
@@ -310,7 +373,16 @@
 					"pattern":"companyDetails",
 					"name":"companyDetails",
 					"target":"companyDetails"
-				}
+				},
+				{
+
+                    "pattern":"vendorDetails",
+
+                    "name":"vendorDetails",
+
+                    "target":"vendorDetails"
+
+                }
 			],
 			"targets": {
 				
@@ -332,6 +404,21 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId":"allPrinters"
 				},
+
+				"Attachments":{
+					"viewName": "Attachments",
+					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
+					"viewId": "Attachments"
+				},
+				"PoNo":{
+					"viewName": "Attachments",
+					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
+					"viewId": "Attachments"
+				},
+
+
 
 
 
@@ -390,6 +477,8 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId":"allPrinters"
 				},
+				
+				
 				"Delivering":{
 					"viewName":"allPrinters",
 					"viewLevel":1,
@@ -413,6 +502,9 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId": "Carborator"
 				},
+				
+
+
 				"userVerify":{
 					"viewName": "userVerify",
 					"viewLevel": 1,
@@ -443,6 +535,17 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId":"companyDetails"
 				},
+				"vendorDetails":{
+
+                    "viewName":"vendorDetails",
+
+                    "viewLevel":1,
+
+                    "controlAggregation": "beginColumnPages",
+
+                    "viewId":"vendorDetails"
+
+                },
 				"Profile":{
 					"viewName":"CustomerProfile",
 					"viewLevel":1,

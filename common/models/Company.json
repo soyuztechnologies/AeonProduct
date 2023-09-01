@@ -90,6 +90,12 @@
 		"PhoneNo3":{
 			"type": "string",
 			"default": ""	
+		},
+		"UpdatedOn": {
+			"type": "date"
+		},
+		"CreatedOn": {
+		"type": "date"
 		}
 	},
 	"scope": {
