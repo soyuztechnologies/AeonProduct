@@ -234,14 +234,7 @@ sap.ui.define([
 
     },
 
-    //this function hits when year is selected from DRS
-    DRSForJobWhenYearChange: function(oEvent){
-      debugger;
-      var oModel = this.getView().getModel("appView");
-      var getSelectedYear = oEvent.getParameter("newValue");
-      var getYear = oEvent.getParameter("from").getFullYear();
-      oModel.setProperty("/getYear",getYear);   
-     },
+
 
     //* This function is used to select the company inside a comboBox
     // selectCompany: function (oEvent) {
@@ -695,7 +688,6 @@ sap.ui.define([
     extracDbFields: function (data) {
       debugger;
       var that = this;
-      var uploadYear = that.getView().getModel("appView").getProperty("/getYear");
       const arrayToJSON = this.arrayToJSON(data);
 
       const dbFieldsJSON = Object.values(this.fieldsJSON);
@@ -722,9 +714,15 @@ sap.ui.define([
       var preData = this.getView().getModel("appView").getProperty("/allExcelData");
       var avalData = that.getView().getModel("appView").getProperty("/newlySelectedData");
       avalData = avalData ? avalData : [];
-      
+      const excelDate = dbFields.date;
+      var excelToActualDate = this.excelDateToJSDate(excelDate);
+      dbFields.date = this.formatDateToDDMMYYYY(excelToActualDate);
+      const dateString =  dbFields.date;
+      const dateParts = dateString.split("/");
+      const uploadDateYear = parseInt(dateParts[2], 10);
+      // var uploadDateYear = dbFields.date.getFullYear();
       dbFields.jobCardNo = dbFields.jobCardNo.toString()
-      dbFields.jobCardNo = dbFields.jobCardNo+"_"+uploadYear;
+      dbFields.jobCardNo = dbFields.jobCardNo+""+uploadDateYear;
       avalData.push(dbFields)
       that.getView().getModel("appView").setProperty("/newlySelectedData", avalData)
       return dbFields;
@@ -735,7 +733,32 @@ sap.ui.define([
 
 
     },
+    formatDateToDDMMYYYY: function(inputDate) {
+      const date = new Date(inputDate);
+    
+      const day = date.getDate();
+      const month = date.getMonth() + 1; // January is 0 in JavaScript
+      const year = date.getFullYear();
+    
+      // Ensure that day and month are formatted as two digits
+      const formattedDay = (day < 10) ? `0${day}` : day;
+      const formattedMonth = (month < 10) ? `0${month}` : month;
+    
+      return `${formattedDay}/${formattedMonth}/${year}`;
+    },
+    excelDateToJSDate: function(excelDate) {
+      debugger
+    // Excel date epoch is January 0, 1900 (yes, 0 is January)
+    const excelEpoch = new Date(1900, 0, 0);
 
+    // Excel stores dates as the number of days since the epoch
+    const daysSinceExcelEpoch = excelDate - 1;
+  
+    // Calculate the date by adding the number of days to the Excel epoch
+    const jsDate = new Date(excelEpoch.getTime() + daysSinceExcelEpoch * 24 * 60 * 60 * 1000);
+
+      return jsDate;
+    },
 
     //*May be I will use it in future!
     // var sPath = `/Jobs`
