@@ -1,4 +1,4 @@
-sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
+sap.ui.define(["sap/ui/core/format/NumberFormat","sap/ui/core/format/DateFormat",], function (NumberFormat,DateFormat) {
   "use strict";
 
   return {
@@ -976,23 +976,23 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
 
     if (status === "Printing" || status === "Paper Cutting" || status === "Coating") {
 
-        return UserRole === "Printing Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+        return UserRole === "Printing Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head" || UserRole === "Customer";
 
     } else if (status === "Foiling" || status === "SpotUV" || status === "Embossing" || status === "Punching") {
 
-        return UserRole === "Post Press Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+        return UserRole === "Post Press Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head" || UserRole === "Customer";
 
     } else if (status === "Pasting" || status === "Ready For Dispatch") {
 
-        return UserRole === "Dispatch Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+        return UserRole === "Dispatch Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head" || UserRole === "Customer";
 
     } else if (status === "Dispatched") {
 
-        return UserRole === "Accounts Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+        return UserRole === "Accounts Head" || UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head" || UserRole === "Customer";
 
     }else if(status === null || status === "Value Mismatched"){
 
-        return UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head";
+        return UserRole === "Admin" || UserRole === "Factory Manager" || UserRole === "Raw Material Head" || UserRole === "Customer";
 
     }
 
@@ -1240,13 +1240,15 @@ sap.ui.define(["sap/ui/core/format/NumberFormat"], function (NumberFormat) {
       var allJobData = this.getView().getModel("appView").getProperty("/jobsData");
 
     },
-    formatMaxDate: function () {
-      var currentDate = new Date();
-      // Adjust the formatting as per your requirements
-      var formattedDate = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate();
-      return formattedDate;
+  formatMaxDate: function(sDate) {
+    if(sDate){
+        var oDateFormat = DateFormat.getDateTimeInstance({ pattern: "MM/dd/yyyy" });
+        var sOutput = oDateFormat.format(new Date(sDate));
+        return sOutput;
+
     }
 
+}
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];
 

@@ -19,6 +19,14 @@
 			"type": "string",
             "default": ""
 		},
+		"InvAttach":{
+			"type": "string",
+            "default": null
+		},
+		"DelAttach":{
+			"type": "string",
+            "default": null
+		},
 		"JobStatusId": {
 			"type": "string",
 			"default": null,
@@ -134,6 +142,16 @@
 			"type": "belongsTo",
 			"model": "Job",
 			"foreignKey": "JobStatusId"
+		},
+		"InvAttachment": {
+			"type": "belongsTo",
+			"model": "Attachments",
+			"foreignKey": "InvNo"
+		},
+		"DelAttachment": {
+			"type": "belongsTo",
+			"model": "Attachments",
+			"foreignKey": "DeliveryNo"
 		}
 	},
 	"acls": [{

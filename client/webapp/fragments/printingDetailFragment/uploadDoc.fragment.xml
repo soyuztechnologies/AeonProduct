@@ -10,19 +10,22 @@
                     <Text visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getTextVisibility'}" text = "Your Uploaded Files are in the format of Excel,Csv,document.Click on download to see the files."></Text>
                 </HBox>
             <HBox alignContent="Center" justifyContent="Center">
-                <Button icon="sap-icon://download"  press="downloadAttachments" text="Download"  type="Transparent" />
             </HBox>
-
+            
             <!-- <PDFViewer visible="{path: 'appView>/AttachmentsFiles', formatter: '.formatter.getPdfVisibility'}" source="{path: 'appView>/AttachmentsFiles', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" /> -->
-            <PDFViewer visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getPdfVisibility'}" source="{path: 'appView>/attachmentFiles', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />
-            <!-- <Image visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getImageVisibility'}" id="image" src="{appView>/attachmentFiles}" /> -->
+                <PDFViewer showDownloadButton="false" visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getPdfVisibility'}" source="{path: 'appView>/attachmentFiles', formatter:'.formatter.getBase64ToPdf'}" width="100%" height="600px" />
+                    <!-- <Image visible="{path: 'appView>/attachmentFiles', formatter: '.formatter.getImageVisibility'}" id="image" src="{appView>/attachmentFiles}" /> -->
+                        
+                        <!-- <Image visible="true" src="{appView>/imageBaseArtwork}" />  -->
+                        </content>
+                        <!-- <beginButton> -->
+                            <!-- <Button visible="{appView>/uploadBrowse-BtnVis}" text="{appView>/buttonText}" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/> -->
+                                <!-- {=${appView>/UserRole}==='Admin' || ${appView>/UserRole}==='Artwork Head' || ${appView>/UserRole}==='Accounts Head' ? true :false -->
+                                <!-- </beginButton> -->
+                                <beginButton>
+                                    <Button icon="sap-icon://download"  press="downloadAttachments" text="Download"  type="Transparent" />
 
-            <!-- <Image visible="true" src="{appView>/imageBaseArtwork}" />  -->
-        </content>
-        <!-- <beginButton> -->
-            <!-- <Button visible="{appView>/uploadBrowse-BtnVis}" text="{appView>/buttonText}" type="Accept" press="onUploadDataPress" enabled="{appView>/submitEnable}"/> -->
-                <!-- {=${appView>/UserRole}==='Admin' || ${appView>/UserRole}==='Artwork Head' || ${appView>/UserRole}==='Accounts Head' ? true :false -->
-        <!-- </beginButton> -->
+                                </beginButton>
         <endButton>
             <Button text="Close" type="Reject" press="onReject" enabled="{appView>/submitEnable}"/>
         </endButton>

@@ -1159,7 +1159,20 @@ app.start = function () {
 			const { jobId } = req.body;
 		
 			try {
-				JobStatus.find({ where: { JobStatusId: jobId } }, (jobStatusError, jobStatusData) => {
+				JobStatus.find(
+					{
+						 where: { 
+							JobStatusId: jobId
+						 },
+							include: [
+								{
+								relation:'InvAttachment'
+							},
+								{
+								relation:'DelAttachment'
+							}
+						 ]
+						}, (jobStatusError, jobStatusData) => {
 					if (jobStatusError) {
 						console.error(jobStatusError);
 						return res.status(500).json({ error: 'Internal server error' });

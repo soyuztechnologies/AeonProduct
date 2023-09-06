@@ -5,16 +5,10 @@
             <ToolbarSpacer/>
             <!-- <Button
                  visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Dispatch Head'|| ${appView>/UserRole} === 'Factory Manager' ? true : ${appView>/selectedKey} !== 'In Stock' ? ${appView>/UserRole} === 'Raw Material Head' ? true : false  : true}"
-
                    text="Remark"
-
                    type="Emphasized"
-
                    icon="sap-icon://add-activity"
-
                    press="onRemarkClick"/> -->
-
-
                    <Button
                 visible="{=${appView>/UserRole} !== 'Customer' ? ${appView>/JobStatusForRemark} !==  null ? true : false : false}"
                    text="Remark"
@@ -29,7 +23,7 @@
     <VBox items="{path: 'appView>/newJobStatus'}">
         <items>
             <CustomListItem >
-                <Table  popinLayout= 'GridSmall'  autoPopinMode="true" id="jobStatusTable" itemPress="editJobstatusEntry">
+                <Table mode="{=${appView>/UserRole} === 'Admin' ? 'Delete' :'None'}" delete="onPressDelete" popinLayout='GridSmall' autoPopinMode="true" id="jobStatusTable" itemPress="editJobstatusEntry">
                     <!-- <VBox > -->
                     <!-- visibleRowCount="4" selectionMode="Single" -->
                     <columns>
@@ -41,9 +35,6 @@
                         </Column>
                         <Column visible="{path: 'appView>UpdatedOn', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="UpdatedOn" />
-                        </Column>
-                        <Column  visible="{path: 'appView>CreatedBy', formatter: '.formatter.tableEntryVisible'}" >
-                            <Label text="Updated By"/>
                         </Column>
                         <Column visible="{path: 'appView>PaperCutting', formatter: '.formatter.tableEntryVisible'}">
                             <Label text="Paper Cutting" />
@@ -117,7 +108,6 @@
                                 <Input type="Number" editable="{appView>/onClickModify}" value="{appView>Packing}"></Input> -->
                                 <Text  text="{path: 'appView>CreatedOn', formatter: '.formatter.formatMaxDate'}"></Text>
                                 <Text  text="{path: 'appView>UpdatedOn', formatter: '.formatter.formatMaxDate'}"></Text>
-                                <Text  text="{path: 'appView>CreatedBy'}"></Text>
                                 <Text  text="{path: 'appView>PaperCutting', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Printing', formatter: '.formatter.formatIndianNumber'} Sheets"></Text>
                                 <Text  text="{path: 'appView>Coating', formatter: '.formatter.formatIndianNumber'} Sheets" />

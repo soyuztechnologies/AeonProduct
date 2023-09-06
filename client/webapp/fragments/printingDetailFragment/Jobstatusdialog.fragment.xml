@@ -25,8 +25,8 @@ resizable="false" >
 						<core:Item text="Pending" key="Pending" />
 					</items>
 				</Select>
-				<Label text="Paper Cutting" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
-				<Input liveChange="paperCuttingLiveChange" valueStateText="{appView>/VSTTPaperCutting}" valueState="{appView>/valueStatePaperCutting}" type="Number" value="{appView>PaperCutting}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }" editable="{appView>/printingHeadEdit}"/>
+				<Label text="Paper Cutting" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }"/>
+				<Input liveChange="paperCuttingLiveChange" valueStateText="{appView>/VSTTPaperCutting}" valueState="{appView>/valueStatePaperCutting}" type="Number" value="{appView>PaperCutting}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Raw Material Head' ? true : false }" editable="{appView>/printingHeadEdit}"/>
 
 
 				<Label text="Printing" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Printing Head' ? true : false }"/>
@@ -78,13 +78,12 @@ resizable="false" >
 
 				<Label text="Inv. No." visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
 				<Input  value="{appView>/InvNo}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }" />
-				<Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
-
+				<!-- <Button press="onClickAddStatusAttachment" id="Invstatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/> -->
+					
 				<Label text="Delivery No." visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
 				<Input  value="{appView>/DeliveryNo}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
-				<Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/>
-
-				<Label required="true" text="Status" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true : false }"/>
+				<!-- <Button press="onClickAddStatusAttachment" id="DeliveryStatus" icon="sap-icon://vds-file" type="Emphasized" width="50%" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head' ? true : false }"/> -->
+				<Label required="true" text="Status"/>
 				<Select id="idStatus" forceSelection="false" selectedKey="{appView>status}"  change="onSelectKeyStatus">
 			    	<items>
 						<core:Item text="Others" key="Others"/>
