@@ -1163,15 +1163,7 @@ app.start = function () {
 					{
 						 where: { 
 							JobStatusId: jobId
-						 },
-							include: [
-								{
-								relation:'InvAttachment'
-							},
-								{
-								relation:'DelAttachment'
-							}
-						 ]
+						 }
 						}, (jobStatusError, jobStatusData) => {
 					if (jobStatusError) {
 						console.error(jobStatusError);

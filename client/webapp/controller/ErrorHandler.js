@@ -64,18 +64,23 @@ sap.ui.define([
 				);
 			}
 			else{
-			MessageBox.error(
-				this._sErrorText,
-				{
-					id : "serviceErrorMessageBox",
-					details : sDetails,
-					styleClass : this._oComponent.getContentDensityClass(),
-					actions : [MessageBox.Action.CLOSE],
-					onClose : function () {
-						this._bMessageOpen = false;
-					}.bind(this)
+				// this.forAttachment = that.getView().getModel("appView").getProperty("/forAttachment")
+				if(window.location.href.includes("http://localhost:3002/#/allPrinters")){
+					return;
+				}else{
+					MessageBox.error(
+						this._sErrorText,
+						{
+							id : "serviceErrorMessageBox",
+							details : sDetails,
+							styleClass : this._oComponent.getContentDensityClass(),
+							actions : [MessageBox.Action.CLOSE],
+							onClose : function () {
+								this._bMessageOpen = false;
+							}.bind(this)
+						}
+					);
 				}
-			);
 		}
 		}
 

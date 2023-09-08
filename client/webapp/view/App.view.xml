@@ -45,11 +45,11 @@
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' ? true : false }" text="Jobs" icon="sap-icon://business-card" key="allPrinters"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false }" text="User Details" icon="sap-icon://family-care" key="userDetails"/>
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Company Details" icon="sap-icon://manager" key="companyDetails"/>
-                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Vendor Details" icon="sap-icon://collaborate" key="vendorDetails"/>
+                        <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Vendor Details" icon="sap-icon://collaborate" key="vendorDetails"/> -->
                         <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' ? true : false }" text="Profile" icon="sap-icon://customer" key="Profile"/>
                         <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Upload Attachments" icon="sap-icon://attachment" key="uploadAttachments"/> -->
-                    <tnt:NavigationListItem expanded="false" text="Upload Attachments" icon="sap-icon://attachment">
-                        <tnt:NavigationListItem text="Po Attachment" key="PoNo"/>
+                    <tnt:NavigationListItem expanded="false" visible="{=${appView>/UserRole} === 'Customer'? false :true}" text="Upload Attachments" icon="sap-icon://attachment">
+                        <tnt:NavigationListItem text="Po Attachment" key="PoNo"/>   
                         <tnt:NavigationListItem text="Artwork Attachment" key="Artwork"/>
                         <tnt:NavigationListItem text="Inv Attachment" key="InvNo"/>
                         <tnt:NavigationListItem text="Del Attachment" key="DelNo"/>
@@ -63,7 +63,7 @@
                         <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Embossing" key="Embossing"/>
                         <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Punching" key="Punching"/>
                         <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Pasting" key="Pasting"/>
-                            <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Ready For Dispatch" key="ReadyForDispatch"/>
+                        <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Ready For Dispatch" key="ReadyForDispatch"/>
                         <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Packing" key="Packing"/> -->
                         <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Dispatched" key="Dispatched"/>
                         <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Others" key="Others"/>

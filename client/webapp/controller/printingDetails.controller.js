@@ -651,12 +651,6 @@ sap.ui.define([
 			var oModel = this.getView().getModel();
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 			oModel.read("/Jobs('" + this.oArgs + "')", {
-				urlParameters:
-				{
-
-					"$expand": 'PoAttachment,ArtworkAttachment'
-
-				},
 				success: function (data) {
 
 					if (data.Urgent === "Yes") {
@@ -876,8 +870,10 @@ sap.ui.define([
 		openCustomerAttachmentDialog: function (oEvent) {
 			var data = oEvent.getSource().getBindingContext("appView").getObject();
 			var clickedrow = oEvent.getSource().getBinding("text").getPath();
+			var dModel = this.getView().getModel();
 			var invoice = data.InvNo;
 			var Delivery = data.DeliveryNo;
+			this.flag=false;
 			// var poNo = data.poAttachment;
 			// var artwork = data.artworkAttachment;
 
@@ -933,8 +929,16 @@ sap.ui.define([
 				if (clickedrow === "clientPONo") {
 					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
 					// oDialog.open();
-					if (selectedJobDetails.PoAttachment?.Type === "PoNo") {
-						that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.PoAttachment.Attachment)
+					if (selectedJobDetails.PoAttach){
+						dModel.read(`/Attachments('${selectedJobDetails.PoAttach}')`, {
+							success: function (data) {
+								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+							},
+							error: function (error) {
+								MessageBox.show("Po Attachment Is Not Attached")
+							}
+						});
 					}
 					// that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.poAttachment)
 					var oModel = that.getView().getModel("appView");
@@ -953,8 +957,16 @@ sap.ui.define([
 				}
 				if (clickedrow === "artworkCode") {
 					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
-					if (selectedJobDetails.ArtworkAttachment?.Type === "ArtworkNo") {
-						that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.ArtworkAttachment.Attachment)
+					if (selectedJobDetails.ArtworkAttach){
+						dModel.read(`/Attachments('${selectedJobDetails.ArtworkAttach}')`, {
+							try: function (data) {
+								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+							},
+							error: function (error) {
+								MessageBox.show("Artwork Attachment Is Not Attached")
+							}
+						});
 					}
 					// oDialog.open();
 					// that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.artworkAttachment)
@@ -998,6 +1010,9 @@ sap.ui.define([
 		onClickPopup: function (oEvent) {
 			var that = this;
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
+
+			var dModel = this.getView().getModel();
+		
 			this.clickedLink = oEvent.getSource().getBinding("text").getPath();
 			this.jobStatusPath = oEvent.getSource().getBindingContext("appView").sPath;
 			var oModel = this.getView().getModel("appView");
@@ -1021,8 +1036,16 @@ sap.ui.define([
 			}
 			else {
 				if (this.clickedLink == "clientPONo") {
-					if (oData.PoAttachment?.Type === "PoNo") {
-						this.getModel("appView").setProperty("/attachmentFiles", oData.PoAttachment.Attachment)
+					if (oData.PoAttach){
+						dModel.read(`/Attachments('${oData.PoAttach}')`, {
+							success: function (data) {
+								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+							},
+							error: function (error) {
+								MessageBox.show("Po Attachment Is Not Attached")
+							}
+						});
 					}
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 					var pofile = oData.poAttachment;
@@ -1039,9 +1062,18 @@ sap.ui.define([
 					}
 				}
 				else if (this.clickedLink == "artworkCode") {
-					if (oData.ArtworkAttachment?.Type === "ArtworkNo") {
-						this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
-					}
+						if (oData.ArtworkAttach){
+							dModel.read(`/Attachments('${oData.ArtworkAttach}')`, {
+								try: function (data) {
+									// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+									that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+								},
+								error: function (error) {
+									MessageBox.show("Artwork Attachment Is Not Attached")
+								}
+							});
+						}
+						// this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
 					var artfile = oData.artworkAttachment
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Artwork Document");
 					if (sUserRole === "Admin" || sUserRole === "Artwork Head" || sUserRole == "Factory Manager") {
@@ -1057,10 +1089,23 @@ sap.ui.define([
 				}
 
 				if (this.clickedLink == "DeliveryNo") {
-					if (oData.DelAttachment?.Type === "DelNo") {
+					// if (oData.DelAttachment?.Type === "DelNo") {
+						
+					// 	this.getModel("appView").setProperty("/attachmentFiles", oData.DelAttachment.Attachment)
+					// }
 
-						this.getModel("appView").setProperty("/attachmentFiles", oData.DelAttachment.Attachment)
+					if(oData.DeliveryNo){
+						dModel.read(`/Attachments('${oData.DeliveryNo}')`, {
+							success: function (data) {
+								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+							},
+							error: function (error) {
+								MessageBox.show("Delivery Attachment Is Not Attached")
+							}
+						});
 					}
+
 					var Delfile = oData.deliveryAttachment;
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Delivery Document");
 					// oModel.setProperty("/btnVisibility", false);
@@ -1074,9 +1119,15 @@ sap.ui.define([
 					}
 				}
 				if (this.clickedLink == "InvNo") {
-					if (oData.InvAttachment?.Type === "InvNo") {
-
-						this.getModel("appView").setProperty("/attachmentFiles", oData.InvAttachment.Attachment)
+					if(oData.InvNo){
+						dModel.read(`/Attachments('${oData.InvNo}')`, {
+							success: function (data) {
+								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+							},
+							error: function (error) {
+								MessageBox.show("Invoice Attachment Is Not Attached")
+							}
+						});
 					}
 					var incFile = oData.incAttachment;
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
@@ -1150,9 +1201,6 @@ sap.ui.define([
 					}
 				}
 			});
-
-
-
 		},
 
 
@@ -1161,8 +1209,10 @@ sap.ui.define([
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 			if (oData.InvNo) {
 				var id = oData.InvNo;
+				var value = "Invoice"
 			} else {
 				id = oData.DeliveryNo;
+				var value = "Delivery"
 			}
 			var that = this;
 			var dModel = this.getView().getModel();
@@ -1171,7 +1221,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
 				},
 				error: function (error) {
-					that.middleWare.errorHandler(error, that);
+					MessageBox.show(value+" Attachment Not Attached")
 				}
 			});
 			var oModel = this.getView().getModel("appView");
