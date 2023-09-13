@@ -49,7 +49,7 @@
                         <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' ? true : false }" text="Profile" icon="sap-icon://customer" key="Profile"/>
                         <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Upload Attachments" icon="sap-icon://attachment" key="uploadAttachments"/> -->
                     <tnt:NavigationListItem expanded="false" visible="{=${appView>/UserRole} === 'Customer'? false :true}" text="Upload Attachments" icon="sap-icon://attachment">
-                        <tnt:NavigationListItem text="Po Attachment" key="PoNo"/>   
+                        <tnt:NavigationListItem text="ClientPo Attachment" key="PoNo"/>   
                         <tnt:NavigationListItem text="Artwork Attachment" key="Artwork"/>
                         <tnt:NavigationListItem text="Inv Attachment" key="InvNo"/>
                         <tnt:NavigationListItem text="Del Attachment" key="DelNo"/>

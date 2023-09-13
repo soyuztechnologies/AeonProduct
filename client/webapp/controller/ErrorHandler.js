@@ -65,7 +65,7 @@ sap.ui.define([
 			}
 			else{
 				// this.forAttachment = that.getView().getModel("appView").getProperty("/forAttachment")
-				if(window.location.href.includes("http://localhost:3002/#/allPrinters")){
+				if(window.location.href.includes("/allPrinters")){
 					return;
 				}else{
 					MessageBox.error(

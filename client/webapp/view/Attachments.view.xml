@@ -20,13 +20,29 @@
                     fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv"
                     multiple="true" />
             <ScrollContainer height="100%" vertical="true">
+                <Table mode="{=${appView>/UserRole} === 'Admin' ? 'Delete' :'None'}" delete="onPressDelete"  id="idAttachmentPage" items="{appView>/filteredAttachments}">
+                    <columns>
+                        <Column>
+                            <Label class="fonts" text="File Name"/>
+                        </Column>
+                    </columns>
+                    <!-- {path: 'appView>operation', formatter: '.formatter.highlightFormatter'} -->
+                    <items>
+                        <ColumnListItem  class="columnListItem" detailPress="getAttachmentDialog" type="Detail" >
+                            <cells>
+                                <Text  text="{appView>Label}">
+                                </Text>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
         </ScrollContainer>
         </content>
         <footer>
             <Toolbar >
                 <ToolbarSpacer/>
                 <Button type="Emphasized" icon="sap-icon://save" visible="true" text="Save" press="onSaveDocuments"></Button>
-                <Button type="Reject" text="Clear" icon="sap-icon://clear-all" press="onPressClear"></Button>
+                <!-- <Button type="Reject" text="Clear" icon="sap-icon://clear-all" press="onPressClear"></Button> -->
             </Toolbar>
         </footer>
     </Page>

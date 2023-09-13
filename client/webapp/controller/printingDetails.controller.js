@@ -930,15 +930,7 @@ sap.ui.define([
 					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
 					// oDialog.open();
 					if (selectedJobDetails.PoAttach){
-						dModel.read(`/Attachments('${selectedJobDetails.PoAttach}')`, {
-							success: function (data) {
-								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
-								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-							},
-							error: function (error) {
-								MessageBox.show("Po Attachment Is Not Attached")
-							}
-						});
+						var url = `/Attachments('${selectedJobDetails.PoAttach+"PoNo"}')`
 					}
 					// that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.poAttachment)
 					var oModel = that.getView().getModel("appView");
@@ -958,15 +950,16 @@ sap.ui.define([
 				if (clickedrow === "artworkCode") {
 					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
 					if (selectedJobDetails.ArtworkAttach){
-						dModel.read(`/Attachments('${selectedJobDetails.ArtworkAttach}')`, {
-							try: function (data) {
-								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
-								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-							},
-							error: function (error) {
-								MessageBox.show("Artwork Attachment Is Not Attached")
-							}
-						});
+						var url = `/Attachments('${selectedJobDetails.ArtworkAttach+"ArtworkNo"}')`;
+						// dModel.read(`/Attachments('${selectedJobDetails.ArtworkAttach+"ArtworkNo"}')`, {
+						// 	try: function (data) {
+						// 		// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+						// 		that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+						// 	},
+						// 	error: function (error) {
+						// 		MessageBox.show("Artwork Attachment Is Not Attached")
+						// 	}
+						// });
 					}
 					// oDialog.open();
 					// that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.artworkAttachment)
@@ -990,7 +983,19 @@ sap.ui.define([
 				// var oSimpleForm = that.getView().byId('allJobDetails')
 				// oSimpleForm.bindElement('appView>/Jobs');
 				// 
+
+				dModel.read(url, {
+					try: function (data) {
+						// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+						that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+					},
+					error: function (error) {
+						MessageBox.show("Attachment Is Not Attached")
+					}
+				});
 			});
+			
+
 		},
 
 		onRejectCustomerDialog: function () {
@@ -1037,15 +1042,7 @@ sap.ui.define([
 			else {
 				if (this.clickedLink == "clientPONo") {
 					if (oData.PoAttach){
-						dModel.read(`/Attachments('${oData.PoAttach}')`, {
-							success: function (data) {
-								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
-								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-							},
-							error: function (error) {
-								MessageBox.show("Po Attachment Is Not Attached")
-							}
-						});
+						var url = `/Attachments('${oData.PoAttach+"PoNo"}')`
 					}
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 					var pofile = oData.poAttachment;
@@ -1063,15 +1060,7 @@ sap.ui.define([
 				}
 				else if (this.clickedLink == "artworkCode") {
 						if (oData.ArtworkAttach){
-							dModel.read(`/Attachments('${oData.ArtworkAttach}')`, {
-								try: function (data) {
-									// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
-									that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-								},
-								error: function (error) {
-									MessageBox.show("Artwork Attachment Is Not Attached")
-								}
-							});
+							var url = `/Attachments('${oData.ArtworkAttach+"ArtworkNo"}')`;
 						}
 						// this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
 					var artfile = oData.artworkAttachment
@@ -1095,15 +1084,7 @@ sap.ui.define([
 					// }
 
 					if(oData.DeliveryNo){
-						dModel.read(`/Attachments('${oData.DeliveryNo}')`, {
-							success: function (data) {
-								// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
-								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-							},
-							error: function (error) {
-								MessageBox.show("Delivery Attachment Is Not Attached")
-							}
-						});
+						var url = `/Attachments('${oData.DeliveryNo+"DelNo"}')`
 					}
 
 					var Delfile = oData.deliveryAttachment;
@@ -1120,14 +1101,7 @@ sap.ui.define([
 				}
 				if (this.clickedLink == "InvNo") {
 					if(oData.InvNo){
-						dModel.read(`/Attachments('${oData.InvNo}')`, {
-							success: function (data) {
-								that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-							},
-							error: function (error) {
-								MessageBox.show("Invoice Attachment Is Not Attached")
-							}
-						});
+						var url = `/Attachments('${oData.InvNo+"InvNo"}')`
 					}
 					var incFile = oData.incAttachment;
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
@@ -1161,6 +1135,18 @@ sap.ui.define([
 					}
 
 				});
+				dModel.read(url, {
+					success: function (data) {
+						that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+					},
+					error: function (error) {
+						MessageBox.show("Attachment Is Not Attached")
+					}
+				});
+
+
+
+
 			}
 		},
 		// getAttachmentForCustomer:function(){
@@ -1203,15 +1189,14 @@ sap.ui.define([
 			});
 		},
 
-
 		getCustomerAttachments: function (oEvent) {
 			var that = this;
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 			if (oData.InvNo) {
-				var id = oData.InvNo;
+				var id = oData.InvNo+"InvNo";
 				var value = "Invoice"
 			} else {
-				id = oData.DeliveryNo;
+				id = oData.DeliveryNo+"DelNo";
 				var value = "Delivery"
 			}
 			var that = this;
@@ -1857,8 +1842,6 @@ sap.ui.define([
 
 		// 		//************ Function to save a Base64 image in the form of File in the Specified Directory  **************//
 		savebase64AsImageFile: function (folderpath, albumName, filename) {
-
-
 			var date = this.getView().getModel("appView").getProperty("/dateAndTime");
 			var formattedDate = date.replace(/[:-]/g, "");
 			var albumName = "Download"
@@ -1874,9 +1857,7 @@ sap.ui.define([
 			var filename = "myTest.png"
 			var filename = "File" + formattedDate + "." + ext;
 			var DataBlob = this.convertFileToUrl(content)
-
 			window.resolveLocalFileSystemURL(folderpath, function (dirEntry) {
-
 				console.log("Access to the emulated storage directory granted succesfully");
 				dirEntry.getDirectory(albumName, {
 					create: true,
