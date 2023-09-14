@@ -716,13 +716,15 @@ sap.ui.define([
       avalData = avalData ? avalData : [];
       const excelDate = dbFields.date;
       var excelToActualDate = this.excelDateToJSDate(excelDate);
-      dbFields.date = this.formatDateToDDMMYYYY(excelToActualDate);
-      const dateString =  dbFields.date;
-      const dateParts = dateString.split("/");
-      const uploadDateYear = parseInt(dateParts[2], 10);
+      var uploadDateYear = excelToActualDate.getFullYear();
+      // dbFields.date = this.formatDateToDDMMYYYY(excelToActualDate);
+      // const dateString =  dbFields.date;
+      // const dateParts = dateString.split("/");
+      // const uploadDateYear = parseInt(dateParts[2], 10);
       // var uploadDateYear = dbFields.date.getFullYear();
+      dbFields.date = excelToActualDate;
       dbFields.jobCardNo = dbFields.jobCardNo.toString()
-      dbFields.jobCardNo = dbFields.jobCardNo+""+uploadDateYear;
+      dbFields.jobCardNo = dbFields.jobCardNo+"_"+uploadDateYear;
       avalData.push(dbFields)
       that.getView().getModel("appView").setProperty("/newlySelectedData", avalData)
       return dbFields;
@@ -2454,7 +2456,7 @@ sap.ui.define([
 
         "label": "Varnish/Lamination :",
 
-        "dbField": "varnishandLamination",
+        "dbField": "varnishandLaminationCS",
 
         "group": "A) Cost Structure :",
 
@@ -2470,7 +2472,7 @@ sap.ui.define([
 
         "label": "Foil Blocks :",
 
-        "dbField": "foilBlocks",
+        "dbField": "foilBlocksCS",
 
         "group": "A) Cost Structure :",
 
@@ -2502,7 +2504,7 @@ sap.ui.define([
 
         "label": "Positive :",
 
-        "dbField": "positive",
+        "dbField": "positiveCS",
 
         "group": "A) Cost Structure :",
 
@@ -2534,7 +2536,7 @@ sap.ui.define([
 
         "label": "Embossing :",
 
-        "dbField": "embossing",
+        "dbField": "embossingCS",
 
         "group": "A) Cost Structure :",
 

@@ -38,10 +38,10 @@
                     <OverflowToolbar>
                         <content>
                             <ToolbarSpacer/>
-                            <DateRangeSelection
+                            <!-- <DateRangeSelection
                             id="DRS5"
                             displayFormat="yyyy"
-                            change="DRSForJobWhenYearChange"/>
+                            change="DRSForJobWhenYearChange"/> -->
                             <ToolbarSpacer/>
                             <Button icon="sap-icon://legend" text="Legend" press="openLegend"/>
                         </content>

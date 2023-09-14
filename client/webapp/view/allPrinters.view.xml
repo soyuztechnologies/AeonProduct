@@ -6,6 +6,7 @@
 					<Title text="Printers  ( {appView>/countJobs} )"/>
 						<ToolbarSpacer/>
 						<SearchField liveChange="onSearchJob" width="30%"/>
+						<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />
 						<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
 						<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}"/>    
 						<Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>

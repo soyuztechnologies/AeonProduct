@@ -1239,16 +1239,21 @@ app.start = function () {
 		});
 		
 
-		app.get('/getJobsWithCompany', function (req, res) {
+		app.post('/getJobsWithCompany', function (req, res) {
 			try {
 				const Job = app.models.Job;
+				var payload = req.body;
+				var selectedYear = payload.selectedYear;
+				var maxDate = payload.maxDate;
+				var minDate = payload.minDate;
+                var selectedYear =  selectedYear.toString();
 				Job.find({
 					order: 'jobCardNo',
 					fields: { 
 						JobName:false,
 						UpdatedOn:false,
 						CreatedOn:false,
-						date:false,
+						// date:false,
 						poAttachment: false,
 						artworkAttachment: false,
 						poNo: false,
@@ -1333,7 +1338,20 @@ app.start = function () {
 						corrections2: false,
 						corrections3: false,
 					},
-					where: { "CompanyId": { "neq": null } },
+					// where: { "CompanyId": { "neq": null } },
+					// where: {
+                    //     "CompanyId": { "neq": null },
+                    //     "date": {
+					// 		"between": [minDate, maxDate]
+					// 	  }
+                    //   },
+					  where: {
+						and: [
+							{ CompanyId: { neq: null } },
+							{ date: { lte: maxDate } },
+							{ date: { gte: minDate } }
+						]
+					},
 					include: [{
 						relation: 'Company',
 						scope: {
@@ -1384,8 +1402,14 @@ app.start = function () {
 							{ CompanyId: cId }
 						]
 					},
-					fields: { "JobStatus": true, "jobCardNo": true, "qtyPcs":true, "jobCode":true, "poNo":true, "nameOFTheProduct":true },
+					fields: { "JobStatus":true, "CompanyId": true, "jobCardNo":true, "qtyPcs": true, "jobCode":true, "poNo":true, "nameOFTheProduct":true, "paperPoNo":true },
 					include: [{
+						relation: 'Company',
+						scope: {
+							order: 'id',
+							fields: { "CompanyName": true }
+						}
+					},{
 						relation: 'JobStatus',
 						scope: {
 							order: 'id',

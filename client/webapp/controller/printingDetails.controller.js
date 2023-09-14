@@ -2301,19 +2301,16 @@ sap.ui.define([
 			}
 
 
-			var sEntityPath = `/Jobs('${ids}')`;
-			oModel.update(sEntityPath, oUpdatedData, {
-				success: function (data) {
-					// MessageToast.show("Job Production Started")
-					that.getJobsDataByCompanyFilter();
-				},
+			var sEntityPath = `api/Jobs`;
+			oUpdatedData.jobCardNo = ids;
+			this.middleWare.callMiddleWare(sEntityPath, "patch" , oUpdatedData)
+           .then(function (data, status, xhr) {
+		    that.getJobsDataByCompanyFilter();
 
-				error: function (error) {
-					// Error callback
-					that.middleWare.errorHandler(error, that);
-					// MessageToast.show("Something is Wrong");
-				}
-			});
+			})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+				that.middleWare.errorHandler(jqXhr, that);
+				});
 		},
 
 		updateStatusValue: function () {
@@ -2387,7 +2384,8 @@ sap.ui.define([
 
 		// },
 		getJobsDataByCompanyFilter: function () {
-
+	debugger;
+			var readDates = this.openYearPickar();
 			var id = this.getModel('appView').getProperty('/UserId');
 			var payLoad = {
 				id,
@@ -2396,6 +2394,14 @@ sap.ui.define([
 			var url = 'api/Jobs?filter=' + oFilter
 			var that = this;
 			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+			var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
+			var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
+			var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
+			var payload = {
+				"selectedYear": selectedYear,
+				"maxDate": maxDate,
+				"minDate": minDate
+			}
 			if (sUserRole === "Customer") {
 				this.middleWare.callMiddleWare("JobsCustomer", "POST", payLoad)
 					.then(function (data, status, xhr) {
@@ -2420,7 +2426,7 @@ sap.ui.define([
 			}
 			else {
 
-				this.middleWare.callMiddleWare("getJobsWithCompany", "get")
+				this.middleWare.callMiddleWare("getJobsWithCompany", "POST" , payload)
 					.then(function (data, status, xhr) {
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 						that.getView().getModel("appView").setProperty("/countJobs", data.length);
@@ -2429,7 +2435,7 @@ sap.ui.define([
 							that.onSortDescending();
 						}
 						else {
-							that.onSortDescending();
+							that.onSortAscending();
 						}
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
@@ -2486,7 +2492,55 @@ sap.ui.define([
 			oModel.setProperty('/jobsData', oList);
 			oModel.updateBindings();
 		},
+         //this function hits when year select for filter jobs
+		openYearPickar: function(oEvent){
+			debugger;
+			var that = this;
+			var oModel = this.getView().getModel("appView");
+			if(oEvent){
+			   if (!this._oPopover) {
+					var oDateRangeSelection = new sap.m.DateRangeSelection({
+					width: "100%",
+					
+					dateValue: new Date(), // Set to January 1st of the current year
+					displayFormat: "yyyy", // Display only the year
+					change: function (oDateChangeEvent) {
+						var getYear = oDateChangeEvent.getParameter("from").getFullYear();
+						var maxDate = new Date(getYear + 1, 2, 31);
+						const uploadDateMaxDate = maxDate ; 
+						var minDate = new Date(getYear, 3, 1);
+						const uploadDateMinDate = minDate ;
+						oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
+						oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
+						oModel.setProperty("/getYearForFilterJobs", getYear);
+						that.getJobsDataByCompanyFilter();
+					},
+					});
+			
+				this._oPopover = new sap.m.Popover({
+				  title: "Select a Year",
+				  contentWidth: "290px",
+				  placement: sap.m.PlacementType.Auto,
+				  content: oDateRangeSelection, // Set the DateRangeSelection as the popover's content
+				});
+				
+				this.getView().addDependent(this._oPopover);
+			  }
+			  // Open the popover
+			  this._oPopover.openBy(oEvent.getSource());
+		  
+			}else{
+				var currentYear = new Date().getFullYear();
+				var maxDate = new Date(currentYear + 1, 2, 31);
+				const uploadDateMaxDate = maxDate
+				var minDate = new Date(currentYear, 3, 1);
+				const uploadDateMinDate = minDate;
+				oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
+				oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
+				oModel.setProperty("/getYearForFilterJobs", currentYear);
+			}
 
+		},
 		paperCuttingLiveChange: function (oEvent) {
 			var newValue1 = oEvent.getParameter("value");
 			var newValue = parseInt(newValue1);

@@ -47,6 +47,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
+					that.openYearPickar();
 					that.getJobsDataByCompanyFilter();
 					// that.getCompanyName();
 				},
@@ -569,7 +570,15 @@ sap.ui.define([
 		}
 		var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
 		var url = 'api/Jobs?filter='+oFilter
+				var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
+		var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
+		var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
 		// sPath = `/Jobs('${id}')/Company`;
+		var payload = {
+			"selectedYear": selectedYear,
+			"maxDate": maxDate,
+			"minDate": minDate
+		}
 		var that = this;
 		if(sUserRole === "Customer"){
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
@@ -584,7 +593,7 @@ sap.ui.define([
 			});
 		}else{
 
-			this.middleWare.callMiddleWare("getJobsWithCompany", "get")
+			this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);
 				that.getView().getModel("appView").setProperty("/countJobs", data.length);
@@ -603,7 +612,55 @@ sap.ui.define([
 			});
 		}
 	   },
+         //this function hits when year select for filter jobs
+		openYearPickar: function(oEvent){
+			debugger;
+			var that = this;
+			var oModel = this.getView().getModel("appView");
+			if(oEvent){
+			   if (!this._oPopover) {
+					var oDateRangeSelection = new sap.m.DateRangeSelection({
+					width: "100%",
+					
+					dateValue: new Date(), // Set to January 1st of the current year
+					displayFormat: "yyyy", // Display only the year
+					change: function (oDateChangeEvent) {
+						var getYear = oDateChangeEvent.getParameter("from").getFullYear();
+						var maxDate = new Date(getYear + 1, 2, 31);
+						const uploadDateMaxDate = maxDate ; 
+						var minDate = new Date(getYear, 3, 1);
+						const uploadDateMinDate = minDate ;
+						oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
+						oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
+						oModel.setProperty("/getYearForFilterJobs", getYear);
+						that.getJobsDataByCompanyFilter();
+					},
+					});
+			
+				this._oPopover = new sap.m.Popover({
+				  title: "Select a Year",
+				  contentWidth: "290px",
+				  placement: sap.m.PlacementType.Auto,
+				  content: oDateRangeSelection, // Set the DateRangeSelection as the popover's content
+				});
+				
+				this.getView().addDependent(this._oPopover);
+			  }
+			  // Open the popover
+			  this._oPopover.openBy(oEvent.getSource());
+		  
+			}else{
+				var currentYear = new Date().getFullYear();
+				var maxDate = new Date(currentYear + 1, 2, 31);
+				const uploadDateMaxDate = maxDate
+				var minDate = new Date(currentYear, 3, 1);
+				const uploadDateMinDate = minDate;
+				oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
+				oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
+				oModel.setProperty("/getYearForFilterJobs", currentYear);
+			}
 
+		},
         // Ascending Sort Jobs List
 
         onSortAscending: function() {
@@ -773,12 +830,12 @@ sap.ui.define([
 			},
 			{
 				label: 'Paper Order No.',
-				property: 'paperordereno',
+				property: 'paperPoNo',
 				width: '25'
 			},
 			{
 				label: 'Partys Name',
-				property: 'partysname',
+			property: 'CompanyName',
 				width: '25'
 			},
 			{
@@ -854,7 +911,21 @@ sap.ui.define([
 				property: 'Punching',
 				width: '18'
 			},
-			
+						{
+				label: 'Remark 1',
+				property: 'remark1',
+				width: '18'
+			},
+			{
+				label: 'Remark 2',
+				property: 'remark2',
+				width: '18'
+			},
+			{
+				label: 'Remark 3',
+				property: 'remark3',
+				width: '18'
+			}			
 			
 			
 			];
@@ -907,7 +978,9 @@ sap.ui.define([
 				element.qtyPcs = filterWithJobs[0].qtyPcs;
 				element.jobCode = filterWithJobs[0].jobCode;
 				element.poNo = filterWithJobs[0].poNo;
+				element.paperPoNo = filterWithJobs[0].paperPoNo;
 				element.nameOFTheProduct = filterWithJobs[0].nameOFTheProduct;
+				element.CompanyName = filterWithJobs[0].Company.CompanyName;
 				jobStatusArray.push(element)
 				
 			}

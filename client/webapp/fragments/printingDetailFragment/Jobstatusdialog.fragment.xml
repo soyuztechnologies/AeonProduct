@@ -40,18 +40,18 @@ resizable="false" >
 					
 
 				<Label text="Foiling" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" />
-				<Input liveChange="foilingLiveChange" type="Number" value="{appView>Foiling}" valueStateText="{appView>/VSTFoiling}" valueState="{appView>/valueStateFoiling}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/foilingData} === '0' ? false : true}"/>
+				<Input liveChange="foilingLiveChange" type="Number" value="{appView>Foiling}" valueStateText="{appView>/VSTFoiling}" valueState="{appView>/valueStateFoiling}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/foilingData} === 0 ? false : true}"/>
 
 
 
 
 				<Label text="Spot UV" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input liveChange="spotUVLiveChange" type="Number" value="{appView>spotUV}" valueStateText="{appView>/VSTspotUV}" valueState="{appView>/valueStatespotUV}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/spotUvData} === '0' ? false : true}"/>
+				<Input liveChange="spotUVLiveChange" type="Number" value="{appView>spotUV}" valueStateText="{appView>/VSTspotUV}" valueState="{appView>/valueStatespotUV}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/spotUvData} === 0 ? false : true}"/>
 
 
 
 				<Label text="Embossing" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
-				<Input  liveChange="embossingLiveChange" type="Number" value="{appView>Embossing}" valueStateText="{appView>/VSTEmbossing}" valueState="{appView>/valueStateEmbossing}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/embossingData} === '0' ? false : true}"/>
+				<Input  liveChange="embossingLiveChange" type="Number" value="{appView>Embossing}" valueStateText="{appView>/VSTEmbossing}" valueState="{appView>/valueStateEmbossing}" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }" editable="{=${appView>/embossingData} === 0 ? false : true}"/>
 
 
 				<Label text="Punching" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Post Press Head' ? true : false }"/>
