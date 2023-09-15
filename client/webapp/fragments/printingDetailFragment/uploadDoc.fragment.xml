@@ -23,7 +23,7 @@
                                 <!-- {=${appView>/UserRole}==='Admin' || ${appView>/UserRole}==='Artwork Head' || ${appView>/UserRole}==='Accounts Head' ? true :false -->
                                 <!-- </beginButton> -->
                                 <beginButton>
-                                    <Button icon="sap-icon://download"  press="downloadAttachments" text="Download"  type="Transparent" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head'? true : false}"/>
+                                    <Button icon="sap-icon://download"  press="downloadAttachments" text="Download"  type="Transparent" visible="{path: 'appView>/downloadButtonVisibility', formatter: '.formatter.downloadAttachmentVis'}" />
 
                                 </beginButton>
         <endButton>

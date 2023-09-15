@@ -279,6 +279,7 @@ onUploadChange: function (oEvent) {
       getAttachmentDialog:function(oEvent){
         debugger;
         var that = this;
+        this.isAttachment = true;
           var key =  oEvent.getSource().getBindingContext('appView').getObject().Key;
           var dModel = this.getView().getModel();
           dModel.read(`/Attachments('${key}')`, {

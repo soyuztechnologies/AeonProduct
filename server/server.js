@@ -675,7 +675,33 @@ app.start = function () {
 			});
 		});
 		
-
+			// * this post call is sending the email to the user,when user is registering into the portal.
+			app.post('/remarkEmailSend', async (req, res) => {
+				debugger
+				try {
+					var payload = req.body;
+					var jobCardNo = payload.JobData;
+					const email = "8278661995a@gmail.com";
+					const token=""; 
+					const replacements = {
+						JOBCARDNO: jobCardNo,
+						EMAIL: "noreply@aeonproducts.com",
+					};
+					const templateFileName="Remark.html"
+					const emailSubject=" Remark Received for Job Card No. "+jobCardNo+"."
+					sendEmail(email, token, replacements, templateFileName, emailSubject)
+						.then(() => {
+							return res.status(200).json('Remark Email Send successfully');
+						})
+						.catch(sendEmailError => {
+						  console.error(sendEmailError);
+						  return res.status(500).json({ error: 'Failed to Send Remark Email' });
+						});
+				} catch (error) {
+					console.error(error);
+					res.status(500).json({ error: 'Internal server error' });
+				}
+			});
 		app.post('/signup/createUser', (req, res) => {
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;

@@ -193,6 +193,21 @@ sap.ui.define(["sap/ui/core/format/NumberFormat","sap/ui/core/format/DateFormat"
       }
       return oDate;
     },
+downloadAttachmentVis:function(value){
+
+  var userName = this.getView().getModel("appView").getProperty('/UserRole');
+  if(this.isAttachment === true){
+    return false;
+  }
+  if(userName === 'Admin'|| userName === 'Factory Manager' || userName === 'Accounts Head'||userName === 'Customer'){
+    return true;
+  }
+  else{
+    return false;
+  }
+
+  // =${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Accounts Head'? true : false}"
+},
     conTimeFormatter: function (oDate) {
       if (oDate) {
         let value = oDate.toString();

@@ -80,6 +80,7 @@ sap.ui.define([
 			oModel.setProperty("/layout", "TwoColumnsMidExpanded");
 			oModel.setProperty("/visibleHeader", true);
 			oModel.setProperty("/hamburgerVisibility", true);
+			oModel.setProperty("/downloadButtonVisibility", true);
 			oModel.setProperty("/userRoleVis", true);
 			oModel.setProperty("/visibility", true);
 			oModel.setProperty("/logoutVisibility", true);
@@ -242,7 +243,7 @@ sap.ui.define([
 			var remark3Img = oModel.getProperty("/logoRemark3");
 
 			var jobStatusDatass = oModel.getProperty("/newJobStatus/0");
-
+			this.getView().getModel("appView").setProperty("/jobDataOnWhichRemarkReceived",jobStatusDatass.JobStatusId);
 			var filterWithRemark = allJobsData.filter((job) => {
 
 				return job.remark1 !== null;
@@ -284,11 +285,9 @@ sap.ui.define([
 					MessageToast.show("successfully Remark uploaded");
 
 					that.getView().byId("idRemarkDialog").bindElement("appView>/newJobStatus/0");
-
 					that.onRemarkFragClose();
-
+					that.emailSendForRemark();
 					that.whenProductionStart();
-
 					that.onReadJobStatus();
 
 
@@ -306,6 +305,23 @@ sap.ui.define([
 			});
 
 		},
+				// this function hits when we click on update and a email will go to tarun 	
+				emailSendForRemark: function() {
+					var oModel = this.getView().getModel('appView')
+					var JobData = oModel.getProperty("/jobDataOnWhichRemarkReceived");
+					var that = this;
+					var payload = {JobData}
+					this.middleWare.callMiddleWare("remarkEmailSend", "POST", payload)
+						.then(function (data, status, xhr) {
+							MessageToast.show("Success")
+							// that.onReject();
+						})
+						.catch(function (jqXhr, textStatus, errorMessage) {
+							MessageToast.show("error")
+							// that.middleWare.errorHandler(jqXhr, that);
+						});
+				
+				},
 
 		//this function hits when we click on close
 
@@ -496,126 +512,371 @@ sap.ui.define([
 
 
 
-		//this function hits when we click on download remark
+		// //this function hits when we click on download remark
 
+		// onDownlodeRemark: function (oEvent) {
+
+		// 	debugger;
+
+		// 	var that = this;
+		// 	this.remarkoEvent = oEvent.getParameter('id').split('--')[2]
+
+		// 	that.getCurrentDateAndTime();
+
+		// 	// Function to check if the code is running in Cordova for Android environment
+
+		// 	function isCordovaAndroidEnvironment() {
+
+		// 		return window.cordova;
+
+		// 	}
+
+
+
+		// 	// Usage
+
+		// 	if (isCordovaAndroidEnvironment()) {
+
+		// 		// Cordova for Android environment, use Cordova-specific functionality
+
+		// 		that.downloadAttachmentCordova();
+
+		// 	} else {
+
+		// 		// Web browser environment or other platforms, use browser-specific functionality
+
+		// 		that.downloadRemarkWeb();
+
+		// 	}
+
+		// },
+
+
+
+		// //this function is for download the remark for web
+
+		// downloadRemarkWeb: function () {
+		// 	debugger;
+		// 	var oModel = this.getView().getModel("appView");
+		// 	this.backendRemark1 = oModel.getProperty("/readedJobdata/0/remark1Img");
+		// 	this.backendRemark2 = oModel.getProperty("/readedJobdata/0/remark2Img");
+		// 	this.backendRemark3 = oModel.getProperty("/readedJobdata/0/remark3Img");
+
+		// 	var newUploadImgDown1 = oModel.getProperty("/logoRemark1");
+		// 	var newUploadImgDown2 = oModel.getProperty("/logoRemark2");
+		// 	var newUploadImgDown3 = oModel.getProperty("/logoRemark3");
+
+		// 	if (this.remarkoEvent === "downloadRemark1") {
+		// 		if (this.backendRemark1 != null) {
+		// 			if (newUploadImgDown1) {
+		// 				var remark1Download = oModel.getProperty("/logoRemark1");
+		// 			} else {
+		// 				var remark1Download = this.backendRemark1;
+		// 			}
+		// 		} else {
+		// 			var remark1Download = oModel.getProperty("/logoRemark1");
+		// 		}
+		// 	}
+		// 	if (this.remarkoEvent === "downloadRemark2") {
+		// 		if (this.backendRemark2 != null) {
+		// 			if (newUploadImgDown2) {
+		// 				var remark2Download = oModel.getProperty("/logoRemark2");
+		// 			} else {
+		// 				var remark2Download = this.backendRemark2;
+		// 			}
+		// 		} else {
+		// 			var remark2Download = oModel.getProperty("/logoRemark2");
+		// 		}
+		// 	}
+		// 	if (this.remarkoEvent === "downloadRemark3") {
+		// 		if (this.backendRemark3 != null) {
+		// 			if (newUploadImgDown3) {
+		// 				var remark3Download = oModel.getProperty("/logoRemark3");
+		// 			} else {
+		// 				var remark3Download = this.backendRemark3;
+		// 			}
+		// 		} else {
+		// 			var remark3Download = oModel.getProperty("/logoRemark3");
+		// 		}
+		// 	}
+
+		// 	var mapping = {
+		// 		"remark1Img": remark1Download,
+		// 		"remark2Img": remark2Download,
+		// 		"remark3Img": remark3Download
+		// 	};
+
+		// 	if (mapping.remark1Img != undefined) {
+		// 		var files = mapping.remark1Img;
+		// 	}
+		// 	else if (mapping.remark2Img != undefined) {
+		// 		var files = mapping.remark2Img;
+		// 	}
+		// 	else if (mapping.remark3Img != undefined) {
+		// 		var files = mapping.remark3Img;
+		// 	}
+
+		// 	// Determine the file extension based on the file name or other logic
+		// 	var mimeType = files.split(';')[0].split(':')[1];
+		// 	var fileExtension = mimeType.split('/')[1];
+		// 	var byteCharacters = atob(files.split(',')[1]);
+		// 	var byteNumbers = new Array(byteCharacters.length);
+		// 	for (var i = 0; i < byteCharacters.length; i++) {
+		// 		byteNumbers[i] = byteCharacters.charCodeAt(i);
+		// 	}
+		// 	var byteArray = new Uint8Array(byteNumbers);
+		// 	var blob = new Blob([byteArray], { type: "application/octet-stream" });
+		// 	fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
+
+		// 	File.save(blob, 'NewFile', fileExtension);
+
+		// },
 		onDownlodeRemark: function (oEvent) {
-
-			debugger;
-
-			var that = this;
-			this.remarkoEvent = oEvent.getParameter('id').split('--')[2]
-
-			that.getCurrentDateAndTime();
-
-			// Function to check if the code is running in Cordova for Android environment
-
-			function isCordovaAndroidEnvironment() {
-
-				return window.cordova;
-
-			}
-
-
-
-			// Usage
-
-			if (isCordovaAndroidEnvironment()) {
-
-				// Cordova for Android environment, use Cordova-specific functionality
-
-				that.downloadAttachmentCordova();
-
-			} else {
-
-				// Web browser environment or other platforms, use browser-specific functionality
-
-				that.downloadRemarkWeb();
-
-			}
-
-		},
-
-
-
-		//this function is for download the remark for web
-
-		downloadRemarkWeb: function () {
-			debugger;
-			var oModel = this.getView().getModel("appView");
-			this.backendRemark1 = oModel.getProperty("/readedJobdata/0/remark1Img");
-			this.backendRemark2 = oModel.getProperty("/readedJobdata/0/remark2Img");
-			this.backendRemark3 = oModel.getProperty("/readedJobdata/0/remark3Img");
-
-			var newUploadImgDown1 = oModel.getProperty("/logoRemark1");
-			var newUploadImgDown2 = oModel.getProperty("/logoRemark2");
-			var newUploadImgDown3 = oModel.getProperty("/logoRemark3");
-
-			if (this.remarkoEvent === "downloadRemark1") {
-				if (this.backendRemark1 != null) {
-					if (newUploadImgDown1) {
-						var remark1Download = oModel.getProperty("/logoRemark1");
-					} else {
-						var remark1Download = this.backendRemark1;
+		
+		
+					debugger;
+		
+		 
+		
+					var that = this;
+		
+					this.remarkoEvent = oEvent.getParameter('id').split('--')[2]
+		
+		 
+		
+					that.getCurrentDateAndTime();
+		
+		 
+		
+					// Function to check if the code is running in Cordova for Android environment
+		
+		 
+		
+					// function isCordovaAndroidEnvironment() {
+		
+		 
+		
+					//  return window.cordova;
+		
+		 
+		
+					// }
+		
+		 
+		
+		 
+		
+		 
+		
+					// // Usage
+		
+		 
+		
+					// if (isCordovaAndroidEnvironment()) {
+		
+		 
+		
+					//  // Cordova for Android environment, use Cordova-specific functionality
+		
+		 
+		
+					//  that.downloadAttachmentCordova();
+		
+		 
+		
+					// } else {
+		
+		 
+		
+						// Web browser environment or other platforms, use browser-specific functionality
+		
+		 
+		
+						that.downloadRemarkWeb();
+		
+		 
+		
+				//  }
+		
+		 
+		
+				},
+		
+		 
+		
+		 
+		
+		 
+		
+				//this function is for download the remark for web
+		
+		 
+		
+				downloadRemarkWeb: function () {
+		
+					debugger;
+		
+					var oModel = this.getView().getModel("appView");
+		
+					this.backendRemark1 = oModel.getProperty("/readedJobdata/0/remark1Img");
+		
+					this.backendRemark2 = oModel.getProperty("/readedJobdata/0/remark2Img");
+		
+					this.backendRemark3 = oModel.getProperty("/readedJobdata/0/remark3Img");
+		
+		 
+		
+					var newUploadImgDown1 = oModel.getProperty("/logoRemark1");
+		
+					var newUploadImgDown2 = oModel.getProperty("/logoRemark2");
+		
+					var newUploadImgDown3 = oModel.getProperty("/logoRemark3");
+		
+		 
+		
+					if (this.remarkoEvent === "downloadRemark1") {
+		
+						if (this.backendRemark1 != null) {
+		
+							if (newUploadImgDown1) {
+		
+								var remark1Download = oModel.getProperty("/logoRemark1");
+		
+							} else {
+		
+								var remark1Download = this.backendRemark1;
+		
+							}
+		
+						} else {
+		
+							var remark1Download = oModel.getProperty("/logoRemark1");
+		
+						}
+		
 					}
-				} else {
-					var remark1Download = oModel.getProperty("/logoRemark1");
-				}
-			}
-			if (this.remarkoEvent === "downloadRemark2") {
-				if (this.backendRemark2 != null) {
-					if (newUploadImgDown2) {
-						var remark2Download = oModel.getProperty("/logoRemark2");
-					} else {
-						var remark2Download = this.backendRemark2;
+		
+					if (this.remarkoEvent === "downloadRemark2") {
+		
+						if (this.backendRemark2 != null) {
+		
+							if (newUploadImgDown2) {
+		
+								var remark2Download = oModel.getProperty("/logoRemark2");
+		
+							} else {
+		
+								var remark2Download = this.backendRemark2;
+		
+							}
+		
+						} else {
+		
+							var remark2Download = oModel.getProperty("/logoRemark2");
+		
+						}
+		
 					}
-				} else {
-					var remark2Download = oModel.getProperty("/logoRemark2");
-				}
-			}
-			if (this.remarkoEvent === "downloadRemark3") {
-				if (this.backendRemark3 != null) {
-					if (newUploadImgDown3) {
-						var remark3Download = oModel.getProperty("/logoRemark3");
-					} else {
-						var remark3Download = this.backendRemark3;
+		
+					if (this.remarkoEvent === "downloadRemark3") {
+		
+						if (this.backendRemark3 != null) {
+		
+							if (newUploadImgDown3) {
+		
+								var remark3Download = oModel.getProperty("/logoRemark3");
+		
+							} else {
+		
+								var remark3Download = this.backendRemark3;
+		
+							}
+		
+						} else {
+		
+							var remark3Download = oModel.getProperty("/logoRemark3");
+		
+						}
+		
 					}
-				} else {
-					var remark3Download = oModel.getProperty("/logoRemark3");
-				}
-			}
-
-			var mapping = {
-				"remark1Img": remark1Download,
-				"remark2Img": remark2Download,
-				"remark3Img": remark3Download
-			};
-
-			if (mapping.remark1Img != undefined) {
-				var files = mapping.remark1Img;
-			}
-			else if (mapping.remark2Img != undefined) {
-				var files = mapping.remark2Img;
-			}
-			else if (mapping.remark3Img != undefined) {
-				var files = mapping.remark3Img;
-			}
-
-			// Determine the file extension based on the file name or other logic
-			var mimeType = files.split(';')[0].split(':')[1];
-			var fileExtension = mimeType.split('/')[1];
-			var byteCharacters = atob(files.split(',')[1]);
-			var byteNumbers = new Array(byteCharacters.length);
-			for (var i = 0; i < byteCharacters.length; i++) {
-				byteNumbers[i] = byteCharacters.charCodeAt(i);
-			}
-			var byteArray = new Uint8Array(byteNumbers);
-			var blob = new Blob([byteArray], { type: "application/octet-stream" });
-			fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
-
-			File.save(blob, 'NewFile', fileExtension);
-
-		},
-
+		
+		 
+		
+					var mapping = {
+		
+						"remark1Img": remark1Download,
+		
+						"remark2Img": remark2Download,
+		
+						"remark3Img": remark3Download
+		
+					};
+		
+		 
+		
+					if (mapping.remark1Img != undefined) {
+		
+						var files = mapping.remark1Img;
+		
+					}
+		
+					else if (mapping.remark2Img != undefined) {
+		
+						var files = mapping.remark2Img;
+		
+					}
+		
+					else if (mapping.remark3Img != undefined) {
+		
+						var files = mapping.remark3Img;
+		
+					}
+		
+					if(window.cordova){
+		
+						that.downloadAttachmentCordova();
+		
+					}else{
+		
+						// Determine the file extension based on the file name or other logic
+		
+						if (files){
+		
+							var mimeType = files.split(';')[0].split(':')[1];
+		
+							var mimeType = files.split(';')[0].split(':')[1];
+		
+						var fileExtension = mimeType.split('/')[1];
+		
+						var byteCharacters = atob(files.split(',')[1]);
+		
+						var byteNumbers = new Array(byteCharacters.length);
+		
+						for (var i = 0; i < byteCharacters.length; i++) {
+		
+							byteNumbers[i] = byteCharacters.charCodeAt(i);
+		
+						}
+		
+						var byteArray = new Uint8Array(byteNumbers);
+		
+						var blob = new Blob([byteArray], { type: "application/octet-stream" });
+		
+						fileExtension = fileExtension.includes('sheet') ? "xlsx" : fileExtension;
+		
+		   
+		
+						File.save(blob, 'NewFile', fileExtension);
+		
+						}
+		
+					}
+		
+				   
+		
+				   
+		
+				},
 		showAddedFields: function () {
 			var oTable = this.getView().byId("jobStatusTable");
 			var aColumns = oTable.getColumns();
@@ -1013,6 +1274,7 @@ sap.ui.define([
 		clickedLink: null,
 		jobStatusPath: null,
 		onClickPopup: function (oEvent) {
+			this.isAttachment = false;
 			var that = this;
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 
