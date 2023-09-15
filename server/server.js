@@ -681,7 +681,7 @@ app.start = function () {
 				try {
 					var payload = req.body;
 					var jobCardNo = payload.JobData;
-					const email = "8278661995a@gmail.com";
+					const email = "Maskara.tarun@gmail.com";
 					const token=""; 
 					const replacements = {
 						JOBCARDNO: jobCardNo,
