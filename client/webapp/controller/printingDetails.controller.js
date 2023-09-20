@@ -2576,40 +2576,24 @@ sap.ui.define([
 		},
 
 		updateStatusValue: function () {
+			debugger	
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
-			const sEntityPath = `/Jobs('${ids}')`;
+			var sEntityPath = `api/Jobs`;
 			const oUpdatedData = {
 				status: "Value Mismatched"
 
 			};
-
-			oModel.update(sEntityPath, oUpdatedData, {
-
-				success: function (data) {
-
-					// MessageToast.show("Job Production Started")
-
-					that.getJobsDataByCompanyFilter();
-
-				},
-
-
-
-
-				error: function (error) {
-
-					// Error callback
-
-					that.middleWare.errorHandler(error, that);
-
-					// MessageToast.show("Something is Wrong");
-
-				}
-
-			});
-
+			oUpdatedData.jobCardNo = ids;
+			this.middleWare.callMiddleWare(sEntityPath, "patch" , oUpdatedData)
+			.then(function (data, status, xhr) {
+			 that.getJobsDataByCompanyFilter();
+ 
+			 })
+				 .catch(function (jqXhr, textStatus, errorMessage) {
+				 that.middleWare.errorHandler(jqXhr, that);
+				 });
 		},
 
 
