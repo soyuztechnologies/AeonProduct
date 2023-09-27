@@ -376,9 +376,9 @@ sap.ui.define([
 
         const element = aNewFetchedExcel[i];
 
-        element.ArtworkAttach = element.artworkCode.split("_")[0]
+        // element.ArtworkAttach = element.artworkCode.split("_")[0]
 
-        element.PoAttach = element.clientPONo.split("_")[0]
+        // element.PoAttach = element.clientPONo.split("_")[0]
 
       }
       //*This call is used to Upload the data that was not already present on the backend!
@@ -403,8 +403,8 @@ sap.ui.define([
          
           const element = aExcelToBeUploaded[i];
           // element.UpdatedOn = formattedDate;
-          element.ArtworkAttach = element.artworkCode.split("_")[0]
-          element.PoAttach = element.clientPONo.split("_")[0]
+          // element.ArtworkAttach = element.artworkCode.split("_")[0]
+          // element.PoAttach = element.clientPONo.split("_")[0]
 
           this.middleWare.callMiddleWare("api/Jobs", "PUT", element)
             .then(function (data, status, xhr) {
