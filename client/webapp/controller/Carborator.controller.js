@@ -387,6 +387,7 @@ sap.ui.define([
           .then(function (data, status, xhr) {
             
             MessageToast.show("Successfully Uploaded")
+            that.getJobsData();
             // that.getView().getModel("appView").setProperty("/customerUser", data);
           })
           .catch(function (jqXhr, textStatus, errorMessage) {
