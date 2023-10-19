@@ -136,12 +136,12 @@ sap.ui.define([
 
 
     //* This function will get the company name!
-    
+
 
 
     //* This function will check the jobs on the backend and if they are present then it will change the operation accordingly!
     checkInJobs: function () {
-      
+
       this.Flag = false;
       // var sUserRole = this.getView().getModel('appView').getProperty('/UserRole');
       var jobCardNos = this.getView().getModel("appView").getProperty("/jobCardNoInString");
@@ -228,7 +228,7 @@ sap.ui.define([
 
         })
         .catch(function (jqXhr, textStatus, errorMessage) {
-          
+
           that.middleWare.errorHandler(jqXhr, that);
         });
 
@@ -238,7 +238,7 @@ sap.ui.define([
 
     //* This function is used to select the company inside a comboBox
     // selectCompany: function (oEvent) {
-    //   
+    //
     //   var oModel = this.getView().getModel();  //default model get at here
     //   var that = this;
     //   if (oEvent) {
@@ -256,16 +256,16 @@ sap.ui.define([
     //   }
     //   // this.middleWare.callMiddleWare("customerNames", "get")
     //   //   .then(function (data, status, xhr) {
-    //   //     
+    //   //
     //   //     that.getView().getModel("appView").setProperty("/customerUser", data);
     //   //   })
     //   //   .catch(function (jqXhr, textStatus, errorMessage) {
-    //   //     
+    //   //
     //   //     that.middleWare.errorHandler(jqXhr, that);
     //   //   });
     // },
     selectCompany: function (oEvent) {
-      
+
       var oModel = this.getView().getModel();  //default model get at here
       var that = this;
       var aExcelsWithMissingCompanies = [];
@@ -275,10 +275,10 @@ sap.ui.define([
         if (oSelectedItem === "") {
           var companyName = oEvent.getSource().getValue();
                    // var lowerCaseValue = value.toLowerCase();
-                   let lowercaseString =companyName.charAt(0).toUpperCase() + companyName.slice(1).toLowerCase();;         
-                   if (lowercaseString != "") {         
-                     var payLoad = {         
-                       "CompanyName": lowercaseString,         
+                   let lowercaseString =companyName.charAt(0).toUpperCase() + companyName.slice(1).toLowerCase();;
+                   if (lowercaseString != "") {
+                     var payLoad = {
+                       "CompanyName": lowercaseString,
                      }
             MessageBox.information("This Company does not exist, do you want to create it ? {" + lowercaseString   + "}", {
               actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
@@ -324,11 +324,11 @@ sap.ui.define([
       }
       // this.middleWare.callMiddleWare("customerNames", "get")
       //   .then(function (data, status, xhr) {
-      //    
+      //
       //     that.getView().getModel("appView").setProperty("/customerUser", data);
       //   })
       //   .catch(function (jqXhr, textStatus, errorMessage) {
-      //    
+      //
       //     that.middleWare.errorHandler(jqXhr, that);
       //   });
     },
@@ -352,7 +352,7 @@ sap.ui.define([
 
     // * This fucntion is saving the jobs data into the backend for both new and updated jobs!
     onSavePayload: function () {
-      
+
       var that = this;
       var oModel = this.getView().getModel();
       var aAllExcelFiles = this.getView().getModel('appView').getProperty("/allExcelData");
@@ -376,22 +376,22 @@ sap.ui.define([
 
         const element = aNewFetchedExcel[i];
 
-        // element.ArtworkAttach = element.artworkCode.split("_")[0]
+        element.ArtworkAttach = element.artworkCode.split("_")[0]
 
-        // element.PoAttach = element.clientPONo.split("_")[0]
+        element.PoAttach = element.clientPONo.split("_")[0]
 
       }
       //*This call is used to Upload the data that was not already present on the backend!
       if (aNewFetchedExcel.length > 0) {
         this.middleWare.callMiddleWare("api/Jobs", "post", aNewFetchedExcel)
           .then(function (data, status, xhr) {
-            
+
             MessageToast.show("Successfully Uploaded")
             that.getJobsData();
             // that.getView().getModel("appView").setProperty("/customerUser", data);
           })
           .catch(function (jqXhr, textStatus, errorMessage) {
-            
+
             that.middleWare.errorHandler(jqXhr, that);
           });
         // that.getJobsData();
@@ -401,26 +401,26 @@ sap.ui.define([
 
       if (aExcelToBeUploaded.length > 0) {
         for (let i = 0; i < aExcelToBeUploaded.length; i++) {
-         
+
           const element = aExcelToBeUploaded[i];
           // element.UpdatedOn = formattedDate;
-          // element.ArtworkAttach = element.artworkCode.split("_")[0]
-          // element.PoAttach = element.clientPONo.split("_")[0]
+          element.ArtworkAttach = element.artworkCode.split("_")[0]
+          element.PoAttach = element.clientPONo.split("_")[0]
 
           this.middleWare.callMiddleWare("api/Jobs", "PUT", element)
             .then(function (data, status, xhr) {
-              
+
               MessageToast.show("Successfully Uploaded")
               // that.getView().getModel("appView").setProperty("/customerUser", data);
             })
             .catch(function (jqXhr, textStatus, errorMessage) {
-              
+
               that.middleWare.errorHandler(jqXhr, that);
             });
         }
         // that.getJobsData();
       }
-      
+
       if (!aExcelToBeUploaded.length && !aNewFetchedExcel.length) {
         MessageToast.show("Those Jobs Are Already Saved")
       }
@@ -431,7 +431,7 @@ sap.ui.define([
 
     },
     // onUpdateJob: function () {
-    //   
+    //
     //   BusyIndicator.show(0);
     //   var that = this;
     //   var userValue = this.getModel("appView").getProperty("/customerId");
@@ -470,7 +470,7 @@ sap.ui.define([
     // },
     onPressClear: function (oEvent) {
       var that = this;
-      
+
       var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
       this.getView().getModel('appView').setProperty("/allExcelData", oldData);
       this.getView().byId("fileUploader").setValue("")
@@ -497,12 +497,12 @@ sap.ui.define([
 
     //* This function will remove the job when click on 'X' button on the fragment, which already have companyID!
     removeJobwithCompId: function (oEvent) {
-      
+
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
       var allDataWithId = this.getView().getModel('appView').getProperty("/withCompanyId");
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
       // var indexToRemove = allDataWithId.findIndex(function (item) {
-      //   return item.jobCardNo === selectedJob.jobCardNo; 
+      //   return item.jobCardNo === selectedJob.jobCardNo;
       // });
       var indexToRemoveFromAllData = validatedExcels.findIndex(function (item) {
         return item.jobCardNo === selectedJob.jobCardNo;
@@ -520,7 +520,7 @@ sap.ui.define([
 
     //* This function will remove the job when click on 'X' button on the fragment, which doNot have companyID!
     removeJobwithoutCompId: function (oEvent) {
-      
+
       var selectedJob = oEvent.getSource().getBindingContext("appView").getObject();
       var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
       var validatedExcels = this.getView().getModel('appView').getProperty("/allExcelData");
@@ -562,14 +562,14 @@ sap.ui.define([
       return this.jobdialog;
     },
     onGetDialog: function (oEvent) {
-      
+
       var excelData = oEvent.getSource().getBindingContext("appView").getObject();
       this.getView().getModel("appView").setProperty("/excelDataUplode", excelData);
       var that = this;
       that.oUploadDialogFragment().then(function (oDialog) {
         oDialog.open();
         //  var trvbyu= that.getView().getModel("appView").getProperty("/excelDataUplode");
-        
+
         var oSimpleForm = that.getView().byId("allJobDetails")
         oSimpleForm.bindElement('appView>/excelDataUplode');
       });
@@ -605,13 +605,13 @@ sap.ui.define([
       that.ojobValidation().then(function (oDialog) {
         oDialog.open();
         //  var trvbyu= that.getView().getModel("appView").getProperty("/excelDataUplode");
-        
+
         // var oSimpleForm = that.getView().byId("allJobDetails")
         // oSimpleForm.bindElement('appView>/excelDataUplode');
       });
     },
     onCloseValDialog: function () {
-      
+
       var that = this;
       this.ojobValidation().then(function (oDialog) {
 
@@ -738,15 +738,15 @@ sap.ui.define([
     },
     formatDateToDDMMYYYY: function(inputDate) {
       const date = new Date(inputDate);
-    
+
       const day = date.getDate();
       const month = date.getMonth() + 1; // January is 0 in JavaScript
       const year = date.getFullYear();
-    
+
       // Ensure that day and month are formatted as two digits
       const formattedDay = (day < 10) ? `0${day}` : day;
       const formattedMonth = (month < 10) ? `0${month}` : month;
-    
+
       return `${formattedDay}/${formattedMonth}/${year}`;
     },
     excelDateToJSDate: function(excelDate) {
@@ -756,7 +756,7 @@ sap.ui.define([
 
     // Excel stores dates as the number of days since the epoch
     const daysSinceExcelEpoch = excelDate - 1;
-  
+
     // Calculate the date by adding the number of days to the Excel epoch
     const jsDate = new Date(excelEpoch.getTime() + daysSinceExcelEpoch * 24 * 60 * 60 * 1000);
 
@@ -792,7 +792,7 @@ sap.ui.define([
 
 
 
-    // 
+    //
 
     // // var oFilter = new Filter (preData[0].jobCardNo ,'In', "jobCardNo")
     // oModel.read(sPath, {
@@ -862,7 +862,7 @@ sap.ui.define([
     //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", false)
     //   })
     //   .catch(function (jqXhr, textStatus, errorMessage) {
-    //     
+    //
     //     that.getView().getModel("appView").setProperty("/onUpdateJobVis", false)
     //     that.getView().getModel("appView").setProperty("/onSavePayloadVis", true)
     //     that.getView().getModel("appView").setProperty("/messageStripVis", false)
@@ -917,7 +917,7 @@ sap.ui.define([
 
     //     //  var trvbyu= that.getView().getModel("appView").getProperty("/excelDataUplode");
 
-    //     
+    //
 
     //   });
 
