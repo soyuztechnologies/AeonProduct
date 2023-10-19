@@ -16,12 +16,12 @@ sap.ui.define([
 
     onInit: function () {
       this._oRouter = this.getRouter();
-      this._oRouter.getRoute("PONumber").attachPatternMatched(this._pomatchedHandler, this); 
+      this._oRouter.getRoute("PONumber").attachPatternMatched(this._pomatchedHandler, this);
       this._oRouter.getRoute("ArtworkNumber").attachPatternMatched(this._artworkmatchedHandler, this);
       this._oRouter.getRoute("InvNumber").attachPatternMatched(this._invmatchedHandler, this);
       this._oRouter.getRoute("DelNumber").attachPatternMatched(this._delmatchedHandler, this);
     },
-   
+
     _pomatchedHandler:function(){
       debugger;
       var oModel = this.getModel("appView");
@@ -222,28 +222,28 @@ onUploadChange: function (oEvent) {
           that.count++;
           processFile(index + 1);
         };
-        
+
         reader.onerror = function (error) {
           reject(error);
         };
-        
+
         reader.readAsDataURL(files[index]);
       } else {
-        resolve(); 
+        resolve();
       }
     }
-    
-    processFile(0); 
-    
+
+    processFile(0);
+
   });
 
 
- 
+
 },
 
       onSaveDocuments:function(){
         debugger;
-        var oModel = this.getView().getModel(); 
+        var oModel = this.getView().getModel();
         var file = this.file;
         var that = this;
         for (let i = 0; i < file.length; i++) {
@@ -274,7 +274,7 @@ onUploadChange: function (oEvent) {
           }.bind(this));
         }
         return this.oUploadDialog;
-  
+
       },
       getAttachmentDialog:function(oEvent){
         debugger;
@@ -333,22 +333,23 @@ onUploadChange: function (oEvent) {
 
       getAttachmentDatas:function(){
         debugger;
-        var oModel = this.getView().getModel(); 
+        var oModel = this.getView().getModel();
         var that = this;
         var value = this.getView().getModel("appView").getProperty("/valueType")
         var filteredAttachmentDatas=[];
         oModel.read('/Attachments', {
+          filters:[new Filter("Type","EQ",value)],
           urlParameters: {
               	"$select": "Key,Type,Label"
               },
           success: function (data) {
             that.getView().getModel("appView").setProperty("/Attachmentsssss",data.results);
-            data.results.forEach(element => {
-              if (element.Type === value) {
-                filteredAttachmentDatas.push(element);
-              }
-            });
-            that.getView().getModel("appView").setProperty("/filteredAttachments",filteredAttachmentDatas)
+            // data.results.forEach(element => {
+            //   if (element.Type === value) {
+            //     filteredAttachmentDatas.push(element);
+            //   }
+            // });
+            that.getView().getModel("appView").setProperty("/filteredAttachments",data.results);
           },
           error: function (error) {
             // Error callback
