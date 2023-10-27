@@ -7,8 +7,9 @@ sap.ui.define([
   "sap/ui/core/BusyIndicator",
   "sap/ui/model/Filter",
   'sap/ui/export/Spreadsheet',
-  'sap/ui/export/library'
-], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator, Filter,Spreadsheet,exportLibrary) {
+  'sap/ui/export/library',
+  'sap/ui/model/FilterOperator'
+], function (BaseController, JSONModel, MessageToast, Fragment, MessageBox, BusyIndicator, Filter,Spreadsheet,exportLibrary,FilterOperator) {
   "use strict";
   var EdmType = exportLibrary.EdmType;
 
@@ -329,6 +330,20 @@ onUploadChange: function (oEvent) {
             }
           }
         });
+      },
+      
+      onSearchAttachment: function (oEvent) {
+        debugger;
+        var sValue = oEvent.getParameter("newValue")
+        var oFilter1 = new Filter("Label", FilterOperator.Contains, sValue);
+        var aFilters = [oFilter1];
+        var oFilter = new Filter({
+          filters: aFilters,
+          and: false
+        });
+        var oList = this.getView().byId("idAttachmentPage");
+        var oBinding = oList.getBinding("items");
+        oBinding.filter(oFilter);
       },
 
       getAttachmentDatas:function(){
