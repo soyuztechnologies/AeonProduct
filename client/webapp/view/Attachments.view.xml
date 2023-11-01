@@ -20,7 +20,8 @@
             <TextArea visible="false" id="_IDGenTextArea1" rows="30" cols="60" value="{appView>/jsonValue}"></TextArea>
             <u:FileUploader width="98%" style="Emphasized" id="fileUploader" sameFilenameAllowed="true" class="sapUiTinyMargin fonts" change="onUploadChange" icon="sap-icon://browse-folder" buttonText="Browse" fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="true" />
             <ScrollContainer height="100%" vertical="true">
-                <Table mode="{=${appView>/UserRole} === 'Admin' ? 'Delete' :'None'}" delete="onPressDelete" id="idAttachmentPage" items="{path:'appView>/filteredAttachments',sorter: { path: 'Label', ascending: true }}">
+                <Table growing="true" growingThreshold="20" mode="{=${appView>/UserRole} === 'Admin' ? 'Delete' :'None'}" delete="onPressDelete" id="idAttachmentPage" items="{path:'/Attachments', parameters: {
+                    select: 'Type,Label,Key'} ,sorter: { path: 'Label', ascending: true }}">
                     <columns>
                         <Column>
                             <Label class="fonts" text="File Name"/>
@@ -30,7 +31,7 @@
                     <items>
                         <ColumnListItem class="columnListItem" detailPress="getAttachmentDialog" type="Detail">
                             <cells>
-                                <Text text="{appView>Label}">
+                                <Text text="{Label}">
                                 </Text>
                             </cells>
                         </ColumnListItem>

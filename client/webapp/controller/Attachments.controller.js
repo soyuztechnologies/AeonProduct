@@ -23,8 +23,9 @@ sap.ui.define([
       this._oRouter.getRoute("DelNumber").attachPatternMatched(this._delmatchedHandler, this);
     },
 
-    _pomatchedHandler:function(){
+    _pomatchedHandler:function(oEvent){
       debugger;
+      this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
       oModel.setProperty("/visibleHeader", false);
@@ -51,12 +52,15 @@ sap.ui.define([
       }
       oModel.updateBindings();
       this.getUserRoleData();
-      this.getAttachmentDatas();
+      var oTable = this.getView().byId('idAttachmentPage').getBinding("items")
+      oTable.filter(new Filter("Type", FilterOperator.EQ, "PoNo"))
+      // this.getAttachmentDatas();
       // this.getCompanyName();
       // this.getJobsData();
     },
-    _artworkmatchedHandler:function(){
+    _artworkmatchedHandler:function(oEvent){
       debugger;
+      this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
       oModel.setProperty("/visibleHeader", false);
@@ -83,12 +87,15 @@ sap.ui.define([
       }
       oModel.updateBindings();
       this.getUserRoleData();
-      this.getAttachmentDatas();
+      var oTable = this.getView().byId('idAttachmentPage').getBinding("items")
+      oTable.filter(new Filter("Type", FilterOperator.EQ, "ArtworkNo"))
+      // this.getAttachmentDatas();
       // this.getCompanyName();
       // this.getJobsData();
     },
-    _invmatchedHandler:function(){
+    _invmatchedHandler:function(oEvent){
       debugger;
+      this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
       oModel.setProperty("/visibleHeader", false);
@@ -115,12 +122,15 @@ sap.ui.define([
       }
       oModel.updateBindings();
       this.getUserRoleData();
-      this.getAttachmentDatas();
+      var oTable = this.getView().byId('idAttachmentPage').getBinding("items")
+      oTable.filter(new Filter("Type", FilterOperator.EQ, "InvNo"))
+      // this.getAttachmentDatas();
       // this.getCompanyName();
       // this.getJobsData();
     },
-    _delmatchedHandler:function(){
+    _delmatchedHandler:function(oEvent){
       debugger;
+      this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
       oModel.setProperty("/visibleHeader", false);
@@ -147,7 +157,9 @@ sap.ui.define([
       }
       oModel.updateBindings();
       this.getUserRoleData();
-      this.getAttachmentDatas();
+      var oTable = this.getView().byId('idAttachmentPage').getBinding("items")
+      oTable.filter(new Filter("Type", FilterOperator.EQ, "DelNo"))
+      // this.getAttachmentDatas();
       // this.getCompanyName();
       // this.getJobsData();
     },
@@ -251,7 +263,7 @@ onUploadChange: function (oEvent) {
           const element = file[i];
         oModel.create('/Attachments', element, {
           success: function (data) {
-            that.getAttachmentDatas();
+            // that.getAttachmentDatas();
           },
           error: function (error) {
             // Error callback
@@ -281,7 +293,7 @@ onUploadChange: function (oEvent) {
         debugger;
         var that = this;
         this.isAttachment = true;
-          var key =  oEvent.getSource().getBindingContext('appView').getObject().Key;
+          var key =  oEvent.getSource().getBindingContext().getObject().Key;
           var dModel = this.getView().getModel();
           dModel.read(`/Attachments('${key}')`, {
             urlParameters: {
@@ -311,7 +323,7 @@ onUploadChange: function (oEvent) {
         debugger;
         var that = this;
         var oModel = this.getView().getModel();
-        var oItem = oEvent.getParameter("listItem").getBindingContext('appView').getObject()
+        var oItem = oEvent.getParameter("listItem").getBindingContext().getObject()
         MessageBox.confirm("Are you sure you want to delete?", {
           actions: ["OK", "Close"],
           emphasizedAction: 'OK',
@@ -321,7 +333,7 @@ onUploadChange: function (oEvent) {
                 success: function () {
                   // Do something after successful deletion
                   MessageToast.show("Deleted Successfully");
-                  that.getAttachmentDatas();
+                  // that.getAttachmentDatas();
                 },
                 error: function (error) {
                   BusyIndicator.hide();
@@ -336,43 +348,44 @@ onUploadChange: function (oEvent) {
         debugger;
         var sValue = oEvent.getParameter("newValue")
         var oFilter1 = new Filter("Label", FilterOperator.Contains, sValue);
-        var aFilters = [oFilter1];
+        var oFilter2 = new Filter("Type", FilterOperator.Contains, this.attachmentType);
+        var aFilters = [oFilter1,oFilter2];
         var oFilter = new Filter({
           filters: aFilters,
-          and: false
+          and: true
         });
         var oList = this.getView().byId("idAttachmentPage");
         var oBinding = oList.getBinding("items");
         oBinding.filter(oFilter);
       },
 
-      getAttachmentDatas:function(){
-        debugger;
-        var oModel = this.getView().getModel();
-        var that = this;
-        var value = this.getView().getModel("appView").getProperty("/valueType")
-        var filteredAttachmentDatas=[];
-        oModel.read('/Attachments', {
-          filters:[new Filter("Type","EQ",value)],
-          urlParameters: {
-              	"$select": "Key,Type,Label"
-              },
-          success: function (data) {
-            that.getView().getModel("appView").setProperty("/Attachmentsssss",data.results);
-            // data.results.forEach(element => {
-            //   if (element.Type === value) {
-            //     filteredAttachmentDatas.push(element);
-            //   }
-            // });
-            that.getView().getModel("appView").setProperty("/filteredAttachments",data.results);
-          },
-          error: function (error) {
-            // Error callback
-            that.middleWare.errorHandler(error, that);
-            // MessageToast.show("Error reading data");
-          }
-        });
-      }
+      // getAttachmentDatas:function(){
+      //   debugger;
+      //   var oModel = this.getView().getModel();
+      //   var that = this;
+      //   var value = this.getView().getModel("appView").getProperty("/valueType")
+      //   var filteredAttachmentDatas=[];
+      //   oModel.read('/Attachments', {
+      //     filters:[new Filter("Type","EQ",value)],
+      //     urlParameters: {
+      //         	"$select": "Key,Type,Label"
+      //         },
+      //     success: function (data) {
+      //       that.getView().getModel("appView").setProperty("/Attachmentsssss",data.results);
+      //       // data.results.forEach(element => {
+      //       //   if (element.Type === value) {
+      //       //     filteredAttachmentDatas.push(element);
+      //       //   }
+      //       // });
+      //       that.getView().getModel("appView").setProperty("/filteredAttachments",data.results);
+      //     },
+      //     error: function (error) {
+      //       // Error callback
+      //       that.middleWare.errorHandler(error, that);
+      //       // MessageToast.show("Error reading data");
+      //     }
+      //   });
+      // }
 
 
   });
