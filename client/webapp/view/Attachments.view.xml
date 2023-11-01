@@ -21,7 +21,7 @@
             <u:FileUploader width="98%" style="Emphasized" id="fileUploader" sameFilenameAllowed="true" class="sapUiTinyMargin fonts" change="onUploadChange" icon="sap-icon://browse-folder" buttonText="Browse" fileType="docx,jpg,jpeg,xml,xlsx,pdf,doc,csv" multiple="true" />
             <ScrollContainer height="100%" vertical="true">
                 <Table growing="true" growingThreshold="20" mode="{=${appView>/UserRole} === 'Admin' ? 'Delete' :'None'}" delete="onPressDelete" id="idAttachmentPage" items="{path:'/Attachments', parameters: {
-                    select: 'Type,Label,Key'} ,sorter: { path: 'Label', ascending: true }}">
+                    select: 'Type,Label,Key'} ,sorter: { path: 'Label', descending: true }}">
                     <columns>
                         <Column>
                             <Label class="fonts" text="File Name"/>
