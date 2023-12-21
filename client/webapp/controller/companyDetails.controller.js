@@ -390,7 +390,7 @@ sap.ui.define([
 			// sPath = `/Jobs('${id}')/Company`;
 			var that = this;
 			return new Promise(function (resolve, reject) {
-				that.middleWare.callMiddleWare("getJobsWithCompany", "get")
+				that.middleWare.callMiddleWare("getJobsWithCompanyDetails", "get")
 				.then(function (data, status, xhr) {
 					var selectedCompany = that.getView().getModel("appView").getProperty("/compNameForFilter");
 					that.getView().getModel("appView").setProperty("/jobsData", data);

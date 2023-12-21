@@ -88,37 +88,21 @@ sap.ui.define([
                var payload = id;
 
                MessageBox.confirm("Are you sure you want to delete this " + id + " Job ?", {
-
                    actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
-
                    onClose: function (sAction) {
-
                      if(sAction === "OK"){
-
                         that.middleWare.callMiddleWare("deleteJobsWithJobStatus", "POST", payload)
-
                         .then(function (data, status, xhr) {
-
                             //
-
                             MessageToast.show("Job Deleted Successfully");
-
                             that.getJobsDataByCompanyFilter()
-
                             that.getRouter().navTo("allPrinters");
-
                             oModel.updateBindings();
-
                         })
-
                         .catch(function (jqXhr, textStatus, errorMessage) {
-
                             that.middleWare.errorHandler(jqXhr, that);
-
                         });
-
                    }
-
                    else{
 
                          

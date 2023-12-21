@@ -70,15 +70,11 @@ sap.ui.define([
 			var pass = localStorage.getItem("pass");
 
 			if(email && pass){
-				
-				// this.isAval = true;
 				this.Login();
-				
 			}
 			else{
 				return;
-			}
-					
+			}	
 		  },
 
 		Login: function () {
@@ -86,8 +82,6 @@ sap.ui.define([
 			var pass = localStorage.getItem("pass");
 			// * for cookie session expire.
 			var allCookies = document.cookie.split(';');
-			// The "expire" attribute of every cookie is
-			// Set to "Thu, 01 Jan 1970 00:00:00 GMT"
 			for (var i = 0; i < allCookies.length; i++) {
 				document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
 				document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString() + ";path=/api";
@@ -96,15 +90,15 @@ sap.ui.define([
 			var that = this;
 			var userName = this.getView().byId("userid").getValue();
 			var password = this.getView().byId("pwd").getValue();
-			if(email && pass){
-				var payload = {
-					"email": localStorage.getItem("email"),
-					"password": localStorage.getItem("pass")
-				};
-			}else{
+			if(userName && password){
 				var payload = {
 					"email": userName,
 					"password": password
+				};
+			}else{
+				var payload = {
+					"email": localStorage.getItem("email"),
+					"password": localStorage.getItem("pass")
 				};
 			}
 			if (userName === password) {
@@ -171,15 +165,12 @@ sap.ui.define([
 					});
 
 					uId = data.userId;
-					var oEmail = localStorage.getItem("email");
-							var oPass = localStorage.getItem("pass");
-							if(!oEmail && !oPass){
-								localStorage.setItem("email",userName);
-								localStorage.setItem("pass",password);
+					localStorage.clear();
+					localStorage.setItem("email",userName);
+					localStorage.setItem("pass",password);
 
-							}
+							
 					if(window.cordova){
-
 						Cookies.set("soyuz_session", data.id, { expires: 7 });
 					}
 
