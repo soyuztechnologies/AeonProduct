@@ -437,6 +437,7 @@ sap.ui.define([
 			}else {
 				this.onViewSettingsCancel();
 			}
+			this.getView().getModel("appView").setProperty("/countJobs", oTable.getItems().length);
 		},
 		// onViewSettingsConfirm: function (oEvent) {
 		// 	
@@ -510,6 +511,7 @@ sap.ui.define([
 			var oTable = this.getView().byId("idListAllPrinters");
 			var oBinding = oTable.getBinding("items");
 			oBinding.filter([]);
+			this.getView().getModel("appView").setProperty("/countJobs", oTable.getItems().length);
 		},
 
 		//* this function is getting the userName into the Select dialog box.
@@ -545,8 +547,10 @@ sap.ui.define([
 			oBinding.filter(oFilter);
 		},
        // this function filter the job by company id and also send job as to spacific user
-       getJobsDataByCompanyFilter: function(){
-		
+       getJobsDataByCompanyFilter: function(oState){
+		if(!oState){
+			var oState = this.getModel('appView').getProperty('/oState');
+		}
 		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 		var id = this.getModel('appView').getProperty('/UserId');
 		var payLoad = {
@@ -561,7 +565,8 @@ sap.ui.define([
 		var payload = {
 			"selectedYear": selectedYear,
 			"maxDate": maxDate,
-			"minDate": minDate
+			"minDate": minDate,
+			"State":oState?oState:false
 		}
 		var that = this;
 		if(sUserRole === "Customer"){
@@ -635,6 +640,7 @@ sap.ui.define([
 		  
 			}else{
 				var currentYear = new Date().getFullYear();
+				var currentYear = currentYear - 1;
 				var maxDate = new Date(currentYear + 1, 2, 31);
 				const uploadDateMaxDate = maxDate
 				var minDate = new Date(currentYear, 3, 1);
@@ -1089,6 +1095,12 @@ sap.ui.define([
             var blob = new Blob(byteArrays, { type: contentType });
         	return blob;
         },
+		onGetNonDispatchedData:function(oEvent){
+			debugger;
+			var oState = oEvent.getSource().getState();
+			this.getView().getModel('appView').setProperty('/oState',oState);
+			this.getJobsDataByCompanyFilter(oState)
+		}
 
 
 

@@ -1273,6 +1273,20 @@ app.start = function () {
 				var maxDate = payload.maxDate;
 				var minDate = payload.minDate;
                 var selectedYear =  selectedYear.toString();
+				if(payload.State){
+					var oFilter = {
+						and:[{ status: { nlike: "Dispatched" }}]
+					}
+				}else{
+					var oFilter = {
+						and: [
+							{ CompanyId: { neq: null } },
+							{ date: { lte: maxDate } },
+							{ date: { gte: minDate } }
+						]
+					}
+				}
+				
 				Job.find({
 					order: 'jobCardNo',
 					fields: { 
@@ -1365,19 +1379,15 @@ app.start = function () {
 						corrections3: false,
 					},
 					// where: { "CompanyId": { "neq": null } },
+					// where: { status: "Dispatched" },
+					
 					// where: {
                     //     "CompanyId": { "neq": null },
                     //     "date": {
 					// 		"between": [minDate, maxDate]
 					// 	  }
                     //   },
-					  where: {
-						and: [
-							{ CompanyId: { neq: null } },
-							{ date: { lte: maxDate } },
-							{ date: { gte: minDate } }
-						]
-					},
+					where: oFilter,
 					include: [{
 						relation: 'Company',
 						scope: {

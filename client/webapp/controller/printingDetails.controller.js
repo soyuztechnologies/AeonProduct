@@ -2630,9 +2630,9 @@ sap.ui.define([
 
 		// },
 		getJobsDataByCompanyFilter: function () {
-	debugger;
 			var readDates = this.openYearPickar();
 			var id = this.getModel('appView').getProperty('/UserId');
+			var oState = this.getModel('appView').getProperty('/oState');
 			var payLoad = {
 				id,
 			}
@@ -2646,7 +2646,8 @@ sap.ui.define([
 			var payload = {
 				"selectedYear": selectedYear,
 				"maxDate": maxDate,
-				"minDate": minDate
+				"minDate": minDate,
+				"State":oState?oState:false
 			}
 			if (sUserRole === "Customer") {
 				this.middleWare.callMiddleWare("JobsCustomer", "POST", payLoad)
@@ -2777,6 +2778,7 @@ sap.ui.define([
 		  
 			}else{
 				var currentYear = new Date().getFullYear();
+				var currentYear = currentYear - 1;
 				var maxDate = new Date(currentYear + 1, 2, 31);
 				const uploadDateMaxDate = maxDate
 				var minDate = new Date(currentYear, 3, 1);
