@@ -5,7 +5,7 @@
 				<content>
 					<Title text="Printers  ( {appView>/countJobs} )"/>
 						<ToolbarSpacer/>
-						<Label text="Show the Jobs that are not dispatche:"></Label>
+						<Label text="Show the Jobs that are not dispatched:"></Label>
 						<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
 						<SearchField liveChange="onSearchJob" width="30%"/>
 						<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />

@@ -119,7 +119,7 @@ sap.ui.define([
 
        },
 		_printingMatchedHandler: async  function(oEvent){
-			debugger;
+			
 			var path = this.getRouter().oHashChanger.hash.split("/")[0];
 			this.getView().getModel('appView').setProperty('/path', path);
 			
@@ -325,7 +325,7 @@ sap.ui.define([
 
 		// * this function will redirect the data of the job to the details page.
 		onListItemPress: function (oEvent) {
-			debugger;	
+				
 			// var route = 'Printing';
 			// 	route = 'sideNav' + route;
 			var route = this.getRouter().oHashChanger.hash.split("/")[0];
@@ -603,7 +603,7 @@ sap.ui.define([
 	   },
          //this function hits when year select for filter jobs
 		openYearPickar: function(oEvent){
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel("appView");
 			if(oEvent){
@@ -782,7 +782,7 @@ sap.ui.define([
 
 			this.middleWare.callMiddleWare("selectedDateJobStatus", "POST" , payload)
 				.then(function (data, status, xhr) {
-				  debugger;
+				  
 				  that.getView().getModel("appView").setProperty("/jobStatusDate", data);	
 				  that.onExport();					
 			  })
@@ -943,7 +943,7 @@ sap.ui.define([
 	},
 
 	onExport: function() {
-		debugger;
+		
 		var that=this;
 		var aCols, oBinding, oSettings, oSheet, oTable,data;
 		var aAllJobStatus = [];
@@ -1096,7 +1096,7 @@ sap.ui.define([
         	return blob;
         },
 		onGetNonDispatchedData:function(oEvent){
-			debugger;
+			
 			var oState = oEvent.getSource().getState();
 			this.getView().getModel('appView').setProperty('/oState',oState);
 			this.getJobsDataByCompanyFilter(oState)

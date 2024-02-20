@@ -405,6 +405,9 @@ sap.ui.define([
           const element = aExcelToBeUploaded[i];
           // element.UpdatedOn = formattedDate;
           element.ArtworkAttach = element.artworkCode.split("_")[0]
+          if(typeof(element.clientPONo) ==='number'){
+            element.clientPONo =  element.clientPONo.toString();
+          }
           element.PoAttach = element.clientPONo.split("_")[0]
 
           this.middleWare.callMiddleWare("api/Jobs", "PUT", element)
@@ -687,7 +690,7 @@ sap.ui.define([
     // },
 
     extracDbFields: function (data) {
-      debugger;
+      
       var that = this;
       const arrayToJSON = this.arrayToJSON(data);
 

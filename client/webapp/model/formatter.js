@@ -697,7 +697,7 @@ downloadAttachmentVis:function(value){
       return "Warning";
     },
       getImageUrlFromContent: function (base64Stream) {
-        debugger;
+        
         if (base64Stream) {
           var b64toBlob = function (dataURI) {
             var dataURIParts = dataURI.split(',');

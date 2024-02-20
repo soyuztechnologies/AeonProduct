@@ -396,7 +396,7 @@ app.start = function () {
 
 
 		function generateOTP(length = 6) {
-		debugger;
+		
 			const digits = '0123456789';
 			let otp = '';
 
@@ -629,7 +629,7 @@ app.start = function () {
 
 		// * this post call is sending the email to the user,when user is registering into the portal.
 		app.post('/signup/verifyEmail', (req, res) => {
-			debugger;
+			
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
 			const otp = app.models.otp;
@@ -1020,7 +1020,7 @@ app.start = function () {
 
 
 		app.get('/getUserRole', (req, res) => {
-			debugger;
+			
 			// models data
 			this.User = app.models.User;
 			this.Param = app.models.Param;
@@ -1560,7 +1560,7 @@ app.start = function () {
 
 
 		app.post('/selectedDateJobStatus', (req, res) => {
-			debugger;
+			
 			const Job = app.models.Job;
 			const JobStatus = app.models.JobStatus;
 			const { CreatedOnStart, CreatedOnEnd, cId } = req.body;

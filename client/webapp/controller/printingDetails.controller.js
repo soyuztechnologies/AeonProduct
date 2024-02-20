@@ -208,7 +208,7 @@ sap.ui.define([
 
 		onRemarkClick: function () {
 
-			debugger;
+			
 
 			var that = this;
 
@@ -226,7 +226,7 @@ sap.ui.define([
 
 		onRemarkFragupdate: function () {
 
-			debugger;
+			
 
 			var that = this;
 
@@ -336,7 +336,7 @@ sap.ui.define([
 		},
 		handleUploadRemark: function (oEvent) {
 
-			debugger;
+			
 			var files = oEvent.getParameter("files");
 			this.getView().getModel("appView").setProperty("/remarkFileAttached", files);
 
@@ -396,7 +396,7 @@ sap.ui.define([
 
 		getImageUrlFromContentforRemark: function (base64Stream) {
 
-			debugger;
+			
 
 			if (base64Stream) {
 
@@ -434,7 +434,7 @@ sap.ui.define([
 
 		onShowRemark: function (oEvent) {
 
-			debugger;
+			
 			var oModel = this.getView().getModel('appView')
 			this.getRemark1Img = oModel.getProperty("/readedJobdata/0/remark1Img")
 			this.getRemark2Img = oModel.getProperty("/readedJobdata/0/remark2Img")
@@ -516,7 +516,6 @@ sap.ui.define([
 
 		// onDownlodeRemark: function (oEvent) {
 
-		// 	debugger;
 
 		// 	var that = this;
 		// 	this.remarkoEvent = oEvent.getParameter('id').split('--')[2]
@@ -556,7 +555,6 @@ sap.ui.define([
 		// //this function is for download the remark for web
 
 		// downloadRemarkWeb: function () {
-		// 	debugger;
 		// 	var oModel = this.getView().getModel("appView");
 		// 	this.backendRemark1 = oModel.getProperty("/readedJobdata/0/remark1Img");
 		// 	this.backendRemark2 = oModel.getProperty("/readedJobdata/0/remark2Img");
@@ -634,7 +632,7 @@ sap.ui.define([
 		onDownlodeRemark: function (oEvent) {
 		
 		
-					debugger;
+					
 		
 		 
 		
@@ -714,7 +712,7 @@ sap.ui.define([
 		
 				downloadRemarkWeb: function () {
 		
-					debugger;
+					
 		
 					var oModel = this.getView().getModel("appView");
 		
@@ -964,7 +962,7 @@ sap.ui.define([
 		},
 
 		onSaveJobStatus: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView"); // Default model get at here
 			var that = this;
 			var data = oModel.getProperty("/newJobStatus");
@@ -1041,7 +1039,7 @@ sap.ui.define([
 						}
 					});
 				}
-				debugger;
+				
 				var parsedPastingValue = parseInt(jobStatus.Pasting)
 				var parsedPastingValueQty = parseInt(pastingValue.qtyPcs)
 				if (parseInt(sumOfJobStatus.Pasting) < parsedPastingValueQty) {
@@ -1426,7 +1424,7 @@ sap.ui.define([
 
 		// },
 		onPressDelete: function (oEvent) {
-			debugger;
+			
 
 			var that = this;
 			var oModel = this.getView().getModel();
@@ -1586,7 +1584,7 @@ sap.ui.define([
 		// * this fucntion will opens the dialog, for factory manager and admin to update the data.
 		isEditStatus: null,
 		onPressAdd: function () {
-			debugger;
+			
 			var that = this;
 			// var oMultiInput1 = this.getView().byId("multiInput1");
 			this.getRemJobsStatus();
@@ -1652,7 +1650,7 @@ sap.ui.define([
 
 		},
 		onInvMultiInput: function (oEvent) {
-			debugger;
+			
 			var selectedInput = oEvent.getParameter('id').split('--')[2];
 			if (selectedInput === 'multiInput') {
 				var getTokens = this.getView().byId('multiInput')?.getTokens();
@@ -2202,7 +2200,7 @@ sap.ui.define([
 
 		// * this fucntion will read the data for job status and shows into the table.
 		onReadJobStatus: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel("appView");  //default model get at here
 			var that = this;
 			var ids = this.oArgs;
@@ -2367,7 +2365,7 @@ sap.ui.define([
 		// Start Production Button Pressed
 
 		whenProductionStart: function () {
-			debugger;
+			
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
@@ -2379,7 +2377,7 @@ sap.ui.define([
 			var oUpdatedData = {
 				status: ""
 			};
-
+			let isFlag = false;
 
 			//* For select box********************************************
 			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
@@ -2393,6 +2391,7 @@ sap.ui.define([
 			//         }
 			//*select box ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 			if (isCoating != 0 && isFoiling != 0 && isSpotUV != 0 && isEmbossing != 0) {
+				isFlag = true;
 				if (updatedJobStatus.rawMaterial === "In Stock") {
 					oUpdatedData.status = "Paper Cutting";
 				}
@@ -2430,6 +2429,7 @@ sap.ui.define([
 				}
 			}
 			if (isCoating != 0 && isFoiling != 0 && isSpotUV == 0 && isEmbossing != 0) {
+				isFlag = true;
 				if (updatedJobStatus.rawMaterial === "In Stock") {
 					oUpdatedData.status = "Paper Cutting";
 				}
@@ -2463,6 +2463,7 @@ sap.ui.define([
 				}
 			}
 			if (isCoating != 0 && isFoiling == 0 && isSpotUV == 0 && isEmbossing != 0) {
+				isFlag = true;
 				if (updatedJobStatus.rawMaterial === "In Stock") {
 					oUpdatedData.status = "Paper Cutting";
 				}
@@ -2493,6 +2494,7 @@ sap.ui.define([
 				}
 			}
 			if (isCoating != 0 && isFoiling != 0 && isSpotUV != 0 && isEmbossing == 0) {
+				isFlag = true;
 				if (updatedJobStatus.rawMaterial === "In Stock") {
 					oUpdatedData.status = "Paper Cutting";
 				}
@@ -2527,6 +2529,7 @@ sap.ui.define([
 				}
 			}
 			if (isCoating != 0 && isFoiling == 0 && isSpotUV == 0 && isEmbossing == 0) {
+				isFlag = true;
 				if (updatedJobStatus.rawMaterial === "In Stock") {
 					oUpdatedData.status = "Paper Cutting";
 				}
@@ -2535,6 +2538,42 @@ sap.ui.define([
 				}
 				if (updatedJobStatus.Printing) {
 					oUpdatedData.status = "Coating";
+				}
+
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Punching";
+				}
+
+				if (updatedJobStatus.Punching) {
+					oUpdatedData.status = "Pasting";
+				}
+
+				if (updatedJobStatus.Pasting) {
+					oUpdatedData.status = "Ready For Dispatch";
+				}
+				if (updatedJobStatus.InvNo) {
+					oUpdatedData.status = "Dispatched";
+				}
+			}
+			if (!isFlag) {
+				if (updatedJobStatus.rawMaterial === "In Stock") {
+					oUpdatedData.status = "Paper Cutting";
+				}
+				if (updatedJobStatus.PaperCutting) {
+					oUpdatedData.status = "Printing";
+				}
+				if (updatedJobStatus.Printing) {
+					oUpdatedData.status = "Coating";
+				}
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Foiling";
+				}
+
+				if (updatedJobStatus.Foiling) {
+					oUpdatedData.status = "SpotUV";
+				}
+				if (updatedJobStatus.Coating) {
+					oUpdatedData.status = "Embossing";
 				}
 
 				if (updatedJobStatus.Coating) {
@@ -2741,7 +2780,7 @@ sap.ui.define([
 		},
          //this function hits when year select for filter jobs
 		openYearPickar: function(oEvent){
-			debugger;
+			
 			var that = this;
 			var oModel = this.getView().getModel("appView");
 			if(oEvent){
@@ -3233,7 +3272,7 @@ sap.ui.define([
 
 		},
 		onClickMarkAsUrgent: function () {
-			debugger;
+			
 			var customerAllJobs = this.getView().getModel("appView").getProperty("/jobsData");
 			var that = this;
 			var selectedJob = this.getView().getModel("appView").getProperty("/Jobs");

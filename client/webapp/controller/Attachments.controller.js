@@ -24,7 +24,7 @@ sap.ui.define([
     },
 
     _pomatchedHandler:function(oEvent){
-      debugger;
+      
       this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
@@ -59,7 +59,7 @@ sap.ui.define([
       // this.getJobsData();
     },
     _artworkmatchedHandler:function(oEvent){
-      debugger;
+      
       this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
@@ -94,7 +94,7 @@ sap.ui.define([
       // this.getJobsData();
     },
     _invmatchedHandler:function(oEvent){
-      debugger;
+      
       this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
@@ -129,7 +129,7 @@ sap.ui.define([
       // this.getJobsData();
     },
     _delmatchedHandler:function(oEvent){
-      debugger;
+      
       this.attachmentType = oEvent.getParameter('config').pattern;
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
@@ -165,7 +165,7 @@ sap.ui.define([
     },
 
   convertFileToUrl: function (vContent) {
-    debugger;
+    
     var regex = /data:(\w.*);base64,/gm;
     var m = regex.exec(vContent),
     decodedPdfContent = atob(vContent.replace(regex, ""));
@@ -180,7 +180,6 @@ sap.ui.define([
     return URL.createObjectURL(blob);
 },
 // onUploadChange: function (oEvent) {
-//   debugger;
 //   var files = oEvent.getParameter("files");
 //   var that = this;
 //   var route = that.getRouter().oHashChanger.hash
@@ -209,9 +208,9 @@ sap.ui.define([
 // },
 
 onUploadChange: function (oEvent) {
-  debugger;
+  
   return new Promise((resolve, reject) => {
-    debugger;
+    
    var type=  this.getView().getModel("appView").getProperty("/valueType")
     var files = oEvent.getParameter("files");
     var that = this;
@@ -255,7 +254,7 @@ onUploadChange: function (oEvent) {
 },
 
       onSaveDocuments:function(){
-        debugger;
+        
         var oModel = this.getView().getModel();
         var file = this.file;
         var that = this;
@@ -290,7 +289,7 @@ onUploadChange: function (oEvent) {
 
       },
       getAttachmentDialog:function(oEvent){
-        debugger;
+        
         var that = this;
         this.isAttachment = true;
           var key =  oEvent.getSource().getBindingContext().getObject().Key;
@@ -320,7 +319,7 @@ onUploadChange: function (oEvent) {
         });
       },
       onPressDelete: function (oEvent) {
-        debugger;
+        
         var that = this;
         var oModel = this.getView().getModel();
         var oItem = oEvent.getParameter("listItem").getBindingContext().getObject()
@@ -345,7 +344,7 @@ onUploadChange: function (oEvent) {
       },
       
       onSearchAttachment: function (oEvent) {
-        debugger;
+        
         var sValue = oEvent.getParameter("newValue")
         var oFilter1 = new Filter("Label", FilterOperator.Contains, sValue);
         var oFilter2 = new Filter("Type", FilterOperator.Contains, this.attachmentType);
@@ -360,7 +359,6 @@ onUploadChange: function (oEvent) {
       },
 
       // getAttachmentDatas:function(){
-      //   debugger;
       //   var oModel = this.getView().getModel();
       //   var that = this;
       //   var value = this.getView().getModel("appView").getProperty("/valueType")

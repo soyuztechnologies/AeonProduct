@@ -65,7 +65,7 @@ sap.ui.define([
 		  },
 
 		  alreadyLogin:function(){
-			debugger;
+			
 			var email = localStorage.getItem("email");
 			var pass = localStorage.getItem("pass");
 
@@ -176,6 +176,7 @@ sap.ui.define([
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
+					localStorage.clear();
 					that.getView().byId("userid").setValueState('Error');
 					that.getView().byId("pwd").setValueState('Error');
 					that.middleWare.errorHandler(jqXhr, that);
