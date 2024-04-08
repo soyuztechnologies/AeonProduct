@@ -1248,7 +1248,7 @@ sap.ui.define([
 						// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
 						that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
 					},
-					error: function (error) {
+					catch: function (error) {
 						MessageBox.show("Attachment Is Not Attached")
 					}
 				});
@@ -2816,14 +2816,17 @@ sap.ui.define([
 			  this._oPopover.openBy(oEvent.getSource());
 		  
 			}else{
-				var currentYear = new Date().getFullYear();
-				var currentYear = currentYear - 1;
-				var maxDate = new Date(currentYear + 1, 2, 31);
-				const uploadDateMaxDate = maxDate
-				var minDate = new Date(currentYear, 3, 1);
-				const uploadDateMinDate = minDate;
-				oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
-				oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
+				var currentDate = new Date("2024-04-08");
+				var currentYear = currentDate.getFullYear();
+
+				if (currentDate.getMonth() < 3 || (currentDate.getMonth() === 3 && currentDate.getDate() < 1)) {
+					currentYear = currentYear - 1;
+				}
+				var financialYearStart = new Date(currentYear, 3, 1);
+
+				var financialYearEnd = new Date(currentYear + 1, 2, 31);
+				oModel.setProperty("/getMaxDateForFilterJobs", financialYearEnd);
+				oModel.setProperty("/getMinDateForFilterJobs", financialYearStart);
 				oModel.setProperty("/getYearForFilterJobs", currentYear);
 			}
 
