@@ -6,7 +6,7 @@
         <f:SimpleForm layout="ResponsiveGridLayout">
             <VBox >
                 <Label text="Mail Address: " visible="{appView>/emailVisible}" />
-                <Input id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" submit="onEmailLiveChange" editable="{local>/EmailEditable}"/>
+                <Input id="emailInput" visible="{appView>/emailVisible}" valueLiveUpdate="true" type='Email' value="{appView>/Email}" submit="onEmailLiveChange" editable="{local>/EmailEditable}"/>
             </VBox>
         </f:SimpleForm>
     </content>

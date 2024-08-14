@@ -6,10 +6,10 @@
         <f:SimpleForm layout="ResponsiveGridLayout">
             <VBox >
                 <Label text="Mail Address: " visible="{appView>/emailVisible}" />
-                    <Input submit="OnEnter"  id="emailInput" visible="{appView>/emailVisible}" type='Email' value="{appView>/Email}" valueState="{appView>/signUpValueState}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
+                    <Input submit="OnEnter"  id="emailInput" visible="{appView>/emailVisible}" valueLiveUpdate="true" type='Email' value="{appView>/Email}" valueState="{appView>/signUpValueState}" liveChange="onEmailLiveChange" editable="{appView>/EmailEditable}"/>
                     <Label text="Otp: " visible="{appView>/otpVis}" />
                         
-                            <Input submit="OnEnter"  id="otpInput" visible="{appView>/otpVis}" type='Number' value="{appView>/otpValue}" valueState="{appView>/signUpValueState}" editable="true"/>
+                            <Input submit="OnEnter" valueLiveUpdate="true"  id="otpInput" visible="{appView>/otpVis}" type='Number' value="{appView>/otpValue}" valueState="{appView>/signUpValueState}" editable="true"/>
                             <!-- <Button  class="sapUiTinyMarginStart" text="OK" type="Accept" press="onVerifyOtp" visible="true" /> -->
                         
                 <MessageStrip text="{appView>/errorMessage}" type="Information" showIcon="true" visible="{appView>/showError}" />

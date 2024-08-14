@@ -30,13 +30,13 @@
 
                 <Label text="New Password"/>
 
-                <Input type="Password" value ="{appView>/NewPassword}" valueState="{appView>/newPassValueState}" valueStateText="{appView>/VSTNewPass}" visible="{appView>/newPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnageNewPassValidation"/>
+                <Input type="Password" value ="{appView>/NewPassword}" valueLiveUpdate="true" valueState="{appView>/newPassValueState}" valueStateText="{appView>/VSTNewPass}" visible="{appView>/newPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnageNewPassValidation"/>
 
 
 
                 <Label text="Confirm New Password"/>
 
-                <Input type="Password" value ="{appView>/conPassWord}" valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" visible="{appView>/conPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnageConfirmPassValidation"/>
+                <Input type="Password" value ="{appView>/conPassWord}" valueLiveUpdate="true" valueState="{appView>/confirmPassValueState}" valueStateText="{appView>/VSTConfirmPass}" visible="{appView>/conPass}" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" liveChange="onLiveChnageConfirmPassValidation"/>
 
             </f:content>
 

@@ -36,7 +36,7 @@
 													<Label text="" design="Bold" width="100%" required="false" textAlign="Center" textDirection="Inherit" visible="true" />
 												</form:label>
 												<form:fields>
-													<Input placeholder="{i18n>password}" type="Password" id="pwd" submit="Login" enabled="true" visible="true" width="auto" maxLength="0" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" />
+													<Input placeholder="{i18n>password}" valueLiveUpdate="true" type="Password" id="pwd" submit="Login" enabled="true" visible="true" width="auto" maxLength="0" showValueHelp="true" valueHelpIconSrc="sap-icon://show" valueHelpRequest="onSeePasswordClick" />
 												</form:fields>
 											</form:FormElement>
 											<form:FormElement visible="true">
