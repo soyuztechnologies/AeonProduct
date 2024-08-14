@@ -261,7 +261,10 @@ sap.ui.define([
 			// 	MessageToast.show("Password must be at least 8 characters long and contain at least one letter, one number, and one special character (!@#$%^&*)");
 			// 	return;
 			//   }
-
+			if(prevPass===passValue){
+				MessageToast.show("New Password Should be Different from Old Password");
+				return;
+			}
 			
 			if (conPassValue !== passValue) {
 				MessageToast.show("Your Entered Password is not Matched");
