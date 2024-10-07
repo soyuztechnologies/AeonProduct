@@ -1188,8 +1188,8 @@ sap.ui.define([
 				if (clickedrow === "clientPONo") {
 					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
 					// oDialog.open();
-					if (selectedJobDetails.PoAttach){
-						var url = `/Attachments('${selectedJobDetails.PoAttach+"PoNo"}')`
+					if (selectedJobDetails.PoAttach) {
+						var url = `/Attachments('${selectedJobDetails.PoAttach + "PoNo"}')`
 					}
 					// that.getModel("appView").setProperty("/attachmentFiles", selectedJobDetails.poAttachment)
 					var oModel = that.getView().getModel("appView");
@@ -1208,8 +1208,8 @@ sap.ui.define([
 				}
 				if (clickedrow === "artworkCode") {
 					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
-					if (selectedJobDetails.ArtworkAttach){
-						var url = `/Attachments('${selectedJobDetails.ArtworkAttach+"ArtworkNo"}')`;
+					if (selectedJobDetails.ArtworkAttach) {
+						var url = `/Attachments('${selectedJobDetails.ArtworkAttach + "ArtworkNo"}')`;
 						// dModel.read(`/Attachments('${selectedJobDetails.ArtworkAttach+"ArtworkNo"}')`, {
 						// 	try: function (data) {
 						// 		// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
@@ -1243,17 +1243,30 @@ sap.ui.define([
 				// oSimpleForm.bindElement('appView>/Jobs');
 				// 
 
-				dModel.read(url, {
-					try: function (data) {
-						// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
-						that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-					},
-					catch: function (error) {
-						MessageBox.show("Attachment Is Not Attached")
-					}
-				});
+				// dModel.read(url, {
+				// 	try: function (data) {
+				// 		// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+				// 		that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+				// 	},
+				// 	catch: function (error) {
+				// 		MessageBox.show("Attachment Is Not Attached")
+				// 	}
+				// });
+
+				// Change by Lakshay
+				if (url) {
+					dModel.read(url, {
+						success: function (data) {
+							that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+						},
+						error: function (error) {
+							MessageBox.show("Attachment Is Not Attached");
+						}
+					});
+				}
+
 			});
-			
+
 
 		},
 
@@ -1301,8 +1314,8 @@ sap.ui.define([
 			}
 			else {
 				if (this.clickedLink == "clientPONo") {
-					if (oData.PoAttach){
-						var url = `/Attachments('${oData.PoAttach+"PoNo"}')`
+					if (oData.PoAttach) {
+						var url = `/Attachments('${oData.PoAttach + "PoNo"}')`
 					}
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Po Document");
 					var pofile = oData.poAttachment;
@@ -1319,10 +1332,10 @@ sap.ui.define([
 					}
 				}
 				else if (this.clickedLink == "artworkCode") {
-						if (oData.ArtworkAttach){
-							var url = `/Attachments('${oData.ArtworkAttach+"ArtworkNo"}')`;
-						}
-						// this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
+					if (oData.ArtworkAttach) {
+						var url = `/Attachments('${oData.ArtworkAttach + "ArtworkNo"}')`;
+					}
+					// this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
 					var artfile = oData.artworkAttachment
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Artwork Document");
 					if (sUserRole === "Admin" || sUserRole === "Artwork Head" || sUserRole == "Factory Manager") {
@@ -1343,8 +1356,8 @@ sap.ui.define([
 					// 	this.getModel("appView").setProperty("/attachmentFiles", oData.DelAttachment.Attachment)
 					// }
 
-					if(oData.DeliveryNo){
-						var url = `/Attachments('${oData.DeliveryNo+"DelNo"}')`
+					if (oData.DeliveryNo) {
+						var url = `/Attachments('${oData.DeliveryNo + "DelNo"}')`
 					}
 
 					var Delfile = oData.deliveryAttachment;
@@ -1360,8 +1373,8 @@ sap.ui.define([
 					}
 				}
 				if (this.clickedLink == "InvNo") {
-					if(oData.InvNo){
-						var url = `/Attachments('${oData.InvNo+"InvNo"}')`
+					if (oData.InvNo) {
+						var url = `/Attachments('${oData.InvNo + "InvNo"}')`
 					}
 					var incFile = oData.incAttachment;
 					oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
@@ -1453,10 +1466,10 @@ sap.ui.define([
 			var that = this;
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 			if (oData.InvNo) {
-				var id = oData.InvNo+"InvNo";
+				var id = oData.InvNo + "InvNo";
 				var value = "Invoice"
 			} else {
-				id = oData.DeliveryNo+"DelNo";
+				id = oData.DeliveryNo + "DelNo";
 				var value = "Delivery"
 			}
 			var that = this;
@@ -1466,7 +1479,7 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
 				},
 				error: function (error) {
-					MessageBox.show(value+" Attachment Not Attached")
+					MessageBox.show(value + " Attachment Not Attached")
 				}
 			});
 			var oModel = this.getView().getModel("appView");
@@ -2604,18 +2617,18 @@ sap.ui.define([
 
 			var sEntityPath = `api/Jobs`;
 			oUpdatedData.jobCardNo = ids;
-			this.middleWare.callMiddleWare(sEntityPath, "patch" , oUpdatedData)
-           .then(function (data, status, xhr) {
-		    that.getJobsDataByCompanyFilter();
+			this.middleWare.callMiddleWare(sEntityPath, "patch", oUpdatedData)
+				.then(function (data, status, xhr) {
+					that.getJobsDataByCompanyFilter();
 
-			})
+				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
-				that.middleWare.errorHandler(jqXhr, that);
+					that.middleWare.errorHandler(jqXhr, that);
 				});
 		},
 
 		updateStatusValue: function () {
-			debugger	
+			debugger
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
@@ -2625,14 +2638,14 @@ sap.ui.define([
 
 			};
 			oUpdatedData.jobCardNo = ids;
-			this.middleWare.callMiddleWare(sEntityPath, "patch" , oUpdatedData)
-			.then(function (data, status, xhr) {
-			 that.getJobsDataByCompanyFilter();
- 
-			 })
-				 .catch(function (jqXhr, textStatus, errorMessage) {
-				 that.middleWare.errorHandler(jqXhr, that);
-				 });
+			this.middleWare.callMiddleWare(sEntityPath, "patch", oUpdatedData)
+				.then(function (data, status, xhr) {
+					that.getJobsDataByCompanyFilter();
+
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
 		},
 
 
@@ -2686,7 +2699,7 @@ sap.ui.define([
 				"selectedYear": selectedYear,
 				"maxDate": maxDate,
 				"minDate": minDate,
-				"State":oState?oState:false
+				"State": oState ? oState : false
 			}
 			if (sUserRole === "Customer") {
 				this.middleWare.callMiddleWare("JobsCustomer", "POST", payLoad)
@@ -2712,7 +2725,7 @@ sap.ui.define([
 			}
 			else {
 
-				this.middleWare.callMiddleWare("getJobsWithCompany", "POST" , payload)
+				this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
 					.then(function (data, status, xhr) {
 						that.getView().getModel("appView").setProperty("/jobsData", data);
 						that.getView().getModel("appView").setProperty("/countJobs", data.length);
@@ -2778,44 +2791,44 @@ sap.ui.define([
 			oModel.setProperty('/jobsData', oList);
 			oModel.updateBindings();
 		},
-         //this function hits when year select for filter jobs
-		openYearPickar: function(oEvent){
-			
+		//this function hits when year select for filter jobs
+		openYearPickar: function (oEvent) {
+
 			var that = this;
 			var oModel = this.getView().getModel("appView");
-			if(oEvent){
-			   if (!this._oPopover) {
+			if (oEvent) {
+				if (!this._oPopover) {
 					var oDateRangeSelection = new sap.m.DateRangeSelection({
-					width: "100%",
-					
-					dateValue: new Date(), // Set to January 1st of the current year
-					displayFormat: "yyyy", // Display only the year
-					change: function (oDateChangeEvent) {
-						var getYear = oDateChangeEvent.getParameter("from").getFullYear();
-						var maxDate = new Date(getYear + 1, 2, 31);
-						const uploadDateMaxDate = maxDate ; 
-						var minDate = new Date(getYear, 3, 1);
-						const uploadDateMinDate = minDate ;
-						oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
-						oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
-						oModel.setProperty("/getYearForFilterJobs", getYear);
-						that.getJobsDataByCompanyFilter();
-					},
+						width: "100%",
+
+						dateValue: new Date(), // Set to January 1st of the current year
+						displayFormat: "yyyy", // Display only the year
+						change: function (oDateChangeEvent) {
+							var getYear = oDateChangeEvent.getParameter("from").getFullYear();
+							var maxDate = new Date(getYear + 1, 2, 31);
+							const uploadDateMaxDate = maxDate;
+							var minDate = new Date(getYear, 3, 1);
+							const uploadDateMinDate = minDate;
+							oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
+							oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
+							oModel.setProperty("/getYearForFilterJobs", getYear);
+							that.getJobsDataByCompanyFilter();
+						},
 					});
-			
-				this._oPopover = new sap.m.Popover({
-				  title: "Select a Year",
-				  contentWidth: "290px",
-				  placement: sap.m.PlacementType.Auto,
-				  content: oDateRangeSelection, // Set the DateRangeSelection as the popover's content
-				});
-				
-				this.getView().addDependent(this._oPopover);
-			  }
-			  // Open the popover
-			  this._oPopover.openBy(oEvent.getSource());
-		  
-			}else{
+
+					this._oPopover = new sap.m.Popover({
+						title: "Select a Year",
+						contentWidth: "290px",
+						placement: sap.m.PlacementType.Auto,
+						content: oDateRangeSelection, // Set the DateRangeSelection as the popover's content
+					});
+
+					this.getView().addDependent(this._oPopover);
+				}
+				// Open the popover
+				this._oPopover.openBy(oEvent.getSource());
+
+			} else {
 				var currentDate = new Date("2024-04-08");
 				var currentYear = currentDate.getFullYear();
 
