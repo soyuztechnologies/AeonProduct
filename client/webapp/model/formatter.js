@@ -1262,8 +1262,14 @@ downloadAttachmentVis:function(value){
         return sOutput;
 
     }
-
-}
+  },
+  formateDateWithTime : function(dateString){
+    if(dateString){
+      var oDateFormat = DateFormat.getDateTimeInstance({ pattern: "dd-MM-yyyy HH:mm:ss" });
+      var sOutput = oDateFormat.format(new Date(dateString));
+      return sOutput;
+    }
+  }
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];
 

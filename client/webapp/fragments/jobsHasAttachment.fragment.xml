@@ -1,0 +1,44 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+  
+    <Dialog contentWidth="100%" contentHeight="100%" title="Jobs Attachments Data" >
+        <content>
+            <Table items="{path: 'appView>/jobsAttachmentData'}" mode="MultiSelect" id="idJobHasAttachment">
+                <columns>
+                    <Column >
+                        <Label text="Attachment Name" />
+                    </Column>
+                    <!-- <Column >
+                        <Label text="Action" />
+                    </Column> -->
+                    <Column >
+                        <Label text="Attachment Code" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem  >
+                        <cells>
+                            <Text text="{appView>attachmentName}" />
+                            <Link text="{appView>attachmentCode}" press="showAttachment"/>
+                            <!-- <core:Icon color="Negative" src="sap-icon://alert" ></core:Icon> -->
+                            <!-- <Button enabled="false" tooltip="Remove the Job" icon="sap-icon://alert"></Button> -->
+                            <!-- <Button press="removeJobwithCompId" tooltip="Remove the Job" icon="sap-icon://decline"></Button> -->
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+        <beginButton>
+            <Button text="Delete" type="Reject" press="onDeleteAttachment" />
+        </beginButton>
+        <endButton>
+            <Button text="Close" type="Emphasized" press="onCloseValDialog" />
+        </endButton>
+    </Dialog>
+                                
+   
+</core:FragmentDefinition>

@@ -72,8 +72,9 @@ sap.ui.define([
 				}
 				else if(window.location.href.includes("/Dispatched")){
 					return;
-				}
-				else{
+				}else if(window.location.href.includes("/dispatchedList")){
+					return;
+				}else{
 					MessageBox.error(
 						this._sErrorText,
 						{

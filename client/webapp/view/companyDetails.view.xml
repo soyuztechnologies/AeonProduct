@@ -58,7 +58,7 @@
 			  </fb:FilterGroupItem>
 			</fb:filterGroupItems>
 		  </fb:FilterBar> -->
-		<Table mode="SingleSelectLeft" items="{appView>/companyDetails}" id="idCompanyTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressCompany">  
+		<Table mode="SingleSelectLeft" items="{appView>/companyDetails}" id="idJobAttachmentTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressCompany">  
 			<columns>
 				<Column width="12em">
 					<Text text="Company Name" />
@@ -78,19 +78,6 @@
 				<Column minScreenWidth="Tablet" demandPopin="true">
 					<Text text="Show User's" />
 				</Column>
-		
-				<!-- <Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
-					<Text text="Blocked" />
-				</Column>
-				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
-					<Text text="Approval" />
-				</Column>
-				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
-					<Text text="Company" />
-				</Column>
-				<Column hAlign="End">
-					<Text text="Reset Password" />
-				</Column> -->
 			</columns>
 			<items>
 				<ColumnListItem vAlign="Middle" type="Active">
@@ -99,7 +86,7 @@
 						<Text text="{appView>FirstName} {appView>LastName}" />
 						<Text  text="{appView>EmailAddress}"/>		
 						<Text  text="{appView>PhoneNo}"/>		
-						<Button type="transparent" text="Jobs" press="openAllPrinterJobDialog" icon="sap-icon://document-text"></Button>
+						<Button type="Transparent" text="Jobs" press="openAllPrinterJobDialog" icon="sap-icon://document-text"></Button>
 						<Button type="Success"  text="User" press="openUserDetailsDialog" icon="sap-icon://visits"></Button>
 						<!-- <Text text="{appView>Role}" /> -->
 						<!-- <Switch state="{=${appView>Blocked} === 'No' ? true : false}" change="onBlockCustomer" type="AcceptReject" customTextOn="Yes" customTextOff="No">

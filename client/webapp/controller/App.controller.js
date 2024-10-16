@@ -87,6 +87,9 @@ sap.ui.define(
           // if device is phone
           this.onClickMenuButton();
         }
+        if(nav === "dispatchedList"){
+          this.getRouter().navTo("dispatchedList")
+        }
         if (nav=== "Profile"){
           this.getRouter().navTo("Profile")
         }

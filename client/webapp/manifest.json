@@ -204,13 +204,6 @@
 					"name":"Printing",
 					"target":["allPrinters"]
 				},
-
-
-
-
-
-
-
 				{
 					"pattern":"Coating/{jobId}",
 					"name":"sideNavCoating",
@@ -221,11 +214,6 @@
 					"name":"Coating",
 					"target":["allPrinters"]
 				},
-
-
-
-
-
 				{
 					"pattern":"Foiling/{jobId}",
 					"name":"sideNavFoiling",
@@ -368,6 +356,11 @@
 					"pattern":"userDetails",
 					"name":"userDetails",
 					"target":"userDetails"
+				},
+				{
+					"pattern":"dispatchedList",
+					"name":"dispatchedList",
+					"target":"dispatchedList"
 				},
 				{
 					"pattern":"companyDetails",
@@ -551,6 +544,12 @@
 					"viewLevel":1,
 					"controlAggregation": "beginColumnPages",
 					"viewId":"Profile"
+				},
+				"dispatchedList":{
+					"viewName":"dispatchedList",
+					"viewLevel":1,
+					"controlAggregation": "beginColumnPages",
+					"viewId":"dispatchedList"
 				}
 			}
 		}

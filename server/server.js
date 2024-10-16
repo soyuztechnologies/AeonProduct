@@ -17,6 +17,7 @@ const moment = require('moment');
 
 var fs = require('fs');
 const { log, debug } = require('console');
+const { default: index } = require('async');
 var app = express();
 app = module.exports = loopback();
 // parse application/json
@@ -193,7 +194,7 @@ app.start = function () {
 		// 	this.Param = app.models.Param;
 		// 	const xoauth2 = require('xoauth2');
 		// 	const fs = require('fs');
-		
+
 		// 	try {
 		// 		const array = ["user", "clientId", "clientSecret", "refreshToken"];
 		// 		const Param = this.Param;
@@ -212,7 +213,7 @@ app.start = function () {
 		// 				callback('Internal server error');
 		// 				return;
 		// 			}
-		
+
 		// 			sParam.forEach(function (element) {
 		// 				switch (element.Code) {
 		// 					case "user":
@@ -229,7 +230,7 @@ app.start = function () {
 		// 						break;
 		// 				}
 		// 			});
-		
+
 		// 			const mailContent = fs.readFileSync(process.cwd() + "/server/sampledata/" + templateFileName, 'utf8');
 		// 			replaceTemplatePlaceholders(mailContent, replacements, function (err, mailBody) {
 		// 				if (err) {
@@ -237,7 +238,7 @@ app.start = function () {
 		// 					callback('Internal server error');
 		// 					return;
 		// 				}
-		
+
 		// 				const transporter = nodemailer.createTransport(smtpTransport({
 		// 					service: 'gmail',
 		// 					host: 'smtp.gmail.com',
@@ -250,13 +251,13 @@ app.start = function () {
 		// 						})
 		// 					}
 		// 				}));
-		
+
 		// 				const emailContent = {
 		// 					to: email,
 		// 					subject: emailSubject,
 		// 					html: mailBody
 		// 				};
-		
+
 		// 				transporter.sendMail(emailContent, function (error, info) {
 		// 					if (error) {
 		// 						console.log(error);
@@ -277,10 +278,10 @@ app.start = function () {
 		// 		callback('Internal server error');
 		// 	}
 		// }
-		
+
 
 		// * this fucntion working to replace the dynamic characters in the email body,like usernameand and emaol etc.
-		
+
 		async function replaceTemplatePlaceholders(content, replacements) {
 			let replacedContent = content;
 			for (const placeholder in replacements) {
@@ -302,19 +303,19 @@ app.start = function () {
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
 			const otp = app.models.otp;
-		
+
 			const { email } = req.body;
-		
+
 			User.findOne({ where: { email } }, (userError, existingUser) => {
 				if (userError) {
 					console.error(userError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-		
+
 				if (!existingUser) {
 					return res.status(400).json({ error: 'Email is not registered with us.' });
 				}
-		
+
 				const otpValue = generateOTP();
 				const dateAndTime = generateDateAndTime();
 				const ExpDateAndTIme = generateDateAndTimeWithExtraTime();
@@ -326,7 +327,7 @@ app.start = function () {
 				};
 				const templateFileName = "Forgot.html";
 				const emailSubject = "Reset Your Password";
-		
+
 				sendEmail(email, token, replacements, templateFileName, emailSubject)
 					.then(async () => {
 						try {
@@ -343,7 +344,7 @@ app.start = function () {
 					});
 			});
 		});
-		
+
 		// Verify the token when the user tries to reset the password
 		app.post('/Forgot/verifyToken', (req, res) => {
 			const User = app.models.User;
@@ -396,7 +397,7 @@ app.start = function () {
 
 
 		function generateOTP(length = 6) {
-		
+
 			const digits = '0123456789';
 			let otp = '';
 
@@ -418,10 +419,10 @@ app.start = function () {
 			var hours = currentDate.getHours();
 			var minutes = currentDate.getMinutes();
 			var seconds = currentDate.getSeconds();
-			
+
 			var formattedDate = year + "-" + addLeadingZero(month) + "-" + addLeadingZero(day);
 			var formattedTime = addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
-			
+
 			var dateAndTime = formattedDate + " " + formattedTime;
 			return dateAndTime;
 			function addLeadingZero(number) {
@@ -432,14 +433,14 @@ app.start = function () {
 		app.post('/getJobsWithStatusFilter', function (req, res) {
 			const status = req.body;
 			const Job = app.models.Job;
-		
+
 			try {
 				Job.find({
-					fields: { 
-						JobName:false,
-						UpdatedOn:false,
-						CreatedOn:false,
-						date:false,
+					fields: {
+						JobName: false,
+						UpdatedOn: false,
+						CreatedOn: false,
+						date: false,
 						poAttachment: false,
 						artworkAttachment: false,
 						poNo: false,
@@ -574,7 +575,7 @@ app.start = function () {
 			const otpModel = app.models.otp;
 			const OTP = req.body;
 			const currentdateAndTime = generateDateAndTime();
-		
+
 			try {
 				otpModel.findOne({ where: { OTP: OTP.inputOtpValue } }, (otpError, otp) => {
 					if (otpError) {
@@ -594,14 +595,14 @@ app.start = function () {
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
-		
+
 
 		//* Delete OTP
 		app.post('/deleteotp', (req, res) => {
 			const User = app.models.User;
 			const otpModel = app.models.otp;
 			const OTP = req.body;
-		
+
 			try {
 				otpModel.findOne({ where: { OTP } }, (otpError, otp) => {
 					if (otpError) {
@@ -625,27 +626,27 @@ app.start = function () {
 				res.status(500).send('Internal server error');
 			}
 		});
-		
+
 
 		// * this post call is sending the email to the user,when user is registering into the portal.
 		app.post('/signup/verifyEmail', (req, res) => {
-			
+
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
 			const otp = app.models.otp;
-		
+
 			const { email } = req.body;
-		
+
 			User.findOne({ where: { email } }, (userError, existingUser) => {
 				if (userError) {
 					console.error(userError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-		
+
 				if (existingUser) {
 					return res.status(400).json({ error: 'User with this email already exists' });
 				}
-		
+
 				const otpValue = generateOTP();
 				const dateAndTime = generateDateAndTime();
 				const ExpDateAndTIme = generateDateAndTimeWithExtraTime();
@@ -657,7 +658,7 @@ app.start = function () {
 				const templateFileName = "verifyEmail.html";
 				const emailSubject = "Verify Your Registration Email";
 				const date = new Date();
-		
+
 				sendEmail(email, token, replacements, templateFileName, emailSubject)
 					.then(async () => {
 						try {
@@ -674,57 +675,57 @@ app.start = function () {
 					});
 			});
 		});
-		
-			// * this post call is sending the email to the user,when user is registering into the portal.
-			app.post('/remarkEmailSend', async (req, res) => {
-				debugger
-				try {
-					var payload = req.body;
-					var jobCardNo = payload.JobData;
-					const email = "Maskara.tarun@gmail.com";
-					const token=""; 
-					const replacements = {
-						JOBCARDNO: jobCardNo,
-						EMAIL: "noreply@aeonproducts.com",
-					};
-					const templateFileName="Remark.html"
-					const emailSubject=" Remark Received for Job Card No. "+jobCardNo+"."
-					sendEmail(email, token, replacements, templateFileName, emailSubject)
-						.then(() => {
-							return res.status(200).json('Remark Email Send successfully');
-						})
-						.catch(sendEmailError => {
-						  console.error(sendEmailError);
-						  return res.status(500).json({ error: 'Failed to Send Remark Email' });
-						});
-				} catch (error) {
-					console.error(error);
-					res.status(500).json({ error: 'Internal server error' });
-				}
-			});
+
+		// * this post call is sending the email to the user,when user is registering into the portal.
+		app.post('/remarkEmailSend', async (req, res) => {
+			debugger
+			try {
+				var payload = req.body;
+				var jobCardNo = payload.JobData;
+				const email = "Maskara.tarun@gmail.com";
+				const token = "";
+				const replacements = {
+					JOBCARDNO: jobCardNo,
+					EMAIL: "noreply@aeonproducts.com",
+				};
+				const templateFileName = "Remark.html"
+				const emailSubject = " Remark Received for Job Card No. " + jobCardNo + "."
+				sendEmail(email, token, replacements, templateFileName, emailSubject)
+					.then(() => {
+						return res.status(200).json('Remark Email Send successfully');
+					})
+					.catch(sendEmailError => {
+						console.error(sendEmailError);
+						return res.status(500).json({ error: 'Failed to Send Remark Email' });
+					});
+			} catch (error) {
+				console.error(error);
+				res.status(500).json({ error: 'Internal server error' });
+			}
+		});
 		app.post('/signup/createUser', (req, res) => {
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
 			const { email, password } = req.body;
 			const role = 'Customer'; // Hardcoded role as 'Customer'
 			const name = email.substring(0, email.indexOf("@"));
-		
+
 			User.findOne({ where: { email } }, (userError, existingUser) => {
 				if (userError) {
 					console.error(userError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-		
+
 				if (existingUser) {
 					return res.status(400).json({ error: 'User with this email already exists' });
 				}
-		
+
 				User.create({ email, password, Role: role, CreatedOn: new Date(), status: "Pending" }, (createUserError, newUser) => {
 					if (createUserError) {
 						console.error(createUserError);
 						return res.status(500).json({ error: 'Internal server error' });
 					}
-		
+
 					AppUser.create({
 						TechnicalId: newUser.id,
 						EmailId: email,
@@ -736,14 +737,14 @@ app.start = function () {
 							console.error(createAppUserError);
 							return res.status(500).json({ error: 'Internal server error' });
 						}
-		
+
 						console.log(`App User created: ${JSON.stringify(newUser.toJSON())}`);
 						res.status(200).json({ message: 'User created successfully' });
 					});
 				});
 			});
 		});
-		
+
 		//* Get all users from the User table
 		app.get('/usersTable', (req, res) => {
 			const User = app.models.User;
@@ -807,41 +808,331 @@ app.start = function () {
 			});
 		});
 
+		// Created by Lakshay - Taken Data from Job and Job Status Table
+		app.get('/Jobs', (req, res) => {
+
+			// Jobs.jobCardNo ----> Here this is job Id
+			const Job = app.models.Job;
+			const attachmentTable = app.models.Attachments;
+			var payload = [];
+			var attachmentArray = [];
+
+			Job.find({
+				where: {
+					status: "Dispatched"
+				},
+				include: {
+					relation: 'JobStatus'
+				}
+			}, (error, jobs) => {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+				if (jobs) {
+
+					jobs.forEach((job) => {
+						let jobPayload = {
+							jobName: job.JobName,
+							jobCardNo: job.jobCardNo,
+							date: job.UpdatedOn,
+							status: job.status,
+							PoAttach: job.PoAttach + 'PoNo',   // Assuming PoAttach is a field in the Job model
+							artworkCode: job.artworkCode + 'ArtworkNo',   // Assuming artworkCode is a field in the Job model
+							InvNo: job.JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'),   // Check if JobStatus exists before accessing
+							DeliveryNo: job.JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo') // Similar check for DeliveryNo
+						};
+						payload.push(jobPayload);
+					})
+					// return res.status(200).json(payload)
+					for (let i = 0; i < jobs.length; i++) {
+						attachmentArray.push(jobs[i].PoAttach + 'PoNo');
+						attachmentArray.push(jobs[i].artworkCode + 'ArtworkNo');
+						attachmentArray.push(...jobs[i].JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'));
+						attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
+					}
+					// attachmentArray = ["'080DelNo', 'PO#2024.pdfPoNo', '083DelNo', '087InvNo', '088DelNo'"];
+					// attachmentArray = ['080DelNo', 'PO#2024.pdfPoNo', '083DelNo', '087InvNo', '088DelNo']; 
+
+					attachmentTable.find({
+						where: {
+							Key: { inq: attachmentArray }
+						}
+					}, (error, attachmentGet) => {
+						if (error) {
+							console.error(error);
+							return res.status(500).json({ error: 'Internal server error' });
+						}
+						if (attachmentGet.length > 0) {
+
+							const validAttachments = attachmentGet.filter(item => item && item.__data && item.__data.Key);
+
+							for (let i = 0; i < payload.length; i++) {
+								let flag = false;
+								validAttachments.forEach(getData => {
+									if (getData.Type == 'PoNo' && payload[i].PoAttach == getData.Key) {
+											flag = true;
+									} else if (getData.Type == 'ArtworkCode' && payload[i].artworkCode == getData.Key) {
+											flag = true;
+									} else if (getData.Type == 'InvNo' && payload[i].InvNo.length>0) {
+										let invArr = payload[i].InvNo;
+										invArr.forEach(data => {
+											if (data == getData.Key) {
+												flag = true;
+											}
+										})
+									} else if (getData.Type == 'DelNo' && payload[i].DeliveryNo.length>0) {
+										let delArr = payload[i].DeliveryNo;
+										delArr.forEach(data => {
+											if (data == getData.Key) {
+												flag = true;
+											}
+										})
+									} else if (flag == false) {
+										delete payload[i];
+									}
+								})
+							}
+
+							return res.status(200).json(payload)
+						} else {
+							return res.status(200).json("Data Not Found");
+						}
+
+
+
+						// attachmentArray.forEach(data=>{
+						// 	attachmentGet.forEach(getData =>{
+						// 		if(data == getData.Key){
+						// 			count ++;
+						// 		}
+						// 	})
+						// })
+						// if (attachmentGet) {
+						// 	res.status(200).json(attachmentGet);
+						// }
+					});
+
+					// attachments.findOne({ where: {Key:attachmentArray} },(AttachmentError,attachment) =>{
+					// 	if(AttachmentError){
+					// 		console.error('Error finding Attachment:', AttachmentError);
+					// 		return res.status(500).send('Internal server error');					
+					// 	}
+					// 	if(attachment){
+					// 		attachment.remove((removeError)=>{
+					// 			if(removeError){
+					// 				console.error('Error in deleting attachment:', removeError);
+					// 				return res.status(500).send('Internal server error');
+					// 			}else{
+					// 				res.status(200).send('Attachment Deleted Successfully');
+					// 			}
+					// 		})
+					// 	}else{
+					// 		res.status(200).send('Attachment Not Found')
+					// 	}
+					// })
+				}
+
+
+				//take Po, artwork, inv, del and create them accordingly to send in atatchments table
+				// attachments fire a call, and check how many of them exists , get only id in response, attchment Key
+
+				//then while creating the payload, check if the attachment exists or not
+
+				// if(jobs && jobs.length>0){
+				// 	for(let i=0;i<jobs.length;i++){
+				// 		payload[i] = {
+				// 			jobName: jobs[i].JobName,
+				// 			jobCardNo: jobs[i].jobCardNo,
+				// 			date: jobs[i].UpdatedOn,
+				// 			status: jobs[i].status,
+				// 			artworkCode: jobs[i].artworkCode,
+				// 			PoAttach: jobs[i].PoAttach,
+				// 			InvNo: jobs[i].JobStatus || null,         // InvNo from JobStatus
+				// 			DeliveryNo: status.DeliveryNo || null // DeliveryNo from JobStatus
+				// 		}
+				// 		console.log(payload);
+				// 	}
+				// 	console.log(payload);
+
+				// }
+			});
+		});
+
+		// Delete Attachments Only for New Created Screen by Lakshay.
+		app.post('/deleteAttachments', (req, res) => {
+			const attachments = app.models.Attachments;
+			const id = req.body;
+			attachments.findOne({ where: { Key: id } }, (AttachmentError, attachment) => {
+				if (AttachmentError) {
+					console.error('Error finding Attachment:', AttachmentError);
+					return res.status(500).send('Internal server error');
+				}
+				if (attachment) {
+					attachment.remove((removeError) => {
+						if (removeError) {
+							console.error('Error in deleting attachment:', removeError);
+							return res.status(500).send('Internal server error');
+						} else {
+							res.status(200).send('Attachment Deleted Successfully');
+						}
+					})
+				} else {
+					res.status(200).send('Attachment Not Found')
+				}
+			})
+		})
+
 		//* Delete job and job status using jobCardNo
+		// Delete Job,job status and their attachments using id--.jobcardNo:Lakshay
 		app.post('/deleteJobsWithJobStatus', (req, res) => {
 			const JobStatus = app.models.JobStatus;
 			const Job = app.models.Job;
+			const attachments = app.models.Attachments;
 			const id = req.body;
+			let clientPO = '';
+			let artworkAttach = '';
+			let deliveryNo = '';
+			let InvNo = '';
+			let str = '';
+
+
 
 			Job.findOne({ where: { jobCardNo: id } }, (jobError, job) => {
 				if (jobError) {
 					console.error('Error finding job:', jobError);
 					return res.status(500).send('Internal server error');
 				}
-
 				if (job) {
+					if (job.PoAttach) {
+						clientPO = job.PoAttach + 'PoNo';
+						// For Deletetion of corresponding attachments.
+						attachments.findOne({ where: { Key: clientPO } }, (AttachmentError, poAttachment) => {
+							if (AttachmentError) {
+								console.error('Error finding attachments: ', AttachmentError);
+								str += "Attachment Error on PoAttach \n"
+								// return res.status(500).send('Internal Server Error');
+							}
+							if (poAttachment) {
+								poAttachment.remove((removeError) => {
+									if (removeError) {
+										console.error('Error deleting attachment:', removeError);
+										// return res.status(500).send('Internal server error');
+										str += "Error on removing Client PO Attachment \n"
+									}
+								})
+							} else {
+								str += "po Attachment Not Found\n"
+							}
+						})
+					} else {
+						str += "Job Client PO Attachment Not Found \n"
+					}
+
+					if (job.ArtworkAttach) {
+						artworkAttach = job.ArtworkAttach + 'ArtworkNo';
+						// For Deletetion of corresponding attachments.
+						attachments.findOne({ where: { Key: artworkAttach } }, (AttachmentError, artWorkAttachment) => {
+							if (AttachmentError) {
+								console.error('Error finding attachments: ', jobError);
+								// return res.status(500).send('Internal Server Error');
+								str += "Attachment Error on Artwork \n"
+							}
+							if (artWorkAttachment) {
+								artWorkAttachment.remove((removeError) => {
+									if (removeError) {
+										console.error('Error deleting attachment:', removeError);
+										// return res.status(500).send('Internal server error');
+										str += "Error on removing Artwork Attachment \n"
+									}
+								})
+							} else {
+								str += "Artwork attachment not found \n"
+							}
+						})
+					} else {
+						str += "Artwork Attachment Not Found \n"
+					}
+
+
+
+
 					job.remove((removeJobError) => {
 						if (removeJobError) {
 							console.error('Error deleting job:', removeJobError);
-							return res.status(500).send('Internal server error');
+							// return res.status(500).send('Internal server error');
+							str += 'Error on removing Job\n'
 						}
 
 						JobStatus.findOne({ where: { JobStatusId: id } }, (jobStatusError, jobStatus) => {
 							if (jobStatusError) {
 								console.error('Error finding job status:', jobStatusError);
-								return res.status(500).send('Internal server error');
+								// return res.status(500).send('Internal server error');
+								str += 'Error on Removing Job\n'
 							}
 
 							if (jobStatus) {
+								if (jobStatus.DeliveryNo) {
+									deliveryNo = jobStatus.DeliveryNo + 'DelNo';
+									// For Deletetion of corresponding attachments.
+									attachments.findOne({ where: { Key: deliveryNo } }, (AttachmentError, deliveryAttachment) => {
+										if (AttachmentError) {
+											console.error('Error finding attachments: ', jobError);
+											str += 'Attachment Error on Delivery Attach\n'
+											// return res.status(500).send('Internal Server Error');
+										}
+										if (deliveryAttachment) {
+											deliveryAttachment.remove((removeError) => {
+												if (removeError) {
+													console.error('Error deleting attachment:', removeError);
+													str += "Error on removing Delivery Attachments \n"
+													// return res.status(500).send('Internal server error');
+												}
+											})
+										} else {
+											str += 'Delivery Attachment Not Found'
+										}
+									})
+								} else {
+									str += "Job Delivery Attachment Not Found \n"
+								}
+
+								if (jobStatus.InvNo) {
+									InvNo = jobStatus.InvNo + 'InvNo';
+									// For Deletetion of corresponding attachments.
+									attachments.findOne({ where: { Key: InvNo } }, (AttachmentError, inventoryAttachment) => {
+										if (AttachmentError) {
+											console.error('Error finding attachments: ', jobError);
+											str += 'Attachment Error on Inv No\n'
+											// return res.status(500).send('Internal Server Error');
+										}
+										if (inventoryAttachment) {
+											inventoryAttachment.remove((removeError) => {
+												if (removeError) {
+													console.error('Error deleting attachment:', removeError);
+													// return res.status(500).send('Internal server error');
+													str += "Error on removing Inventory Attachment\n"
+												}
+											})
+										} else {
+											str += "Inventory Attachment Not Found\n"
+										}
+									})
+								} else {
+									str += "Job Invoice Attachment Not Found \n"
+								}
 								jobStatus.remove((removeJobStatusError) => {
 									if (removeJobStatusError) {
 										console.error('Error deleting job status:', removeJobStatusError);
-										return res.status(500).send('Internal server error');
+										// return res.status(500).send('Internal server error');
+										str += 'Error on removing Job Status\n'
 									}
-									res.status(200).send('Job and Job Status Deleted Successfully');
+
+									res.status(200).send("Job and Relevent Job Related Data Deleted Successfully" + "\n" + str);
 								});
 							} else {
-								res.status(200).send('Job Deleted Successfully');
+								str += "Job Status Not Found /n"
+								res.status(200).send('Job Deleted Successfully' + '\n' + str);
 							}
 						});
 					});
@@ -871,97 +1162,97 @@ app.start = function () {
 			const User = app.models.User;
 			const Param = app.models.Param;
 			const AppUser = app.models.AppUser;
-		
+
 			const { email, password } = req.body;
-		
+
 			if (!email || !password) {
 				return res.status(400).json({ error: 'Email and password are required' });
 			}
-		
+
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		
+
 			if (!emailRegex.test(email)) {
 				return res.status(400).json({ error: 'Invalid email format' });
 			}
-		
+
 			const data = {
 				email,
 				password
 			};
-		
+
 			User.login(data, (loginError, user) => {
 				if (loginError) {
 					return res.status(400).json({ error: 'Invalid email or password' });
 				}
-		
+
 				AppUser.findOne({ where: { EmailId: email } }, (appUserError, appUser) => {
 					if (appUserError) {
 						return res.status(400).json({ error: 'Invalid email or password' });
 					}
-		
+
 					let tempPass = null;
 					let temp = false;
-		
+
 					User.findOne({ where: { email, TempPass: password } }, (tempUserError, tempUser) => {
 						if (tempUserError) {
 							return res.status(400).json({ error: 'Invalid email or password' });
 						}
-		
+
 						if (tempUser) {
 							tempPass = tempUser.TempPass;
 							temp = true;
 						}
-		
+
 						const { id, ttl, created, userId } = user;
-		
+
 						const { Status, Blocked, Role } = appUser;
-		
+
 						return res.status(200).json({ id, Status, Role, ttl, created, userId, Blocked, temp, tempPass });
 					});
 				});
 			});
 		});
-		
+
 		// * this post call is use to create the new user via the admin side in the portal.
 		app.post('/addUserAdmin', (req, res) => {
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
-		
+
 			const newCustomer = {};
 			for (const field in req.body) {
 				newCustomer[field] = req.body[field];
 			}
-		
+
 			const email = newCustomer.EmailId;
 			const name = email.substring(0, email.indexOf("@"));
 			const requestPass = newCustomer.PassWord;
 			const Role = newCustomer.Role;
 			const status = newCustomer.Status;
-		
+
 			let password = requestPass;
 			if (!requestPass) {
 				password = generateRandomPassword();
 			}
-		
+
 			User.findOne({ where: { email } }, (userFindError, userTable) => {
 				if (userFindError) {
 					console.error(userFindError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-		
+
 				if (!userTable) {
 					User.create({ email, TempPass: password, password, Role, CreatedOn: new Date(), status }, (createUserError, newUser) => {
 						if (createUserError) {
 							console.error(createUserError);
 							return res.status(500).json({ error: 'Failed to create customer' });
 						}
-		
+
 						AppUser.findOne({ where: { EmailId: email } }, (appUserFindError, AppUuser) => {
 							if (appUserFindError) {
 								console.error(appUserFindError);
 								return res.status(500).json({ error: 'Internal server error' });
 							}
-		
+
 							if (!AppUuser) {
 								AppUser.create({
 									TechnicalId: newUser.id,
@@ -975,7 +1266,7 @@ app.start = function () {
 										console.error(createAppUserError);
 										return res.status(500).json({ error: 'Failed to create customer' });
 									}
-		
+
 									const replacements = {
 										email: "noreply@aeonproducts.com",
 										user: email,
@@ -985,7 +1276,7 @@ app.start = function () {
 									const templateFileName = "NewUser.html";
 									const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
 									const token = "";
-		
+
 									sendEmail(email, token, replacements, templateFileName, emailSubject)
 										.then(() => {
 											return res.status(200).json('Customer created successfully');
@@ -1020,67 +1311,67 @@ app.start = function () {
 
 
 		app.get('/getUserRole', (req, res) => {
-			
+
 			// models data
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
 			this.AccessToken = app.models.AccessToken;
-		
+
 			const cookieHeader = req.headers.cookie;
 			// Parse the cookie string and extract the value of 'soyuz_session'
 			const cookies = cookie.parse(cookieHeader);
 			const sessionCookie = cookies.soyuz_session;
-		
+
 			if (!sessionCookie) {
 				return res.status(404).json({ error: 'Session not found' });
 			}
-		
+
 			this.AccessToken.findOne({ where: { id: sessionCookie } }, (tokenError, accessToken) => {
 				if (tokenError) {
 					console.error('Error fetching access token:', tokenError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-		
+
 				if (!accessToken) {
 					return res.status(404).json({ error: 'Session not found' });
 				}
-		
+
 				const { ttl, created, userId } = accessToken;
 				let userID = accessToken.userId;
-		
+
 				this.User.findOne({ where: { id: userID } }, (userError, user) => {
 					if (userError) {
 						console.error('Error fetching user:', userError);
 						return res.status(500).json({ error: 'Internal server error' });
 					}
-		
+
 					if (!user) {
 						return res.status(404).json({ error: 'User not found' });
 					}
-		
+
 					this.AppUser.findOne({ where: { EmailId: user.email } }, (appUserError, Appuser) => {
 						if (appUserError) {
 							console.error('Error fetching AppUser:', appUserError);
 							return res.status(500).json({ error: 'Internal server error' });
 						}
-		
+
 						if (!Appuser) {
 							return res.status(404).json({ error: 'User not found' });
 						}
-		
+
 						const { Status, TechnicalId, Role, EmailId, id, CompanyId } = Appuser;
 						const responseData = {
 							role: { Status, TechnicalId, Role, EmailId, id, CompanyId },
 							// Include other relevant data if needed
 						};
-		
+
 						res.status(200).json(responseData);
 					});
 				});
 			});
 		});
-		
+
 
 		app.get('/getUserProfileData', (req, res) => {
 			// models data
@@ -1088,56 +1379,56 @@ app.start = function () {
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
 			this.AccessToken = app.models.AccessToken;
-		
+
 			const cookieHeader = req.headers.cookie;
 			// Parse the cookie string and extract the value of 'soyuz_session'
 			const cookies = cookie.parse(cookieHeader);
 			const sessionCookie = cookies.soyuz_session;
-		
+
 			this.AccessToken.findOne({ where: { id: sessionCookie } }, (tokenError, accessToken) => {
 				if (tokenError) {
 					console.error('Error fetching access token:', tokenError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-		
+
 				if (!accessToken) {
 					return res.status(404).json({ error: 'Session not found' });
 				}
-		
+
 				const { ttl, created, userId } = accessToken;
 				let userID = accessToken.userId;
-		
+
 				this.User.findOne({ where: { id: userID } }, (userError, user) => {
 					if (userError) {
 						console.error('Error fetching user:', userError);
 						return res.status(500).json({ error: 'Internal server error' });
 					}
-		
+
 					if (!user) {
 						return res.status(404).json({ error: 'User not found' });
 					}
-		
+
 					this.AppUser.findOne({ where: { EmailId: user.email } }, (appUserError, Appuser) => {
 						if (appUserError) {
 							console.error('Error fetching AppUser:', appUserError);
 							return res.status(500).json({ error: 'Internal server error' });
 						}
-		
+
 						if (!Appuser) {
 							return res.status(404).json({ error: 'User not found' });
 						}
-		
+
 						const responseData = {
 							Appuser
 							// Include other relevant data if needed
 						};
-		
+
 						res.status(200).json(responseData);
 					});
 				});
 			});
 		});
-		
+
 
 		// * this is the logout callback. 
 		app.post('/logout', (req, res) => {
@@ -1155,22 +1446,22 @@ app.start = function () {
 			this.User = app.models.User;
 			this.Param = app.models.Param;
 			this.AppUser = app.models.AppUser;
-		
+
 			const { email, password, newPassword } = req.body;
-		
+
 			this.User.findOne({ where: { email, TempPass: password } }, (findError, tempUser) => {
 				if (findError) {
 					console.error('Error finding user:', findError);
 					return res.status(500).send('Internal server error');
 				}
-		
+
 				if (tempUser) {
 					tempUser.updateAttributes({ password: newPassword }, (updateError, updatedUser) => {
 						if (updateError) {
 							console.error('Error updating password:', updateError);
 							return res.status(500).send('Internal server error');
 						}
-		
+
 						return res.status(200).send('Password updated successfully');
 					});
 				} else {
@@ -1178,32 +1469,32 @@ app.start = function () {
 				}
 			});
 		});
-		
+
 
 		app.post('/jobStatusData', (req, res) => {
 			const JobStatus = app.models.JobStatus;
 			const { jobId } = req.body;
-		
+
 			try {
 				JobStatus.find(
 					{
-						 where: { 
+						where: {
 							JobStatusId: jobId
-						 }
-						}, (jobStatusError, jobStatusData) => {
-					if (jobStatusError) {
-						console.error(jobStatusError);
-						return res.status(500).json({ error: 'Internal server error' });
-					}
-		
-					res.status(200).json(jobStatusData);
-				});
+						}
+					}, (jobStatusError, jobStatusData) => {
+						if (jobStatusError) {
+							console.error(jobStatusError);
+							return res.status(500).json({ error: 'Internal server error' });
+						}
+
+						res.status(200).json(jobStatusData);
+					});
 			} catch (error) {
 				console.error(error);
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
-		
+
 
 		app.post('/getSumOfJobStatus', (req, res) => {
 			const JobStatus = app.models.JobStatus;
@@ -1222,14 +1513,14 @@ app.start = function () {
 				"InvNo": [],
 				"DeliveryNo": []
 			};
-		
+
 			try {
 				JobStatus.find({ where: { JobStatusId: jobId } }, (jobStatusError, jobStatusData) => {
 					if (jobStatusError) {
 						console.error(jobStatusError);
 						return res.status(500).json({ error: 'Internal server error' });
 					}
-		
+
 					for (let i = 0; i < jobStatusData.length; i++) {
 						oSumOfData.Coating += jobStatusData[i].Coating;
 						oSumOfData.Printing += jobStatusData[i].Printing;
@@ -1240,7 +1531,7 @@ app.start = function () {
 						oSumOfData.spotUV += jobStatusData[i].spotUV;
 						oSumOfData.Packing += jobStatusData[i].Packing;
 						oSumOfData.rawMaterial = jobStatusData[i].rawMaterial;
-						
+
 						if (jobStatusData[i].InvNo) {
 							oSumOfData.InvNo.push({
 								InvNo: jobStatusData[i].InvNo,
@@ -1254,7 +1545,7 @@ app.start = function () {
 							});
 						}
 					}
-		
+
 					const array = [oSumOfData];
 					res.status(200).json(array);
 				});
@@ -1263,7 +1554,7 @@ app.start = function () {
 				res.status(500).json({ error: 'Internal server error' });
 			}
 		});
-		
+
 
 		app.post('/getJobsWithCompany', function (req, res) {
 			try {
@@ -1272,12 +1563,12 @@ app.start = function () {
 				var selectedYear = payload.selectedYear;
 				var maxDate = payload.maxDate;
 				var minDate = payload.minDate;
-                var selectedYear =  selectedYear.toString();
-				if(payload.State){
+				var selectedYear = selectedYear.toString();
+				if (payload.State) {
 					var oFilter = {
-						and:[{ status: { nlike: "Dispatched" }}]
+						and: [{ status: { nlike: "Dispatched" } }]
 					}
-				}else{
+				} else {
 					var oFilter = {
 						and: [
 							{ CompanyId: { neq: null } },
@@ -1286,13 +1577,13 @@ app.start = function () {
 						]
 					}
 				}
-				
+
 				Job.find({
 					order: 'jobCardNo',
-					fields: { 
-						JobName:false,
-						UpdatedOn:false,
-						CreatedOn:false,
+					fields: {
+						JobName: false,
+						UpdatedOn: false,
+						CreatedOn: false,
 						// date:false,
 						poAttachment: false,
 						artworkAttachment: false,
@@ -1380,13 +1671,13 @@ app.start = function () {
 					},
 					// where: { "CompanyId": { "neq": null } },
 					// where: { status: "Dispatched" },
-					
+
 					// where: {
-                    //     "CompanyId": { "neq": null },
-                    //     "date": {
+					//     "CompanyId": { "neq": null },
+					//     "date": {
 					// 		"between": [minDate, maxDate]
 					// 	  }
-                    //   },
+					//   },
 					where: oFilter,
 					include: [{
 						relation: 'Company',
@@ -1394,18 +1685,18 @@ app.start = function () {
 							order: 'id',
 							fields: { "CompanyName": true }
 						}
-					},{
-						relation:'JobStatus',
-						scope:{	
+					}, {
+						relation: 'JobStatus',
+						scope: {
 							order: 'id',
-							fields:{
+							fields: {
 								"remark1": true,
 								"remark2": true,
 								"remark3": true
 							}
 						}
 					}
-				]
+					]
 				}, function (err, jobs) {
 					if (err) {
 						return res.status(500).send(err);
@@ -1423,13 +1714,13 @@ app.start = function () {
 				// var selectedYear = payload.selectedYear;
 				// var maxDate = payload.maxDate;
 				// var minDate = payload.minDate;
-                // var selectedYear =  selectedYear.toString();
+				// var selectedYear =  selectedYear.toString();
 				Job.find({
 					order: 'jobCardNo',
-					fields: { 
-						JobName:false,
-						UpdatedOn:false,
-						CreatedOn:false,
+					fields: {
+						JobName: false,
+						UpdatedOn: false,
+						CreatedOn: false,
 						// date:false,
 						poAttachment: false,
 						artworkAttachment: false,
@@ -1517,11 +1808,11 @@ app.start = function () {
 					},
 					where: { "CompanyId": { "neq": null } },
 					// where: {
-                    //     "CompanyId": { "neq": null },
-                    //     "date": {
+					//     "CompanyId": { "neq": null },
+					//     "date": {
 					// 		"between": [minDate, maxDate]
 					// 	  }
-                    //   },
+					//   },
 					//   where: {
 					// 	and: [
 					// 		{ CompanyId: { neq: null } },
@@ -1535,18 +1826,18 @@ app.start = function () {
 							order: 'id',
 							fields: { "CompanyName": true }
 						}
-					},{
-						relation:'JobStatus',
-						scope:{	
+					}, {
+						relation: 'JobStatus',
+						scope: {
 							order: 'id',
-							fields:{
+							fields: {
 								"remark1": true,
 								"remark2": true,
 								"remark3": true
 							}
 						}
 					}
-				]
+					]
 				}, function (err, jobs) {
 					if (err) {
 						return res.status(500).send(err);
@@ -1560,47 +1851,47 @@ app.start = function () {
 
 
 		app.post('/selectedDateJobStatus', (req, res) => {
-			
+
 			const Job = app.models.Job;
 			const JobStatus = app.models.JobStatus;
 			const { CreatedOnStart, CreatedOnEnd, cId } = req.body;
-		
+
 			try {
 				const startDate = CreatedOnStart;
 				const endDate = CreatedOnEnd;
-		
+
 				Job.find(
 					{
-					order: 'jobCardNo',
-					where: {
-						and: [
-							{ CreatedOn: { gte: startDate } },
-							{ CreatedOn: { lte: endDate } },
-							{ CompanyId: cId }
-						]
+						order: 'jobCardNo',
+						where: {
+							and: [
+								{ CreatedOn: { gte: startDate } },
+								{ CreatedOn: { lte: endDate } },
+								{ CompanyId: cId }
+							]
+						},
+						fields: { "JobStatus": true, "CompanyId": true, "jobCardNo": true, "qtyPcs": true, "jobCode": true, "poNo": true, "nameOFTheProduct": true, "paperPoNo": true },
+						include: [{
+							relation: 'Company',
+							scope: {
+								order: 'id',
+								fields: { "CompanyName": true }
+							}
+						}, {
+							relation: 'JobStatus',
+							scope: {
+								order: 'id',
+								fields: { "Printing": true, "UpdatedOn": true, "rawMaterial": true, "Coating": true, "Foiling": true, "Embossing": true, "InvNo": true, "Pasting": true, "spotUV": true, "Punching": true, "Packing": true, "noOfBoxPerPieces": true, "noOfPiecesToSend": true }
+							}
+						}]
 					},
-					fields: { "JobStatus":true, "CompanyId": true, "jobCardNo":true, "qtyPcs": true, "jobCode":true, "poNo":true, "nameOFTheProduct":true, "paperPoNo":true },
-					include: [{
-						relation: 'Company',
-						scope: {
-							order: 'id',
-							fields: { "CompanyName": true }
+					(jobError, jobStatusSelectedData) => {
+						if (jobError) {
+							console.error(jobError);
+							return res.status(500).send('Internal server error');
 						}
-					},{
-						relation: 'JobStatus',
-						scope: {
-							order: 'id',
-							fields: { "Printing": true, "UpdatedOn": true, "rawMaterial": true, "Coating": true, "Foiling": true, "Embossing": true, "InvNo": true, "Pasting": true, "spotUV": true, "Punching": true, "Packing": true, "noOfBoxPerPieces": true, "noOfPiecesToSend": true }
-						}
-					}]
-				},
-				 (jobError, jobStatusSelectedData) => {
-					if (jobError) {
-						console.error(jobError);
-						return res.status(500).send('Internal server error');
-					}
-					res.status(200).json(jobStatusSelectedData);
-				});
+						res.status(200).json(jobStatusSelectedData);
+					});
 			} catch (error) {
 				console.error(error);
 				return res.status(500).send('Internal server error');
@@ -1610,35 +1901,35 @@ app.start = function () {
 		app.post('/sendEmailExistUser', (req, res) => {
 			const User = app.models.User;
 			const AppUser = app.models.AppUser;
-		
+
 			const newCustomer = {};
 			for (const field in req.body) {
 				newCustomer[field] = req.body[field];
 			}
-		
+
 			const EmailId = newCustomer.EmailId;
 			const id = newCustomer.TechnicalId;
 			let password = newCustomer.password || generateRandomPassword();
-		
+
 			User.findOne({ where: { email: EmailId, id: id } }, (userFindError, userTableUser) => {
 				if (userFindError) {
 					console.error(userFindError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-		
+
 				AppUser.findOne({ where: { EmailId, TechnicalId: id } }, (appUserFindError, AppUser) => {
 					if (appUserFindError) {
 						console.error(appUserFindError);
 						return res.status(500).json({ error: 'Internal server error' });
 					}
-		
+
 					if (userTableUser) {
 						userTableUser.updateAttributes({ password: password, TempPass: password }, (updateError, updatedUser) => {
 							if (updateError) {
 								console.error('Error updating password:', updateError);
 								return res.status(500).send('Internal server error');
 							}
-		
+
 							const token = "";
 							const replacements = {
 								email: "noreply@aeonproducts.com",
@@ -1647,7 +1938,7 @@ app.start = function () {
 							};
 							const templateFileName = "NewUser.html"
 							const emailSubject = "[Confidential]Aeon Products Customer Portal Registration";
-		
+
 							sendEmail(EmailId, token, replacements, templateFileName, emailSubject)
 								.then(() => {
 									return res.status(200).json('Email sent successfully');
@@ -1663,7 +1954,7 @@ app.start = function () {
 				});
 			});
 		});
-		
+
 
 		// 	this.User = app.models.User;
 		// 	this.Param = app.models.Param;
@@ -1714,115 +2005,114 @@ app.start = function () {
 		// 	}
 		// });
 
-		
 		app.post('/JobsCustomer', (req, res) => {
 			const AppUser = app.models.AppUser;
 			const Job = app.models.Job;
 			const { id } = req.body;
-		
+
 			AppUser.findOne({ where: { id } }, (appUserError, AppUser) => {
 				if (appUserError) {
 					console.error('Error finding user:', appUserError);
 					return res.status(500).send('Internal server error');
 				}
-		
+
 				if (AppUser) {
 					const CompanyId = AppUser.CompanyId;
 					if (CompanyId) {
 						Job.find(
-							{ 
+							{
 								where: { CompanyId },
-								fields: { 
-								JobName:false,
-								UpdatedOn:false,
-								CreatedOn:false,
-								date:false,
-								poAttachment: false,
-								artworkAttachment: false,
-								poNo: false,
-								artworkCode: false,
-								clientPONo: false,
-								industry: false,
-								cartonType: false,
-								qtyPcs: false,
-								PaperGSM: false,
-								paperPoNo: false,
-								paperQuality: false,
-								printing: false,
-								color: false,
-								sizeL: false,
-								sizeW: false,
-								sizeH: false,
-								varLmt: false,
-								effects: false,
-								lock: false,
-								tF: false,
-								pF: false,
-								doubleCut: false,
-								trimTF: false,
-								trimPF: false,
-								noOfUps1: false,
-								noOfUps2: false,
-								noOfUps3: false,
-								noOfSheets1: false,
-								noOfSheets2: false,
-								wastage: false,
-								wtKgs: false,
-								printingSheetSizeL1: false,
-								printingSheetSizeW1: false,
-								printingSheetSizeL2: false,
-								printingMachine: false,
-								punchingMachine: false,
-								pastingMachine: false,
-								ref: false,
-								old: false,
-								none: false,
-								b2A: false,
-								none1: false,
-								none2: false,
-								batchNo: false,
-								mfgDate: false,
-								expDate: false,
-								correctionsInArtwork: false,
-								remarks: false,
-								totalAB: false,
-								profit: false,
-								totalCostOfJob: false,
-								costPerPc: false,
-								plate: false,
-								plate1: false,
-								plate2: false,
-								pantoneInks: false,
-								foilBlocks: false,
-								positive: false,
-								embossBlock: false,
-								punch: false,
-								punch1: false,
-								punch2: false,
-								reference: false,
-								cartonLength: false,
-								cartonWidth: false,
-								paperCost: false,
-								printingCharges: false,
-								varnishLamination: false,
-								embossing: false,
-								punching: false,
-								bSOPasting: false,
-								lBTOPasting: false,
-								packing: false,
-								transportation: false,
-								total: false,
-								plateCharges: false,
-								blanketCharges: false,
-								userName: false,
-								remarks1: false,
-								remarks2: false,
-								corrections1: false,
-								corrections2: false,
-								corrections3: false,
-							}, 
-							include: 'Company',
-						},
+								fields: {
+									JobName: false,
+									UpdatedOn: false,
+									CreatedOn: false,
+									date: false,
+									poAttachment: false,
+									artworkAttachment: false,
+									poNo: false,
+									artworkCode: false,
+									clientPONo: false,
+									industry: false,
+									cartonType: false,
+									qtyPcs: false,
+									PaperGSM: false,
+									paperPoNo: false,
+									paperQuality: false,
+									printing: false,
+									color: false,
+									sizeL: false,
+									sizeW: false,
+									sizeH: false,
+									varLmt: false,
+									effects: false,
+									lock: false,
+									tF: false,
+									pF: false,
+									doubleCut: false,
+									trimTF: false,
+									trimPF: false,
+									noOfUps1: false,
+									noOfUps2: false,
+									noOfUps3: false,
+									noOfSheets1: false,
+									noOfSheets2: false,
+									wastage: false,
+									wtKgs: false,
+									printingSheetSizeL1: false,
+									printingSheetSizeW1: false,
+									printingSheetSizeL2: false,
+									printingMachine: false,
+									punchingMachine: false,
+									pastingMachine: false,
+									ref: false,
+									old: false,
+									none: false,
+									b2A: false,
+									none1: false,
+									none2: false,
+									batchNo: false,
+									mfgDate: false,
+									expDate: false,
+									correctionsInArtwork: false,
+									remarks: false,
+									totalAB: false,
+									profit: false,
+									totalCostOfJob: false,
+									costPerPc: false,
+									plate: false,
+									plate1: false,
+									plate2: false,
+									pantoneInks: false,
+									foilBlocks: false,
+									positive: false,
+									embossBlock: false,
+									punch: false,
+									punch1: false,
+									punch2: false,
+									reference: false,
+									cartonLength: false,
+									cartonWidth: false,
+									paperCost: false,
+									printingCharges: false,
+									varnishLamination: false,
+									embossing: false,
+									punching: false,
+									bSOPasting: false,
+									lBTOPasting: false,
+									packing: false,
+									transportation: false,
+									total: false,
+									plateCharges: false,
+									blanketCharges: false,
+									userName: false,
+									remarks1: false,
+									remarks2: false,
+									corrections1: false,
+									corrections2: false,
+									corrections3: false,
+								},
+								include: 'Company',
+							},
 							(jobError, Jobs) => {
 								if (jobError) {
 									console.error('Error finding jobs:', jobError);
@@ -1839,7 +2129,7 @@ app.start = function () {
 				}
 			});
 		});
-		
+
 
 		app.post('/usersRemove', (req, res) => {
 			const userEmail = "dheeraj@soyuztechnologies.com";
