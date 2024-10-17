@@ -6,27 +6,11 @@
 	<Page showHeader="false">
 		<subHeader>
 			<OverflowToolbar>
-			   <Title text="Attachment Utility" level="H2"/>
-			   <!-- <ToolbarSpacer />
-			   <Button text="Add" type="Emphasized" icon="sap-icon://add" press="AddUserDialog"/>
-			   <Button text="Delete" type="Reject" press="getSelectedUserDetails" icon="sap-icon://delete" tooltip="Delete"/> -->
+			   <Title text="Attachments" level="H2"/>
 		   </OverflowToolbar>
 		</subHeader>
 		<fb:FilterBar class="classFilterBar" id="filterbarAttachments" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
-            <!-- <fb:filterItems></fb:filterItems> -->
 			<fb:filterGroupItems>
-			  <!-- <fb:FilterGroupItem name="Date" label="Date(Range)" groupName="Group1" visibleInFilterBar="true" >
-                <fb:control>
-                    <DateRangeSelection
-                        id="DRS3"
-                        showCurrentDateButton="true"
-                        showFooter="true"
-                        change="dateFilterOnUpdateDate"
-                        value= "{
-                            'type': 'sap.ui.model.type.DateInterval'
-                        }"/>
-                </fb:control>
-              </fb:FilterGroupItem> -->
 			  <fb:FilterGroupItem name="Date" label="Date(Range)" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control> 
 				<DateRangeSelection
@@ -48,6 +32,13 @@
 					<SearchField id="searchField" liveChange="onSearchCardCode"></SearchField>
 				</fb:control>
               </fb:FilterGroupItem>
+
+			  <fb:FilterGroupItem name="Orphan Find" label="Demo Button" groupName="Group1" visibleInFilterBar="true" >
+                <fb:control>
+					<Button text="Orphans" press="orphanDemoFunction"></Button>
+				</fb:control>
+              </fb:FilterGroupItem>
+
 			</fb:filterGroupItems>
 		  </fb:FilterBar>
 		<Table items="{appView>/jobsData}" id="idJobTable" growing="true" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs">  

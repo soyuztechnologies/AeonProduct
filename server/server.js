@@ -16,7 +16,7 @@ const moment = require('moment');
 
 
 var fs = require('fs');
-const { log, debug } = require('console');
+const { log, debug, error } = require('console');
 const { default: index } = require('async');
 var app = express();
 app = module.exports = loopback();
@@ -808,6 +808,86 @@ app.start = function () {
 			});
 		});
 
+		
+		// Only one time use --> Delete Orphans(Created by Lakshay)
+		app.post('/orphansDelete', (req, res) => {
+			const Job = app.models.Job;
+			const attachmentTable = app.models.Attachments;
+			var payload = [];
+			var attachmentArray = [];
+			var totalAttachments = [];
+			var usedAttachments = [];
+
+			Job.find({
+				include: {
+					relation: 'JobStatus'
+				}
+			}, (error, jobs) => {
+				if (error) {
+					return;
+				}
+				if (jobs) {
+					jobs.forEach((job) => {
+						let jobPayload = {
+							jobCardNo: job.jobCardNo,
+							PoAttach: job.PoAttach + 'PoNo',   // Assuming PoAttach is a field in the Job model
+							artworkCode: job.artworkCode + 'ArtworkNo',   // Assuming artworkCode is a field in the Job model
+							InvNo: job.JobStatus() && job.JobStatus().length > 0
+								? job.JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo') : '',   // Check if JobStatus exists before accessing
+							DeliveryNo: job.JobStatus() && job.JobStatus().length > 0
+								? job.JobStatus()[0].DeliveryNo.split(',').map(del => del + 'DelNo') : '' // Similar check for DeliveryNo
+						};
+						payload.push(jobPayload);
+					})
+					for (let i = 0; i < jobs.length; i++) {
+						attachmentArray.push(jobs[i].PoAttach + 'PoNo');
+						attachmentArray.push(jobs[i].artworkCode + 'ArtworkNo');
+						if (jobs[i].JobStatus() && jobs[i].JobStatus().length > 0) {
+							attachmentArray.push(...jobs[i].JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'));
+							attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
+						}
+					}
+
+					attachmentTable.find({
+						where: {
+							Key: { inq: attachmentArray }
+						}
+					}, (newError, attachmentGet) => {
+						if (newError) {
+							return;
+						}
+						if (attachmentGet.length > 0) {
+							attachmentGet.forEach(data => {
+								usedAttachments.push(data);
+							})
+						}
+					});
+
+					attachmentTable.find((error, att) => {
+						if (error) {
+							return;
+						}
+						if (att) {
+							totalAttachments.push(att);
+						}
+					})
+				}
+			});
+
+			attachmentTable.find((error, att) => {
+				if (error) {
+					return;
+				}
+				if (att) {
+					att.forEach(data => {
+						totalAttachments.push(data);
+					})
+				}
+			})
+
+
+		})
+
 		// Created by Lakshay - Taken Data from Job and Job Status Table
 		app.get('/Jobs', (req, res) => {
 
@@ -839,8 +919,10 @@ app.start = function () {
 							status: job.status,
 							PoAttach: job.PoAttach + 'PoNo',   // Assuming PoAttach is a field in the Job model
 							artworkCode: job.artworkCode + 'ArtworkNo',   // Assuming artworkCode is a field in the Job model
-							InvNo: job.JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'),   // Check if JobStatus exists before accessing
-							DeliveryNo: job.JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo') // Similar check for DeliveryNo
+							InvNo: job.JobStatus() && job.JobStatus().length > 0
+								? job.JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo') : '',   // Check if JobStatus exists before accessing
+							DeliveryNo: job.JobStatus() && job.JobStatus().length > 0
+								? job.JobStatus()[0].DeliveryNo.split(',').map(del => del + 'DelNo') : '' // Similar check for DeliveryNo
 						};
 						payload.push(jobPayload);
 					})
@@ -848,8 +930,10 @@ app.start = function () {
 					for (let i = 0; i < jobs.length; i++) {
 						attachmentArray.push(jobs[i].PoAttach + 'PoNo');
 						attachmentArray.push(jobs[i].artworkCode + 'ArtworkNo');
-						attachmentArray.push(...jobs[i].JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'));
-						attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
+						if (jobs[i].JobStatus() && jobs[i].JobStatus().length > 0) {
+							attachmentArray.push(...jobs[i].JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'));
+							attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
+						}
 					}
 					// attachmentArray = ["'080DelNo', 'PO#2024.pdfPoNo', '083DelNo', '087InvNo', '088DelNo'"];
 					// attachmentArray = ['080DelNo', 'PO#2024.pdfPoNo', '083DelNo', '087InvNo', '088DelNo']; 
@@ -873,10 +957,10 @@ app.start = function () {
 									if (getData.Type == 'PoNo' && payload[i].PoAttach == getData.Key) {
 										flag = true;
 									} else if (getData.Type == 'ArtworkCode' && payload[i].artworkCode == getData.Key) {
-											flag = true;
+										flag = true;
 									}
 									else if (getData.Type == 'InvNo') {
-										if(payload[i].InvNo.length > 0){
+										if (payload[i].InvNo.length > 0) {
 											let invArr = payload[i].InvNo;
 											invArr.forEach(data => {
 												if (data == getData.Key) {
@@ -885,8 +969,8 @@ app.start = function () {
 											})
 										}
 									}
-									else if (getData.Type == 'DelNo' ) {
-										if(payload[i].DeliveryNo.length > 0){
+									else if (getData.Type == 'DelNo') {
+										if (payload[i].DeliveryNo.length > 0) {
 											let delArr = payload[i].DeliveryNo;
 											delArr.forEach(data => {
 												if (data == getData.Key) {
@@ -896,7 +980,7 @@ app.start = function () {
 										}
 									}
 								})
-								
+
 								if (flag == false) {
 									delete payload[i];
 								}
@@ -904,7 +988,7 @@ app.start = function () {
 
 							return res.status(200).json(payload)
 						} else {
-							return res.status(200).json("Data Not Found");
+							return res.status(200).json("No data found with at least one attachment");
 						}
 					});
 				}
@@ -918,178 +1002,84 @@ app.start = function () {
 
 			attachments.destroyAll({
 				Key: { inq: ids }
-			},(AttachmentError, attachment) => {
-				if(AttachmentError){
+			}, (AttachmentError, attachment) => {
+				if (AttachmentError) {
 					console.error('Error finding Attachment:', AttachmentError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
 				if (attachment.count > 0) {
 					// If some attachments were deleted
 					res.status(200).send("Attachments Deleted Successfully");
-				  } else {
+				} else {
 					// If no attachments were found for deletion
 					res.status(404).send('No Attachments found with the provided Keys');
-				  }
+				}
 			})
 		});
 
 		//* Delete job and job status using jobCardNo
 		// Delete Job,job status and their attachments using id--.jobcardNo:Lakshay
 		app.post('/deleteJobsWithJobStatus', (req, res) => {
-			const JobStatus = app.models.JobStatus;
-			const Job = app.models.Job;
-			const attachments = app.models.Attachments;
-			const id = req.body;
-			let clientPO = '';
-			let artworkAttach = '';
-			let deliveryNo = '';
-			let InvNo = '';
-			let str = '';
+			const Job = app.models.Job;		//Getting Job table
+			const attachments = app.models.Attachments;    //Getting Job table
+			const id = req.body;		//Getting id as job-card no
+			var attachmentArray = [];	//array for storing attachment linked with this job
 
-
-
-			Job.findOne({ where: { jobCardNo: id } }, (jobError, job) => {
-				if (jobError) {
+			Job.find({
+				where: {
+					jobCardNo: id			//passing jobcard as id 
+				},
+				include: {
+					relation: 'JobStatus'		//hasMany Relation with JobStatus table
+				}
+			}, (jobError, jobData) => {		//returs jobTable data of this Id with linked JobStatus
+				if (jobError) {		//If error in getting job
 					console.error('Error finding job:', jobError);
 					return res.status(500).send('Internal server error');
 				}
-				if (job) {
-					if (job.PoAttach) {
-						clientPO = job.PoAttach + 'PoNo';
-						// For Deletetion of corresponding attachments.
-						attachments.findOne({ where: { Key: clientPO } }, (AttachmentError, poAttachment) => {
-							if (AttachmentError) {
-								console.error('Error finding attachments: ', AttachmentError);
-								str += "Attachment Error on PoAttach \n"
-								// return res.status(500).send('Internal Server Error');
-							}
-							if (poAttachment) {
-								poAttachment.remove((removeError) => {
-									if (removeError) {
-										console.error('Error deleting attachment:', removeError);
-										// return res.status(500).send('Internal server error');
-										str += "Error on removing Client PO Attachment \n"
-									}
-								})
-							} else {
-								str += "po Attachment Not Found\n"
-							}
-						})
-					} else {
-						str += "Job Client PO Attachment Not Found \n"
+				if (jobData) {		//If job is present
+					if (jobData['0'].PoAttach) {
+						attachmentArray.push(jobData['0'].PoAttach + 'PoNo')	//push ClientPo Attachment key in attachment array(key of Attachment Table)
 					}
-
-					if (job.ArtworkAttach) {
-						artworkAttach = job.ArtworkAttach + 'ArtworkNo';
-						// For Deletetion of corresponding attachments.
-						attachments.findOne({ where: { Key: artworkAttach } }, (AttachmentError, artWorkAttachment) => {
-							if (AttachmentError) {
-								console.error('Error finding attachments: ', jobError);
-								// return res.status(500).send('Internal Server Error');
-								str += "Attachment Error on Artwork \n"
-							}
-							if (artWorkAttachment) {
-								artWorkAttachment.remove((removeError) => {
-									if (removeError) {
-										console.error('Error deleting attachment:', removeError);
-										// return res.status(500).send('Internal server error');
-										str += "Error on removing Artwork Attachment \n"
-									}
-								})
-							} else {
-								str += "Artwork attachment not found \n"
-							}
-						})
-					} else {
-						str += "Artwork Attachment Not Found \n"
+					if (jobData['0'].artworkCode) {
+						attachmentArray.push(jobData['0'].PoAttach + 'ArtworkNo')	//push artwork Attachment key in attachment array(key of Attachment Table) 
 					}
-
-
-
-
-					job.remove((removeJobError) => {
-						if (removeJobError) {
-							console.error('Error deleting job:', removeJobError);
-							// return res.status(500).send('Internal server error');
-							str += 'Error on removing Job\n'
+					if (jobData['0'].JobStatus().length > 0) {	//check jobStatus is present or not
+						if (jobData['0'].JobStatus()['0'].InvNo) {	//check inv no is present or not
+							attachmentArray.push(...jobData['0'].JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
 						}
+						if (jobData['0'].JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+							attachmentArray.push(...jobData['0'].JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+						}
+					}
 
-						JobStatus.findOne({ where: { JobStatusId: id } }, (jobStatusError, jobStatus) => {
-							if (jobStatusError) {
-								console.error('Error finding job status:', jobStatusError);
-								// return res.status(500).send('Internal server error');
-								str += 'Error on Removing Job\n'
+					// To delete all attachments at once.
+					attachments.destroyAll({
+						Key: { inq: attachmentArray }		//pass attachment array as key of attachment table.
+					}, (AttachmentError) => {
+						if (AttachmentError) {
+							console.error('Error finding Attachment:', AttachmentError);
+							return res.status(500).json({ error: 'Internal server error' });
+						}
+					});
+					
+					// Removing job data
+					let jobsRemoved = 0;
+					jobData.forEach((job) => {
+						job.remove((removeError) => {
+							if (removeError) {
+								console.error('Error deleting job:', removeError);
+								return res.status(500).send('Error deleting job');
 							}
-
-							if (jobStatus) {
-								if (jobStatus.DeliveryNo) {
-									deliveryNo = jobStatus.DeliveryNo + 'DelNo';
-									// For Deletetion of corresponding attachments.
-									attachments.findOne({ where: { Key: deliveryNo } }, (AttachmentError, deliveryAttachment) => {
-										if (AttachmentError) {
-											console.error('Error finding attachments: ', jobError);
-											str += 'Attachment Error on Delivery Attach\n'
-											// return res.status(500).send('Internal Server Error');
-										}
-										if (deliveryAttachment) {
-											deliveryAttachment.remove((removeError) => {
-												if (removeError) {
-													console.error('Error deleting attachment:', removeError);
-													str += "Error on removing Delivery Attachments \n"
-													// return res.status(500).send('Internal server error');
-												}
-											})
-										} else {
-											str += 'Delivery Attachment Not Found'
-										}
-									})
-								} else {
-									str += "Job Delivery Attachment Not Found \n"
-								}
-
-								if (jobStatus.InvNo) {
-									InvNo = jobStatus.InvNo + 'InvNo';
-									// For Deletetion of corresponding attachments.
-									attachments.findOne({ where: { Key: InvNo } }, (AttachmentError, inventoryAttachment) => {
-										if (AttachmentError) {
-											console.error('Error finding attachments: ', jobError);
-											str += 'Attachment Error on Inv No\n'
-											// return res.status(500).send('Internal Server Error');
-										}
-										if (inventoryAttachment) {
-											inventoryAttachment.remove((removeError) => {
-												if (removeError) {
-													console.error('Error deleting attachment:', removeError);
-													// return res.status(500).send('Internal server error');
-													str += "Error on removing Inventory Attachment\n"
-												}
-											})
-										} else {
-											str += "Inventory Attachment Not Found\n"
-										}
-									})
-								} else {
-									str += "Job Invoice Attachment Not Found \n"
-								}
-								jobStatus.remove((removeJobStatusError) => {
-									if (removeJobStatusError) {
-										console.error('Error deleting job status:', removeJobStatusError);
-										// return res.status(500).send('Internal server error');
-										str += 'Error on removing Job Status\n'
-									}
-
-									res.status(200).send("Job and Relevent Job Related Data Deleted Successfully" + "\n" + str);
-								});
-							} else {
-								str += "Job Status Not Found /n"
-								res.status(200).send('Job Deleted Successfully' + '\n' + str);
+							jobsRemoved++;
+							if (jobsRemoved === jobData.length) {
+								res.status(200).json('Job(s) deleted successfully');
 							}
 						});
 					});
-				} else {
-					res.status(404).send('Job not found');
 				}
-			});
+
+			})
 		});
 
 		//* Get all users from the AppUser table

@@ -20,19 +20,17 @@ sap.ui.define([
 
 		_matchedHandler: function (oEvent) {
 			var oModel = this.getView().getModel("appView");
-			oModel.setProperty("/layout", "OneColumn");
+			oModel.setProperty("/layout", "OneColumn");		
 			this.getModel('appView').setProperty('/UserRole',"Admin");
-			this.jobsWithAtleastAttachment();
+			this.jobsWithAtleastAttachment();		//Function to find job with atleast 1 attachment
 		},
 
-
+		//Function to find job with atleast 1 attachment
 		jobsWithAtleastAttachment: function () {
 			var that = this;
-			this.middleWare.callMiddleWare("Jobs", "GET")
+			this.middleWare.callMiddleWare("Jobs", "GET")		//Calling Server.js/API endpoint /Jobs
 				.then(function (data, status, xhr) {
-					that.serverPayload(data);
-					// data = data.filter(element => element !== null);
-					// that.getView().getModel('appView').setProperty('/jobsData', data);
+					that.serverPayload(data);		//Send coming data from /Jobs endpoint to function.
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -40,35 +38,48 @@ sap.ui.define([
 
 		},
 
+		// Function used at only once for finding attachemnets without Job's.
+		orphanDemoFunction : function(){
+			var that = this;
+			this.middleWare.callMiddleWare("orphansDelete","POST").then(function(data){
+				console.log(data);
+			}).catch(function(data){
+				console.log(data);
+			});
+		},
+
+		// Custumize data accoring to requiremnt.
 		serverPayload : function(data){
 			if(data){
 				if(typeof(data) == 'string'){
-					MessageBox.show(data);
+					MessageToast.show(data);		//If not getting any job with attachement then server send only response as string.
 				}else{
-					data = data.filter(element => element !== null);
+					data = data.filter(element => element !== null);	//filter the data with null data.
 					data.forEach(data =>{
-						data.date = data.date.split('T')[0]
+						data.date = data.date.split('T')[0]		//Chnage date in DD-MM-YYYY format.
 					});
-					this.getView().getModel('appView').setProperty('/jobsData', data);
+					this.getView().getModel('appView').setProperty('/jobsData', data);		//Data set in model to show in UI in form of table.
 				}
 			}
 
 		},
 
+		// Date Filter function
 		onDateRangeChange: function (oEvent) {
 			// Get the selected date range
-			var sDateRange = oEvent.getSource().getValue().split(" - ");
+			var sDateRange = oEvent.getSource().getValue().split(" - ");	//split start and end date.
 			if(sDateRange){
 				var aFilters = [];
-				aFilters.push(new Filter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]));
+				aFilters.push(new Filter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]));	//push filter
 	
-				// Get the binding of the table and apply the filters
-				var oTable = this.getView().byId("idJobTable");
+				// Get the binding of the table and apply the filter
+				var oTable = this.getView().byId("idJobTable");		
 				var oBinding = oTable.getBinding("items");			
-				oBinding.filter(aFilters);
+				oBinding.filter(aFilters);		//Filter items acc to selected date
 			}
 		},
 
+		// Filter data acc to job card no.
 		onSearchCardCode: function (oEvent) {
 			var sSearchValue = this.getView().byId('searchField').getValue();
 			var aFilters = [];
@@ -79,12 +90,13 @@ sap.ui.define([
 			// Get the binding of the table and apply the filters
 			var oTable = this.getView().byId("idJobTable");
 			var oBinding = oTable.getBinding("items");
-			oBinding.filter(aFilters);
+			oBinding.filter(aFilters);	//Filter items acc to job card data
 		},
 
+		// Function triggers on pressing/selecting table row
 		rowItemsPressJobs: function (oEvent) {
 
-			var oParameter = oEvent.getParameter('listItem');
+			var oParameter = oEvent.getParameter('listItem');	//getting selected row item object
 			var oPath = oEvent.getParameter("listItem").getBindingContextPath();
 			this.bindingPath = oPath;
 			var omodel = this.getView().getModel("appView");
@@ -101,6 +113,7 @@ sap.ui.define([
 
 		},
 
+		// Modifying data acc to fragment send data of row in array to bind with fragment.
 		updateFragmentData: function (sData) {
 			let aItems = [];
 			aItems.push({
@@ -128,7 +141,7 @@ sap.ui.define([
 
 			return aItems;
 		},
-		//* This function will open the dialog to check if the job is already present or not and which job u want to keep or not
+		//* This function will open a fragment and shows their attachments
 		ojobValidation: function () {
 			var oView = this.getView();
 			if (!this.jobsvalidatioin) {
@@ -150,6 +163,7 @@ sap.ui.define([
 			});
 		},
 
+		// Set attachment data and endpoint in form of url for attachment call
 		showAttachment: function (oEvent) {
 			var dModel = this.getView().getModel();
 			var that = this;
@@ -157,7 +171,6 @@ sap.ui.define([
 			var oModel = this.getView().getModel("appView");
 			var url = "";
 
-			// debugger;
 			if (oData.attachmentName == "Client PO Code") {
 				var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
@@ -175,6 +188,7 @@ sap.ui.define([
 				oModel.setProperty("/uploadDocumnetTitle", "Invoice Attachment");
 			}
 
+			//getting api attachment data
 			dModel.read(url, {
 				success: function (data) {
 					that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
@@ -189,6 +203,8 @@ sap.ui.define([
 
 
 		},
+
+		// Open the dialog to display the attachment in PDF form.
 		oDialogOpen: function () {
 			var oView = this.getView();
 			var that = this;
@@ -206,19 +222,22 @@ sap.ui.define([
 			}
 			return this.oUploadDialog;
 		},
+
+		// Close the pdf format.
 		onReject: function () {
 			this.oDialogOpen().then(function (oDialog) {
 				oDialog.close();
 			})
 		},
 
+		// Function to delete selected attachments
 		onDeleteAttachment: function () {
 			var that = this;
 			let AttachmentDeletion = this.getView().byId('idJobHasAttachment')._aSelectedPaths;
 			if (AttachmentDeletion.length == 0) {
 				MessageToast.show("Please select a Attachment to delete");
 			} else {
-				let payload = [];
+				let payload = [];		//push all the attachents in form attachment table id's
 				if (AttachmentDeletion.length > 0) {
 					for (let i = 0; i < AttachmentDeletion.length; i++) {
 						let data = this.getModel('appView').getProperty(AttachmentDeletion[i]);
@@ -236,11 +255,11 @@ sap.ui.define([
 						}
 					}
 				}
-				MessageBox.confirm("Are you sure you want to delete Attachments", {
+				MessageBox.confirm("Are you sure you want to delete Attachments", {			
 					actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
 					onClose: function (sAction) {
 						if (sAction === "OK") {
-								that.middleWare.callMiddleWare("deleteAttachments", "POST", payload)
+								that.middleWare.callMiddleWare("deleteAttachments", "POST", payload)		//delete attachment api call
 									.then(function (data, status, xhr) {
 										MessageToast.show(data);
 									})
