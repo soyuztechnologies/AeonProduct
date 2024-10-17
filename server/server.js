@@ -915,35 +915,21 @@ app.start = function () {
 		app.post('/deleteAttachments', (req, res) => {
 			const attachments = app.models.Attachments;
 			const ids = req.body;
-			attachments.find({
-				where: {
-					Key: { inq: ids }
-				}
-			}, (AttachmentError, attachment) => {
-				if (AttachmentError) {
+
+			attachments.destroyAll({
+				Key: { inq: ids }
+			},(AttachmentError, attachment) => {
+				if(AttachmentError){
 					console.error('Error finding Attachment:', AttachmentError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-				if (attachment) {
-					const validAttachments = attachment.filter(item => item && item.__data && item.__data.Key);
-					validAttachments.forEach((attachDelete => {
-						attachDelete.remove((removeError) => {
-							if (removeError) {
-								console.error('Error in deleting attachment:', removeError);
-								return res.status(500).send('Internal server error');
-							}
-						})
-					}))
-					// attachment.remove((removeError) => {
-					// 	if (removeError) {
-					// 		console.error('Error in deleting attachment:', removeError);
-					// 		return res.status(500).send('Internal server error');
-					// 	} else {
-					// 		res.status(200).send('Attachment Deleted Successfully');
-					// 	}
-					// })
-					res.status(200).send('Attachment Deleted Successfully')
-				}
+				if (attachment.count > 0) {
+					// If some attachments were deleted
+					res.status(200).send("Attachments Deleted Successfully");
+				  } else {
+					// If no attachments were found for deletion
+					res.status(404).send('No Attachments found with the provided Keys');
+				  }
 			})
 		});
 

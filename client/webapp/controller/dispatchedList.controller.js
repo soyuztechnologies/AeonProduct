@@ -20,6 +20,7 @@ sap.ui.define([
 
 		_matchedHandler: function (oEvent) {
 			var oModel = this.getView().getModel("appView");
+			oModel.setProperty("/layout", "OneColumn");
 			this.getModel('appView').setProperty('/UserRole',"Admin");
 			this.jobsWithAtleastAttachment();
 		},
@@ -156,21 +157,21 @@ sap.ui.define([
 			var oModel = this.getView().getModel("appView");
 			var url = "";
 
-			debugger;
+			// debugger;
 			if (oData.attachmentName == "Client PO Code") {
-				var url = `/Attachments('${oData.attachmentCode + "PoNo"}')`
+				var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
 			}
 			if (oData.attachmentName == "Artwork Attchment") {
-				var url = `/Attachments('${oData.attachmentCode + "ArtworkNo"}')`;
+				var url = `/Attachments('${oData.attachmentCode}')`;
 				oModel.setProperty("/uploadDocumnetTitle", "Artwork Attachment");
 			}
 			if (oData.attachmentName == "Delivery No") {
-				var url = `/Attachments('${oData.attachmentCode + "DelNo"}')`
+				var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Delivery Attachment");
 			}
 			if (oData.attachmentName == "Invoice No") {
-				var url = `/Attachments('${oData.attachmentCode + "InvNo"}')`
+				var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Invoice Attachment");
 			}
 
