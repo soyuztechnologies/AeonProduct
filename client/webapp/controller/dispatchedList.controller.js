@@ -40,11 +40,17 @@ sap.ui.define([
 		},
 
 		serverPayload : function(data){
-			data = data.filter(element => element !== null);
-			data.forEach(data =>{
-				data.date = data.date.split('T')[0]
-			});
-			this.getView().getModel('appView').setProperty('/jobsData', data);
+			if(data){
+				if(typeof(data) == 'string'){
+					MessageBox.show(data);
+				}else{
+					data = data.filter(element => element !== null);
+					data.forEach(data =>{
+						data.date = data.date.split('T')[0]
+					});
+					this.getView().getModel('appView').setProperty('/jobsData', data);
+				}
+			}
 
 		},
 
@@ -216,20 +222,16 @@ sap.ui.define([
 					for (let i = 0; i < AttachmentDeletion.length; i++) {
 						let data = this.getModel('appView').getProperty(AttachmentDeletion[i]);
 						if (data.attachmentName == "Client PO Code") {
-							let str = data.attachmentCode + "PoNo";
-							payload.push(str);
+							payload.push(data.attachmentCode);
 						}
 						if (data.attachmentName == "Artwork Attchment") {
-							let str = data.attachmentCode + "ArtworkNo";
-							payload.push(str);
+							payload.push(data.attachmentCode);
 						}
 						if (data.attachmentName == "Delivery No") {
-							let str = data.attachmentCode + "DelNo";
-							payload.push(str);
+							payload.push(data.attachmentCode);
 						}
 						if (data.attachmentName == "Invoice No") {
-							let str = data.attachmentCode + "InvNo";
-							payload.push(str);
+							payload.push(data.attachmentCode);
 						}
 					}
 				}
@@ -237,16 +239,13 @@ sap.ui.define([
 					actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
 					onClose: function (sAction) {
 						if (sAction === "OK") {
-							payload.forEach(data => {
-								that.middleWare.callMiddleWare("deleteAttachments", "POST", data)
+								that.middleWare.callMiddleWare("deleteAttachments", "POST", payload)
 									.then(function (data, status, xhr) {
-										//
 										MessageToast.show(data);
 									})
 									.catch(function (jqXhr, textStatus, errorMessage) {
 										that.middleWare.errorHandler(jqXhr, that);
 									});
-							})
 						}
 					}
 				});

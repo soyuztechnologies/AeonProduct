@@ -871,117 +871,81 @@ app.start = function () {
 								let flag = false;
 								validAttachments.forEach(getData => {
 									if (getData.Type == 'PoNo' && payload[i].PoAttach == getData.Key) {
-											flag = true;
+										flag = true;
 									} else if (getData.Type == 'ArtworkCode' && payload[i].artworkCode == getData.Key) {
 											flag = true;
-									} else if (getData.Type == 'InvNo' && payload[i].InvNo.length>0) {
-										let invArr = payload[i].InvNo;
-										invArr.forEach(data => {
-											if (data == getData.Key) {
-												flag = true;
-											}
-										})
-									} else if (getData.Type == 'DelNo' && payload[i].DeliveryNo.length>0) {
-										let delArr = payload[i].DeliveryNo;
-										delArr.forEach(data => {
-											if (data == getData.Key) {
-												flag = true;
-											}
-										})
-									} else if (flag == false) {
-										delete payload[i];
+									}
+									else if (getData.Type == 'InvNo') {
+										if(payload[i].InvNo.length > 0){
+											let invArr = payload[i].InvNo;
+											invArr.forEach(data => {
+												if (data == getData.Key) {
+													flag = true;
+												}
+											})
+										}
+									}
+									else if (getData.Type == 'DelNo' ) {
+										if(payload[i].DeliveryNo.length > 0){
+											let delArr = payload[i].DeliveryNo;
+											delArr.forEach(data => {
+												if (data == getData.Key) {
+													flag = true;
+												}
+											})
+										}
 									}
 								})
+								
+								if (flag == false) {
+									delete payload[i];
+								}
 							}
 
 							return res.status(200).json(payload)
 						} else {
 							return res.status(200).json("Data Not Found");
 						}
-
-
-
-						// attachmentArray.forEach(data=>{
-						// 	attachmentGet.forEach(getData =>{
-						// 		if(data == getData.Key){
-						// 			count ++;
-						// 		}
-						// 	})
-						// })
-						// if (attachmentGet) {
-						// 	res.status(200).json(attachmentGet);
-						// }
 					});
-
-					// attachments.findOne({ where: {Key:attachmentArray} },(AttachmentError,attachment) =>{
-					// 	if(AttachmentError){
-					// 		console.error('Error finding Attachment:', AttachmentError);
-					// 		return res.status(500).send('Internal server error');					
-					// 	}
-					// 	if(attachment){
-					// 		attachment.remove((removeError)=>{
-					// 			if(removeError){
-					// 				console.error('Error in deleting attachment:', removeError);
-					// 				return res.status(500).send('Internal server error');
-					// 			}else{
-					// 				res.status(200).send('Attachment Deleted Successfully');
-					// 			}
-					// 		})
-					// 	}else{
-					// 		res.status(200).send('Attachment Not Found')
-					// 	}
-					// })
 				}
-
-
-				//take Po, artwork, inv, del and create them accordingly to send in atatchments table
-				// attachments fire a call, and check how many of them exists , get only id in response, attchment Key
-
-				//then while creating the payload, check if the attachment exists or not
-
-				// if(jobs && jobs.length>0){
-				// 	for(let i=0;i<jobs.length;i++){
-				// 		payload[i] = {
-				// 			jobName: jobs[i].JobName,
-				// 			jobCardNo: jobs[i].jobCardNo,
-				// 			date: jobs[i].UpdatedOn,
-				// 			status: jobs[i].status,
-				// 			artworkCode: jobs[i].artworkCode,
-				// 			PoAttach: jobs[i].PoAttach,
-				// 			InvNo: jobs[i].JobStatus || null,         // InvNo from JobStatus
-				// 			DeliveryNo: status.DeliveryNo || null // DeliveryNo from JobStatus
-				// 		}
-				// 		console.log(payload);
-				// 	}
-				// 	console.log(payload);
-
-				// }
 			});
 		});
 
 		// Delete Attachments Only for New Created Screen by Lakshay.
 		app.post('/deleteAttachments', (req, res) => {
 			const attachments = app.models.Attachments;
-			const id = req.body;
-			attachments.findOne({ where: { Key: id } }, (AttachmentError, attachment) => {
+			const ids = req.body;
+			attachments.find({
+				where: {
+					Key: { inq: ids }
+				}
+			}, (AttachmentError, attachment) => {
 				if (AttachmentError) {
 					console.error('Error finding Attachment:', AttachmentError);
-					return res.status(500).send('Internal server error');
+					return res.status(500).json({ error: 'Internal server error' });
 				}
 				if (attachment) {
-					attachment.remove((removeError) => {
-						if (removeError) {
-							console.error('Error in deleting attachment:', removeError);
-							return res.status(500).send('Internal server error');
-						} else {
-							res.status(200).send('Attachment Deleted Successfully');
-						}
-					})
-				} else {
-					res.status(200).send('Attachment Not Found')
+					const validAttachments = attachment.filter(item => item && item.__data && item.__data.Key);
+					validAttachments.forEach((attachDelete => {
+						attachDelete.remove((removeError) => {
+							if (removeError) {
+								console.error('Error in deleting attachment:', removeError);
+								return res.status(500).send('Internal server error');
+							}
+						})
+					}))
+					// attachment.remove((removeError) => {
+					// 	if (removeError) {
+					// 		console.error('Error in deleting attachment:', removeError);
+					// 		return res.status(500).send('Internal server error');
+					// 	} else {
+					// 		res.status(200).send('Attachment Deleted Successfully');
+					// 	}
+					// })
+					res.status(200).send('Attachment Deleted Successfully')
 				}
 			})
-		})
+		});
 
 		//* Delete job and job status using jobCardNo
 		// Delete Job,job status and their attachments using id--.jobcardNo:Lakshay
