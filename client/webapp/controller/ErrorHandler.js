@@ -15,7 +15,6 @@ sap.ui.define([
 		 * @alias ent.ui.ecommerce.controller.ErrorHandler
 		 */
 		constructor : function (oComponent) {
-			debugger;
 			this._oResourceBundle = oComponent.getModel("i18n").getResourceBundle();
 			this._oComponent = oComponent;
 			this._oModel = oComponent.getModel();
@@ -66,7 +65,6 @@ sap.ui.define([
 			}
 			else{
 				// this.forAttachment = that.getView().getModel("appView").getProperty("/forAttachment")
-				debugger;
 				if(window.location.href.includes("/allPrinters")){
 					return;
 				}

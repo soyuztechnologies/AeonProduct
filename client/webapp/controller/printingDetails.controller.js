@@ -2628,7 +2628,6 @@ sap.ui.define([
 		},
 
 		updateStatusValue: function () {
-			// debugger
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;

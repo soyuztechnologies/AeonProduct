@@ -753,7 +753,6 @@ sap.ui.define([
       return `${formattedDay}/${formattedMonth}/${year}`;
     },
     excelDateToJSDate: function(excelDate) {
-      debugger
     // Excel date epoch is January 0, 1900 (yes, 0 is January)
     const excelEpoch = new Date(1900, 0, 0);
 

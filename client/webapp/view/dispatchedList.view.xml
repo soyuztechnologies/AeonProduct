@@ -35,11 +35,11 @@
 				</fb:control>
               </fb:FilterGroupItem>
 
-			  <fb:FilterGroupItem name="Orphan Find" label="Demo Button" groupName="Group1" visibleInFilterBar="true" >
+			  <!-- <fb:FilterGroupItem name="Orphan Find" label="Demo Button" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
 					<Button text="Orphans" press="orphanDemoFunction"></Button>
 				</fb:control>
-              </fb:FilterGroupItem>
+              </fb:FilterGroupItem> -->
 
 			</fb:filterGroupItems>
 		  </fb:FilterBar>

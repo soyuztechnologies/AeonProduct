@@ -32,6 +32,11 @@ sap.ui.define([
 			var that = this;
 			this.middleWare.callMiddleWare("Companies", "GET")
 				.then(function (data, status, xhr) {
+					let newData = {
+						"CompanyName": "None",
+						"id": null
+					};
+					data.unshift(newData);
 					that.getView().getModel('appView').setProperty('/CompanyDetails', data);
 				}
 				)
@@ -40,21 +45,6 @@ sap.ui.define([
 				});
 		},
 
-		selectedCompany: function (oEvent) {
-			let selectedKey = oEvent.getSource().getSelectedKey();
-			// var aFilters = [];
-
-			if (selectedKey) {
-				this.aFilters.push(new Filter("companyId", FilterOperator.EQ, selectedKey));
-			} else {
-				let index = this.aFilters.findIndex(item => item.sPath === 'companyId');
-				delete this.aFilters[index];
-			}
-			// Get the binding of the table and apply the filters
-			var oTable = this.getView().byId("idJobTable");
-			var oBinding = oTable.getBinding("items");
-			oBinding.filter(this.aFilters);	//Filter items acc to job card data
-		},
 
 		//Function to find job with atleast 1 attachment
 		jobsWithAtleastAttachment: function () {
@@ -107,18 +97,43 @@ sap.ui.define([
 		onDateRangeChange: function (oEvent) {
 			// Get the selected date range
 			var sDateRange = oEvent.getSource().getValue().split(" - ");	//split start and end date.
-			if (sDateRange) {
-				// var aFilters = [];
-				this.aFilters.push(new Filter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]));	//push filter
+			// if (sDateRange) {
+			// 	// var aFilters = [];
+			// 	this.aFilters.push(new Filter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]));	//push filter
 
-				// Get the binding of the table and apply the filter
-				var oTable = this.getView().byId("idJobTable");
-				var oBinding = oTable.getBinding("items");
-				oBinding.filter(this.aFilters);		//Filter items acc to selected date
-			} else {
-				let index = this.aFilters.findIndex(item => item.sPath === 'date');
-				delete this.aFilters[index];
+			// 	// Get the binding of the table and apply the filter
+			// 	var oTable = this.getView().byId("idJobTable");
+			// 	var oBinding = oTable.getBinding("items");
+			// 	oBinding.filter(this.aFilters);		//Filter items acc to selected date
+			// } else {
+			// 	let index = this.aFilters.findIndex(item => item.sPath === 'date');
+			// 	delete this.aFilters[index];
+			// }
+			if (sDateRange) {
+				this.tableFilter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]);
 			}
+			else {
+				this.tableFilter("date", FilterOperator.BT, sDateRange);
+			}
+		},
+
+
+		selectedCompany: function (oEvent) {
+			let selectedKey = oEvent.getSource().getSelectedKey();
+			// var aFilters = [];
+
+			// if (selectedKey) {
+			// 	this.aFilters.push(new Filter("companyId", FilterOperator.EQ, selectedKey));
+			// } else {
+			// 	let index = this.aFilters.findIndex(item => item.sPath === 'companyId');
+			// 	delete this.aFilters[index];
+			// }
+			// // Get the binding of the table and apply the filters
+			// var oTable = this.getView().byId("idJobTable");
+			// var oBinding = oTable.getBinding("items");
+			// oBinding.filter(this.aFilters);	//Filter items acc to job card data
+
+			this.tableFilter("companyId", FilterOperator.EQ, selectedKey);
 		},
 
 		// Filter data acc to job card no.
@@ -126,16 +141,18 @@ sap.ui.define([
 			var sSearchValue = this.getView().byId('searchField').getValue();
 			// var aFilters = [];
 
-			if (sSearchValue) {
-				this.aFilters.push(new Filter("jobCardNo", FilterOperator.Contains, sSearchValue));
-			}else {
-				let index = this.aFilters.findIndex(item => item.sPath === 'jobCardNo');
-				delete this.aFilters[index];
-			}
-			// Get the binding of the table and apply the filters
-			var oTable = this.getView().byId("idJobTable");
-			var oBinding = oTable.getBinding("items");
-			oBinding.filter(this.aFilters);	//Filter items acc to job card data
+			// if (sSearchValue) {
+			// 	this.aFilters.push(new Filter("jobCardNo", FilterOperator.Contains, sSearchValue));
+			// } else {
+			// 	let index = this.aFilters.findIndex(item => item.sPath === 'jobCardNo');
+			// 	delete this.aFilters[index];
+			// }
+			this.tableFilter("jobCardNo", FilterOperator.Contains, sSearchValue);
+
+			// // Get the binding of the table and apply the filters
+			// var oTable = this.getView().byId("idJobTable");
+			// var oBinding = oTable.getBinding("items");
+			// oBinding.filter(this.aFilters);	//Filter items acc to job card data
 		},
 
 		// Function triggers on pressing/selecting table row
@@ -314,7 +331,23 @@ sap.ui.define([
 				});
 			}
 
-		}
+		},
 
+		tableFilters: {},
+		tableFilter: function (filterProperty, operator, value, value2) {
+			var oTable = this.getView().byId("idJobTable");
+			if (value) {
+				if (typeof (value) === 'object') {
+					this.tableFilters[filterProperty] = value;
+				} else if (filterProperty === 'date') {
+					this.tableFilters[filterProperty] = new Filter(filterProperty, operator, value, value2);
+				} else {
+					this.tableFilters[filterProperty] = new Filter(filterProperty, operator, value);
+				}
+			} else {
+				delete this.tableFilters[filterProperty];
+			}
+			oTable.getBinding("items").filter(Object.values(this.tableFilters));
+		},
 	});
 });
