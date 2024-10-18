@@ -888,6 +888,20 @@ app.start = function () {
 
 		})
 
+		// Company call
+		app.get('/Companies', (req, res) => {
+			const company = app.models.Company;
+
+			company.find((error, companyDetail) => {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+				if(companyDetail){
+					return res.status(200).json(companyDetail);
+				}
+			});
+		});
 		// Created by Lakshay - Taken Data from Job and Job Status Table
 		app.get('/Jobs', (req, res) => {
 
@@ -913,6 +927,7 @@ app.start = function () {
 
 					jobs.forEach((job) => {
 						let jobPayload = {
+							companyId : job.CompanyId,
 							jobName: job.JobName,
 							jobCardNo: job.jobCardNo,
 							date: job.UpdatedOn,
@@ -935,8 +950,6 @@ app.start = function () {
 							attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
 						}
 					}
-					// attachmentArray = ["'080DelNo', 'PO#2024.pdfPoNo', '083DelNo', '087InvNo', '088DelNo'"];
-					// attachmentArray = ['080DelNo', 'PO#2024.pdfPoNo', '083DelNo', '087InvNo', '088DelNo']; 
 
 					attachmentTable.find({
 						where: {
@@ -956,36 +969,41 @@ app.start = function () {
 								validAttachments.forEach(getData => {
 									if (getData.Type == 'PoNo' && payload[i].PoAttach == getData.Key) {
 										flag = true;
+										return;
 									} else if (getData.Type == 'ArtworkCode' && payload[i].artworkCode == getData.Key) {
 										flag = true;
+										return;
 									}
-									else if (getData.Type == 'InvNo') {
+									else if (getData.Type == 'InvNo' && payload[i].InvNo) {
 										if (payload[i].InvNo.length > 0) {
 											let invArr = payload[i].InvNo;
 											invArr.forEach(data => {
 												if (data == getData.Key) {
 													flag = true;
+													return;
 												}
 											})
 										}
 									}
-									else if (getData.Type == 'DelNo') {
+									else if (getData.Type == 'DelNo' && payload[i].DeliveryNo) {
 										if (payload[i].DeliveryNo.length > 0) {
 											let delArr = payload[i].DeliveryNo;
 											delArr.forEach(data => {
 												if (data == getData.Key) {
 													flag = true;
+													return;
 												}
 											})
 										}
 									}
 								})
-
 								if (flag == false) {
 									delete payload[i];
 								}
-							}
 
+								
+							}
+							payload = payload.filter(payload => payload !== null);
 							return res.status(200).json(payload)
 						} else {
 							return res.status(200).json("No data found with at least one attachment");
@@ -1010,9 +1028,6 @@ app.start = function () {
 				if (attachment.count > 0) {
 					// If some attachments were deleted
 					res.status(200).send("Attachments Deleted Successfully");
-				} else {
-					// If no attachments were found for deletion
-					res.status(404).send('No Attachments found with the provided Keys');
 				}
 			})
 		});
@@ -1063,7 +1078,7 @@ app.start = function () {
 						}
 					});
 					
-					// Removing job data
+					// Removing job and job status
 					let jobsRemoved = 0;
 					jobData.forEach((job) => {
 						job.remove((removeError) => {
@@ -1081,6 +1096,10 @@ app.start = function () {
 
 			})
 		});
+
+		app.post('/jobWithCompany',(req,res)=>{
+			
+		})
 
 		//* Get all users from the AppUser table
 		app.get('/Appusers', (req, res) => {

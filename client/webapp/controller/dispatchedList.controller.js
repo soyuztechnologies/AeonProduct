@@ -20,9 +20,40 @@ sap.ui.define([
 
 		_matchedHandler: function (oEvent) {
 			var oModel = this.getView().getModel("appView");
-			oModel.setProperty("/layout", "OneColumn");		
-			this.getModel('appView').setProperty('/UserRole',"Admin");
-			this.jobsWithAtleastAttachment();		//Function to find job with atleast 1 attachment
+			oModel.setProperty("/layout", "OneColumn");
+			this.getModel('appView').setProperty('/UserRole', "Admin");		//As by user role as admin all sidenavigation - navigation list items will visible.
+			this.jobsWithAtleastAttachment();
+			this.getCompanyData();
+			this.aFilters = [];
+			this.getModel("appView").updateBindings();
+		},
+
+		getCompanyData: function () {
+			var that = this;
+			this.middleWare.callMiddleWare("Companies", "GET")
+				.then(function (data, status, xhr) {
+					that.getView().getModel('appView').setProperty('/CompanyDetails', data);
+				}
+				)
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+		},
+
+		selectedCompany: function (oEvent) {
+			let selectedKey = oEvent.getSource().getSelectedKey();
+			// var aFilters = [];
+
+			if (selectedKey) {
+				this.aFilters.push(new Filter("companyId", FilterOperator.EQ, selectedKey));
+			} else {
+				let index = this.aFilters.findIndex(item => item.sPath === 'companyId');
+				delete this.aFilters[index];
+			}
+			// Get the binding of the table and apply the filters
+			var oTable = this.getView().byId("idJobTable");
+			var oBinding = oTable.getBinding("items");
+			oBinding.filter(this.aFilters);	//Filter items acc to job card data
 		},
 
 		//Function to find job with atleast 1 attachment
@@ -30,7 +61,15 @@ sap.ui.define([
 			var that = this;
 			this.middleWare.callMiddleWare("Jobs", "GET")		//Calling Server.js/API endpoint /Jobs
 				.then(function (data, status, xhr) {
-					that.serverPayload(data);		//Send coming data from /Jobs endpoint to function.
+					if (typeof (data) == 'string') {
+						MessageToast.show(data);		//If not getting any job with attachement then server send only response as string.
+					} else {
+						data.forEach(data => {
+							data.date = data.date.split('T')[0]		//Chnage date in DD-MM-YYYY format.
+						});
+						that.getView().getModel('appView').setProperty('/JobsData', data);		//Data set in model to show in UI in form of table.
+					}
+					// that.serverPayload(data);		//Send coming data from /Jobs endpoint to function.
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -39,66 +78,70 @@ sap.ui.define([
 		},
 
 		// Function used at only once for finding attachemnets without Job's.
-		orphanDemoFunction : function(){
+		orphanDemoFunction: function () {
 			var that = this;
-			this.middleWare.callMiddleWare("orphansDelete","POST").then(function(data){
+			this.middleWare.callMiddleWare("orphansDelete", "POST").then(function (data) {
 				console.log(data);
-			}).catch(function(data){
+			}).catch(function (data) {
 				console.log(data);
 			});
 		},
 
 		// Custumize data accoring to requiremnt.
-		serverPayload : function(data){
-			if(data){
-				if(typeof(data) == 'string'){
-					MessageToast.show(data);		//If not getting any job with attachement then server send only response as string.
-				}else{
-					data = data.filter(element => element !== null);	//filter the data with null data.
-					data.forEach(data =>{
-						data.date = data.date.split('T')[0]		//Chnage date in DD-MM-YYYY format.
-					});
-					this.getView().getModel('appView').setProperty('/jobsData', data);		//Data set in model to show in UI in form of table.
-				}
-			}
+		// serverPayload : function(data){
+		// 	if(data){
+		// 		if(typeof(data) == 'string'){
+		// 			MessageToast.show(data);		//If not getting any job with attachement then server send only response as string.
+		// 		}else{
+		// 			data = data.filter(element => element !== null);	//filter the data with null data.
+		// 			data.forEach(data =>{
+		// 				data.date = data.date.split('T')[0]		//Chnage date in DD-MM-YYYY format.
+		// 			});
+		// 			this.getView().getModel('appView').setProperty('/jobsData', data);		//Data set in model to show in UI in form of table.
+		// 		}
+		// 	}
 
-		},
+		// },
 
 		// Date Filter function
 		onDateRangeChange: function (oEvent) {
 			// Get the selected date range
 			var sDateRange = oEvent.getSource().getValue().split(" - ");	//split start and end date.
-			if(sDateRange){
-				var aFilters = [];
-				aFilters.push(new Filter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]));	//push filter
-	
+			if (sDateRange) {
+				// var aFilters = [];
+				this.aFilters.push(new Filter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]));	//push filter
+
 				// Get the binding of the table and apply the filter
-				var oTable = this.getView().byId("idJobTable");		
-				var oBinding = oTable.getBinding("items");			
-				oBinding.filter(aFilters);		//Filter items acc to selected date
+				var oTable = this.getView().byId("idJobTable");
+				var oBinding = oTable.getBinding("items");
+				oBinding.filter(this.aFilters);		//Filter items acc to selected date
+			} else {
+				let index = this.aFilters.findIndex(item => item.sPath === 'date');
+				delete this.aFilters[index];
 			}
 		},
 
 		// Filter data acc to job card no.
 		onSearchCardCode: function (oEvent) {
 			var sSearchValue = this.getView().byId('searchField').getValue();
-			var aFilters = [];
+			// var aFilters = [];
 
 			if (sSearchValue) {
-				aFilters.push(new Filter("jobCardNo", FilterOperator.Contains, sSearchValue));
+				this.aFilters.push(new Filter("jobCardNo", FilterOperator.Contains, sSearchValue));
+			}else {
+				let index = this.aFilters.findIndex(item => item.sPath === 'jobCardNo');
+				delete this.aFilters[index];
 			}
 			// Get the binding of the table and apply the filters
 			var oTable = this.getView().byId("idJobTable");
 			var oBinding = oTable.getBinding("items");
-			oBinding.filter(aFilters);	//Filter items acc to job card data
+			oBinding.filter(this.aFilters);	//Filter items acc to job card data
 		},
 
 		// Function triggers on pressing/selecting table row
 		rowItemsPressJobs: function (oEvent) {
 
 			var oParameter = oEvent.getParameter('listItem');	//getting selected row item object
-			var oPath = oEvent.getParameter("listItem").getBindingContextPath();
-			this.bindingPath = oPath;
 			var omodel = this.getView().getModel("appView");
 			var sData = oParameter.getBindingContext('appView').getObject();
 			let updatedData = this.updateFragmentData(sData);
@@ -233,7 +276,7 @@ sap.ui.define([
 		// Function to delete selected attachments
 		onDeleteAttachment: function () {
 			var that = this;
-			let AttachmentDeletion = this.getView().byId('idJobHasAttachment')._aSelectedPaths;
+			let AttachmentDeletion = this.getView().byId('idJobHasAttachment').getSelectedContextPaths();
 			if (AttachmentDeletion.length == 0) {
 				MessageToast.show("Please select a Attachment to delete");
 			} else {
@@ -255,17 +298,17 @@ sap.ui.define([
 						}
 					}
 				}
-				MessageBox.confirm("Are you sure you want to delete Attachments", {			
+				MessageBox.confirm("Are you sure you want to delete Attachments", {
 					actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
 					onClose: function (sAction) {
 						if (sAction === "OK") {
-								that.middleWare.callMiddleWare("deleteAttachments", "POST", payload)		//delete attachment api call
-									.then(function (data, status, xhr) {
-										MessageToast.show(data);
-									})
-									.catch(function (jqXhr, textStatus, errorMessage) {
-										that.middleWare.errorHandler(jqXhr, that);
-									});
+							that.middleWare.callMiddleWare("deleteAttachments", "POST", payload)		//delete attachment api call
+								.then(function (data, status, xhr) {
+									MessageToast.show(data);
+								})
+								.catch(function (jqXhr, textStatus, errorMessage) {
+									that.middleWare.errorHandler(jqXhr, that);
+								});
 						}
 					}
 				});

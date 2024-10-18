@@ -21,9 +21,11 @@
                 </fb:control>
               </fb:FilterGroupItem>
 
-              <fb:FilterGroupItem name="Customer Id" label="Customer Id" groupName="Group1" visibleInFilterBar="true" >
+              <fb:FilterGroupItem name="Company" label="Company" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
-					<SearchField liveChange="onSearchCustomer"></SearchField>
+					<Select  items="{appView>/CompanyDetails}" forceSelection="false" change="selectedCompany" >
+							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
+						</Select>
 				</fb:control>
               </fb:FilterGroupItem>
 
@@ -41,7 +43,7 @@
 
 			</fb:filterGroupItems>
 		  </fb:FilterBar>
-		<Table items="{appView>/jobsData}" id="idJobTable" growing="true" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs">  
+		<Table items="{appView>/JobsData}" id="idJobTable" growing="true" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs">  
 			<columns>
 				<Column width="12em">
 					<!-- <Text text="Job Card No. and Name" /> -->

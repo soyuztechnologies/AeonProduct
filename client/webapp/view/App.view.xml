@@ -70,7 +70,7 @@
                         <!-- <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}" text="Delivering" key="Delivering"/> -->
 			        </tnt:NavigationListItem>
 
-                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' ? true : false}" text="Job with Attachments" icon="sap-icon://attachment"  key="dispatchedList"/>
+                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Job with Attachments" icon="sap-icon://attachment"  key="dispatchedList"/>
                     
                 </tnt:NavigationList>
             </tnt:SideNavigation>
