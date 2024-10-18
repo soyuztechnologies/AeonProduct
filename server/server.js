@@ -678,7 +678,7 @@ app.start = function () {
 
 		// * this post call is sending the email to the user,when user is registering into the portal.
 		app.post('/remarkEmailSend', async (req, res) => {
-			debugger
+			// debugger
 			try {
 				var payload = req.body;
 				var jobCardNo = payload.JobData;
@@ -892,7 +892,12 @@ app.start = function () {
 		app.get('/Companies', (req, res) => {
 			const company = app.models.Company;
 
-			company.find((error, companyDetail) => {
+			company.find({
+				order: 'jobCardNo',
+				fields: {
+					CompanyName: true,
+					id : true
+				}},(error, companyDetail) => {
 				if (error) {
 					console.error(error);
 					return res.status(500).json({ error: 'Internal server error' });
@@ -917,6 +922,16 @@ app.start = function () {
 				},
 				include: {
 					relation: 'JobStatus'
+				},
+				fields : {
+					CompanyId : true,
+					JobName : true,
+					jobCardNo : true,
+					UpdatedOn : true,
+					status : true,
+					PoAttach : true,
+					artworkCode : true,
+					JobStatus : true
 				}
 			}, (error, jobs) => {
 				if (error) {
@@ -1025,10 +1040,7 @@ app.start = function () {
 					console.error('Error finding Attachment:', AttachmentError);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-				if (attachment.count > 0) {
-					// If some attachments were deleted
-					res.status(200).send("Attachments Deleted Successfully");
-				}
+				res.status(200).send("Attachments Deleted Successfully");
 			})
 		});
 
