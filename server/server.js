@@ -813,10 +813,12 @@ app.start = function () {
 		app.post('/orphansDelete', (req, res) => {
 			const Job = app.models.Job;
 			const attachmentTable = app.models.Attachments;
-			var payload = [];
-			var attachmentArray = [];
-			var totalAttachments = [];
-			var usedAttachments = [];
+			var jobsData = [];				//Pushing Job data only with jobcardNo and attachments.
+			var totalAttachments = [];		//Total attachments present in application
+			var attachmentArray = [];		//pushing attachment that are linked with jobid
+			var availableAttachments = [];		//attachment in which data is present
+
+			//unused attachments = total-used attachments.
 
 			Job.find({
 				include: {
@@ -828,6 +830,7 @@ app.start = function () {
 				}
 				if (jobs) {
 					jobs.forEach((job) => {
+						// Payload for single job as object.
 						let jobPayload = {
 							jobCardNo: job.jobCardNo,
 							PoAttach: job.PoAttach + 'PoNo',   // Assuming PoAttach is a field in the Job model
@@ -837,8 +840,10 @@ app.start = function () {
 							DeliveryNo: job.JobStatus() && job.JobStatus().length > 0
 								? job.JobStatus()[0].DeliveryNo.split(',').map(del => del + 'DelNo') : '' // Similar check for DeliveryNo
 						};
-						payload.push(jobPayload);
+						jobsData.push(jobPayload);		//Pushing one by one payload in jobsData array.
 					})
+
+					// Loop over jobs and push all job attachments in attachmentArray.
 					for (let i = 0; i < jobs.length; i++) {
 						attachmentArray.push(jobs[i].PoAttach + 'PoNo');
 						attachmentArray.push(jobs[i].artworkCode + 'ArtworkNo');
@@ -848,6 +853,7 @@ app.start = function () {
 						}
 					}
 
+					// To pass total attachment linked with job and as reponse find available attachments
 					attachmentTable.find({
 						where: {
 							Key: { inq: attachmentArray }
@@ -857,33 +863,30 @@ app.start = function () {
 							return;
 						}
 						if (attachmentGet.length > 0) {
-							attachmentGet.forEach(data => {
-								usedAttachments.push(data);
+							attachmentGet.forEach(data=>{
+								availableAttachments.push(data.Key)
 							})
 						}
+						
 					});
 
+					// Getting total attachments of the application.
 					attachmentTable.find((error, att) => {
 						if (error) {
 							return;
 						}
 						if (att) {
-							totalAttachments.push(att);
+							if(att.length>0){
+								att.forEach(data=>{
+									totalAttachments.push(data.Key);
+								})
+							}
 						}
 					})
 				}
 			});
 
-			attachmentTable.find((error, att) => {
-				if (error) {
-					return;
-				}
-				if (att) {
-					att.forEach(data => {
-						totalAttachments.push(data);
-					})
-				}
-			})
+			
 
 
 		})
@@ -1058,9 +1061,12 @@ app.start = function () {
 
 						// Checking which attachments are present as 'totalAttachments' array as attachment array.
 						attachments.find({
-							inq: {
-								Key: totalAttachments
+							where : {
+								Key: {
+									inq: totalAttachments
+								}
 							}
+							
 						}, (error, foundedAttachments) => {
 							if (error) {
 								res.status(500).json('Error');

@@ -349,7 +349,7 @@ sap.ui.define([
 			let jobIds = [];
 
 			// Selected Paths-----for deletion
-			var selectedPath = oTable.getSelectedContextPaths();
+			let selectedPath = oTable.getSelectedContextPaths();
 
 			if (selectedPath.length == 0) {	//Attachment Not found condition
 				MessageToast.show("Please select Attachment to delete");
@@ -389,10 +389,10 @@ sap.ui.define([
 					let data = tableOject[i];
 					let attachArray = [];
 					attachArray.push(data.PoAttach, data.artworkCode, ...data.InvNo, ...data.DeliveryNo);
-					newPayloadData[i] = {		//Payload sended to server
+					newPayloadData.push( {		//Payload sended to server
 						jobCardNo: data.jobCardNo,
 						attachments: attachArray
-					}
+					})
 				}
 			}
 
@@ -410,6 +410,7 @@ sap.ui.define([
 							.then(function (data, status, xhr) {
 								that.jobsWithAtleastAttachment();
 								MessageToast.show(data);
+								oTable.setSelectedContextPaths(false);
 							})
 							.catch(function (jqXhr, textStatus, errorMessage) {
 								that.middleWare.errorHandler(jqXhr, that);

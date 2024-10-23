@@ -35,12 +35,11 @@
 				</fb:control>
               </fb:FilterGroupItem>
 
-			  <fb:FilterGroupItem name="Delete Attachment" label="Delete" groupName="Group1" visibleInFilterBar="true" >
+			  <!-- <fb:FilterGroupItem name="Delete Attachment" label="Delete" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
-					<!-- <SearchField id="deleteTableAttachments" liveChange="onSearchCardCode"></SearchField> -->
 					<Button text="Delete" type="Reject" press="onDeleteAttachmentTable"></Button>
 				</fb:control>
-              </fb:FilterGroupItem>
+              </fb:FilterGroupItem> -->
 
 			  <!-- <fb:FilterGroupItem name="Orphan Find" label="Demo Button" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
@@ -51,6 +50,14 @@
 			</fb:filterGroupItems>
 		  </fb:FilterBar>
 		<Table items="{appView>/JobsData}" id="idJobTable" growing="true" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs" mode="MultiSelect">  
+			<headerToolbar>
+				<Toolbar >
+					<Title text="Attachments Table"></Title>
+					<ToolbarSpacer ></ToolbarSpacer>
+					<!-- <ToolbarSeparator/> -->
+					<Button text="Delete" type="Reject" press="onDeleteAttachmentTable" icon="sap-icon://delete"/>
+				</Toolbar>
+			</headerToolbar>
 			<columns>
 				<Column width="12em">
 					<!-- <Text text="Job Card No. and Name" /> -->
