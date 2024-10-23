@@ -25,7 +25,7 @@
 				<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin' ? true :false}"/>     
 			</content>
 		</Toolbar> -->
-				<List   id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}"> 
+				<List id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}"> 
 					<items>
 						<custom:customListItem type="Navigation" backgroundColor="{path : 'appView>status', formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
 							

@@ -73,6 +73,7 @@ sap.ui.define([
 			// this.getUserName();
 			// this.getJobAccordingCustomer();
 		},
+
    //* Delete Call for jobs with there crossponding job status
         onDeleteJobs:function(){
 
@@ -93,11 +94,14 @@ sap.ui.define([
                      if(sAction === "OK"){
                         that.middleWare.callMiddleWare("deleteJobsWithJobStatus", "POST", payload)
                         .then(function (data, status, xhr) {
-                            //
-                            MessageToast.show("Job Deleted Successfully");
-                            that.getJobsDataByCompanyFilter()
-                            that.getRouter().navTo("allPrinters");
-                            oModel.updateBindings();
+							if(typeof(data) === 'string'){
+								MessageToast.show(data);
+							}else{
+								MessageToast.show("Job Deleted Successfully");
+								that.getJobsDataByCompanyFilter()
+								that.getRouter().navTo("allPrinters");
+								oModel.updateBindings();
+							}
                         })
                         .catch(function (jqXhr, textStatus, errorMessage) {
                             that.middleWare.errorHandler(jqXhr, that);

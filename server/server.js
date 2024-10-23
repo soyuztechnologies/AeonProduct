@@ -1034,98 +1034,116 @@ app.start = function () {
 		app.post('/deleteAttachments', (req, res) => {
 			const attachments = app.models.Attachments;
 			const job = app.models.Job;
-			let requestedPayload = req.body;
-			let totalAttachments = [];
-			let jobIds = [];
-			
+			let requestedPayload = req.body;		//Requested body in json form with jobCardNo and attachment array.
+			let totalAttachments = [];				//Empty array to store all attachments.
+			let jobIds = [];						//Empty array to store all jobId's
+
 			// For getting email
-			const User = app.models.User;
-			const AccessToken = app.models.AccessToken;
-
-			let emailId = '';
-			const cookieHeader = req.headers.cookie;
-			const cookies = cookie.parse(cookieHeader);
-			const sessionCookie = cookies.soyuz_session;
-			
+			const User = app.models.User;		//user's table
+			const AccessToken = app.models.AccessToken;		//accesstoken table to provide key for user's table.
+			const cookieHeader = req.headers.cookie;		//getting cookies from req header
+			const cookies = cookie.parse(cookieHeader);		//Convert in object
+			const sessionCookie = cookies.soyuz_session;	//taken sessionCookie -> id of accesstoken
 
 
-			AccessToken.findOne({where : {id:sessionCookie}},(tookenError,accessToken) => {
-				let userId = accessToken.userId;
-				User.findOne({where : {id:userId}},(userError,user)=>{
-					if(user){
-						emailId = user.email;
 
+			AccessToken.findOne({ where: { id: sessionCookie } }, (tookenError, accessToken) => {
+				let userId = accessToken.userId;		//id of user's table
+				User.findOne({ where: { id: userId } }, (userError, user) => {
+					if (user) {
 						requestedPayload.forEach(data => {
-							totalAttachments.push(...data.attachments);
-							jobIds.push(data.jobCardNo);
+							totalAttachments.push(...data.attachments);		//pushing total attachment get from ui.
+							jobIds.push(data.jobCardNo);					//pushing total job id's got from ui.
 						})
-						attachments.destroyAll({
-							Key: { inq: totalAttachments }
-						}, (AttachmentError, attachment) => {
-							if (AttachmentError) {
-								console.error('Error finding Attachment:', AttachmentError);
-								return res.status(500).json({ error: 'Internal server error' });
-							}
-							if (attachment) {
-								if(attachment.count==0){
-									res.status(200).send("Attachments Deleted Successfully");
-								}else{
 
-									job.find({ where: { jobCardNo: { inq: jobIds } } }, (err, jobInstances) => {
-										if (err) {
-											console.error('Error finding jobs:', err);
-											return;
-										}
-				
-										if (!jobInstances || jobInstances.length === 0) {
-											console.log('No jobs found for the provided IDs');
-											return;
-										}
-										let i=0;
-										// Step 2: Update the specific field for each job instance
-										jobInstances.forEach(jobInstance => {
-											let jInst = jobInstance.attachmentDeleteInfoJob // Update the field
-											let payload = {
-												attachments: requestedPayload[i].attachments,
-												emailId : emailId,
-												time : new Date()
-											}
-											i++;
-											if (jInst == null || jInst == "null") {
-												var result = payload;
-											} else {
-												var result = jInst.split()
-												result.push(payload);
-											}
-											result = JSON.stringify(result);
-				
-											// Step 3: Save the updated job instances
-											job.updateAll(
-												{ jobCardNo: jobInstance.jobCardNo }, // Filter to select jobs by IDs
-												{ attachmentDeleteInfoJob: result }, // Update the specific field
-												(err, info) => {
-													if (err) {
-														console.error('Error updating jobs:', err);
-														return;
-													}
-												}
-											);
-										});
-										res.status(200).send("Attachments Deleted Successfully");
-				
-				
-									});
-								}
+						// Checking which attachments are present as 'totalAttachments' array as attachment array.
+						attachments.find({
+							inq: {
+								Key: totalAttachments
 							}
-							// res.status(200).send("Attachments Deleted Successfully");
+						}, (error, foundedAttachments) => {
+							if (error) {
+								res.status(500).json('Error');
+							}
+							let deleteAttachment = [];		//Attachment that we want to delete.
+							foundedAttachments.forEach(data => {
+								deleteAttachment.push(data.Key)
+							})
+
+							// To delete all attachments at a time.
+							attachments.destroyAll({
+								Key: { inq: deleteAttachment }
+							}, (AttachmentError, attachment) => {
+								if (AttachmentError) {
+									console.error('Error finding Attachment:', AttachmentError);
+									return res.status(500).json({ error: 'Internal server error' });
+								}
+								if (attachment) {
+									if (attachment.count == 0) {		//Checking deleted attachment count
+										res.status(200).send("Attachments Deleted Successfully");
+									} else {
+
+										// Job table as key job id
+										job.find({ where: { jobCardNo: { inq: jobIds } } }, (err, jobInstances) => {
+											if (err) {
+												console.error('Error finding jobs:', err);
+												return;
+											}
+
+											if (!jobInstances || jobInstances.length === 0) {
+												console.error('No jobs found for the provided IDs');
+												return;
+											}
+
+											// Here 'i' is declared to check one by one requested payload and assign new field value according to it for particular job.
+											let i = 0;
+											// Step 2: Update the specific field for each job instance
+											jobInstances.forEach(jobInstance => {
+												let deleteattachmentInfo = jobInstance.attachmentDeleteInfoJob // getting 'attachmentDeleteInfoJob' for particular job
+												let payload = {
+													attachments: [...new Set(deleteAttachment)].filter(item => new Set(requestedPayload[i].attachments).has(item)),		//filter only deleted attachment for particular job.
+													emailId: user.email,
+													time: new Date()
+												}
+												i++;
+												if (deleteattachmentInfo == null || deleteattachmentInfo == "null") {		//Case of no data present in field 
+													var result = payload;
+												} else {
+													var result = deleteattachmentInfo.split()		//data present in field then convert field string to array.	
+													result.push(payload);
+												}
+												result = JSON.stringify(result);		//again covert into string.
+
+												// Step 3: Save the updated job instances
+												job.updateAll(
+													{ jobCardNo: jobInstance.jobCardNo }, // Filter to select jobs by IDs
+													{ attachmentDeleteInfoJob: result }, // Update the specific field
+													(err, info) => {
+														if (err) {
+															console.error('Error updating jobs:', err);
+															return;
+														}
+													}
+												);
+											});
+											res.status(200).send("Attachments Deleted Successfully");
+
+
+										});
+									}
+								}
+								// res.status(200).send("Attachments Deleted Successfully");
+							})
 						})
+
+
 
 					}
 				})
 			})
 
 
-			
+
 		});
 
 		//* Delete job and job status using jobCardNo
@@ -1134,63 +1152,120 @@ app.start = function () {
 			const Job = app.models.Job;		//Getting Job table
 			const attachments = app.models.Attachments;    //Getting Job table
 			const id = req.body;		//Getting id as job-card no
-			var attachmentArray = [];	//array for storing attachment linked with this job
+			var attachmentArray = [];	//array for storing attachment linked with job
 
+			// For Validation only to check same attachments are not present in other Jobs.
+			// let response;
+			let allAttachments = [];
 			Job.find({
-				where: {
-					jobCardNo: id			//passing jobcard as id 
-				},
 				include: {
 					relation: 'JobStatus'		//hasMany Relation with JobStatus table
 				}
-			}, (jobError, jobData) => {		//returs jobTable data of this Id with linked JobStatus
-				if (jobError) {		//If error in getting job
-					console.error('Error finding job:', jobError);
-					return res.status(500).send('Internal server error');
+			}, (err, response) => {
+				if (err) {
+					console.log('Error');
 				}
-				if (jobData) {		//If job is present
-					if (jobData['0'].PoAttach) {
-						attachmentArray.push(jobData['0'].PoAttach + 'PoNo')	//push ClientPo Attachment key in attachment array(key of Attachment Table)
-					}
-					if (jobData['0'].artworkCode) {
-						attachmentArray.push(jobData['0'].PoAttach + 'ArtworkNo')	//push artwork Attachment key in attachment array(key of Attachment Table) 
-					}
-					if (jobData['0'].JobStatus().length > 0) {	//check jobStatus is present or not
-						if (jobData['0'].JobStatus()['0'].InvNo) {	//check inv no is present or not
-							attachmentArray.push(...jobData['0'].JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
-						}
-						if (jobData['0'].JobStatus()['0'].DeliveryNo) {		//check del no is present or not
-							attachmentArray.push(...jobData['0'].JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
-						}
-					}
-
-					// To delete all attachments at once.
-					attachments.destroyAll({
-						Key: { inq: attachmentArray }		//pass attachment array as key of attachment table.
-					}, (AttachmentError) => {
-						if (AttachmentError) {
-							console.error('Error finding Attachment:', AttachmentError);
-							return res.status(500).json({ error: 'Internal server error' });
-						}
-					});
-
-					// Removing job and job status
-					let jobsRemoved = 0;
-					jobData.forEach((job) => {
-						job.remove((removeError) => {
-							if (removeError) {
-								console.error('Error deleting job:', removeError);
-								return res.status(500).send('Error deleting job');
+				// Response as all job with jobstatus
+				if (response) {
+					response.forEach(data => {
+						if (!(data.jobCardNo === id)) {
+							allAttachments.push(data.PoAttach + 'PoNo');
+							allAttachments.push(data.artworkCode + 'ArtworkNo');
+							if (data.JobStatus && data.JobStatus().length > 0) {
+								if (data.JobStatus()['0'].InvNo) {	//check inv no is present or not
+									allAttachments.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+								}
+								if (data.JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+									allAttachments.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+								}
 							}
-							jobsRemoved++;
-							if (jobsRemoved === jobData.length) {
-								res.status(200).json('Job(s) deleted successfully');
+						} else {
+							attachmentArray.push(data.PoAttach + 'PoNo');
+							attachmentArray.push(data.artworkCode + 'ArtworkNo');
+							if (data.JobStatus && data.JobStatus().length > 0) {
+								if (data.JobStatus()['0'].InvNo) {	//check inv no is present or not
+									attachmentArray.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+								}
+								if (data.JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+									attachmentArray.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+								}
+							}
+						}
+					})
+
+					let commonAttachment = [];
+					attachmentArray.forEach(data => {
+						if (allAttachments.includes(data)) {
+							commonAttachment.push(data);
+						}
+					})
+					if (commonAttachment.length > 0) {
+						res.status(200).json('Found common attachment in other Jobs : ' + commonAttachment);
+						return;
+					}
+				}
+
+				Job.find({
+					where: {
+						jobCardNo: id			//passing jobcard as id 
+					},
+					include: {
+						relation: 'JobStatus'		//hasMany Relation with JobStatus table
+					}
+				}, (jobError, jobData) => {		//returs jobTable data of this Id with linked JobStatus
+					if (jobError) {		//If error in getting job
+						console.error('Error finding job:', jobError);
+						return res.status(500).send('Internal server error');
+					}
+					if (jobData) {		//If job is present
+						if (jobData['0'].PoAttach) {
+							attachmentArray.push(jobData['0'].PoAttach + 'PoNo')	//push ClientPo Attachment key in attachment array(key of Attachment Table)
+						}
+						if (jobData['0'].artworkCode) {
+							attachmentArray.push(jobData['0'].PoAttach + 'ArtworkNo')	//push artwork Attachment key in attachment array(key of Attachment Table) 
+						}
+						if (jobData['0'].JobStatus && jobData['0'].JobStatus().length > 0) {	//check jobStatus is present or not
+							if (jobData['0'].JobStatus()['0'].InvNo) {	//check inv no is present or not
+								attachmentArray.push(...jobData['0'].JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+							}
+							if (jobData['0'].JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+								attachmentArray.push(...jobData['0'].JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+							}
+						}
+
+						// To delete all attachments at once.
+						attachments.destroyAll({
+							Key: { inq: attachmentArray }		//pass attachment array as key of attachment table.
+						}, (AttachmentError) => {
+							if (AttachmentError) {
+								console.error('Error finding Attachment:', AttachmentError);
+								return res.status(500).json({ error: 'Internal server error' });
 							}
 						});
-					});
-				}
 
-			})
+						// Removing job and job status
+						let jobsRemoved = 0;
+						jobData.forEach((job) => {
+							job.remove((removeError) => {
+								if (removeError) {
+									console.error('Error deleting job:', removeError);
+									return res.status(500).send('Error deleting job');
+								}
+								jobsRemoved++;
+								if (jobsRemoved === jobData.length) {
+									res.status(200).json('Job(s) deleted successfully');
+								}
+							});
+						});
+					}
+
+				})
+
+			});
+
+
+
+
 		});
 
 		app.post('/jobWithCompany', (req, res) => {
