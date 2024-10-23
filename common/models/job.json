@@ -397,6 +397,10 @@
 		},
 		"corrections3": {
 			"type": "string"
+		},
+		"attachmentDeleteInfoJob" : {
+			"type" : "string",
+			"default": null
 		}
 	},
 	"scope": {

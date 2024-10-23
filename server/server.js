@@ -16,7 +16,7 @@ const moment = require('moment');
 
 
 var fs = require('fs');
-const { log, debug, error } = require('console');
+const { log, debug, error, time } = require('console');
 const { default: index } = require('async');
 var app = express();
 app = module.exports = loopback();
@@ -808,7 +808,7 @@ app.start = function () {
 			});
 		});
 
-		
+
 		// Only one time use --> Delete Orphans(Created by Lakshay)
 		app.post('/orphansDelete', (req, res) => {
 			const Job = app.models.Job;
@@ -888,7 +888,7 @@ app.start = function () {
 
 		})
 
-		// Company call
+		// Company call -- Lakshay
 		app.get('/Companies', (req, res) => {
 			const company = app.models.Company;
 
@@ -896,13 +896,14 @@ app.start = function () {
 				order: 'jobCardNo',
 				fields: {
 					CompanyName: true,
-					id : true
-				}},(error, companyDetail) => {
+					id: true
+				}
+			}, (error, companyDetail) => {
 				if (error) {
 					console.error(error);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-				if(companyDetail){
+				if (companyDetail) {
 					return res.status(200).json(companyDetail);
 				}
 			});
@@ -923,15 +924,16 @@ app.start = function () {
 				include: {
 					relation: 'JobStatus'
 				},
-				fields : {
-					CompanyId : true,
-					JobName : true,
-					jobCardNo : true,
-					UpdatedOn : true,
-					status : true,
-					PoAttach : true,
-					artworkCode : true,
-					JobStatus : true
+				fields: {
+					CompanyId: true,
+					JobName: true,
+					jobCardNo: true,
+					UpdatedOn: true,
+					status: true,
+					PoAttach: true,
+					artworkCode: true,
+					JobStatus: true,
+					attachmentDeleteInfoJob: true
 				}
 			}, (error, jobs) => {
 				if (error) {
@@ -942,7 +944,7 @@ app.start = function () {
 
 					jobs.forEach((job) => {
 						let jobPayload = {
-							companyId : job.CompanyId,
+							companyId: job.CompanyId,
 							jobName: job.JobName,
 							jobCardNo: job.jobCardNo,
 							date: job.UpdatedOn,
@@ -1016,7 +1018,7 @@ app.start = function () {
 									delete payload[i];
 								}
 
-								
+
 							}
 							payload = payload.filter(payload => payload !== null);
 							return res.status(200).json(payload)
@@ -1031,17 +1033,99 @@ app.start = function () {
 		// Delete Attachments Only for New Created Screen by Lakshay.
 		app.post('/deleteAttachments', (req, res) => {
 			const attachments = app.models.Attachments;
-			const ids = req.body;
+			const job = app.models.Job;
+			let requestedPayload = req.body;
+			let totalAttachments = [];
+			let jobIds = [];
+			
+			// For getting email
+			const User = app.models.User;
+			const AccessToken = app.models.AccessToken;
 
-			attachments.destroyAll({
-				Key: { inq: ids }
-			}, (AttachmentError, attachment) => {
-				if (AttachmentError) {
-					console.error('Error finding Attachment:', AttachmentError);
-					return res.status(500).json({ error: 'Internal server error' });
-				}
-				res.status(200).send("Attachments Deleted Successfully");
+			let emailId = '';
+			const cookieHeader = req.headers.cookie;
+			const cookies = cookie.parse(cookieHeader);
+			const sessionCookie = cookies.soyuz_session;
+			
+
+
+			AccessToken.findOne({where : {id:sessionCookie}},(tookenError,accessToken) => {
+				let userId = accessToken.userId;
+				User.findOne({where : {id:userId}},(userError,user)=>{
+					if(user){
+						emailId = user.email;
+
+						requestedPayload.forEach(data => {
+							totalAttachments.push(...data.attachments);
+							jobIds.push(data.jobCardNo);
+						})
+						attachments.destroyAll({
+							Key: { inq: totalAttachments }
+						}, (AttachmentError, attachment) => {
+							if (AttachmentError) {
+								console.error('Error finding Attachment:', AttachmentError);
+								return res.status(500).json({ error: 'Internal server error' });
+							}
+							if (attachment) {
+								if(attachment.count==0){
+									res.status(200).send("Attachments Deleted Successfully");
+								}else{
+
+									job.find({ where: { jobCardNo: { inq: jobIds } } }, (err, jobInstances) => {
+										if (err) {
+											console.error('Error finding jobs:', err);
+											return;
+										}
+				
+										if (!jobInstances || jobInstances.length === 0) {
+											console.log('No jobs found for the provided IDs');
+											return;
+										}
+										let i=0;
+										// Step 2: Update the specific field for each job instance
+										jobInstances.forEach(jobInstance => {
+											let jInst = jobInstance.attachmentDeleteInfoJob // Update the field
+											let payload = {
+												attachments: requestedPayload[i].attachments,
+												emailId : emailId,
+												time : new Date()
+											}
+											i++;
+											if (jInst == null || jInst == "null") {
+												var result = payload;
+											} else {
+												var result = jInst.split()
+												result.push(payload);
+											}
+											result = JSON.stringify(result);
+				
+											// Step 3: Save the updated job instances
+											job.updateAll(
+												{ jobCardNo: jobInstance.jobCardNo }, // Filter to select jobs by IDs
+												{ attachmentDeleteInfoJob: result }, // Update the specific field
+												(err, info) => {
+													if (err) {
+														console.error('Error updating jobs:', err);
+														return;
+													}
+												}
+											);
+										});
+										res.status(200).send("Attachments Deleted Successfully");
+				
+				
+									});
+								}
+							}
+							// res.status(200).send("Attachments Deleted Successfully");
+						})
+
+					}
+				})
 			})
+
+
+			
 		});
 
 		//* Delete job and job status using jobCardNo
@@ -1089,7 +1173,7 @@ app.start = function () {
 							return res.status(500).json({ error: 'Internal server error' });
 						}
 					});
-					
+
 					// Removing job and job status
 					let jobsRemoved = 0;
 					jobData.forEach((job) => {
@@ -1109,8 +1193,8 @@ app.start = function () {
 			})
 		});
 
-		app.post('/jobWithCompany',(req,res)=>{
-			
+		app.post('/jobWithCompany', (req, res) => {
+
 		})
 
 		//* Get all users from the AppUser table

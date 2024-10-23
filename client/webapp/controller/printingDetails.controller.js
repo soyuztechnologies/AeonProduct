@@ -1388,34 +1388,38 @@ sap.ui.define([
 					}
 				}
 
-
-				var oModel = this.getView().getModel("appView");
-				this.oDialogOpen().then(function (oDialog) {
-					oDialog.open();
-
-					var sUserRole = oModel.getProperty('/UserRole');
-					if (sUserRole === 'Customer') {
-						// oModel.setProperty('/browseVis', false);
-						// oModel.setProperty("/btnVisibility", false);
-					}
-					if (sUserRole === "Dispatch Head" || "Accounts Head") {
-						// oModel.setProperty('/browseVis', false);
-						// oModel.setProperty("/btnVisibility", false);
-					}
-					if (sUserRole === "Artwork Head") {
-						// oModel.setProperty('/browseVis', false);
-						// oModel.setProperty("/btnVisibility", true);
-					}
-
-				});
+				// Change by Lakshay - Validation - Not open attachment fragment if attachment not found.
 				dModel.read(url, {
 					success: function (data) {
-						that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+						that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+						that.oDialogOpen().then(function(oDialog){
+							oDialog.open();
+						})
 					},
 					error: function (error) {
 						MessageBox.show("Attachment Is Not Attached")
 					}
 				});
+
+				var oModel = this.getView().getModel("appView");
+				// this.oDialogOpen().then(function (oDialog) {
+				// 	oDialog.open();
+
+				// 	var sUserRole = oModel.getProperty('/UserRole');
+				// 	if (sUserRole === 'Customer') {
+				// 		// oModel.setProperty('/browseVis', false);
+				// 		// oModel.setProperty("/btnVisibility", false);
+				// 	}
+				// 	if (sUserRole === "Dispatch Head" || "Accounts Head") {
+				// 		// oModel.setProperty('/browseVis', false);
+				// 		// oModel.setProperty("/btnVisibility", false);
+				// 	}
+				// 	if (sUserRole === "Artwork Head") {
+				// 		// oModel.setProperty('/browseVis', false);
+				// 		// oModel.setProperty("/btnVisibility", true);
+				// 	}
+
+				// });
 
 
 

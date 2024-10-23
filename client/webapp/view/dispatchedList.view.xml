@@ -6,7 +6,7 @@
 	<Page showHeader="false">
 		<subHeader>
 			<OverflowToolbar>
-			   <Title text="Attachments" level="H2"/>
+			   <Title text="Attachments  ({appView>/currentItems}{appView>/countJobsAttachment})" level="H2"/>
 		   </OverflowToolbar>
 		</subHeader>
 		<fb:FilterBar class="classFilterBar" id="filterbarAttachments" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
@@ -35,6 +35,13 @@
 				</fb:control>
               </fb:FilterGroupItem>
 
+			  <fb:FilterGroupItem name="Delete Attachment" label="Delete" groupName="Group1" visibleInFilterBar="true" >
+                <fb:control>
+					<!-- <SearchField id="deleteTableAttachments" liveChange="onSearchCardCode"></SearchField> -->
+					<Button text="Delete" type="Reject" press="onDeleteAttachmentTable"></Button>
+				</fb:control>
+              </fb:FilterGroupItem>
+
 			  <!-- <fb:FilterGroupItem name="Orphan Find" label="Demo Button" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
 					<Button text="Orphans" press="orphanDemoFunction"></Button>
@@ -43,7 +50,7 @@
 
 			</fb:filterGroupItems>
 		  </fb:FilterBar>
-		<Table items="{appView>/JobsData}" id="idJobTable" growing="true" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs">  
+		<Table items="{appView>/JobsData}" id="idJobTable" growing="true" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs" mode="MultiSelect">  
 			<columns>
 				<Column width="12em">
 					<!-- <Text text="Job Card No. and Name" /> -->
