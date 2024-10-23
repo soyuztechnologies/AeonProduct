@@ -66,7 +66,7 @@ sap.ui.define([
 						});
 						that.getView().getModel('appView').setProperty('/JobsData', data);		//Data set in model to show in UI in form of table.
 						that.getView().getModel('appView').setProperty('/countJobsAttachment', data.length);
-						that.getModel('appView').setProperty('/currentItems', data.length+'/');
+						that.getModel('appView').setProperty('/currentItems', data.length + '/');
 					}
 					// that.serverPayload(data);		//Send coming data from /Jobs endpoint to function.
 				})
@@ -246,6 +246,8 @@ sap.ui.define([
 
 		// Function to delete selected attachments from fragment
 		onDeleteAttachment: function () {
+			let tableOject = this.getModel('appView').getProperty('/JobsData');		//Get Table data with binding is from /JobsData
+			var oTable = this.byId("idJobTable");  		// get table by id
 			var that = this;
 			let AttachmentDeletion = this.getView().byId('idJobHasAttachment').getSelectedContextPaths();	//selected attachments
 			if (AttachmentDeletion.length == 0) {	//Attachment Not found condition
@@ -254,52 +256,68 @@ sap.ui.define([
 			}
 
 			let payload = [];		//push all the attachents in form attachment table id's
-			if (AttachmentDeletion.length > 0) {
-				for (let i = 0; i < AttachmentDeletion.length; i++) {
-					let data = this.getModel('appView').getProperty(AttachmentDeletion[i]);
-					if (data.attachmentName == "Client PO Code") {
-						payload.push(data.attachmentCode);
-					}
-					if (data.attachmentName == "Artwork Attchment") {
-						payload.push(data.attachmentCode);
-					}
-					if (data.attachmentName == "Delivery No") {
-						payload.push(data.attachmentCode);
-					}
-					if (data.attachmentName == "Invoice No") {
-						payload.push(data.attachmentCode);
 
+			for (let i = 0; i < AttachmentDeletion.length; i++) {
+				let data = this.getModel('appView').getProperty(AttachmentDeletion[i]);
+				if (data.attachmentName == "Client PO Code") {
+					payload.push(data.attachmentCode);
+				}
+				if (data.attachmentName == "Artwork Attchment") {
+					payload.push(data.attachmentCode);
+				}
+				if (data.attachmentName == "Delivery No") {
+					payload.push(data.attachmentCode);
+				}
+				if (data.attachmentName == "Invoice No") {
+					payload.push(data.attachmentCode);
+
+				}
+			}
+
+			let currentJob = this.getModel('appView').getProperty('/currentJobCardNo');
+			let duplicateJobs = [];
+			for (let i = 0; i < tableOject.length; i++) {
+				if (!(tableOject[i].jobCardNo === currentJob)) {		//No selected row here to show duplicates on which row 
+					let presentedAttachmentInJob = [];
+					presentedAttachmentInJob.push(tableOject[i].PoAttach, tableOject[i].artworkCode, ...tableOject[i].InvNo, ...tableOject[i].DeliveryNo);
+					let isAnyPresent = presentedAttachmentInJob.some(item => payload.includes(item));
+					if (isAnyPresent) {
+						let jobCardNo = this.getModel('appView').getProperty('/JobsData/' + i);
+						duplicateJobs.push(jobCardNo.jobCardNo);
 					}
 				}
-
-
-				let jobCardNo = this.getModel('appView').getProperty('/currentJobCardNo');
-				let newPayloadData = [];	//payload send to server
-				newPayloadData.push({
-					jobCardNo: jobCardNo,
-					attachments: payload
-				})
-				var that = this;
-				MessageBox.confirm("Are you sure you want to delete Attachments", {
-					actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
-					onClose: function (sAction) {
-						if (sAction === "OK") {
-							that.middleWare.callMiddleWare("deleteAttachments", "POST", newPayloadData)		//delete attachment api call
-								.then(function (data, status, xhr) {
-									that.jobsWithAtleastAttachment();
-									MessageToast.show(data);
-									that.ojobValidation().then(data=>{
-										data.close();
-									})
-
-								})
-								.catch(function (jqXhr, textStatus, errorMessage) {
-									that.middleWare.errorHandler(jqXhr, that);
-								});
-						}
-					}
-				});
 			}
+			if (duplicateJobs.length > 0) {
+				MessageToast.show('Found Same attachments in Job : ' + duplicateJobs);
+				return;
+			}
+
+			let newPayloadData = [];	//payload send to server
+			newPayloadData.push({
+				jobCardNo: currentJob,
+				attachments: payload
+			})
+			var that = this;
+			MessageBox.confirm("Are you sure you want to delete Attachments", {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+				onClose: function (sAction) {
+					if (sAction === "OK") {
+						that.middleWare.callMiddleWare("deleteAttachments", "POST", newPayloadData)		//delete attachment api call
+							.then(function (data, status, xhr) {
+								that.jobsWithAtleastAttachment();
+								MessageToast.show(data);
+								that.ojobValidation().then(data => {
+									data.close();
+								})
+
+							})
+							.catch(function (jqXhr, textStatus, errorMessage) {
+								that.middleWare.errorHandler(jqXhr, that);
+							});
+					}
+				}
+			});
+
 
 		},
 
@@ -320,7 +338,7 @@ sap.ui.define([
 			oTable.getBinding("items").filter(Object.values(this.tableFilters));
 
 			let currentItems = oTable.getBinding('items').getCurrentContexts();
-			this.getModel('appView').setProperty('/currentItems', currentItems.length+'/');
+			this.getModel('appView').setProperty('/currentItems', currentItems.length + '/');
 		},
 
 		// Delete Attachments from dispatched screen table
