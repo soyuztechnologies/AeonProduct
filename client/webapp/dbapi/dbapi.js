@@ -111,7 +111,12 @@ sap.ui.define([
 							data: JSON.stringify(oPayload), // data to submit
 							success: function (data, status, xhr) {
 								// sap.ui.core.BusyIndicator.hide();
-								resolve(data);
+								if(xhr.status==207){
+									let statusCode = xhr.status
+									resolve({data,statusCode});
+									return;
+								}
+								resolve(data,status,xhr);
 							},
 							error: function (jqXhr, textStatus, errorMessage) {
 								// sap.ui.core.BusyIndicator.hide();

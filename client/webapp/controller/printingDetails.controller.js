@@ -940,8 +940,10 @@ sap.ui.define([
 
 				},
 				error: function (error) {
-
-					that.middleWare.errorHandler(error, that);
+					MessageToast.show('No Job Found : ' + that.oArgs);
+					that.getRouter().navTo("allPrinters");
+					// that.middleWare.errorHandler(error.statusText,that);
+					// that.middleWare.errorHandler(error, that);
 				}
 			});
 		},

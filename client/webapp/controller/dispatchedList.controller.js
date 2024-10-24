@@ -81,6 +81,7 @@ sap.ui.define([
 			var that = this;
 			this.middleWare.callMiddleWare("orphansDelete", "POST").then(function (data) {
 				console.log(data);
+				MessageBox.show('Orphans : ' + data);
 			}).catch(function (data) {
 				console.log(data);
 			});

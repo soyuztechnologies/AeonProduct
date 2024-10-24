@@ -816,8 +816,8 @@ app.start = function () {
 			var jobsData = [];				//Pushing Job data only with jobcardNo and attachments.
 			var totalAttachments = [];		//Total attachments present in application
 			var attachmentArray = [];		//pushing attachment that are linked with jobid
-			var availableAttachments = [];		//attachment in which data is present
-
+			var availableAttachments = [];		//attachment in which data is present that linked with particular job.
+			let orphans = [];
 			//unused attachments = total-used attachments.
 
 			Job.find({
@@ -863,30 +863,35 @@ app.start = function () {
 							return;
 						}
 						if (attachmentGet.length > 0) {
-							attachmentGet.forEach(data=>{
+							attachmentGet.forEach(data => {
 								availableAttachments.push(data.Key)
 							})
 						}
-						
+
+						// Getting total attachments of the application.
+						attachmentTable.find((error, att) => {
+							if (error) {
+								return;
+							}
+							if (att) {
+								if (att.length > 0) {
+									att.forEach(data => {
+										totalAttachments.push(data.Key);
+									})
+								}
+
+								orphans = totalAttachments.filter(value => !availableAttachments.includes(value));
+								res.status(200).json(JSON.stringify(orphans));
+							}
+						})
+
 					});
 
-					// Getting total attachments of the application.
-					attachmentTable.find((error, att) => {
-						if (error) {
-							return;
-						}
-						if (att) {
-							if(att.length>0){
-								att.forEach(data=>{
-									totalAttachments.push(data.Key);
-								})
-							}
-						}
-					})
+
 				}
 			});
 
-			
+
 
 
 		})
@@ -941,7 +946,7 @@ app.start = function () {
 			}, (error, jobs) => {
 				if (error) {
 					console.error(error);
-					return res.status(500).json({ error: 'Internal server error' });
+					return res.status(500).json({ error: 'No Job Found' });
 				}
 				if (jobs) {
 
@@ -978,7 +983,7 @@ app.start = function () {
 					}, (error, attachmentGet) => {
 						if (error) {
 							console.error(error);
-							return res.status(500).json({ error: 'Internal server error' });
+							return res.status(500).json({ error: 'No Attachments Found' });
 						}
 						if (attachmentGet.length > 0) {
 
@@ -1061,12 +1066,12 @@ app.start = function () {
 
 						// Checking which attachments are present as 'totalAttachments' array as attachment array.
 						attachments.find({
-							where : {
+							where: {
 								Key: {
 									inq: totalAttachments
 								}
 							}
-							
+
 						}, (error, foundedAttachments) => {
 							if (error) {
 								res.status(500).json('Error');
@@ -1162,7 +1167,8 @@ app.start = function () {
 
 			// For Validation only to check same attachments are not present in other Jobs.
 			// let response;
-			let allAttachments = [];
+			// let allAttachments = [];
+			let restAllJobsObject = {};			//Here we store all attachment without our current job Id.
 			Job.find({
 				include: {
 					relation: 'JobStatus'		//hasMany Relation with JobStatus table
@@ -1174,15 +1180,16 @@ app.start = function () {
 				// Response as all job with jobstatus
 				if (response) {
 					response.forEach(data => {
+						let attachments = [];
 						if (!(data.jobCardNo === id)) {
-							allAttachments.push(data.PoAttach + 'PoNo');
-							allAttachments.push(data.artworkCode + 'ArtworkNo');
+							attachments.push(data.PoAttach + 'PoNo');
+							attachments.push(data.artworkCode + 'ArtworkNo');
 							if (data.JobStatus && data.JobStatus().length > 0) {
 								if (data.JobStatus()['0'].InvNo) {	//check inv no is present or not
-									allAttachments.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+									attachments.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
 								}
 								if (data.JobStatus()['0'].DeliveryNo) {		//check del no is present or not
-									allAttachments.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+									attachments.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
 								}
 							}
 						} else {
@@ -1197,16 +1204,42 @@ app.start = function () {
 								}
 							}
 						}
+
+						restAllJobsObject[data.jobCardNo] = attachments;
+
 					})
 
-					let commonAttachment = [];
-					attachmentArray.forEach(data => {
-						if (allAttachments.includes(data)) {
-							commonAttachment.push(data);
+					// let commonAttachment = [];
+					let commonAttachmentObject = {};
+					for (let jobId in restAllJobsObject) {
+						if (restAllJobsObject.hasOwnProperty(jobId)) {
+							let newArray = restAllJobsObject[jobId];
+
+							// Find common values between attachmentArray and sendedArray
+							let commonValues = newArray.filter(item => attachmentArray.includes(item));
+
+							// If there are common values, add them to the result object
+							if (commonValues.length > 0) {
+								commonAttachmentObject[jobId] = commonValues;
+							}
 						}
-					})
-					if (commonAttachment.length > 0) {
-						res.status(200).json('Found common attachment in other Jobs : ' + commonAttachment);
+					}
+					// attachmentArray.forEach(data => {
+					// 	if (allAttachments.includes(data)) {
+					// 		commonAttachment.push(data);
+					// 	}
+					// })
+
+					// if (commonAttachment.length > 0) {
+					// 	res.status(200).json('Found common attachment in other Jobs : ' + commonAttachment);
+					// 	return;
+					// }
+
+					// To show job with attachments
+					if (Object.keys(commonAttachmentObject).length > 0) {
+						commonAttachmentObject = JSON.stringify(commonAttachmentObject);
+						res.status(207).json(commonAttachmentObject);
+						// res.status(501).json('Found common attachment in other Jobs : ' + commonAttachmentObject);
 						return;
 					}
 				}
@@ -1224,20 +1257,20 @@ app.start = function () {
 						return res.status(500).send('Internal server error');
 					}
 					if (jobData) {		//If job is present
-						if (jobData['0'].PoAttach) {
-							attachmentArray.push(jobData['0'].PoAttach + 'PoNo')	//push ClientPo Attachment key in attachment array(key of Attachment Table)
-						}
-						if (jobData['0'].artworkCode) {
-							attachmentArray.push(jobData['0'].PoAttach + 'ArtworkNo')	//push artwork Attachment key in attachment array(key of Attachment Table) 
-						}
-						if (jobData['0'].JobStatus && jobData['0'].JobStatus().length > 0) {	//check jobStatus is present or not
-							if (jobData['0'].JobStatus()['0'].InvNo) {	//check inv no is present or not
-								attachmentArray.push(...jobData['0'].JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
-							}
-							if (jobData['0'].JobStatus()['0'].DeliveryNo) {		//check del no is present or not
-								attachmentArray.push(...jobData['0'].JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
-							}
-						}
+						// if (jobData['0'].PoAttach) {
+						// 	attachmentArray.push(jobData['0'].PoAttach + 'PoNo')	//push ClientPo Attachment key in attachment array(key of Attachment Table)
+						// }
+						// if (jobData['0'].artworkCode) {
+						// 	attachmentArray.push(jobData['0'].PoAttach + 'ArtworkNo')	//push artwork Attachment key in attachment array(key of Attachment Table) 
+						// }
+						// if (jobData['0'].JobStatus && jobData['0'].JobStatus().length > 0) {	//check jobStatus is present or not
+						// 	if (jobData['0'].JobStatus()['0'].InvNo) {	//check inv no is present or not
+						// 		attachmentArray.push(...jobData['0'].JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+						// 	}
+						// 	if (jobData['0'].JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+						// 		attachmentArray.push(...jobData['0'].JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+						// 	}
+						// }
 
 						// To delete all attachments at once.
 						attachments.destroyAll({
@@ -1259,7 +1292,7 @@ app.start = function () {
 								}
 								jobsRemoved++;
 								if (jobsRemoved === jobData.length) {
-									res.status(200).json('Job(s) deleted successfully');
+									res.status(200).json('Job deleted successfully');
 								}
 							});
 						});

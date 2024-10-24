@@ -87,21 +87,35 @@ sap.ui.define([
                var Jobs = oItem.getBindingContext("appView").getObject();
                var id = Jobs.jobCardNo;
                var payload = id;
-
+			   let dbData;
                MessageBox.confirm("Are you sure you want to delete this " + id + " Job ?", {
                    actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
                    onClose: function (sAction) {
                      if(sAction === "OK"){
                         that.middleWare.callMiddleWare("deleteJobsWithJobStatus", "POST", payload)
-                        .then(function (data, status, xhr) {
-							if(typeof(data) === 'string'){
-								MessageToast.show(data);
+                        .then( (data, status, xhr)=> {
+							if(data.statusCode === 207){
+								let obj = JSON.parse(data.data);
+								let response = 'Duplicate Jobs with Attachments are : \n';
+								Object.keys(obj).forEach(data=>{
+									response += `${data} : [${obj[data]}] \n `;
+								})
+								MessageBox.show(response);
 							}else{
-								MessageToast.show("Job Deleted Successfully");
-								that.getJobsDataByCompanyFilter()
-								that.getRouter().navTo("allPrinters");
-								oModel.updateBindings();
+									MessageToast.show("Job Deleted Successfully");
+									that.getJobsDataByCompanyFilter();
+									that.getRouter().navTo("allPrinters");
+									oModel.updateBindings();
 							}
+							// if(typeof(data) === 'string'){
+							// 	// MessageToast.show(data);
+							// 	MessageBox.show(data);
+							// }else{
+							// 	MessageToast.show("Job Deleted Successfully");
+							// 	that.getJobsDataByCompanyFilter();
+							// 	that.getRouter().navTo("allPrinters");
+							// 	oModel.updateBindings();
+							// }
                         })
                         .catch(function (jqXhr, textStatus, errorMessage) {
                             that.middleWare.errorHandler(jqXhr, that);
