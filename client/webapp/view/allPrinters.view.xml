@@ -8,6 +8,9 @@
 						<Label text="Show the Jobs that are not dispatched:"></Label>
 						<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
 						<SearchField liveChange="onSearchJob" width="30%"/>
+						<Select  items="{appView>/CompanyDetails}" forceSelection="false" change="selectedCompany" >
+							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
+						</Select>
 						<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />
 						<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
 						<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}"/>    

@@ -1614,19 +1614,36 @@ sap.ui.define([
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
-		   },
-getAllJobs:function(){
-	oModel.read("/Jobs", {
-		success: function (data) {
-			that.getView().getModel("appView").setProperty("/jobsData", data.results);
-			BusyIndicator.hide();
 		},
-		error: function (error) {
-			MessageToast.show("Error reading data");
-			BusyIndicator.hide();
+		getAllJobs: function () {
+			oModel.read("/Jobs", {
+				success: function (data) {
+					that.getView().getModel("appView").setProperty("/jobsData", data.results);
+					BusyIndicator.hide();
+				},
+				error: function (error) {
+					MessageToast.show("Error reading data");
+					BusyIndicator.hide();
+				}
+			});
+		},
+
+		getCompanyData: function () {
+			var that = this;
+			this.middleWare.callMiddleWare("Companies", "GET")
+				.then(function (data, status, xhr) {
+					let newData = {
+						"CompanyName": "None",
+						"id": null
+					};
+					data.unshift(newData);
+					that.getModel('appView').setProperty('/CompanyDetails', data);
+				}
+				)
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
 		}
-	});
-}
-		  
+
 	});
 });

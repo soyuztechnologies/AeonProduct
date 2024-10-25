@@ -50,6 +50,7 @@ sap.ui.define([
 					that.openYearPickar();
 					that.getJobsDataByCompanyFilter();
 					// that.getCompanyName();
+					that.getCompanyData();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -158,6 +159,7 @@ sap.ui.define([
 			);
 			this.getCompanyName();
 			this.getModel("appView").setProperty("/layout", "OneColumn");
+			this.getCompanyData();
 
 		},
 		// _coatingMatchedHandler: async  function(oEvent){
@@ -1127,7 +1129,21 @@ sap.ui.define([
 			var oState = oEvent.getSource().getState();
 			this.getView().getModel('appView').setProperty('/oState',oState);
 			this.getJobsDataByCompanyFilter(oState)
-		}
+		},
+
+		selectedCompany: function (oEvent) {
+			let selectedKey = oEvent.getSource().getSelectedKey();
+			var oList = this.getView().byId("idListAllPrinters");
+			var oBinding = oList.getBinding("items");
+			let filter;
+			if(selectedKey){
+				filter = new Filter("CompanyId",FilterOperator.EQ,selectedKey);
+				oBinding.filter(filter);
+			}else{
+				oBinding.filter();
+				// delete this.tableFilters[filterProperty];
+			}			
+		},
 
 
 

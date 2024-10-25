@@ -77,15 +77,15 @@ sap.ui.define([
 		},
 
 		// Function used at only once for finding attachemnets without Job's.
-		orphanDemoFunction: function () {
-			var that = this;
-			this.middleWare.callMiddleWare("orphansDelete", "POST").then(function (data) {
-				console.log(data);
-				MessageBox.show('Orphans : ' + data);
-			}).catch(function (data) {
-				console.log(data);
-			});
-		},
+		// orphanDemoFunction: function () {
+		// 	var that = this;
+		// 	this.middleWare.callMiddleWare("orphansDelete", "POST").then(function (data) {
+		// 		console.log(data);
+		// 		MessageBox.show('Orphans : ' + data);
+		// 	}).catch(function (data) {
+		// 		console.log(data);
+		// 	});
+		// },
 
 		// Date Filter function
 		onDateRangeChange: function (oEvent) {
@@ -327,7 +327,7 @@ sap.ui.define([
 		tableFilter: function (filterProperty, operator, value, value2) {
 			var oTable = this.getView().byId("idJobTable");
 			if (value) {
-				if (filterProperty === "jobCardNo") {
+				if (filterProperty === "jobCardNo") {	//jobCardNo
 						var filters = value.map(function(jobCardNo) {
 							return new sap.ui.model.Filter(filterProperty, operator, jobCardNo);
 						});
@@ -337,11 +337,10 @@ sap.ui.define([
 							filters: filters,
 							and: false // OR condition to filter acc to multiple values
 						});
-
 				}else if (filterProperty === 'date') {		//date
 						this.tableFilters[filterProperty] = new Filter(filterProperty, operator, value, value2);
-				}else{					
-					this.tableFilters[filterProperty] = value;
+				}else if(filterProperty === 'companyId'){					
+					this.tableFilters[filterProperty] = new Filter(filterProperty,operator,value);		
 				}
 			} else {
 				delete this.tableFilters[filterProperty];

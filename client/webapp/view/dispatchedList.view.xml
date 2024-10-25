@@ -41,15 +41,15 @@
 				</fb:control>
               </fb:FilterGroupItem> -->
 
-			  <fb:FilterGroupItem name="Orphan Find" label="Demo Button" groupName="Group1" visibleInFilterBar="true" >
+			  <!-- <fb:FilterGroupItem name="Orphan Find" label="Demo Button" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
 					<Button text="Orphans" press="orphanDemoFunction"></Button>
 				</fb:control>
-              </fb:FilterGroupItem>
+              </fb:FilterGroupItem> -->
 
 			</fb:filterGroupItems>
 		  </fb:FilterBar>
-		<Table items="{appView>/JobsData}" id="idJobTable"  sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs" mode="MultiSelect">  
+		<Table items="{path : 'appView>/JobsData', sorter : {path : 'jobCardNo' ,descending : false}}" id="idJobTable"  sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressJobs" mode="MultiSelect">  
 			<headerToolbar>
 				<Toolbar >
 					<Title text="Attachments Table ({appView>/currentItems})"></Title>

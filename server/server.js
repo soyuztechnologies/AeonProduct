@@ -991,6 +991,9 @@ app.start = function () {
 					attachmentTable.find({
 						where: {
 							Key: { inq: attachmentArray }
+						},
+						fields: {
+							Attachment: false
 						}
 					}, (error, attachmentGet) => {
 						if (error) {
