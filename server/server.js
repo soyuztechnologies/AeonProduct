@@ -881,7 +881,19 @@ app.start = function () {
 								}
 
 								orphans = totalAttachments.filter(value => !availableAttachments.includes(value));
-								res.status(200).json(JSON.stringify(orphans));
+								return res.status(200).json(JSON.stringify(orphans));
+
+								// If we want to delete orphan attachments
+								// if(orphans.length>0){
+								// 	attachmentTable.destroyAll({Key : {inq : orphans}},(error,count)=>{
+								// 		if(error){
+								// 			return res.status(500).json({ error: 'Internal server error on deleting orphan attachments' })
+								// 		}
+								// 		if(count){
+								// 			return res.status(200).json("Orphans Deleted and count is : " + count);
+								// 		}
+								// 	})
+								// }
 							}
 						})
 
@@ -1192,6 +1204,7 @@ app.start = function () {
 									attachments.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
 								}
 							}
+							restAllJobsObject[data.jobCardNo] = attachments;
 						} else {
 							attachmentArray.push(data.PoAttach + 'PoNo');
 							attachmentArray.push(data.artworkCode + 'ArtworkNo');
@@ -1205,7 +1218,6 @@ app.start = function () {
 							}
 						}
 
-						restAllJobsObject[data.jobCardNo] = attachments;
 
 					})
 

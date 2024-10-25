@@ -66,7 +66,7 @@ sap.ui.define([
 						});
 						that.getView().getModel('appView').setProperty('/JobsData', data);		//Data set in model to show in UI in form of table.
 						that.getView().getModel('appView').setProperty('/countJobsAttachment', data.length);
-						that.getModel('appView').setProperty('/currentItems', data.length + '/');
+						that.getModel('appView').setProperty('/currentItems', data.length);
 					}
 					// that.serverPayload(data);		//Send coming data from /Jobs endpoint to function.
 				})
@@ -108,6 +108,7 @@ sap.ui.define([
 		// Filter data acc to job card no.
 		onSearchCardCode: function (oEvent) {
 			var sSearchValue = this.getView().byId('searchField').getValue();
+			sSearchValue = sSearchValue.split(',');
 			this.tableFilter("jobCardNo", FilterOperator.Contains, sSearchValue);
 		},
 
@@ -326,12 +327,21 @@ sap.ui.define([
 		tableFilter: function (filterProperty, operator, value, value2) {
 			var oTable = this.getView().byId("idJobTable");
 			if (value) {
-				if (typeof (value) === 'object') {		//Customer name
+				if (filterProperty === "jobCardNo") {
+						var filters = value.map(function(jobCardNo) {
+							return new sap.ui.model.Filter(filterProperty, operator, jobCardNo);
+						});
+	
+						// Combine the filters with OR condition (and: false)
+						this.tableFilters[filterProperty] = new sap.ui.model.Filter({
+							filters: filters,
+							and: false // OR condition to filter acc to multiple values
+						});
+
+				}else if (filterProperty === 'date') {		//date
+						this.tableFilters[filterProperty] = new Filter(filterProperty, operator, value, value2);
+				}else{					
 					this.tableFilters[filterProperty] = value;
-				} else if (filterProperty === 'date') {		//date
-					this.tableFilters[filterProperty] = new Filter(filterProperty, operator, value, value2);
-				} else {	//jobCardno
-					this.tableFilters[filterProperty] = new Filter(filterProperty, operator, value);
 				}
 			} else {
 				delete this.tableFilters[filterProperty];
@@ -339,7 +349,7 @@ sap.ui.define([
 			oTable.getBinding("items").filter(Object.values(this.tableFilters));
 
 			let currentItems = oTable.getBinding('items').getCurrentContexts();
-			this.getModel('appView').setProperty('/currentItems', currentItems.length + '/');
+			this.getModel('appView').setProperty('/currentItems', currentItems.length);
 		},
 
 		// Delete Attachments from dispatched screen table
@@ -390,7 +400,7 @@ sap.ui.define([
 					let data = tableOject[i];
 					let attachArray = [];
 					attachArray.push(data.PoAttach, data.artworkCode, ...data.InvNo, ...data.DeliveryNo);
-					newPayloadData.push( {		//Payload sended to server
+					newPayloadData.push({		//Payload sended to server
 						jobCardNo: data.jobCardNo,
 						attachments: attachArray
 					})
