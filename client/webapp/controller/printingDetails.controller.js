@@ -8,9 +8,10 @@ sap.ui.define([
 	"sap/ui/core/util/File",
 	"sap/ui/unified/FileUploader",
 	"sap/m/Token",
-	"sap/m/MessageBox"
+	"sap/m/MessageBox",
+	"ent/ui/ecommerce/pdfgen/pdfEngine"
 
-], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator, File, FileUploader, Token, MessageBox) {
+], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator, File, FileUploader, Token, MessageBox,pdfEngine) {
 	"use strict";
 	var isPono;
 	return BaseController.extend("ent.ui.ecommerce.controller.printingDetails", {
@@ -66,7 +67,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
 					// that.getJobsData();
-					that.getJobsDataByStatusFilter();
+					// that.getJobsDataByStatusFilter();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -109,7 +110,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
 					// that.x();
-					that.getJobsDataByCompanyFilter();
+					// that.getJobsDataByCompanyFilter();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -3398,7 +3399,499 @@ sap.ui.define([
 			});
 
 
+		},
+
+		// modelData : {
+		// 	orderNo: "2023-24/198",
+		// 	date: "28-Oct-24",
+		// 	deliveryAddress: {
+		// 		name: "Aeon Products - NEW ADDRESS",
+		// 		address: "Gala No 1/13, Shree Shankar Industrial Estate No. 1, Behind Burma Shell Bharat Petroleum Pump, Naka Pada, N.H. No. 8, Vasai (E)."
+		// 	},
+		// 	items: [
+		// 		{
+		// 			description: "Tulsi - Satin Chrome White Back",
+		// 			quantity: "1147 Kg",
+		// 			rate: "₹ 47.75",
+		// 			value: "₹ 54,769.25"
+		// 		}
+		// 	],
+		// 	total: "₹ 54,769.25",
+		// 	sgst: "₹ 3,286.16",
+		// 	cgst: "₹ 3,286.16",
+		// 	grandTotal: "₹ 61,341.56"
+		// },
+
+		onPDFGenerate: async function () {
+
+
+			// let oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+		//    const jsonData = {
+		// 	"language": "",
+		// 	"clientData":{
+		// 		"company": "Royal Umzug GmbH",
+		// 		"name": "Mhidin Eskandar",
+		// 		"emailId": "info@royal-umzug.ch",
+		// 		"contactNo": "+41 43 433 80 87",
+		// 		"street": "Seebergstrasse 1",
+		// 		"postal": "8952",
+		// 		"city": "Schlieren",
+		// 		"country": "Schweiz",
+		// 		"status": 10,
+		// 		"comments": "Bezahlung on Rechnung.",
+		// 		"Website": "www.royal-umzug.ch"
+		// 	},
+		// 	"orderData":{
+		// 				"orderedDate"       : "01.02.2024",
+		// 				"orderedItems"     :[{
+		// 					"item" : "Umzug",
+		// 					"date": "01.03.2024 - 08:30",
+		// 					"description":"Umzug 1 von: Seebergstr. 1, 8952 Schlieren, Schweiz - Haus - 5. Etage mit Lift \nnach: Badenestrasse 240, 8008 Zürich, Schweiz - Wohnung - 5. Etage mit Lift.",
+		// 					"remarks":" Umzugsgegenstände :40x standard Umzugskisten, 1x 4. schiebtüriges Schrank Schrank , 1x klein Kommode, 1x klein Sessel, 1x klein Doppelbett - Volumen ca. 10.7 (m3) - Gewicht: ca 1130 (Kg)."
+		// 				},{
+		// 					"item" : "Umzug",
+		// 					"date": "02.03.2024 - 08:30",
+		// 					"description":"Umzug 2- von: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung - 2. Etage mit Lift \nnach: Badenestrasse 240, 8008 Zürich, Schweiz - Wohnung - 5. Etage mit Lift.",
+		// 					"remarks":" Umzugsgegenstände :40x standard Umzugskisten, 1x 4. schiebtüriges Schrank Schrank , 1x klein Kommode, 1x klein Sessel, 1x klein Doppelbett - Volumen ca. 10.7 (m3) - Gewicht: ca 1130 (Kg)."
+		// 				},{
+		// 					"item" : "Einlagerung",
+		// 					"date": "02.03.2024 - 08:30",
+		// 					"description":" von: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung - 2. Etage mit Lift nach: Royal Umzug GmbH, Lager in Schlieren",
+		// 					"remarks":" Lagerunggegenstände :40x standard Umzugskisten, 1x 4. schiebtüriges Schrank Schrank , 1x klein Kommode, 1x klein Sessel, 1x klein Doppelbett - Volumen ca. 10 (m3) - Gewicht: ca 1130 (Kg)."
+		// 				},{
+		// 					"item" : "Einpakung",
+		// 					"date": "29.02.2024 - 14:30",
+		// 					"description":"Einpaken von Mäbel und Content",
+		// 					"remarks":"Umzugsgegenstände :40x standard Umzugskisten, 1x 4. schiebtüriges Schrank Schrank , 1x klein Kommode, 1x klein Sessel, 1x klein Doppelbett - Volumen ca. 10.7 (m3) - Gewicht: ca 1130 (Kg)."
+		// 				},{
+		// 					"item" : "Reinigung",
+		// 					"date": "03.03.2024 - 07:30",
+		// 					"description":"Reinigung 1 at: Seebergstr. 1, 8952 Schlieren, Schweiz - Haus -5 Zimmer 150 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial sind nicht inklusive."
+		// 				},{
+		// 					"item" : "Reinigung",
+		// 					"date": "04.03.2024 - 15:30",
+		// 					"description":"Abagbe grantie at Seebergstr. 1 ",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+		// 				{
+		// 					"item" : "Reinigung",
+		// 					"date": "02.03.2024 - 07:30",
+		// 					"description":"Reinigung 2 at: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung -5 Zimmer 70 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+		// 				{
+		// 					"item" : "Reinigung",
+		// 					"date": "02.03.2024 - 07:30",
+		// 					"description":"Reinigung 2 at: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung -5 Zimmer 70 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+		// 				{
+		// 					"item" : "Reinigung",
+		// 					"date": "02.03.2024 - 07:30",
+		// 					"description":"Reinigung 2 at: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung -5 Zimmer 70 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+		// 				{
+		// 					"item" : "Reinigung",
+		// 					"date": "02.03.2024 - 07:30",
+		// 					"description":"Reinigung 2 at: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung -5 Zimmer 70 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+		// 				{
+		// 					"item" : "Reinigung",
+		// 					"date": "02.03.2024 - 07:30",
+		// 					"description":"Reinigung 2 at: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung -5 Zimmer 70 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+		// 				{
+		// 					"item" : "Reinigung",
+		// 					"date": "02.03.2024 - 07:30",
+		// 					"description":"Reinigung 2 at: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung -5 Zimmer 70 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+		// 				{
+		// 					"item" : "Reinigung",
+		// 					"date": "02.03.2024 - 07:30",
+		// 					"description":"Reinigung 2 at: Dättnauerstrase 151, 8400 Winterthur, Schweiz - Wohnung -5 Zimmer 70 m2 mit Keller",
+		// 					"remarks":"Reinigungsmaterial inklusive."
+		// 				},
+   
+		// 				{
+		// 					"item" : "Verpackungs material",
+		// 					"date": "15.02.2024 - 07:30",
+		// 					"description":"10x Standardkarton, 20x Bücherkarton,2x Weinkarton and 10mx Strechfoilie",
+		// 					"remarks":"zur Miete"
+		// 				}
+   
+		// 				]
+		// 			 },
+		// 	"offerData" :
+		// 		 {
+		// 			"offerDate": "03.02.2024",
+		// 			"offerRef": "2024-10001",
+		// 			"offerComments": "Grobofferte",
+		// 			"isDiscount"  : true,
+		// 			"discount"  : "10%",
+		// 			"isVAT"  : true,
+		// 			"Resources":"1 LKW and 2 Movers",
+		// 			"VAT": "8.1%",
+		// 			"offerItems": [
+		// 				{
+		// 				"item"        : "Umzug",
+		// 				"description" :"Anfahrt/ Rückfahrt",
+		// 				"rate"        : "150.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 1,
+		// 				"unit"        : "Stunde",
+		// 				"subtotal"    : "150.00"
+		// 				 },
+   
+		// 			 {
+		// 				"item"        : "Umzug",
+		// 				"description" :"Ort 2-Aufwand bei Verfladen,Entladen und Fahrt",
+		// 				"rate"        : "150.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : "2.00",
+		// 				"unit"        : "Stunde",
+		// 				"subtotal"    : "300.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Einlagerung",
+		// 				"description" :"Ort 2-Aufwand bei Verfladen,Entladen und Fahrt",
+		// 				"rate"        : "150.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 2,
+		// 				"unit"        : "Stunde",
+		// 				"subtotal"    : "300.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Einlagerung",
+		// 				"description" : "Lagerungsvolumen",
+		// 				"rate"        : "15.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 10,
+		// 				"unit"        : "m3",
+		// 				"subtotal"    : "150.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Einpakung",
+		// 				"description" :"Ort 1 Demontage und Einpacken ",
+		// 				"rate"        : "150.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 2,
+		// 				"unit"        : "Stunde",
+		// 				"subtotal"    : "300.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Reinigung",
+		// 				"description" :"Ort 1 Reinigung 4 Zimmer",
+		// 				"rate"        : "700.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 1,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "700.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Reinigung",
+		// 				"description" :"Ort 1 Reinigung 4 Zimmer",
+		// 				"rate"        : "700.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 1,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "700.00"
+		// 			 },
+   
+		// 			 {
+		// 				"item"        : "Reinigung",
+		// 				"description" :"Ort 2 Reinigung 5 Zimmer",
+		// 				"rate"        : "900.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 1,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "700.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Entsorung",
+		// 				"description" :"Entsorgungsvolumen",
+		// 				"rate"        : "50.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 5,
+		// 				"unit"        : "m3.",
+		// 				"subtotal"    : "250.00"
+		// 			 } ,
+		// 			 {
+		// 				"item"        : "Entsorung",
+		// 				"description" :"Ort 2- Doppelbett und Kommode",
+		// 				"rate"        : "50.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 6,
+		// 				"unit"        : "m3.",
+		// 				"subtotal"    : "300.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Entsorung",
+		// 				"description" :"Aufwand bei Entsorgungsstelle",
+		// 				"rate"        : "150.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 1,
+		// 				"unit"        : "LKW",
+		// 				"subtotal"    : "150.00"
+		// 			 } ,
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Standardkarton zu Miete",
+		// 				"rate"        : "3.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 10,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "30.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Bücherkarton zu Miete",
+		// 				"rate"        : "3.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 20,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "60.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Bücherkarton zu Miete",
+		// 				"rate"        : "3.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 20,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "60.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Bücherkarton zu Miete",
+		// 				"rate"        : "3.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 20,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "60.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Bücherkarton zu Miete",
+		// 				"rate"        : "3.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 20,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "60.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Bücherkarton zu Miete",
+		// 				"rate"        : "3.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 20,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "60.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Bücherkarton zu Miete",
+		// 				"rate"        : "3.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 20,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "60.00"
+		// 			 },
+		// 			 {
+		// 				"item"        : "Verpackungs material",
+		// 				"description" :"Weinkarton zu Miete",
+		// 				"rate"        : "8.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 2,
+		// 				"unit"        : "Stck.",
+		// 				"subtotal"    : "16.00"
+		// 			 },
+		// 			 {
+		// 				"item"        :"Verpackungs material",
+		// 				"description" :"Strechfoilie zu Kauf",
+		// 				"rate"        : "14.00",
+		// 				"currency"    : "CHF",
+		// 				"qty"         : 1,
+		// 				"unit"        : "Rol.",
+		// 				"subtotal"    : "15.00"
+		// 			 }
+		// 			 ]
+		// 		 }
+   
+   
+		// 	};
+
+		// var oParameter = oEvent.getParameter('listItem');	//getting selected row item object
+		// var omodel = this.getView().getModel("appView");
+		// var sData = oParameter.getBindingContext('appView').getObject();
+		// let updatedData = this.updateFragmentData(sData);
+		// omodel.setProperty('/currentJobCardNo', sData.jobCardNo);
+		// omodel.setProperty('/jobsAttachmentData', updatedData);
+		var oView = this.getView();
+		// var that = this;
+		// omodel.updateBindings();
+		// this.pdfDetails();
+		let oPaylaod = {
+			pdfDataOrderNo : '',
+			pdfDeliveryDate : '',
+			pdfDataDeliveryAddress : '',
+			tableData : [{
+				"ItemName": "",
+				"ItemSize": "",
+				"ItemInches": "",
+				"GSM": "",
+				"Sheets": "",
+				"ProductCode": "",
+				"DeliveryDate": "",
+				"Quantity": "",
+				"Rate": ""
+			}]
+		};
+		this.getModel("appView").setProperty("/pdfItems",oPaylaod);
+		this.pdfDetails().then(function (oDialog) {
+			oDialog.open();
+		});
+
+
+   
+			// let model = this.getView().getModel("i18n");
+			// let jsonData = this.getView().getModel("appView").getProperty("/Jobs");
+			// let companyId = jsonData.CompanyId;
+			// var oModel = this.getView().getModel();
+			// let aeonCompanyId = "64d31c348c30b08f885c2c0e";
+			// let newJson = {};
+			// let aeonCompany = await oModel.read("/Company('" + aeonCompanyId + "')", {
+			// 	success: function (data) {
+			// 		newJson = {
+			// 			SenderCompanyName : data.CompanyName,
+			// 			SenderCompanyAddress : data.CompanyAddress,
+			// 			SenderGstNumber : data.GstNumber,
+			// 			SenderPhoneNumber : data.PhoneNo,
+			// 			SenderEmail : data.EmailAddress
+			// 		}
+			// 	}
+			// });
+			// await oModel.read("/Company('" + companyId + "')", {
+			// 	success: function (data) {
+			// 		// console.log(data);
+			// 		let reciverJSON = {
+			// 			companyName : data.CompanyName,
+			// 			companyAddress : data.CompanyAddress,
+			// 			gstNumber : data.GstNumber,
+			// 			phoneNumber : data.PhoneNo,
+			// 			email : data.EmailAddress
+			// 		}
+			// 		Object.assign(newJson,reciverJSON);
+			// 		const binary =  pdfEngine.pdf(newJson, 'download','A4',model);
+			// 	},
+			// 	error: function (error) {
+			// 		MessageToast.show('No Job Found : ' + that.oArgs);
+			// 		that.getRouter().navTo("allPrinters");
+			// 		// that.middleWare.errorHandler(error.statusText,that);
+			// 		// that.middleWare.errorHandler(error, that);
+			// 	}
+			// });
+
+
+
+		//    const binary = await pdfEngine.pdf(jsonData, 'download','A4',model);
+
+		 },
+
+		 pdfDetails: function () {
+			var oView = this.getView();
+			if (!this.pdfdetails) {
+				this.pdfdetails = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.createInvoicePDF",
+					controller: this
+				}).then(function (oDialog) {
+					// Add dialog to view hierarchy
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.pdfdetails;
+		},
+		onCloseValDialog: function () {
+			this.pdfDetails().then(function (oDialog) {
+				oDialog.close();
+			});
+		},
+
+		onSavePDFData : async function(){
+			// Getting data from fragment for PDF body area.
+			let tableData = this.getModel("appView").getProperty("/pdfItems");
+
+			let model = this.getView().getModel("i18n");
+			let jsonData = this.getView().getModel("appView").getProperty("/Jobs");
+			let companyId = jsonData.CompanyId;
+			var oModel = this.getView().getModel();
+			let aeonCompanyId = "64d31c348c30b08f885c2c0e";
+			let newJson = {};
+			let selfCompany = await oModel.read("/Company('" + aeonCompanyId + "')", {
+				success: function (data) {
+					newJson = {
+						SenderCompanyName : data.CompanyName,
+						SenderCompanyAddress : data.CompanyAddress,
+						SenderGstNumber : data.GstNumber,
+						SenderPhoneNumber : data.PhoneNo,
+						SenderEmail : data.EmailAddress
+					}
+					oModel.read("/Company('" + companyId + "')", {
+						success: function (data) {
+							// console.log(data);
+							let reciverJSON = {
+								companyName : data.CompanyName,
+								companyAddress : data.CompanyAddress,
+								gstNumber : data.GstNumber,
+								phoneNumber : data.PhoneNo,
+								email : data.EmailAddress
+							}
+							Object.assign(newJson,reciverJSON);
+							Object.assign(newJson,tableData);
+							const binary =  pdfEngine.pdf(newJson, 'download','A4',model);
+						},
+						error: function (error) {
+							MessageToast.show('No Job Found : ' + that.oArgs);
+							that.getRouter().navTo("allPrinters");
+						}
+					});
+				}
+			});
+
+
+
+		//    const binary = await pdfEngine.pdf(jsonData, 'download','A4',model);
+
+
+
+
+
+		},
+
+		onAddItemsPDF: function () {
+			var oData = this.getModel("appView").getProperty("/pdfItems/tableData");
+			var oPaylaod = {
+				"ItemName": "",
+				"ItemSize": "",
+				"ItemInches": "",
+				"GSM": "",
+				"Sheets": "",
+				"ProductCode": "",
+				"DeliveryDate": "",
+				"Quantity": "",
+				"Rate": ""
+			};
+			oData.push(oPaylaod);
+			this.getModel("appView").setProperty("/pdfItems/tableData", oData);
 		}
+
+
 
 
 	});

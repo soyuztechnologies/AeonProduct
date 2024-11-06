@@ -150,7 +150,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
-					that.getJobsDataByStatusFilter();
+					// that.getJobsDataByStatusFilter(); 
 					// that.getCompanyName();
 				},
 				function (oErr) {

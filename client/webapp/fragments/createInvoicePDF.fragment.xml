@@ -1,0 +1,138 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+   
+  
+    <Dialog contentWidth="100%" contentHeight="100%" title="Data For PDF" >
+        <content >
+            <form:SimpleForm  editable="true" layout="ResponsiveGridLayout" labelSpanL="-1" id="pdfData">
+                <Label text="Purchase Order No " />
+                <Input id="pdfDataOrderNo" value="{appView>/pdfItems/pdfDataOrderNo}" width="50%"/>
+                <Label text="Purchase Date "/>
+                <DatePicker width="50%"
+					id="DP1"
+					placeholder="Enter Date"
+					change="handleChange"
+					class="sapUiSmallMarginBottom" value="{appView>/pdfItems/pdfDeliveryDate}"/>
+                <Label text="Delivery Address " />
+                <Input id="pdfDataDeliveryAddress" placeholder="Add Delivery Address...." width="50%" value="{appView>/pdfItems/pdfDataDeliveryAddress}"></Input>
+                <!-- <Label text="Item Description "/>
+                <Input width="50%" id="pdfDataItemDescription"/>
+                <Label text="Item Quantity "/>
+                <Input width="50%" id="pdfDataItemQuantity"/>
+                <Label text="Item Rate (INR) "/>
+                <Input width="50%" id="pdfDataItemRate"/>
+                <Label text="Item Total Cost " />
+                <Input width="50%" id="pdfDataItemTotalCost"/> -->
+                    
+            </form:SimpleForm>
+
+            <Table items="{path: 'appView>/pdfItems/tableData'}" mode="None">
+                <headerToolbar>
+                    <OverflowToolbar>
+                    <content>
+                        <ToolbarSpacer />
+                        <Button icon="sap-icon://add" press="onAddItemsPDF"/>
+                    </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column>
+                        <Text text="Item Name" />
+                    </Column>
+                    <Column>
+                        <Text text="Item Size" />
+                    </Column>
+                    <Column>
+                        <Text text="Item Inches" />
+                    </Column>
+                    <Column>
+                        <Text text="Item GSM" />
+                    </Column>
+                    <Column>
+                        <Text text="Sheets" />
+                    </Column>
+                    <Column>
+                        <Text text="Product Code" />
+                    </Column>
+                    <Column>
+                        <Text text="Delivery Date" />
+                    </Column>
+                    <Column>
+                        <Text text="Quantity" />
+                    </Column>
+                    <Column>
+                        <Text text="Rate (INR)" />
+                    </Column>
+                    <!-- <Column>
+                        <Text text="Total (INR)" />
+                    </Column> -->
+                </columns>
+                <items>
+                    <ColumnListItem >
+                        <cells>
+                            <Input value="{appView>ItemName}" width="80%"/>
+                            <Input value="{appView>ItemSize}" width="80%"/>
+                            <Input value="{appView>ItemInches}" width="80%"/>
+                            <Input value="{appView>GSM}" width="80%"/>
+                            <Input value="{appView>Sheets}" width="80%"/>
+                            <Input value="{appView>ProductCode}" width="80%"/>
+                            <!-- <Input value="{appView>DeliveryDate}" width="80%"/> -->
+                            <DatePicker width="100%"
+                            id="DP2"
+                            change="handleChangeDeliveryDate"
+                            class="sapUiSmallMarginBottom" value="{appView>DeliveryDate}"/>
+                            <Input value="{appView>Quantity}" width="80%"/>
+                            <Input value="{appView>Rate}" width="80%"/>
+                            <!-- <Input value="{= ${appView>/Quantity} * ${appView>/Rate}}" width="80%" placeholder="Total" editable="false"/> -->
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+            <HBox  class="sapUiSmallMarginTop">
+                <VBox width="50%">
+                    <form:SimpleForm editable="true">
+                        <Label text="Transport" /> 
+                        <Input value="{appView>/pdfItems/transportName}"></Input>   
+                        <Label text="Excise Duty" />       
+                        <Input value="{appView>/pdfItems/exciseDuty}"></Input>    
+                        <Label text="Tax Type" />        
+                        <Input value="{appView>/pdfItems/taxType}"></Input>     
+                        <Label text="Payment Terms" />   
+                        <Text text="60 Days"></Text>    
+                        <Label text="Delivery Terms" /> 
+                        <Text text="Door Delivery"></Text>    
+                    </form:SimpleForm>
+                </VBox>
+                <!-- <VBox width="50%">
+                    <form:SimpleForm editable="true">
+                        <Label text="Total" /> 
+                        <Text text="15000"></Text>  
+                        <Label text="Transporatation" />       
+                        <Text text="15000"></Text>  
+                        <Label text="SGST" />        
+                        <Text text="15000"></Text>       
+                        <Label text="CGST" />   
+                        <Text text="15000"></Text>     
+                        <Label text="Grand Total" /> 
+                        <Text text="61000"></Text> 
+                    </form:SimpleForm>   
+                </VBox> -->
+            </HBox>
+
+
+
+        </content>
+        <beginButton>
+            <Button text="Save" type="Accept" press="onSavePDFData" />
+        </beginButton>
+        <endButton>
+            <Button text="Close" type="Emphasized" press="onCloseValDialog" />
+        </endButton>
+    </Dialog>
+                                
+   
+</core:FragmentDefinition>

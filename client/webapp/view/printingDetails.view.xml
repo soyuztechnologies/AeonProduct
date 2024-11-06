@@ -12,6 +12,9 @@
             press="whenProductionStart"
           >   
           </Button> -->
+
+			<Button icon="sap-icon://pdf-attachment" press="onPDFGenerate"></Button>
+
 		  <Button
 		  tooltip="Job Details"
 		  icon="sap-icon://form"

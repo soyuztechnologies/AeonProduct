@@ -90,6 +90,14 @@
 				{
 					"uri": "css/style.css"
 				}
+			],
+			"js": [
+				{
+					"uri": "pdfgen/pdfkit.js"
+				},
+				{
+					"uri": "pdfgen/blob-stream-v0.1.2.js"
+				}
 			]
 		},
 		"routing": {
@@ -252,133 +260,133 @@
 					"name":"Embossing",
 					"target":["allPrinters"]
 				},
-
-
-
-
 				{
-					"pattern":"Punching/{jobId}",
-					"name":"sideNavPunching",
-					"target":["allPrinters","printingDetails"]
+					"pattern": "Punching/{jobId}",
+					"name": "sideNavPunching",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
 				},
 				{
-					"pattern":"Punching",
-					"name":"Punching",
-					"target":["allPrinters"]
-				},
-
-
-
-
-				{
-					"pattern":"Pasting/{jobId}",
-					"name":"sideNavPasting",
-					"target":["allPrinters","printingDetails"]
+					"pattern": "Punching",
+					"name": "Punching",
+					"target": [
+						"allPrinters"
+					]
 				},
 				{
-					"pattern":"Pasting",
-					"name":"Pasting",
-					"target":["allPrinters"]
-				},
-           {
-
-                    "pattern":"ReadyForDispatch/{jobId}",
-
-                    "name":"sideNavReadyForDispatch",
-
-                    "target":["allPrinters","printingDetails"]
-
-                },
-
-                {
-
-                    "pattern":"Ready For Dispatch",
-
-                    "name":"Ready For Dispatch",
-
-                    "target":["allPrinters"]
-
-                },
-
-
-
-				{
-					"pattern":"Packing/{jobId}",
-					"name":"sideNavPacking",
-					"target":["allPrinters","printingDetails"]
+					"pattern": "Pasting/{jobId}",
+					"name": "sideNavPasting",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
 				},
 				{
-					"pattern":"Packing",
-					"name":"Packing",
-					"target":["allPrinters"]
-				},
-
-
-
-				{
-					"pattern":"Dispatched/{jobId}",
-					"name":"sideNavDispatched",
-					"target":["allPrinters","printingDetails"]
+					"pattern": "Pasting",
+					"name": "Pasting",
+					"target": [
+						"allPrinters"
+					]
 				},
 				{
-					"pattern":"Dispatched",
-					"name":"Dispatched",
-					"target":["allPrinters"]
-				},
-
-
-
-				{
-					"pattern":"Delivering/{jobId}",
-					"name":"sideNavDelivering",
-					"target":["allPrinters","printingDetails"]
+					"pattern": "ReadyForDispatch/{jobId}",
+					"name": "sideNavReadyForDispatch",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
 				},
 				{
-					"pattern":"Delivering",
-					"name":"Delivering",
-					"target":["allPrinters"]
+					"pattern": "Ready For Dispatch",
+					"name": "Ready For Dispatch",
+					"target": [
+						"allPrinters"
+					]
 				},
 				{
-					"pattern":"Others/{jobId}",
-					"name":"sideNavOthers",
-					"target":["allPrinters","printingDetails"]
+					"pattern": "Packing/{jobId}",
+					"name": "sideNavPacking",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
 				},
 				{
-					"pattern":"Others",
-					"name":"Others",
-					"target":["allPrinters"]
-				},
-
-
-
-
-				{
-					"pattern":"userDetails",
-					"name":"userDetails",
-					"target":"userDetails"
+					"pattern": "Packing",
+					"name": "Packing",
+					"target": [
+						"allPrinters"
+					]
 				},
 				{
-					"pattern":"dispatchedList",
-					"name":"dispatchedList",
-					"target":"dispatchedList"
+					"pattern": "Dispatched/{jobId}",
+					"name": "sideNavDispatched",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
 				},
 				{
-					"pattern":"companyDetails",
-					"name":"companyDetails",
-					"target":"companyDetails"
+					"pattern": "Dispatched",
+					"name": "Dispatched",
+					"target": [
+						"allPrinters"
+					]
 				},
 				{
-
-                    "pattern":"vendorDetails",
-
-                    "name":"vendorDetails",
-
-                    "target":"vendorDetails"
-
-                }
+					"pattern": "Delivering/{jobId}",
+					"name": "sideNavDelivering",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
+				},
+				{
+					"pattern": "Delivering",
+					"name": "Delivering",
+					"target": [
+						"allPrinters"
+					]
+				},
+				{
+					"pattern": "Others/{jobId}",
+					"name": "sideNavOthers",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
+				},
+				{
+					"pattern": "Others",
+					"name": "Others",
+					"target": [
+						"allPrinters"
+					]
+				},
+				{
+					"pattern": "userDetails",
+					"name": "userDetails",
+					"target": "userDetails"
+				},
+				{
+					"pattern": "dispatchedList",
+					"name": "dispatchedList",
+					"target": "dispatchedList"
+				},
+				{
+					"pattern": "companyDetails",
+					"name": "companyDetails",
+					"target": "companyDetails"
+				},
+				{
+					"pattern": "vendorDetails",
+					"name": "vendorDetails",
+					"target": "vendorDetails"
+				}
 			],
 			"targets": {
-				
 				"login": {
 					"viewName": "Login",
 					"viewLevel": 1,
@@ -391,165 +399,143 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId": "notFound"
 				},
-				"allPrinters":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"allPrinters": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-
-				"Attachments":{
+				"Attachments": {
 					"viewName": "Attachments",
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
 					"viewId": "Attachments"
 				},
-				"PoNo":{
+				"PoNo": {
 					"viewName": "Attachments",
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
 					"viewId": "Attachments"
 				},
-
-
-
-
-
-
-				"Printing":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Printing": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"Coating":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Coating": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"Foiling":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Foiling": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"SpotUV":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"SpotUV": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"Embossing":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Embossing": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"Punching":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Punching": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"Pasting":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Pasting": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"Packing":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Packing": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				"Dispatched":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Dispatched": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				
-				
-				"Delivering":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Delivering": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-				
-				"Others":{
-					"viewName":"allPrinters",
-					"viewLevel":1,
+				"Others": {
+					"viewName": "allPrinters",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"allPrinters"
+					"viewId": "allPrinters"
 				},
-
-
-
-
-				"Carborator":{
+				"Carborator": {
 					"viewName": "Carborator",
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
 					"viewId": "Carborator"
 				},
-				
-
-
-				"userVerify":{
+				"userVerify": {
 					"viewName": "userVerify",
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
 					"viewId": "userVerify"
 				},
-				"updatePassword":{
+				"updatePassword": {
 					"viewName": "updatePassword",
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
 					"viewId": "updatePassword"
 				},
-				"printingDetails":{
+				"printingDetails": {
 					"viewName": "printingDetails",
 					"viewLevel": 1,
 					"controlAggregation": "midColumnPages",
 					"viewId": "printingDetails"
 				},
-				"userDetails":{
-					"viewName":"userDetails",
-					"viewLevel":1,
+				"userDetails": {
+					"viewName": "userDetails",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"userDetails"
+					"viewId": "userDetails"
 				},
-				"companyDetails":{
-					"viewName":"companyDetails",
-					"viewLevel":1,
+				"companyDetails": {
+					"viewName": "companyDetails",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"companyDetails"
+					"viewId": "companyDetails"
 				},
-				"vendorDetails":{
-
-                    "viewName":"vendorDetails",
-
-                    "viewLevel":1,
-
-                    "controlAggregation": "beginColumnPages",
-
-                    "viewId":"vendorDetails"
-
-                },
-				"Profile":{
-					"viewName":"CustomerProfile",
-					"viewLevel":1,
+				"vendorDetails": {
+					"viewName": "vendorDetails",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"Profile"
+					"viewId": "vendorDetails"
 				},
-				"dispatchedList":{
-					"viewName":"dispatchedList",
-					"viewLevel":1,
+				"Profile": {
+					"viewName": "CustomerProfile",
+					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId":"dispatchedList"
+					"viewId": "Profile"
+				},
+				"dispatchedList": {
+					"viewName": "dispatchedList",
+					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
+					"viewId": "dispatchedList"
 				}
 			}
 		}
