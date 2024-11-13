@@ -275,30 +275,36 @@ sap.ui.define([
 
 				}
 			}
-
 			let currentJob = this.getModel('appView').getProperty('/currentJobCardNo');
-			let duplicateJobs = [];
-			for (let i = 0; i < tableOject.length; i++) {
-				if (!(tableOject[i].jobCardNo === currentJob)) {		//No selected row here to show duplicates on which row 
-					let presentedAttachmentInJob = [];
-					presentedAttachmentInJob.push(tableOject[i].PoAttach, tableOject[i].artworkCode, ...tableOject[i].InvNo, ...tableOject[i].DeliveryNo);
-					let isAnyPresent = presentedAttachmentInJob.some(item => payload.includes(item));
-					if (isAnyPresent) {
-						let jobCardNo = this.getModel('appView').getProperty('/JobsData/' + i);
-						duplicateJobs.push(jobCardNo.jobCardNo);
-					}
-				}
-			}
-			if (duplicateJobs.length > 0) {
-				MessageToast.show('Found Same attachments in Job : ' + duplicateJobs);
-				return;
-			}
-
-			let newPayloadData = [];	//payload send to server
+			let newPayloadData = [];
 			newPayloadData.push({
-				jobCardNo: currentJob,
-				attachments: payload
-			})
+					jobCardNo: currentJob,
+					attachments: payload
+				})
+
+			// let currentJob = this.getModel('appView').getProperty('/currentJobCardNo');
+			// let duplicateJobs = [];
+			// for (let i = 0; i < tableOject.length; i++) {
+			// 	if (!(tableOject[i].jobCardNo === currentJob)) {		//No selected row here to show duplicates on which row 
+			// 		let presentedAttachmentInJob = [];
+			// 		presentedAttachmentInJob.push(tableOject[i].PoAttach, tableOject[i].artworkCode, ...tableOject[i].InvNo, ...tableOject[i].DeliveryNo);
+			// 		let isAnyPresent = presentedAttachmentInJob.some(item => payload.includes(item));
+			// 		if (isAnyPresent) {
+			// 			let jobCardNo = this.getModel('appView').getProperty('/JobsData/' + i);
+			// 			duplicateJobs.push(jobCardNo.jobCardNo);
+			// 		}
+			// 	}
+			// }
+			// if (duplicateJobs.length > 0) {
+			// 	MessageToast.show('Found Same attachments in Job : ' + duplicateJobs);
+			// 	return;
+			// }
+
+			// let newPayloadData = [];	//payload send to server
+			// newPayloadData.push({
+			// 	jobCardNo: currentJob,
+			// 	attachments: payload
+			// })
 			var that = this;
 			MessageBox.confirm("Are you sure you want to delete Attachments", {
 				actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
@@ -355,8 +361,8 @@ sap.ui.define([
 		onDeleteAttachmentTable: function () {
 			let tableOject = this.getModel('appView').getProperty('/JobsData');		//Get Table data with binding is from /JobsData
 			var oTable = this.byId("idJobTable");  		// get table by id
-			var oBinding = oTable.getBinding('items');	//get table data
-			let jobIds = [];
+			// var oBinding = oTable.getBinding('items');	//get table data
+			// let jobIds = [];
 
 			// Selected Paths-----for deletion
 			let selectedPath = oTable.getSelectedContextPaths();
@@ -367,49 +373,66 @@ sap.ui.define([
 			}
 
 			// Storing the attachments that we want to delete.
-			let attachments = [];
-			selectedPath.forEach(data => {
-				data = this.getModel('appView').getProperty(data);
-				jobIds.push(data.jobCardNo);
-				attachments.push(...data.DeliveryNo);
-				attachments.push(...data.InvNo);
-				attachments.push(data.PoAttach);
-				attachments.push(data.artworkCode);
-			})
+			// let attachments = [];
+			// selectedPath.forEach(data => {
+			// 	data = this.getModel('appView').getProperty(data);
+			// 	// jobIds.push(data.jobCardNo);
+			// 	attachments.push(...data.DeliveryNo);
+			// 	attachments.push(...data.InvNo);
+			// 	attachments.push(data.PoAttach);
+			// 	attachments.push(data.artworkCode);
+			// })
 
-			// Selected Indexes/rows by user to delete
+			let newPayloadData = [];
 			let usedIndexes = [];
 			selectedPath.forEach(data => {
 				usedIndexes.push(data.split('/')[data.split('/').length - 1])
 			})
-
-			let duplicateJobs = [];
-			let newPayloadData = [];	//Final Payload
-			// Finding Duplicate Attachments with other jobs.
 			for (let i = 0; i < tableOject.length; i++) {
-				if (!usedIndexes.includes(i.toString())) {		//No selected row here to show duplicates on which row 
-					let presentedAttachmentInJob = [];
-					presentedAttachmentInJob.push(tableOject[i].PoAttach, tableOject[i].artworkCode, ...tableOject[i].InvNo, ...tableOject[i].DeliveryNo);
-					let isAnyPresent = presentedAttachmentInJob.some(item => attachments.includes(item));
-					if (isAnyPresent) {
-						let jobCardNo = this.getModel('appView').getProperty('/JobsData/' + i);
-						duplicateJobs.push(jobCardNo.jobCardNo);
-					}
-				} else {
-					let data = tableOject[i];
-					let attachArray = [];
-					attachArray.push(data.PoAttach, data.artworkCode, ...data.InvNo, ...data.DeliveryNo);
-					newPayloadData.push({		//Payload sended to server
-						jobCardNo: data.jobCardNo,
-						attachments: attachArray
-					})
+					if (usedIndexes.includes(i.toString())) {		//No selected row here to show duplicates on which row 
+						let data = tableOject[i];
+						let attachArray = [];
+						attachArray.push(data.PoAttach, data.artworkCode, ...data.InvNo, ...data.DeliveryNo);
+						newPayloadData.push({		//Payload sended to server
+							jobCardNo: data.jobCardNo,
+							attachments: attachArray
+						})
+					} 
 				}
-			}
 
-			if (duplicateJobs.length > 0) {
-				MessageToast.show('Found Job with same attachments : ' + duplicateJobs);
-				return;
-			}
+			// Selected Indexes/rows by user to delete
+			// let usedIndexes = [];
+			// selectedPath.forEach(data => {
+			// 	usedIndexes.push(data.split('/')[data.split('/').length - 1])
+			// })
+
+			// let duplicateJobs = [];
+			// let newPayloadData = [];	//Final Payload
+			// Finding Duplicate Attachments with other jobs.
+			// for (let i = 0; i < tableOject.length; i++) {
+			// 	if (!usedIndexes.includes(i.toString())) {		//No selected row here to show duplicates on which row 
+			// 		let presentedAttachmentInJob = [];
+			// 		presentedAttachmentInJob.push(tableOject[i].PoAttach, tableOject[i].artworkCode, ...tableOject[i].InvNo, ...tableOject[i].DeliveryNo);
+			// 		let isAnyPresent = presentedAttachmentInJob.some(item => attachments.includes(item));
+			// 		if (isAnyPresent) {
+			// 			let jobCardNo = this.getModel('appView').getProperty('/JobsData/' + i);
+			// 			duplicateJobs.push(jobCardNo.jobCardNo);
+			// 		}
+			// 	} else {
+			// 		let data = tableOject[i];
+			// 		let attachArray = [];
+			// 		attachArray.push(data.PoAttach, data.artworkCode, ...data.InvNo, ...data.DeliveryNo);
+			// 		newPayloadData.push({		//Payload sended to server
+			// 			jobCardNo: data.jobCardNo,
+			// 			attachments: attachArray
+			// 		})
+			// 	}
+			// }
+
+			// if (duplicateJobs.length > 0) {
+			// 	MessageToast.show('Found Job with same attachments : ' + duplicateJobs);
+			// 	return;
+			// }
 
 			var that = this;
 			MessageBox.confirm("Are you sure you want to delete Attachments", {
