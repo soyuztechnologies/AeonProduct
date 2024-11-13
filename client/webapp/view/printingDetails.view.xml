@@ -13,7 +13,7 @@
           >   
           </Button> -->
 
-			<Button icon="sap-icon://pdf-attachment" press="onPDFGenerate"></Button>
+			<!-- <Button icon="sap-icon://pdf-attachment" press="onPDFGenerate" visible="false"></Button> -->
 
 		  <Button
 		  tooltip="Job Details"
