@@ -1756,10 +1756,10 @@ app.start = function () {
 			try {
 				const Job = app.models.Job;
 				var payload = req.body;
-				var selectedYear = payload.selectedYear;
+				// var selectedYear = payload.selectedYear;
 				var maxDate = payload.maxDate;
 				var minDate = payload.minDate;
-				var selectedYear = selectedYear.toString();
+				// var selectedYear = selectedYear.toString();
 				if (payload.State) {
 					var oFilter = {
 						and: [{ status: { nlike: "Dispatched" } }]
