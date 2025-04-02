@@ -45,7 +45,12 @@ function myMiddleware(options) {
 			var originalSend = res.send;
 			res.send = function (body) {
 				if (body && JSON.parse(body).id) {
-					res.cookie('soyuz_session', JSON.parse(body).id);
+					res.cookie('soyuz_session', JSON.parse(body).id, {
+						httpOnly: true,  // Prevents access to cookie from JavaScript
+						secure: true,    // Ensures cookie is sent over HTTPS
+						sameSite: 'None', // Allows cross-site cookie usage
+						maxAge: 3600 * 1000 // 1 hour expiration
+					});
 				}
 				// Call the original send function with the unmodified body
 				originalSend.call(this, body);
@@ -1504,8 +1509,11 @@ app.start = function () {
 
 			const cookieHeader = req.headers.cookie;
 			// Parse the cookie string and extract the value of 'soyuz_session'
-			const cookies = cookie.parse(cookieHeader);
-			const sessionCookie = cookies.soyuz_session;
+			var cookies = {};
+			if(cookieHeader){
+				cookies = cookie.parse(cookieHeader);
+			}
+			const sessionCookie = cookies.soyuz_session || req.query.access_token;
 
 			if (!sessionCookie) {
 				return res.status(404).json({ error: 'Session not found' });
@@ -1566,9 +1574,11 @@ app.start = function () {
 
 			const cookieHeader = req.headers.cookie;
 			// Parse the cookie string and extract the value of 'soyuz_session'
-			const cookies = cookie.parse(cookieHeader);
-			const sessionCookie = cookies.soyuz_session;
-
+			var cookies = {};
+			if(cookieHeader){
+				cookies = cookie.parse(cookieHeader);
+			}
+			const sessionCookie = cookies.soyuz_session || req.query.access_token;
 			this.AccessToken.findOne({ where: { id: sessionCookie } }, (tokenError, accessToken) => {
 				if (tokenError) {
 					console.error('Error fetching access token:', tokenError);
@@ -1617,8 +1627,10 @@ app.start = function () {
 		// * this is the logout callback. 
 		app.post('/logout', (req, res) => {
 			const cookieHeader = req.headers.cookie;
-			const cookies = cookie.parse(cookieHeader);
-			const sessionCookie = cookies.soyuz_session;
+			if(cookieHeader){
+				const cookies = cookie.parse(cookieHeader);
+				const sessionCookie = cookies.soyuz_session;
+			}
 			res.clearCookie('soyuz_session');
 			res.json({ message: 'Logout successful' });
 		});
