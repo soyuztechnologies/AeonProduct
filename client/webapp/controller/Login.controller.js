@@ -108,6 +108,9 @@ sap.ui.define([
 				.then(function (data, status, xhr) {
 					// MessageToast.show("Login Success");
 					that.UserRole = data.Role
+					if(window.cordova){
+						window.cordova.session=data.id;
+					}
 					if (data.Blocked == "Yes") {
 						MessageBox.information("Your Account has been blocked by Administrator, For Further Details Contact Admin");
 					}
@@ -170,9 +173,9 @@ sap.ui.define([
 					localStorage.setItem("pass",password);
 
 							
-					if(window.cordova){
-						Cookies.set("soyuz_session", data.id, { expires: 7 });
-					}
+					// if(window.cordova){
+					// 	Cookies.set("soyuz_session", data.id, { expires: 7 });
+					// }
 
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {

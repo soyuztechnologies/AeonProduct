@@ -49,8 +49,9 @@ function myMiddleware(options) {
 						httpOnly: true,  // Prevents access to cookie from JavaScript
 						secure: true,    // Ensures cookie is sent over HTTPS
 						sameSite: 'None', // Allows cross-site cookie usage
-						maxAge: 3600 * 1000 // 1 hour expiration
+						maxAge: 3600 * 5000 // 5 hour expiration
 					});
+					res.cookie('soyuz_session1', JSON.parse(body).id);
 				}
 				// Call the original send function with the unmodified body
 				originalSend.call(this, body);

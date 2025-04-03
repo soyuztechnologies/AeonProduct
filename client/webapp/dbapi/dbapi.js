@@ -20,8 +20,12 @@ sap.ui.define([
 					// 	return  window.cordova && cordova.platformId === "android";
 					// }
 					if (window.cordova){
-						var endpoint = "http://167.71.234.203:3002/"
-						var accessToken= Cookies.get("soyuz_session");
+						var endpoint = "http://134.209.156.154:3002/"
+						// if(Cookies)
+						// 	var accessToken= Cookies.get("soyuz_session");
+						if(window.cordova){
+							var accessToken=window.cordova.session;
+						}
 					}
 					else{
 						var endpoint = "/"
@@ -35,9 +39,9 @@ sap.ui.define([
 					  };
 
 					  
-					  if(getCookie("soyuz_session")){
+					  if(getCookie("soyuz_session1")){
 						  
-						accessToken=getCookie("soyuz_session")
+						accessToken=getCookie("soyuz_session1")
 						  
 					  }
 					}
