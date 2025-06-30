@@ -1395,7 +1395,7 @@ app.start = function () {
 
 						const { id, ttl, created, userId } = user;
 
-						const { Status, Blocked, Role } = appUser || {};
+						const { Status, Blocked, Role } = appUser;
 
 						return res.status(200).json({ id, Status, Role, ttl, created, userId, Blocked, temp, tempPass });
 					});
