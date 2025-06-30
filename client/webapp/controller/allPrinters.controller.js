@@ -665,7 +665,7 @@ sap.ui.define([
 				// const uploadDateMaxDate = maxDate
 				// var minDate = new Date(currentYear, 3, 1);
 				// const uploadDateMinDate = minDate;
-				var currentDate = new Date("2024-04-08");
+				var currentDate = new Date();
 				var currentYear = currentDate.getFullYear();
 
 				if (currentDate.getMonth() < 3 || (currentDate.getMonth() === 3 && currentDate.getDate() < 1)) {

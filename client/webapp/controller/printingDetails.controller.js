@@ -2835,7 +2835,7 @@ sap.ui.define([
 				this._oPopover.openBy(oEvent.getSource());
 
 			} else {
-				var currentDate = new Date("2024-04-08");
+				var currentDate = new Date();
 				var currentYear = currentDate.getFullYear();
 
 				if (currentDate.getMonth() < 3 || (currentDate.getMonth() === 3 && currentDate.getDate() < 1)) {
