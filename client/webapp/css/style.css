@@ -8,22 +8,27 @@
 .columnListItem > .sapMListTblHighlightCell > .sapMLIBHighlightIndication08{
     background-color: gray;
 }
-.logoCss{
-    right: 9%;
-    margin-bottom: 5rem;
+
+.logoCss .sapMImg {
+  display: block;
+  margin: 0 auto;
 }
-.loginFormCss{
+
+/* .loginFormCss{
     width: 30%;
     margin-bottom: 4rem;
     left: 5%;
-}
+} */
 .loginText{
-  font-size: 2rem; /* Adjust font size as needed */
+  font-size: 1.8rem; /* Adjust font size as needed */
   font-weight: 700;
   color: #000000; /* Adjust text color */
   text-align: center;
-  margin-bottom: 5rem; /* Add margin to separate from other elements */
-  padding-left: 10%;
+  margin-bottom: 2rem; /* Add margin to separate from other elements */
+  /* padding-left: 10%; */
+  width: 95%;
+  display: block;
+  margin: 0 auto;
 }
 
 /* .fonts{
