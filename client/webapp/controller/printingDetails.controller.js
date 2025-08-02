@@ -1133,8 +1133,10 @@ sap.ui.define([
 			var data = oEvent.getSource().getBindingContext("appView").getObject();
 			var clickedrow = oEvent.getSource().getBinding("text").getPath();
 			var dModel = this.getView().getModel();
-			var invoice = data.InvNo;
-			var Delivery = data.DeliveryNo;
+			var invoice = (data.InvNo.split(',').map(item => item.trim()).length>1) ? data.InvNo.split(',')
+				.map(item => ({ InvNo: item.trim() })) : data.InvNo;
+			var Delivery = (data.DeliveryNo.split(',').map(item => item.trim()).length>1) ? data.DeliveryNo.split(',')
+				.map(item => ({ DeliveryNo: item.trim() })) : data.DeliveryNo;
 			this.flag=false;
 			// var poNo = data.poAttachment;
 			// var artwork = data.artworkAttachment;
@@ -1160,7 +1162,6 @@ sap.ui.define([
 				else {
 					that.getView().getModel("appView").setProperty("/custInvAttachVis", true)
 					that.getView().getModel("appView").setProperty("/custDelAttachVis", false)
-
 				}
 				if (clickedrow == "DeliveryNo") {
 					var oModel = that.getView().getModel("appView");
@@ -1310,8 +1311,53 @@ sap.ui.define([
 
 
 			if (sUserRole === "Customer") {
-
-				this.openCustomerAttachmentDialog(oEvent);
+				if (this.clickedLink === "DeliveryNo") {
+					that.getView().getModel("appView").setProperty("/custInvAttachVis", false)
+					that.getView().getModel("appView").setProperty("/custDelAttachVis", true)
+				}else {
+					that.getView().getModel("appView").setProperty("/custInvAttachVis", true)
+					that.getView().getModel("appView").setProperty("/custDelAttachVis", false)
+				}
+				if (this.clickedLink == "DeliveryNo") {
+					if(oData.DeliveryNo.split(',').map(item => item.trim()).length>1){
+						this.openCustomerAttachmentDialog(oEvent);
+						return;
+					}
+					if (oData.DeliveryNo && oData.DeliveryNo.length) {
+						var url = `/Attachments('${oData.DeliveryNo[0].DeliveryNo + "DelNo"}')`
+					}
+				}
+				if (this.clickedLink == "InvNo") {
+					if(oData.InvNo.split(',').map(item => item.trim()).length>1){
+						this.openCustomerAttachmentDialog(oEvent);
+						return;
+					}
+					if (oData.InvNo && oData.InvNo.length) {
+						var url = `/Attachments('${oData.InvNo[0].InvNo + "InvNo"}')`
+					}
+				}
+				if (this.clickedLink === "clientPONo") {
+					if (oData.PoAttach) {
+						var url = `/Attachments('${oData.PoAttach + "InvNo"}')`
+					}
+				}
+				if (this.clickedLink === "artworkCode") {
+					if (oData.ArtworkAttach) {
+						var url = `/Attachments('${oData.ArtworkAttach + "InvNo"}')`
+					}
+				}
+				dModel.read(url, {
+					success: function (data) {
+						that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+						that.oDialogOpen().then(function(oDialog){
+							oDialog.open();
+						})
+					},
+					error: function (error) {
+						MessageBox.show("Attachment Is Not Attached")
+					}
+				});
+				// this.openCustomerAttachmentDialog(oEvent);
 
 				// this.getJobsStatusDatas();
 			}
@@ -1354,10 +1400,10 @@ sap.ui.define([
 				}
 
 				if (this.clickedLink == "DeliveryNo") {
-					// if (oData.DelAttachment?.Type === "DelNo") {
-						
-					// 	this.getModel("appView").setProperty("/attachmentFiles", oData.DelAttachment.Attachment)
-					// }
+					if(oData.DeliveryNo.split(',').map(item => item.trim()).length>1){
+						this.openCustomerAttachmentDialog(oEvent);
+						return;
+					}
 
 					if (oData.DeliveryNo) {
 						var url = `/Attachments('${oData.DeliveryNo + "DelNo"}')`
@@ -1376,18 +1422,23 @@ sap.ui.define([
 					}
 				}
 				if (this.clickedLink == "InvNo") {
-					if (oData.InvNo) {
-						var url = `/Attachments('${oData.InvNo + "InvNo"}')`
-					}
-					var incFile = oData.incAttachment;
-					oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
-					// oModel.setProperty("/btnVisibility", false);
-					// oModel.setProperty("/browseVisArtwork", false);
-					if (incFile) {
-						oModel.setProperty("/buttonText", "Update");
-					}
-					else {
-						oModel.setProperty("/buttonText", "Upload");
+					if(oData.InvNo.split(',').map(item => item.trim()).length>1){
+						this.openCustomerAttachmentDialog(oEvent);
+						return;
+					}else{
+						if (oData.InvNo) {
+							var url = `/Attachments('${oData.InvNo + "InvNo"}')`
+						}
+						var incFile = oData.incAttachment;
+						oModel.setProperty("/uploadDocumnetTitle", "Upload Invoice Document");
+						// oModel.setProperty("/btnVisibility", false);
+						// oModel.setProperty("/browseVisArtwork", false);
+						if (incFile) {
+							oModel.setProperty("/buttonText", "Update");
+						}
+						else {
+							oModel.setProperty("/buttonText", "Upload");
+						}
 					}
 				}
 
@@ -1627,7 +1678,6 @@ sap.ui.define([
 				"SecoundarySuppliers": "",
 				"SecoundaryPiecesToSend": "",
 				"Pasting": "",
-				"Printing": "",
 				"Punching": "",
 				"deliveryAttachment": "",
 				"incAttachment": "",
