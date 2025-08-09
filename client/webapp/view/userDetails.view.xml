@@ -22,6 +22,7 @@
 					<items>
 					  <core:Item key="Customer" text="Customer" />
 					  <core:Item key="Admin" text="Admin" />
+					  <core:Item key="SalesPerson" text="Sales Person" />
 					  <core:Item key="Factory Manager" text="Factory Manager" />
 					  <core:Item key="Raw Material Head" text="Raw Material Head" />
 					  <core:Item key="Printing Head" text="Printing Head" />
@@ -94,9 +95,18 @@
 							<core:Item text="Reject" key="Reject" />
 							<core:Item text="Approved" key="Approved" />
 						</Select>
-						<Select enabled="{parts:[ {path:'appView>Blocked'}, { path: 'appView>Status'}] ,formatter:'.formatter.companyVis'}" editable="{appView>/onBlockSelectBlocked}" items="{appView>/companyNames}" selectedKey="{appView>CompanyId}"  forceSelection="false" change="onSelectComPany"  visible="{=${appView>Role} === 'Customer' ? true : false}">
-							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
-						</Select>
+						<VBox>
+							<Select enabled="{parts:[ {path:'appView>Blocked'}, { path: 'appView>Status'}] ,formatter:'.formatter.companyVis'}" editable="{appView>/onBlockSelectBlocked}" items="{appView>/companyNames}" selectedKey="{appView>CompanyId}"  forceSelection="false" change="onSelectComPany"  visible="{=${appView>Role} === 'Customer' ? true : false}">
+								<core:Item text="{appView>CompanyName}" key="{appView>id}" />
+							</Select>
+							<MultiComboBox
+									visible="{=${appView>Role} === 'SalesPerson' ? true : false}"
+									selectionFinish="onSelectComPanySalesPerson"
+									selectedKeys="{appView>CompanyId}"
+									items="{appView>/companyNames}">
+								<core:Item key="{appView>id}" text="{appView>CompanyName}"/>
+							</MultiComboBox>
+						</VBox>
 						<Button type="Reject" text="Password" press="SendEmailExistUser" icon="sap-icon://reset"></Button>
 					</cells>
 				</ColumnListItem>

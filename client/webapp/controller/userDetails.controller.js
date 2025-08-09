@@ -177,6 +177,14 @@ sap.ui.define([
 					$select: "id,FirstName,LastName,UserName,EmailId,Role,Blocked,Status,Company,CompanyName,CompanyId,phoneNumber,Website,CompanyLogo,Title,CompanyAddress,GSTNO,__metadata"
 				},
 				success: function (data) {
+
+					data.results.forEach(user => {
+						if (user.Role === "SalesPerson" && user.CompanyId) {
+							user.CompanyId = user.CompanyId
+								.split(",")   // split into array
+								.map(id => id.trim()); // clean spaces // convert to object format
+						}
+					});
 					that.getView().getModel("appView").setProperty("/userDetails", data.results);
 					// that.getView().getModel("appView").setProperty("/userName", data.results[0].UserName); 
 					// if(sUserRole === "Admin"){
@@ -804,7 +812,7 @@ sap.ui.define([
 		},
 		//when select comapny this function trigger
 		onSelectComPany: function (oEvent) {
-			
+
 			var oSelectedCompanyName = oEvent.getParameter("selectedItem").getText();
 			var oSelectedCompanyKey = oEvent.getParameter("selectedItem").getKey();
             var rowData = oEvent.getSource().getParent().getBindingContext("appView").getObject();
@@ -816,6 +824,31 @@ sap.ui.define([
 			const payload = {
 				"CompanyId": oSelectedCompanyKey,
 				"CompanyName": oSelectedCompanyName
+			};
+
+			oModel.update(sEntityPath, payload, {
+				success: function (data) {
+					MessageToast.show("successfully Company Assigned to User");
+				},
+				error: function (error) {
+					this.middleWare.errorHandler(error, that);
+					// console.error("PATCH request failed");
+				}
+			});
+		},
+		//Urjent Requirement
+		onSelectComPanySalesPerson: function (oEvent) {
+
+			var aSelectedCompanyNames = oEvent.getParameter("selectedItems");
+			let companies = aSelectedCompanyNames.map(item => item.getProperty('key')).join(',');
+
+			var oModel = this.getView().getModel();
+			var that = this;
+			var id = oEvent.getSource().getBindingContext("appView").getObject().id;
+			const sEntityPath = `/AppUsers('${id}')`;
+			const payload = {
+				"CompanyId": companies,
+				"CompanyName": "Multi"
 			};
 
 			oModel.update(sEntityPath, payload, {

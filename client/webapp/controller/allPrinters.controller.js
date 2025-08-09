@@ -150,7 +150,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
-					// that.getJobsDataByStatusFilter(); 
+					that.getJobsDataByStatusFilter();
 					// that.getCompanyName();
 				},
 				function (oErr) {
@@ -600,8 +600,22 @@ sap.ui.define([
 			.catch(function (jqXhr, textStatus, errorMessage) {
 			  that.middleWare.errorHandler(jqXhr, that);
 			});
+		}else if(sUserRole === "SalesPerson"){
+			let companyId = this.getModel('appView').getProperty('/CompanyId');
+			let salesPayload = {
+				id: id,
+				companyId: companyId
+			}
+			this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , salesPayload)
+				.then(function (data, status, xhr) {
+					that.getView().getModel("appView").setProperty("/jobsData", data);
+					that.getView().getModel("appView").setProperty("/countJobs", data.length);
+					that.onSortDescending();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
 		}else{
-
 			this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);

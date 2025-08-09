@@ -2326,6 +2326,130 @@ app.start = function () {
 				}
 			});
 		});
+		app.post('/JobsSalesPerson', (req, res) => {
+			const AppUser = app.models.AppUser;
+			const Job = app.models.Job;
+			const { id, companyId } = req.body;
+
+			AppUser.findOne({ where: { id } }, (appUserError, AppUser) => {
+				if (appUserError) {
+					console.error('Error finding user:', appUserError);
+					return res.status(500).send('Internal server error');
+				}
+
+				if (AppUser) {
+					if (companyId) {
+						const ids = companyId?.split(",").map(id => id.trim());
+						Job.find(
+							{
+								where: { CompanyId : { inq: ids } },
+								fields: {
+									JobName: false,
+									UpdatedOn: false,
+									CreatedOn: false,
+									date: false,
+									poAttachment: false,
+									artworkAttachment: false,
+									poNo: false,
+									artworkCode: false,
+									clientPONo: false,
+									industry: false,
+									cartonType: false,
+									qtyPcs: false,
+									PaperGSM: false,
+									paperPoNo: false,
+									paperQuality: false,
+									printing: false,
+									color: false,
+									sizeL: false,
+									sizeW: false,
+									sizeH: false,
+									varLmt: false,
+									effects: false,
+									lock: false,
+									tF: false,
+									pF: false,
+									doubleCut: false,
+									trimTF: false,
+									trimPF: false,
+									noOfUps1: false,
+									noOfUps2: false,
+									noOfUps3: false,
+									noOfSheets1: false,
+									noOfSheets2: false,
+									wastage: false,
+									wtKgs: false,
+									printingSheetSizeL1: false,
+									printingSheetSizeW1: false,
+									printingSheetSizeL2: false,
+									printingMachine: false,
+									punchingMachine: false,
+									pastingMachine: false,
+									ref: false,
+									old: false,
+									none: false,
+									b2A: false,
+									none1: false,
+									none2: false,
+									batchNo: false,
+									mfgDate: false,
+									expDate: false,
+									correctionsInArtwork: false,
+									remarks: false,
+									totalAB: false,
+									profit: false,
+									totalCostOfJob: false,
+									costPerPc: false,
+									plate: false,
+									plate1: false,
+									plate2: false,
+									pantoneInks: false,
+									foilBlocks: false,
+									positive: false,
+									embossBlock: false,
+									punch: false,
+									punch1: false,
+									punch2: false,
+									reference: false,
+									cartonLength: false,
+									cartonWidth: false,
+									paperCost: false,
+									printingCharges: false,
+									varnishLamination: false,
+									embossing: false,
+									punching: false,
+									bSOPasting: false,
+									lBTOPasting: false,
+									packing: false,
+									transportation: false,
+									total: false,
+									plateCharges: false,
+									blanketCharges: false,
+									userName: false,
+									remarks1: false,
+									remarks2: false,
+									corrections1: false,
+									corrections2: false,
+									corrections3: false,
+								},
+								include: 'Company',
+							},
+							(jobError, Jobs) => {
+								if (jobError) {
+									console.error('Error finding jobs:', jobError);
+									return res.status(500).send('Internal server error');
+								}
+								return res.status(200).send(Jobs);
+							}
+						);
+					} else {
+						return res.status(200).send([]);
+					}
+				} else {
+					return res.status(400).send('User not found');
+				}
+			});
+		});
 
 
 		app.post('/usersRemove', (req, res) => {

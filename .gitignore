@@ -24,3 +24,6 @@ n_odata_server.log.3
 n_odata_server.log.4
 n_odata_server.log.5
 datasource.json
+/AppResources
+/android_package
+/myApp
