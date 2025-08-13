@@ -1338,12 +1338,12 @@ sap.ui.define([
 				}
 				if (this.clickedLink === "clientPONo") {
 					if (oData.PoAttach) {
-						var url = `/Attachments('${oData.PoAttach + "InvNo"}')`
+						var url = `/Attachments('${oData.PoAttach + "PoNo"}')`
 					}
 				}
 				if (this.clickedLink === "artworkCode") {
 					if (oData.ArtworkAttach) {
-						var url = `/Attachments('${oData.ArtworkAttach + "InvNo"}')`
+						var url = `/Attachments('${oData.ArtworkAttach + "ArtworkNo"}')`
 					}
 				}
 				dModel.read(url, {

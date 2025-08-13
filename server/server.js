@@ -790,27 +790,82 @@ app.start = function () {
 		});
 
 		//* Delete user from the AppUser table
+		// app.post('/deleteAppUsersTable', (req, res) => {
+		// 	const AppUser = app.models.AppUser;
+		// 	const id = req.body.id;
+
+		// 	AppUser.findOne({ where: { id: id } }, (appUserError, user) => {
+		// 		if (appUserError) {
+		// 			console.error('Error finding user:', appUserError);
+		// 			return res.status(500).send('Internal server error');
+		// 		}
+
+		// 		if (user) {
+		// 			const technicalId = user.TechnicalId;
+					
+		// 			user.remove((removeError) => {
+		// 				if (removeError) {
+		// 					console.error('Error deleting user:', removeError);
+		// 					return res.status(500).send('Internal server error');
+		// 				}
+						
+		// 				// Return TechnicalId in response
+		// 				res.status(200).json({
+		// 					message: 'User deleted successfully',
+		// 					TechnicalId: technicalId
+		// 				});
+		// 			});
+		// 		} else {
+		// 			res.status(404).send('User not found');
+		// 		}
+		// 	});
+		// });
+
 		app.post('/deleteAppUsersTable', (req, res) => {
 			const AppUser = app.models.AppUser;
-			const id = req.body.id;
+			const User = app.models.User;
+			const appUserId = req.body.id;
 
-			AppUser.findOne({ where: { id: id } }, (appUserError, user) => {
+			AppUser.findOne({ where: { id: appUserId } }, (appUserError, appUser) => {
 				if (appUserError) {
-					console.error('Error finding user:', appUserError);
+					console.error('Error finding app user:', appUserError);
 					return res.status(500).send('Internal server error');
 				}
 
-				if (user) {
-					user.remove((removeError) => {
-						if (removeError) {
-							console.error('Error deleting user:', removeError);
+				if (!appUser) {
+					return res.status(404).send('AppUser not found');
+				}
+
+				const technicalId = appUser.TechnicalId;
+				
+				appUser.remove((removeAppUserError) => {
+					if (removeAppUserError) {
+						console.error('Error deleting app user:', removeAppUserError);
+						return res.status(500).send('Internal server error');
+					}
+
+					User.findOne({ where: { id: technicalId } }, (userError, user) => {
+						if (userError) {
+							console.error('Error finding user:', userError);
 							return res.status(500).send('Internal server error');
 						}
-						res.status(200).send('User deleted successfully');
+
+						if (!user) {
+							return res.status(404).send('User not found');
+						}
+
+						user.remove((removeUserError) => {
+							if (removeUserError) {
+								console.error('Error deleting user:', removeUserError);
+								return res.status(500).send('Internal server error');
+							}
+
+							res.status(200).json({
+								message: 'User deleted successfully from both tables'
+							});
+						});
 					});
-				} else {
-					res.status(404).send('User not found');
-				}
+				});
 			});
 		});
 
@@ -1256,12 +1311,22 @@ app.start = function () {
 					// 	return;
 					// }
 
-					// To show job with attachments
+					// // To show job with attachments
+					// if (Object.keys(commonAttachmentObject).length > 0) {
+					// 	commonAttachmentObject = JSON.stringify(commonAttachmentObject);
+					// 	res.status(207).json(commonAttachmentObject);
+					// 	// res.status(501).json('Found common attachment in other Jobs : ' + commonAttachmentObject);
+					// 	return;
+					// }
+
+					// Remove common attachments from attachmentArray 
 					if (Object.keys(commonAttachmentObject).length > 0) {
-						commonAttachmentObject = JSON.stringify(commonAttachmentObject);
-						res.status(207).json(commonAttachmentObject);
-						// res.status(501).json('Found common attachment in other Jobs : ' + commonAttachmentObject);
-						return;
+						let commonAttachmentKeys = [];
+						for (let jobId in commonAttachmentObject) {
+							commonAttachmentKeys.push(...commonAttachmentObject[jobId]);
+						}
+						commonAttachmentKeys = [...new Set(commonAttachmentKeys)];
+						attachmentArray = attachmentArray.filter(item => !commonAttachmentKeys.includes(item));
 					}
 				}
 
@@ -1318,7 +1383,6 @@ app.start = function () {
 							});
 						});
 					}
-
 				})
 
 			});
