@@ -41,14 +41,15 @@ sap.ui.define(
             return decodeURIComponent(parts.pop().split(";").shift());
           }
         };
-        if(getCookie("soyuz_session")){
-			this.getModel().setHeaders({
-				"Authorization": getCookie("soyuz_session")
-			});
-		}
-		else{
-			
-		}
+        const sessionCookie = getCookie("soyuz_session");
+        if(sessionCookie){
+          this.getModel().setHeaders({
+          "Authorization": sessionCookie
+        });
+       }
+      else{
+        
+      }
         fnSetAppNotBusy = function () {
           oViewModel.setProperty("/busy", false);
           oViewModel.setProperty("/delay", iOriginalBusyDelay);

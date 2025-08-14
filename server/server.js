@@ -51,7 +51,7 @@ function myMiddleware(options) {
 						sameSite: 'None', // Allows cross-site cookie usage
 						maxAge: 3600 * 5000 // 5 hour expiration
 					});
-					res.cookie('soyuz_session1', JSON.parse(body).id);
+					res.cookie('soyuz_session', JSON.parse(body).id);
 				}
 				// Call the original send function with the unmodified body
 				originalSend.call(this, body);

@@ -39,9 +39,9 @@ sap.ui.define([
 					  };
 
 					  
-					  if(getCookie("soyuz_session1")){
+					  if(getCookie("soyuz_session")){
 						  
-						accessToken=getCookie("soyuz_session1")
+						accessToken=getCookie("soyuz_session")
 						  
 					  }
 					}

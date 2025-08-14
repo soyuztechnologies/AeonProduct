@@ -1133,6 +1133,8 @@ sap.ui.define([
 			var data = oEvent.getSource().getBindingContext("appView").getObject();
 			var clickedrow = oEvent.getSource().getBinding("text").getPath();
 			var dModel = this.getView().getModel();
+			if(Array.isArray(data.InvNo)) data.InvNo = data.InvNo[0].InvNo;
+			if(Array.isArray(data.DeliveryNo)) data.DeliveryNo = data.DeliveryNo[0].DeliveryNo;
 			var invoice = (data.InvNo.split(',').map(item => item.trim()).length>1) ? data.InvNo.split(',')
 				.map(item => ({ InvNo: item.trim() })) : data.InvNo;
 			var Delivery = (data.DeliveryNo.split(',').map(item => item.trim()).length>1) ? data.DeliveryNo.split(',')
@@ -1319,7 +1321,7 @@ sap.ui.define([
 					that.getView().getModel("appView").setProperty("/custDelAttachVis", false)
 				}
 				if (this.clickedLink == "DeliveryNo") {
-					if(oData.DeliveryNo.split(',').map(item => item.trim()).length>1){
+					if(oData.DeliveryNo[0].DeliveryNo.split(',').map(item => item.trim()).length>1){
 						this.openCustomerAttachmentDialog(oEvent);
 						return;
 					}
@@ -1328,7 +1330,7 @@ sap.ui.define([
 					}
 				}
 				if (this.clickedLink == "InvNo") {
-					if(oData.InvNo.split(',').map(item => item.trim()).length>1){
+					if(oData.InvNo[0].InvNo.split(',').map(item => item.trim()).length>1){
 						this.openCustomerAttachmentDialog(oEvent);
 						return;
 					}
