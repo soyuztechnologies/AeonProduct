@@ -221,7 +221,7 @@ onUploadChange: function (oEvent) {
     function processFile(index) {
       if (index < files.length) {
         var reader = new FileReader();
-        that.files.push({ "Label": files[index].name, "Key": files[index].name.split('.')[0]+type, "Type": route });
+        that.files.push({ "Label": files[index].name, "Key": files[index].name.split('_')[0]+type, "Type": route });
         reader.onload = function (e) {
           var vContent = e.currentTarget.result;
           that.oFileContentJson = {};
