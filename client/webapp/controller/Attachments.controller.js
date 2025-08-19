@@ -221,7 +221,13 @@ onUploadChange: function (oEvent) {
     function processFile(index) {
       if (index < files.length) {
         var reader = new FileReader();
-        that.files.push({ "Label": files[index].name, "Key": files[index].name.split('_')[0]+type, "Type": route });
+        var key;
+        if (type == "ArtworkNo") {
+          key = files[index].name.replace(/\s+/g, "").split('.')[0] + type;
+        } else {
+          key = files[index].name.split('_')[0] + type;
+        }
+        that.files.push({ "Label": files[index].name, "Key": key, "Type": route });
         reader.onload = function (e) {
           var vContent = e.currentTarget.result;
           that.oFileContentJson = {};

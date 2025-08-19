@@ -336,10 +336,20 @@ sap.ui.define([
 
     arrayToJSON: function (array) {
       let json = {};
-
+      function getExcelColumnName(num) {
+        let columnName = "";
+        while (num > 0) {
+          let remainder = (num - 1) % 26;
+          columnName = String.fromCharCode(65 + remainder) + columnName;
+          num = Math.floor((num - 1) / 26);
+        }
+        return columnName;
+      }
       for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < array[i].length; j++) {
-          let key = String.fromCharCode(j % 26 + 65) + (j > 26 ? j % 26 + 65 : '') + (i + 1);
+          let colName = getExcelColumnName(j + 1); // Excel columns start at 1
+          let key = colName + (i + 1); // e.g., A1, B1 … AA1
+          // let key = String.fromCharCode(j % 26 + 65) + (j > 26 ? j % 26 + 65 : '') + (i + 1);
           json[key] = array[i][j];
         }
       }

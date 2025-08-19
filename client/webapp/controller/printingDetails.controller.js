@@ -1345,7 +1345,7 @@ sap.ui.define([
 				}
 				if (this.clickedLink === "artworkCode") {
 					if (oData.ArtworkAttach) {
-						var url = `/Attachments('${oData.ArtworkAttach + "ArtworkNo"}')`
+						var url = `/Attachments('${oData.ArtworkAttach.replace(/\s+/g, "") + "ArtworkNo"}')`
 					}
 				}
 				dModel.read(url, {
@@ -1384,7 +1384,7 @@ sap.ui.define([
 				}
 				else if (this.clickedLink == "artworkCode") {
 					if (oData.ArtworkAttach) {
-						var url = `/Attachments('${oData.ArtworkAttach + "ArtworkNo"}')`;
+						var url = `/Attachments('${oData.ArtworkAttach.replace(/\s+/g, "") + "ArtworkNo"}')`;
 					}
 					// this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
 					var artfile = oData.artworkAttachment
@@ -2446,6 +2446,7 @@ sap.ui.define([
 			var isFoiling = this.getView().getModel('appView').getProperty('/foilingData');
 			var isSpotUV = this.getView().getModel('appView').getProperty('/spotUvData');
 			var isEmbossing = this.getView().getModel('appView').getProperty('/embossingData');
+			var oJobs = this.getView().getModel("appView").getProperty("/Jobs");
 			var oUpdatedData = {
 				status: ""
 			};
@@ -2684,6 +2685,24 @@ sap.ui.define([
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
+
+			if(oUpdatedData.status === "Dispatched" && oJobs.ArtworkAttach) {
+				var ArtWork = oJobs.ArtworkAttach.replace(/\s+/g, "") + 'ArtworkNo';
+				// this.middleWare.callMiddleWare("deleteArtworkAfterDispatch", "POST", ArtWork)
+				var that = this;
+       		    var oModel = this.getView().getModel();
+					oModel.remove(`/Attachments('${ArtWork}')`, {
+					success: function () {
+					// Do something after successful deletion
+					// MessageToast.show("Deleted Successfully");
+					// that.getAttachmentDatas();
+					},
+					error: function (error) {
+						BusyIndicator.hide();
+						that.middleWare.errorHandler(error, that);
+					}
+              });
+			}
 		},
 
 		updateStatusValue: function () {
