@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Popover
+        id="whatsAppPopover"
+        title="Chat with Us"
+        placement="Auto"
+        contentWidth="200px"
+        contentHeight="100px">
+         <content>
+            <Text text="Click on the button below to start a chat on WhatsApp." class="sapUiSmallMargin" />
+        </content>
+        <footer>
+            <Toolbar>
+                <ToolbarSpacer />
+                <Button
+                    text="Go to WhatsApp"
+                    type="Accept"
+                    press="onChatWithUs" />
+            </Toolbar>
+        </footer>
+        <!-- <Button
+            text="Chat with us"
+            type="Emphasized"
+            press="onChatWithUs" /> -->
+            
+    </Popover>
+</core:FragmentDefinition>

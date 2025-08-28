@@ -242,7 +242,11 @@ sap.ui.define([
 
 					break;
 				case 'object':
-					if(jqr.responseText){
+					if(jqr.statusText === "Unauthorized"){
+						// MessageBox.error(jqr.responseText);
+						break;
+					}
+					else if(jqr.responseText){
 						MessageBox.error(jqr.responseText);
 						break;
 					}

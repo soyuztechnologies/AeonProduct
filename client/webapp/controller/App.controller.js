@@ -1,6 +1,6 @@
 sap.ui.define(
-  ["./BaseController","sap/ui/model/json/JSONModel"],
-  function (BaseController, JSONModel) {
+  ["./BaseController","sap/ui/model/json/JSONModel","sap/ui/core/Fragment"],
+  function (BaseController, JSONModel, Fragment) {
     "use strict";
     var userRole;
     
@@ -165,11 +165,56 @@ sap.ui.define(
         if (nav === "Dispatched"){
           this.getRouter().navTo("Dispatched")
         }
+
+        if (nav === "whatsappSupport"){
+          this._openWhatsAppPopover(oEvent);
+        }
         if (nav === "Others"){
           this.getRouter().navTo("Others")
         }
       },
-      
+
+      _openWhatsAppPopover: function (oEvent) {
+          var oView = this.getView();
+
+          if (!this._oPopover) {
+              Fragment.load({
+                  id: oView.getId(),
+                  name: "ent.ui.ecommerce.fragments.WhatsappSupport",
+                  controller: this
+              }).then(function (oPopover) {
+                  this._oPopover = oPopover;
+                  oView.addDependent(this._oPopover);
+
+                  var oItem = oEvent.getParameter("item");
+                  if (oItem) {
+                      this._oPopover.openBy(oItem.getDomRef());
+                  } else {
+                      this._oPopover.open();
+                  }
+              }.bind(this));
+          } else {
+              var oItem = oEvent.getParameter("item");
+              if (oItem) {
+                  this._oPopover.openBy(oItem.getDomRef());
+              } else {
+                  this._oPopover.open();
+              }
+          }
+      },
+
+
+      onChatWithUs: function () {
+          var sPhone = "918850137836"; 
+          var sMsg = encodeURIComponent("Hello, I need support on CDS.");
+          var sUrl = "https://wa.me/" + sPhone + "?text=" + sMsg;
+          // var sUrl = "https://wa.me/" + sPhone;
+
+          sap.m.URLHelper.redirect(sUrl, true);
+      },
+
+
+
 
       // getUserId: function () {
         

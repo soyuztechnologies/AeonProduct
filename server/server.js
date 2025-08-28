@@ -36,6 +36,39 @@ app.use(session({
 app.use(fileUpload());
 
 
+// create update field in AccessToken model
+  app.use((req, res, next) => {
+    const cookieHeader = req.headers.cookie;
+    let sessionCookie = null;
+
+    if (cookieHeader) {
+        const cookies = cookie.parse(cookieHeader);
+        sessionCookie = cookies.soyuz_session;
+    }
+    if (!sessionCookie && req.headers.authorization) {
+        sessionCookie = req.headers.authorization.replace("Bearer ", "");
+    }
+    if (!sessionCookie) {
+        sessionCookie = req.query.access_token || req.body.access_token;
+    }
+
+    if (sessionCookie) {
+        const AccessToken = app.models.AccessToken;
+        AccessToken.updateAll(
+            { id: sessionCookie },
+            { updated: new Date() },   
+            (err) => {
+                if (err) {
+                    console.error("Failed to update AccessToken:", err);
+                }
+            }
+        );
+    }
+
+    next();
+});
+
+
 function myMiddleware(options) {
 	return function (req, res, next) {
 
@@ -634,6 +667,105 @@ app.start = function () {
 		});
 
 
+		app.post('/deleteAccountEmail', (req, res) => {
+
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
+			const otp = app.models.otp;
+
+			const { email } = req.body;
+			const EmailId = email;
+
+			User.findOne({ where: { email } }, (userError, existingUser) => {
+				if (userError) {
+					console.error(userError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+				if(!existingUser) {
+					return res.status(400).json({ error: 'User with this email does not exist in User' });
+				}
+				AppUser.findOne({ where: { EmailId } }, (appUserError, existingAppUser) => {
+					if (appUserError) {
+						console.error(appUserError);
+						return res.status(500).json({ error: 'Internal server error' });
+					}
+					if (!existingAppUser) {
+						return res.status(400).json({ error: 'User with this email does not exist in AppUser' });
+					}
+
+					const otpValue = generateOTP();
+					const dateAndTime = generateDateAndTime();
+					const ExpDateAndTIme = generateDateAndTimeWithExtraTime();
+					const token = generateToken(email);
+					const replacements = {
+						OTP: otpValue,
+						email: "noreply@aeonproducts.com",
+					};
+					const templateFileName = "deleteAccountEmail.html";
+					const emailSubject = "Verify Your Account Deletion Email";
+					const date = new Date();
+					
+					sendEmail(email, token, replacements, templateFileName, emailSubject)
+					.then(async () => {
+						try {
+							await otp.create({ OTP: otpValue, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
+							res.status(200).json({ message: 'Verification email sent successfully' });
+						} catch (createOtpError) {
+							console.error(createOtpError);
+							res.status(500).json({ error: 'Internal server error' });
+						}
+					})
+					.catch(sendEmailError => {
+						console.error(sendEmailError);
+						res.status(500).json({ error: 'Internal server error' });
+					});
+				});
+			});
+		});
+
+		// app.post('/deleteAccountEmail', async (req, res) => {
+		// 	const User = app.models.User;
+		// 	const AppUser = app.models.AppUser;
+		// 	const otp = app.models.otp;
+
+		// 	const { email } = req.body;
+
+		// 	try {
+		// 		// check in User
+		// 		const existingUser = await User.findOne({ where: { email } });
+		// 		// check in AppUser
+		// 		const existingAppUser = await AppUser.findOne({ where: { email } });
+
+		// 		if (!existingUser || !existingAppUser) {
+		// 			return res.status(404).json({ error: 'Email not found in User or AppUser' });
+		// 		}
+
+		// 		// agar dono me hai -> otp bhejna h
+		// 		const otpValue = generateOTP();
+		// 		const dateAndTime = generateDateAndTime();
+		// 		const ExpDateAndTIme = generateDateAndTimeWithExtraTime();
+		// 		const token = generateToken(email);
+
+		// 		const replacements = {
+		// 			OTP: otpValue,
+		// 			email: "noreply@aeonproducts.com",
+		// 		};
+		// 		const templateFileName = "deleteAccountEmail.html";
+		// 		const emailSubject = "Verify Your Account Deletion Email";
+
+		// 		await sendEmail(email, token, replacements, templateFileName, emailSubject);
+
+		// 		await otp.create({ OTP: otpValue, User: email, CreatedOn: dateAndTime, ExpDate: ExpDateAndTIme });
+
+		// 		return res.status(200).json({ message: 'Verification email sent successfully' });
+
+		// 	} catch (error) {
+		// 		console.error(error);
+		// 		return res.status(500).json({ error: 'Internal server error' });
+		// 	}
+		// });
+
+
 		// * this post call is sending the email to the user,when user is registering into the portal.
 		app.post('/signup/verifyEmail', (req, res) => {
 
@@ -825,8 +957,16 @@ app.start = function () {
 			const AppUser = app.models.AppUser;
 			const User = app.models.User;
 			const appUserId = req.body.id;
+			const email = req.body.email;
 
-			AppUser.findOne({ where: { id: appUserId } }, (appUserError, appUser) => {
+			let condition = {};
+			if (appUserId) {
+			condition = { id: appUserId };
+			} else if (email) {
+			condition = { EmailId: email };
+			}
+
+			AppUser.findOne({ where: condition }, (appUserError, appUser) => {
 				if (appUserError) {
 					console.error('Error finding app user:', appUserError);
 					return res.status(500).send('Internal server error');
@@ -1690,15 +1830,60 @@ app.start = function () {
 
 
 		// * this is the logout callback. 
+		// app.post('/logout', (req, res) => {
+		// 	const cookieHeader = req.headers.cookie;
+		// 	if(cookieHeader){
+		// 		const cookies = cookie.parse(cookieHeader);
+		// 		const sessionCookie = cookies.soyuz_session;
+		// 	}
+		// 	res.clearCookie('soyuz_session');
+		// 	res.json({ message: 'Logout successful' });
+		// });
+
 		app.post('/logout', (req, res) => {
+			this.AccessToken = app.models.AccessToken;
+
 			const cookieHeader = req.headers.cookie;
-			if(cookieHeader){
+			let sessionCookie = null;
+
+			if (cookieHeader) {
 				const cookies = cookie.parse(cookieHeader);
-				const sessionCookie = cookies.soyuz_session;
+				sessionCookie = cookies.soyuz_session;
 			}
-			res.clearCookie('soyuz_session');
-			res.json({ message: 'Logout successful' });
+
+			// agar header me Authorization bheja h
+			if (!sessionCookie && req.headers.authorization) {
+				sessionCookie = req.headers.authorization.replace("Bearer ", "");
+			}
+
+			// agar query param me bheja h
+			if (!sessionCookie) {
+				sessionCookie = req.query.access_token || req.body.access_token;
+			}
+
+			if (!sessionCookie) {
+				return res.status(401).json({ error: "Access token missing" });
+			}
+
+			// ab AccessToken delete karo
+			this.AccessToken.destroyAll({ id: sessionCookie }, (err, info) => {
+				if (err) {
+					console.error("Error deleting token:", err);
+					return res.status(500).json({ error: "Failed to logout" });
+				}
+
+				if (info.count === 0) {
+					return res.status(404).json({ error: "Session not found" });
+				}
+
+				// cookie bhi clear karna ho to:
+				res.clearCookie("soyuz_session");
+
+				return res.status(200).json({ message: "Logout successful" });
+			});
 		});
+
+
 
 
 		// * this call is for update the password of the user when he login with the temp password.

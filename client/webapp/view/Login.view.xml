@@ -47,8 +47,10 @@
 													<Button id="idLoginButton" text="{i18n>login}" press="Login" type="Emphasized" icon="sap-icon://feeder-arrow" iconFirst="false" width="auto" iconDensityAware="false" />
 												</form:fields>
 												<form:fields>
-
-													<Button id="idSignupButtn" text="Sign Up" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="100%" iconDensityAware="false" class="newButtonStyle"/>
+													<FlexBox direction="Row" width="100%" class="sapUiTinyMarginTop" justifyContent="SpaceBetween" alignItems="Center">
+														<Button id="idSignupButtn" text="Sign Up" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="250%" iconDensityAware="false" class="newButtonStyle"/>
+														<Button id="userDeleteButtn" text="Delete Account" press="DeleteAccount" type="Reject" icon="sap-icon://delete" iconFirst="false" width="100%" iconDensityAware="false" class="newButtonStyle"/>
+													</FlexBox>
 												</form:fields>
 												<HBox alignContent="Center" justifyContent="End">
 

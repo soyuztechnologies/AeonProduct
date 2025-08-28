@@ -71,8 +71,13 @@
 			        </tnt:NavigationListItem>
 
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Job with Attachments" icon="sap-icon://attachment"  key="dispatchedList"/>
-                    
-                </tnt:NavigationList>
+                        
+                    </tnt:NavigationList>
+                    <tnt:fixedItem>
+                        <tnt:NavigationList>
+                            <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" text="Whatsapp Support" icon="sap-icon://headset"  key="whatsappSupport"/>
+                        </tnt:NavigationList>
+                    </tnt:fixedItem>
             </tnt:SideNavigation>
         </tnt:sideContent>
 

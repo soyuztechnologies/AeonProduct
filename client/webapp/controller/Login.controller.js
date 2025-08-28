@@ -10,6 +10,7 @@ sap.ui.define([
 	"use strict";
 	// try {
 	var isSignupButton = false; // Global flag variable
+	var isDeleteButton = false;
 	var uId;
 	return BaseController.extend("ent.ui.ecommerce.controller.Login", {
 		onInit: function onInit(oEvent) {
@@ -169,10 +170,15 @@ sap.ui.define([
 
 					uId = data.userId;
 					localStorage.clear();
-					localStorage.setItem("email",userName);
-					localStorage.setItem("pass",password);
-
-							
+					if(userName && password){
+						localStorage.setItem("email",userName);
+						localStorage.setItem("pass",password);
+					}
+					else{
+						localStorage.setItem("email",email);
+						localStorage.setItem("pass",pass);
+					}
+					
 					// if(window.cordova){
 					// 	Cookies.set("soyuz_session", data.id, { expires: 7 });
 					// }
@@ -186,6 +192,124 @@ sap.ui.define([
 				});
 
 		},
+
+		DeleteAccount: function () {
+			var that = this;
+			var oModel = that.getView().getModel('appView');
+			this.openDeleteDialog().then(function (oDialog) {
+				oDialog.open();
+				oModel.setProperty("/Title", "Delete Account");
+				isDeleteButton = true;
+			})
+		},
+
+		openDeleteDialog: function () {
+			var oView = this.getView();
+			var that = this;
+			if (!this.deleteDialog) {
+				this.deleteDialog = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.loginScreenFragment.Delete",
+					controller: this
+				}).then(function (oDialog) {
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.deleteDialog;
+		},
+		onRejectDelete: function () {
+			var oModel = this.getView().getModel('appView');
+			var that = this;
+			clearInterval(this.x);
+			this.openDeleteDialog().then(function (oDialog) {
+				oDialog.close();
+				that.getView().getModel('appView').setProperty("/timerText", "");
+				oModel.setProperty("/Email", "");
+				oModel.setProperty("/otpValue","");
+				oModel.setProperty("/showError", false);
+				oModel.setProperty("/EmailEditable", true);
+				oModel.setProperty("/onResendOTP", false);
+				oModel.setProperty("/validateOTPVis", false);
+				oModel.setProperty("/otpVis", false);
+				// that.getView().getModel('appView').setProperty("/onResendOTP", false);
+				// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
+				oModel.setProperty("/ResendStatusSignup", false);
+				oModel.setProperty("/submitEnable", true);
+				oModel.setProperty("/signUpValueState", 'None');
+			})
+		},
+
+		closeDeleteDialog: function () {
+			var that = this;
+			this.openDeleteDialog().then(function (oDialog) {
+				oDialog.close();
+			});
+		},
+		
+		onDeleteAccountEmailVerifyCall: function() {
+			var that = this;
+			var oEmail = this.getView().getModel('appView').getProperty("/Email");
+			var oModel = that.getView().getModel('appView');
+			oModel.setProperty("/showError", false);
+			oModel.setProperty("/submitEnable", true);
+
+			var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (oEmail && !oEmail.match(emailRegex)) {
+				MessageToast.show("Please enter a valid email address");
+				return;
+			}
+			else if (!oEmail) {
+				MessageToast.show("Please enter a email address");
+				return;
+			};
+
+			var payload = {
+				"email": oEmail
+			};
+			this.middleWare.callMiddleWare("deleteAccountEmail", "POST", payload)
+				.then(function (data, status, xhr) {
+
+					MessageToast.show("Verfication Email Sent to Your Mail (If not : Please Check Spam Folder)");
+					oModel.setProperty("/ResendStatusSignup", true);
+					oModel.setProperty("/validateOTPVis", true);
+					oModel.setProperty("/submitEnable", false);
+					oModel.setProperty("/otpVis", true);
+
+					oModel.setProperty("/EmailEditable", false);
+					// that.getView().getModel('appView').setProperty("/EmailEditable", false);
+
+					// oModel.setProperty("/errorMessage","You will receive a Email to update your Password.");
+					oModel.setProperty("/submitEnable", false);
+					that.ResendEmailSend();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+		},
+
+		onDeleteAccount:function(){
+			var that = this;
+			var email = this.getView().getModel('appView').getProperty("/Email");
+			
+			var payload = {"email":email}
+
+			if(payload){
+			that.middleWare.callMiddleWare("deleteAppUsersTable", "POST", payload)
+			.then(function (data, status, xhr) {
+				MessageToast.show("User Deleted Successfully");
+				that.closeDeleteDialog();
+			})
+			.catch(function (jqXhr, textStatus, errorMessage) {
+				that.middleWare.errorHandler(jqXhr, that);
+			});
+			}
+			else{
+				MessageToast.show("No Email Address Found");
+			}
+		},
+
 		onLiveChnagePassValidationForUpdateNewPassward: function (oEvent) {
 			var newValue = oEvent.getParameter("newValue");
 			this.getView().getModel("appView").setProperty("/updateNewPassValue" , newValue);
@@ -480,6 +604,9 @@ sap.ui.define([
 			
 			if (isSignupButton == true) {
 				this.onSignupEmailVerifyCall();
+			} 
+			else if (isDeleteButton == true) {
+				this.onDeleteAccountEmailVerifyCall();
 			}
 			else {
 				this.onForgotPasswordEmailVerfiyCall();
@@ -490,6 +617,9 @@ sap.ui.define([
 			
 			if (isSignupButton == true) {
 				this.onSignupEmailVerifyCall();
+			}
+			else if (isDeleteButton == true) {
+				this.onDeleteAccountEmailVerifyCall();
 			}
 			else {
 				this.onForgotPasswordEmailVerfiyCall();
@@ -509,7 +639,11 @@ sap.ui.define([
 			this.middleWare.callMiddleWare("verifyOtp", "POST", payload)
 				.then(function (data, status, xhr) {
 					MessageToast.show("Success")
-					that.onGetDialog();
+					if(isDeleteButton){
+						that.onDeleteAccount();
+					}else{
+						that.onGetDialog();
+					}
 					that.deleteOtp();
 					oModel.setProperty("/otpValue","");
 					// that.onReject();
