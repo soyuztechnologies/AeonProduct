@@ -54,7 +54,7 @@
 												</form:fields>
 												<HBox alignContent="Center" justifyContent="End">
 
-													<ObjectStatus press="ForgotPasswprd" state="Information" active="true" icon="" iconDensityAware="true" text="Forgot Password ?" textDirection="Inherit">
+													<ObjectStatus press="ForgotPassword" state="Information" active="true" icon="" iconDensityAware="true" text="Forgot Password ?" textDirection="Inherit">
 													</ObjectStatus>
 
 												</HBox>

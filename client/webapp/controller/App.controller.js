@@ -166,16 +166,14 @@ sap.ui.define(
           this.getRouter().navTo("Dispatched")
         }
 
-        if (nav === "whatsappSupport"){
-          this._openWhatsAppPopover(oEvent);
-        }
         if (nav === "Others"){
           this.getRouter().navTo("Others")
         }
       },
 
-      _openWhatsAppPopover: function (oEvent) {
+      whatsappSupport: function (oEvent) {
           var oView = this.getView();
+          var oButton = oEvent.getSource();
 
           if (!this._oPopover) {
               Fragment.load({
@@ -185,21 +183,10 @@ sap.ui.define(
               }).then(function (oPopover) {
                   this._oPopover = oPopover;
                   oView.addDependent(this._oPopover);
-
-                  var oItem = oEvent.getParameter("item");
-                  if (oItem) {
-                      this._oPopover.openBy(oItem.getDomRef());
-                  } else {
-                      this._oPopover.open();
-                  }
+                  this._oPopover.openBy(oButton); 
               }.bind(this));
           } else {
-              var oItem = oEvent.getParameter("item");
-              if (oItem) {
-                  this._oPopover.openBy(oItem.getDomRef());
-              } else {
-                  this._oPopover.open();
-              }
+              this._oPopover.openBy(oButton);
           }
       },
 

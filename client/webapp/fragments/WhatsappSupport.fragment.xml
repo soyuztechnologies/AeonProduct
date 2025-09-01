@@ -2,7 +2,7 @@
     <Popover
         id="whatsAppPopover"
         title="Chat with Us"
-        placement="Auto"
+        placement="Bottom"
         contentWidth="200px"
         contentHeight="100px">
          <content>

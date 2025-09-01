@@ -21,6 +21,8 @@
                    <Image src="logo/logo.png" width="4%"/>
                    <Title text="Aeon Products"></Title>
                    <ToolbarSpacer/> 
+                   <Button priority="High" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" icon="logo/whatsapp.png" press="whatsappSupport">
+                   </Button>
                         <Button visible="{appView>/userRoleVis}" enabled="false" wrapping="true" text="{appView>/UserEmail}({appView>/UserRole})" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="High" />
@@ -73,11 +75,6 @@
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Job with Attachments" icon="sap-icon://attachment"  key="dispatchedList"/>
                         
                     </tnt:NavigationList>
-                    <tnt:fixedItem>
-                        <tnt:NavigationList>
-                            <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" text="Whatsapp Support" icon="sap-icon://headset"  key="whatsappSupport"/>
-                        </tnt:NavigationList>
-                    </tnt:fixedItem>
             </tnt:SideNavigation>
         </tnt:sideContent>
 

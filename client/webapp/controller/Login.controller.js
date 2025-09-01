@@ -490,7 +490,7 @@ sap.ui.define([
 			})
 		},
 
-		ForgotPasswprd: function () {
+		ForgotPassword: function () {
 			var oModel = this.getView().getModel('appView');
 			var that = this;
 			this.openDialog().then(function (oDialog) {
@@ -929,16 +929,6 @@ onUpdateUser: function (oEvent) {
 			});
 	}
 },
-
-
-
-
-
-
 	});
 
 });
-
-
-
-
