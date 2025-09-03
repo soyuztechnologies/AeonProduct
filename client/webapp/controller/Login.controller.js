@@ -221,6 +221,8 @@ sap.ui.define([
 		onRejectDelete: function () {
 			var oModel = this.getView().getModel('appView');
 			var that = this;
+			isSignupButton = false;
+			isDeleteButton = false;
 			clearInterval(this.x);
 			this.openDeleteDialog().then(function (oDialog) {
 				oDialog.close();
@@ -462,6 +464,8 @@ sap.ui.define([
 			var oModel = this.getView().getModel('appView');
 			var that = this;
 			clearInterval(this.x);
+			isSignupButton = false;
+			isDeleteButton = false;
 			this.openDialog().then(function (oDialog) {
 				oDialog.close();
 				that.getView().getModel('appView').setProperty("/timerText", "");

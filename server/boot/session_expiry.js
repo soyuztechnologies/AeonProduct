@@ -7,7 +7,7 @@ module.exports = function (app) {
 
     AccessToken.destroyAll({ updated: { lt: cutoff } }, (err, info) => {
       if (err) {
-        console.error("Error deleting expired tokens:", err);
+        console.log("Error deleting expired tokens:", err);
         return;
       }
 
@@ -16,4 +16,4 @@ module.exports = function (app) {
       }
     });
   }, 5 * 60 * 1000); // session expire check in every 5 minutes
-};``
+};
