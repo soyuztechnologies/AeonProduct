@@ -2791,10 +2791,21 @@ sap.ui.define([
 						else {
 							that.onSortAscending();
 						}
-
-
-
-
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						that.middleWare.errorHandler(jqXhr, that);
+					});
+			}else if(sUserRole === "SalesPerson"){
+				let companyId = this.getModel('appView').getProperty('/CompanyId');
+				let salesPayload = {
+					id: id,
+					companyId: companyId
+				}
+				this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , salesPayload)
+					.then(function (data, status, xhr) {
+						that.getView().getModel("appView").setProperty("/jobsData", data);
+						that.getView().getModel("appView").setProperty("/countJobs", data.length);
+						that.onSortDescending();
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
 						that.middleWare.errorHandler(jqXhr, that);

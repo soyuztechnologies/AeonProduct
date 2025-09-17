@@ -10,7 +10,7 @@
                    icon="sap-icon://add-activity"
                    press="onRemarkClick"/> -->
                    <Button
-                visible="{=${appView>/UserRole} !== 'Customer' ? ${appView>/JobStatusForRemark} !==  null ? true : false : false}"
+                visible="{=${appView>/UserRole} !== 'Customer' ? true : false}"
                    text="Remark"
                    type="Emphasized"
                    icon="sap-icon://add-activity"

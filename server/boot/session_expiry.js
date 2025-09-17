@@ -3,9 +3,9 @@ module.exports = function (app) {
 
   setInterval(() => {
     const now = new Date();
-    const cutoff = new Date(now - 30 * 60 * 1000); // session expire time 30 minutes
+    const cutoff = new Date(now - 24 * 60 * 60 * 1000); // session expire time 24 hours
 
-    AccessToken.destroyAll({ updated: { lt: cutoff } }, (err, info) => {
+    AccessToken.destroyAll({ created: { lt: cutoff } }, (err, info) => {
       if (err) {
         console.log("Error deleting expired tokens:", err);
         return;
@@ -15,5 +15,5 @@ module.exports = function (app) {
         console.log(`Session expired`);
       }
     });
-  }, 5 * 60 * 1000); // session expire check in every 5 minutes
+  }, 60 * 60 * 1000); // session expire check in every 60 minutes
 };

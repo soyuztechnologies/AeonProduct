@@ -578,7 +578,7 @@ sap.ui.define([
 		}
 		var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
 		var url = 'api/Jobs?filter='+oFilter
-				var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
+		var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
 		var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
 		var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
 		// sPath = `/Jobs('${id}')/Company`;
@@ -590,6 +590,8 @@ sap.ui.define([
 		}
 		var that = this;
 		if(sUserRole === "Customer"){
+			let companyId = this.getModel('appView').getProperty('/CompanyId');
+			this.getCompanyName(companyId)
 			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
 			.then(function (data, status, xhr) {
 			  
@@ -602,8 +604,12 @@ sap.ui.define([
 			});
 		}else if(sUserRole === "SalesPerson"){
 			let companyId = this.getModel('appView').getProperty('/CompanyId');
+			this.getCompanyName(companyId)
 			let salesPayload = {
-				id: id,
+				"selectedYear": selectedYear,
+				"maxDate": maxDate,
+				"minDate": minDate,
+				"State":oState?oState:false,
 				companyId: companyId
 			}
 			this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , salesPayload)
@@ -1158,6 +1164,29 @@ sap.ui.define([
 				// delete this.tableFilters[filterProperty];
 			}			
 		},
+
+		openStatusLegend: function (oEvent) {
+			var oSource = oEvent.getSource(),
+				oView = this.getView();
+			if (!this._pLegendPopover) {
+				this._pLegendPopover = Fragment.load({
+				id: oView.getId(),
+				name: "ent.ui.ecommerce.fragments.JobStatusLegend",
+				controller: this
+				}).then(function (oLegendPopover) {
+				oView.addDependent(oLegendPopover);
+				return oLegendPopover;
+				});
+			}
+			this._pLegendPopover.then(function (oLegendPopover) {
+				if (oLegendPopover.isOpen()) {
+				oLegendPopover.close();
+				} else {
+				oLegendPopover.openBy(oSource);
+				}
+			});
+
+			},
 
 
 

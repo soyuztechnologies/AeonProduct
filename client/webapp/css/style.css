@@ -35,3 +35,52 @@
     font-family: cursive ;
     color: rgb(44, 44, 44);
 } */
+
+
+.paperCuttingIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #E76500 !important; 
+}
+.PrintingIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #0070F2 !important; 
+}
+.CoatingIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #616161 !important; 
+}
+.FoilingIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #9C27B0 !important; 
+}
+.SpotUVIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #D84315 !important; 
+}
+.EmbossingIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #3F51B5 !important; 
+}
+.PunchingIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #009688 !important; 
+}
+.PastingIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #795548 !important; 
+}
+.ReadyForDispatchIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: #FF5722 !important; 
+}
+.DispatchedIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: white !important; 
+}
+.CommonWhiteIcon .sapSuiteUiCommonsMicroProcessFlowItemIcon{
+  color: white !important; 
+}
+
+.sapUiCompFilterBar .sapUiCompFilterBarItemLabel:after {
+    content: none !important; 
+}
+
+
+.urgentStar .sapUiIcon{
+  color: gold !important;
+}
+
+.remarkFlag .sapUiIcon{
+  color: red !important;
+}
+

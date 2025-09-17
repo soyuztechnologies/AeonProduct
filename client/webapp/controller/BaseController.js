@@ -1578,29 +1578,74 @@ sap.ui.define([
 					this.middleWare.errorHandler(jqXhr, this);
 				}.bind(this));
 		},
-		getCompanyName: function () {
+		// getCompanyName: function () {
 			
-			var oModel = this.getView().getModel();
+		// 	var oModel = this.getView().getModel();
+		// 	var that = this;
+		// 	oModel.read('/Company', {
+		// 	  success: function (data) {
+		// 		that.CompanyData = data;
+		// 		//   const results = results.filter(obj => {
+		// 		//    return obj.id === "64913ea67f0ea353ac20a390";
+		// 		//  });
+		// 		//  var filteredArray =  results.filter(function(obj) {
+		// 		//   return obj.age > 25;
+		// 		// });
+		// 		that.getView().getModel("appView").setProperty("/companyDetails", data.results);
+		// 	  },
+		// 	  error: function (error) {
+		// 		// Error callback
+		// 		that.middleWare.errorHandler(error, that);
+		// 		MessageToast.show("Error reading data");
+		// 	  }
+		// 	});
+		//   },
+
+		 getCompanyName: function (companies) {
 			var that = this;
-			oModel.read('/Company', {
-			  success: function (data) {
-				// 
-				that.CompanyData = data;
-				//   const results = results.filter(obj => {
-				//    return obj.id === "64913ea67f0ea353ac20a390";
-				//  });
-				//  var filteredArray =  results.filter(function(obj) {
-				//   return obj.age > 25;
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+			var companyIdsArray = [];
+			if (companies) {
+				companyIdsArray = companies.split(',').map(id => id.trim());
+			}
+
+			var oModel = this.getView().getModel();
+
+			if(sUserRole === "Admin"){
+				// oModel.read("/Company", {
+				// 	success: function (data) {
+				// 		that.CompanyData = data;
+				// 		that.getView().getModel("appView").setProperty("/companyDetails", data.results);
+				// 		console.log("All Companies:", data.results);
+				// 	},
+				// 	error: function (error) {
+				// 		that.middleWare.errorHandler(error, that);
+				// 		MessageToast.show("Error reading data");
+				// 	}
 				// });
-				that.getView().getModel("appView").setProperty("/companyDetails", data.results);
-			  },
-			  error: function (error) {
-				// Error callback
-				that.middleWare.errorHandler(error, that);
-				MessageToast.show("Error reading data");
-			  }
-			});
-		  },
+				this.middleWare.callMiddleWare("Companies", "GET")
+					.then(function (data, status, xhr) {
+						that.getView().getModel("appView").setProperty("/companyDetails", data);
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						that.middleWare.errorHandler(jqXhr, that);
+					});
+			}
+			else if (companyIdsArray.length > 0) {
+				let companyIdsParam = encodeURIComponent(companyIdsArray.join(","));
+				this.middleWare.callMiddleWare("Companies?companyIds=" + companyIdsParam, "GET")
+					.then(function (data, status, xhr) {
+						that.getView().getModel("appView").setProperty("/companyDetails", data);
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						that.middleWare.errorHandler(jqXhr, that);
+					});
+			} else {
+				MessageToast.show("No company is assigned");
+			}
+		},
+
+
 		  getJobsDataByStatusFilter: function(){
 			
 			var path = this.getView().getModel('appView').getProperty('/path');

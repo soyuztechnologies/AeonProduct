@@ -1,0 +1,106 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <ResponsivePopover
+        id="StatuslegendPopover"
+        title="Legend"
+        placement="Bottom"
+        showHeader="true"
+        contentWidth="auto"
+        horizontalScrolling="false">
+
+        <List showSeparators="None" inset="false" class="sapUiSmallMarginBegin sapUiSmallMarginEnd">
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://scissors" size="1rem" color="#E76500" class="sapUiTinyMarginEnd"/>
+                        <Text text="Paper Cutting" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://print" size="1rem" color="#0070F2" class="sapUiTinyMarginEnd"/>
+                        <Text text="Printing" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://paint-bucket" size="1rem" color="#616161" class="sapUiTinyMarginEnd"/>
+                        <Text text="Coating" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://badge" size="1rem" color="#9C27B0" class="sapUiTinyMarginEnd"/>
+                        <Text text="Foiling" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://lightbulb" size="1rem" color="#D84315" class="sapUiTinyMarginEnd"/>
+                        <Text text="SpotUV" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://detail-view" size="1rem" color="#3F51B5" class="sapUiTinyMarginEnd"/>
+                        <Text text="Embossing" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://doc-attachment" size="1rem" color="#009688" class="sapUiTinyMarginEnd"/>
+                        <Text text="Punching" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://attachment-html" size="1rem" color="#795548" class="sapUiTinyMarginEnd"/>
+                        <Text text="Pasting" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://shipping-status" size="1rem" color="#FF5722" class="sapUiTinyMarginEnd"/>
+                        <Text text="Ready For Dispatch" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+
+            <CustomListItem>
+                <HBox alignItems="Center" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                    <items>
+                        <core:Icon src="sap-icon://thumb-up" size="1rem" color="#3F51B5" class="sapUiTinyMarginEnd"/>
+                        <Text text="Dispatched" />
+                    </items>
+                </HBox>
+            </CustomListItem>
+        </List>
+
+    </ResponsivePopover>
+</core:FragmentDefinition>

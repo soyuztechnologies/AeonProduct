@@ -1,25 +1,37 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:custom="ent.ui.ecommerce.controller.controls" xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="ent.ui.ecommerce.controller.allPrinters" >
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:custom="ent.ui.ecommerce.controller.controls" xmlns:fb="sap.ui.comp.filterbar" xmlns="sap.m" xmlns:layout="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:suite="sap.suite.ui.commons" controllerName="ent.ui.ecommerce.controller.allPrinters" >
   <Page id='idWelcomeP' showHeader="false">
-	  <subHeader>
-		<OverflowToolbar>
+	
+		<!-- <customHeader>
+			<OverflowToolbar >
+			<content>
+				<Title text="Printers  ( {appView>/countJobs} )"/>
+					<ToolbarSpacer/>
+					<Label text="Show the Jobs that are not dispatched:"></Label>
+					<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
+					<SearchField liveChange="onSearchJob" width="30%"/>
+					<Select  items="{appView>/CompanyDetails}" forceSelection="false" change="selectedCompany" >
+					<core:Item text="{appView>CompanyName}" key="{appView>id}" />
+					</Select>
+					</content>
+					</OverflowToolbar>
+					</customHeader> -->
+		<subHeader>
+			<OverflowToolbar >
 				<content>
 					<Title text="Printers  ( {appView>/countJobs} )"/>
-						<ToolbarSpacer/>
-						<Label text="Show the Jobs that are not dispatched:"></Label>
-						<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
-						<SearchField liveChange="onSearchJob" width="30%"/>
-						<Select  items="{appView>/CompanyDetails}" forceSelection="false" change="selectedCompany" >
-							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
-						</Select>
-						<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />
-						<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
-						<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}"/>    
-						<Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
-						<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Sort Descending"/>
-						<Button  text="Delete" type="Reject" icon="sap-icon://delete" press="onDeleteJobs" tooltip="Delete Job" visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
+					<ToolbarSpacer ></ToolbarSpacer>
+					<Label text="Dispatched Jobs:"></Label>
+					<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
+					<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />
+					<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
+					<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}"/>    
+					<Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
+					<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Sort Descending"/>
+					<Button  text="Delete" type="Reject" icon="sap-icon://delete" press="onDeleteJobs" tooltip="Delete Job" visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
+					<Button icon="sap-icon://legend" text="Legend" press="openStatusLegend"/>
 				</content>
 		</OverflowToolbar>
-	  </subHeader>
+	</subHeader>
 		<!-- <Toolbar>
 		   <content>
 				<SearchField liveChange="onSearchJob" width="50%"/>
@@ -28,7 +40,7 @@
 				<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin' ? true :false}"/>     
 			</content>
 		</Toolbar> -->
-				<List id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}"> 
+				<!-- <List id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}"> 
 					<items>
 						<custom:customListItem type="Navigation" backgroundColor="{path : 'appView>status', formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
 							
@@ -45,6 +57,105 @@
 							</HBox>
 						</custom:customListItem>
 					</items>	
-			  </List>
+			  </List> -->
+			  <fb:FilterBar useToolbar="false" persistencyKey="myPersKey" >
+					<fb:filterGroupItems>
+						<fb:FilterGroupItem name="search" label="Search"  groupName="Group3" visibleInFilterBar="true">
+							<fb:control>
+								<SearchField liveChange="onSearchJob" width="250px" />
+							</fb:control>
+						</fb:FilterGroupItem>
+						<fb:FilterGroupItem name="company" label="Company" groupName="Group4" visibleInFilterBar="true">
+							<fb:control>
+								<Select  items="{appView>/companyDetails}" forceSelection="false" change="selectedCompany" width="200px" >
+									<core:Item text="{appView>CompanyName}" key="{appView>id}" />
+									</Select>
+								</fb:control>
+							</fb:FilterGroupItem>
+						<!-- <fb:FilterGroupItem name="text" label="Show the Jobs that are not dispatched" groupName="Group1" visibleInFilterBar="true">
+							<fb:control>
+								<Switch class="sapUiSmallMarginBegin sapUiMediumMarginBottom" tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData" ></Switch>
+							</fb:control>
+						</fb:FilterGroupItem> -->
+					</fb:filterGroupItems>
+				</fb:FilterBar>
+			 <List id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}">
+				<items>
+					<custom:customListItem type="Navigation" backgroundColor="{path : 'appView>status', formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
+						<HBox alignItems="Center" justifyContent="SpaceBetween">
+							<items>
+								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
+									<HBox alignItems="Center" >
+										<Label text="{appView>Company/CompanyName}" class ="sapUiTinyMarginBottom" wrapping="true"/>
+										<ObjectMarker class="sapUiMediumMarginBottom sapUiMediumMarginBegin sapUiSmallMarginTop urgentStar" type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
+										<ObjectMarker class="sapUiMediumMarginBottom sapUiMediumMarginBegin sapUiSmallMarginTop remarkFlag" type="{parts:[{path: 'appView>JobStatus/0/remark1'},{path: 'appView>JobStatus/0/remark2'},{path: 'appView>JobStatus/0/remark3'}],formatter:'.formatter.RemarkStarFormatter'}" />
+									</HBox>
+									<Text text="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"/>
+									<HBox alignContent="Center" alignItems="Center">
+										<ObjectStatus class="sapUiSmallMarginTop" text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
+										<suite:MicroProcessFlow id="processFlow" class="sapUiSmallMarginBegin sapUiSmallMarginTop" width="100%">
+											<suite:content>
+												<suite:MicroProcessFlowItem 
+													title="Paper Cutting" 
+													state="{= ${appView>status} === 'Paper Cutting' ? 'Warning' : ${appView>status} === 'Printing' || ${appView>status} === 'Coating' || ${appView>status} === 'Foiling' || ${appView>status} === 'SpotUV' || ${appView>status} === 'Embossing' || ${appView>status} === 'Punching' || ${appView>status} === 'Pasting' || ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}" 
+													icon="sap-icon://scissors" 
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Printing" 
+													state="{= ${appView>status} === 'Printing' ? 'Warning' : ${appView>status} === 'Coating' || ${appView>status} === 'Foiling' || ${appView>status} === 'SpotUV' || ${appView>status} === 'Embossing' || ${appView>status} === 'Punching' || ${appView>status} === 'Pasting' || ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://print"
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Coating" 
+													state="{= ${appView>status} === 'Coating' ? 'Warning' : ${appView>status} === 'Foiling' || ${appView>status} === 'SpotUV' || ${appView>status} === 'Embossing' || ${appView>status} === 'Punching' || ${appView>status} === 'Pasting' || ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://paint-bucket"
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Foiling" 
+													state="{= ${appView>status} === 'Foiling' ? 'Warning' : ${appView>status} === 'SpotUV' || ${appView>status} === 'Embossing' || ${appView>status} === 'Punching' || ${appView>status} === 'Pasting' || ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://badge"
+												/>
+												<suite:MicroProcessFlowItem 
+													title="SpotUV" 
+													state="{= ${appView>status} === 'SpotUV' ? 'Warning' : ${appView>status} === 'Embossing' || ${appView>status} === 'Punching' || ${appView>status} === 'Pasting' || ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://lightbulb"
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Embossing" 
+													state="{= ${appView>status} === 'Embossing' ? 'Warning' : ${appView>status} === 'Punching' || ${appView>status} === 'Pasting' || ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://detail-view"
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Punching" 
+													state="{= ${appView>status} === 'Punching' ? 'Warning' : ${appView>status} === 'Pasting' || ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://doc-attachment"
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Pasting" 
+													state="{= ${appView>status} === 'Pasting' ? 'Warning' : ${appView>status} === 'Ready For Dispatch' || ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://attachment-html"
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Ready For Dispatch" 
+													state="{= ${appView>status} === 'Ready For Dispatch' ? 'Warning' : ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://shipping-status" 
+												/>
+												<suite:MicroProcessFlowItem 
+													title="Dispatched" 
+													state="{= ${appView>status} === 'Dispatched' ? 'Success' : 'None'}"
+													icon="sap-icon://thumb-up"
+												/>
+											</suite:content>
+										</suite:MicroProcessFlow> 
+									</HBox>
+									
+								</VBox>
+								<!-- <ToolbarSpacer /> -->
+								
+							</items>
+						</HBox>
+					</custom:customListItem>
+				</items>
+			</List>
   </Page>
 </mvc:View>

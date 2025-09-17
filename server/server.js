@@ -1112,21 +1112,29 @@ app.start = function () {
 		// Company call -- Lakshay
 		app.get('/Companies', (req, res) => {
 			const company = app.models.Company;
+			let companyIds = req.query.companyIds;   
 
-			company.find({
+			let filter = {
 				order: 'jobCardNo',
 				fields: {
 					CompanyName: true,
 					id: true
 				}
-			}, (error, companyDetail) => {
+			};
+
+			if (companyIds) {
+				companyIds = companyIds.split(',').map(id => id.trim());
+				filter.where = {
+					id: { inq: companyIds }
+				};
+			}
+
+			company.find(filter, (error, companyDetail) => {
 				if (error) {
 					console.error(error);
 					return res.status(500).json({ error: 'Internal server error' });
 				}
-				if (companyDetail) {
-					return res.status(200).json(companyDetail);
-				}
+				return res.status(200).json(companyDetail);
 			});
 		});
 		// Created by Lakshay - Taken Data from Job and Job Status Table
