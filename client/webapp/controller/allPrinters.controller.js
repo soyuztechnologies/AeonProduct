@@ -573,26 +573,28 @@ sap.ui.define([
 		}
 		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
 		var id = this.getModel('appView').getProperty('/UserId');
-		var payLoad = {
-			id,
-		}
+		// var payLoad = {
+		// 	id,
+		// }
 		var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
 		var url = 'api/Jobs?filter='+oFilter
 		var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
 		var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
 		var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
 		// sPath = `/Jobs('${id}')/Company`;
-		var payload = {
-			"selectedYear": selectedYear,
-			"maxDate": maxDate,
-			"minDate": minDate,
-			"State":oState?oState:false
-		}
+		
 		var that = this;
 		if(sUserRole === "Customer"){
 			let companyId = this.getModel('appView').getProperty('/CompanyId');
 			this.getCompanyName(companyId)
-			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payLoad)
+			var payload = {
+				id: id,
+				"selectedYear": selectedYear,
+				"maxDate": maxDate,
+				"minDate": minDate,
+				"State":oState?oState:false
+			}
+			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payload)
 			.then(function (data, status, xhr) {
 			  
 			  that.getView().getModel("appView").setProperty("/jobsData", data);
@@ -605,14 +607,15 @@ sap.ui.define([
 		}else if(sUserRole === "SalesPerson"){
 			let companyId = this.getModel('appView').getProperty('/CompanyId');
 			this.getCompanyName(companyId)
-			let salesPayload = {
+			let payload = {
+				id: id,
 				"selectedYear": selectedYear,
 				"maxDate": maxDate,
 				"minDate": minDate,
 				"State":oState?oState:false,
 				companyId: companyId
 			}
-			this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , salesPayload)
+			this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
 				.then(function (data, status, xhr) {
 					that.getView().getModel("appView").setProperty("/jobsData", data);
 					that.getView().getModel("appView").setProperty("/countJobs", data.length);
@@ -622,6 +625,13 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 		}else{
+			var payload = {
+				"selectedYear": selectedYear,
+				"maxDate": maxDate,
+				"minDate": minDate,
+				"State":oState?oState:false
+			}
+			this.getCompanyName()
 			this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);

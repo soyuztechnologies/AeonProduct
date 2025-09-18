@@ -56,6 +56,20 @@
                         <Input value="{parts:[ {path:'appView>noOfUps1'}, { path: 'appView>noOfUps2'}, {path: 'appView>noOfUps3'} ] ,formatter:'.formatter.equal'}" editable="false"/>
 						<Label text="Coating"/>
                         <Input value="{appView>varLmt}" editable="false"/>
+						<Label text="Expected Delivery Date" labelFor="DP8"/>
+						<DatePicker
+							id="DP8"
+							placeholder="Enter Date"
+							change="onExpectedDeliveryDateChange"
+							value="{
+								'path':'appView>ExpectedDeliveryDate',
+								'type':'sap.ui.model.type.Date',
+								'formatOptions': {
+									'pattern': 'dd-MM-yyyy'
+								}
+							}"
+							showFooter="true"
+							editable="{= ${appView>/UserRole} === 'Admin' ? true : false}"/>
 				</f:content>
 		</f:SimpleForm>
 		<core:Fragment fragmentName="ent.ui.ecommerce.fragments.Jobstatus" type="XML"></core:Fragment>

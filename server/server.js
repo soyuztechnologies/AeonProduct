@@ -1137,6 +1137,95 @@ app.start = function () {
 				return res.status(200).json(companyDetail);
 			});
 		});
+
+		
+		app.patch('/ExpectedDeliveryDate', async (req, res) => {
+			try {
+				const Job = app.models.Job;
+				const { id, ExpectedDeliveryDate } = req.body;
+
+				if (!id) {
+					return res.status(400).json({
+						error: 'Job ID is required'
+					});
+				}
+
+				if (!ExpectedDeliveryDate) {
+					return res.status(400).json({
+						error: 'ExpectedDeliveryDate is required'
+					});
+				}
+
+				const job = await Job.findById(id);
+				
+				if (!job) {
+					return res.status(404).json({
+						error: 'Job not found'
+					});
+				}
+
+				job.ExpectedDeliveryDate = ExpectedDeliveryDate;
+				
+				const updatedJob = await job.save();
+
+				res.status(200).json({
+					success: true,
+					message: 'ExpectedDeliveryDate updated successfully',
+					data: updatedJob
+				});
+
+			} catch (error) {
+				console.error('Error updating ExpectedDeliveryDate:', error);
+				res.status(500).json({
+					error: 'Internal server error',
+					message: error.message
+				});
+			}
+		});
+		app.patch('/onMarkAsUrgent', async (req, res) => {
+			try {
+				const Job = app.models.Job;
+				const { id, Urgent } = req.body;
+
+				if (!id) {
+					return res.status(400).json({
+						error: 'Job ID is required'
+					});
+				}
+
+				if (!Urgent) {
+					return res.status(400).json({
+						error: 'Urgent flag is required'
+					});
+				}
+
+				const job = await Job.findById(id);
+				
+				if (!job) {
+					return res.status(404).json({
+						error: 'Job not found'
+					});
+				}
+
+				job.Urgent = Urgent;
+				
+				const updatedJob = await job.save();
+
+				res.status(200).json({
+					success: true,
+					message: 'Urgent updated successfully',
+					data: updatedJob
+				});
+
+			} catch (error) {
+				console.error('Error updating Urgent:', error);
+				res.status(500).json({
+					error: 'Internal server error',
+					message: error.message
+				});
+			}
+		});
+
 		// Created by Lakshay - Taken Data from Job and Job Status Table
 		app.get('/Jobs', (req, res) => {
 
@@ -2018,18 +2107,15 @@ app.start = function () {
 				var maxDate = payload.maxDate;
 				var minDate = payload.minDate;
 				// var selectedYear = selectedYear.toString();
-				if (payload.State) {
-					var oFilter = {
-						and: [{ status: { nlike: "Dispatched" } }]
-					}
-				} else {
-					var oFilter = {
-						and: [
-							{ CompanyId: { neq: null } },
-							{ date: { lte: maxDate } },
-							{ date: { gte: minDate } }
-						]
-					}
+				var oFilter = {
+					and: [
+						{ CompanyId: { neq: null } },
+						{ date: { lte: maxDate } },
+						{ date: { gte: minDate } },
+					],
+					};
+					if (payload.State) {
+					oFilter.and.push({ status: { nlike: "Dispatched" } });
 				}
 
 				Job.find({
@@ -2462,7 +2548,14 @@ app.start = function () {
 		app.post('/JobsCustomer', (req, res) => {
 			const AppUser = app.models.AppUser;
 			const Job = app.models.Job;
-			const { id } = req.body;
+			var payload = req.body;
+			
+			const id = payload.id;
+			// var selectedYear = payload.selectedYear;
+			var maxDate = payload.maxDate;
+			var minDate = payload.minDate;
+			// var selectedYear = selectedYear.toString();
+			
 
 			AppUser.findOne({ where: { id } }, (appUserError, AppUser) => {
 				if (appUserError) {
@@ -2473,9 +2566,18 @@ app.start = function () {
 				if (AppUser) {
 					const CompanyId = AppUser.CompanyId;
 					if (CompanyId) {
+						var oFilter = {
+							and: [
+								{ CompanyId: { eq: CompanyId } },
+								{ date: { lte: maxDate } },
+								{ date: { gte: minDate } }
+							]
+						};
+						if (payload.State) {
+							oFilter.and.push({ status: { nlike: "Dispatched" }});
+						}
 						Job.find(
 							{
-								where: { CompanyId },
 								fields: {
 									JobName: false,
 									UpdatedOn: false,
@@ -2565,6 +2667,7 @@ app.start = function () {
 									corrections2: false,
 									corrections3: false,
 								},
+								where: oFilter,
 								include: 'Company',
 							},
 							(jobError, Jobs) => {
@@ -2586,7 +2689,15 @@ app.start = function () {
 		app.post('/JobsSalesPerson', (req, res) => {
 			const AppUser = app.models.AppUser;
 			const Job = app.models.Job;
-			const { id, companyId } = req.body;
+			var payload = req.body;
+			
+			const companyId = payload.companyId;
+			const id = payload.id;
+			// var selectedYear = payload.selectedYear;
+			var maxDate = payload.maxDate;
+			var minDate = payload.minDate;
+			// var selectedYear = selectedYear.toString();
+			
 
 			AppUser.findOne({ where: { id } }, (appUserError, AppUser) => {
 				if (appUserError) {
@@ -2597,9 +2708,19 @@ app.start = function () {
 				if (AppUser) {
 					if (companyId) {
 						const ids = companyId?.split(",").map(id => id.trim());
+						var oFilter = {
+							and: [
+								{ CompanyId : { inq: ids } },
+								{ date: { lte: maxDate } },
+								{ date: { gte: minDate } }
+							]
+						};
+						if (payload.State) {
+							oFilter.and.push({ status: { nlike: "Dispatched" }});
+						}
 						Job.find(
 							{
-								where: { CompanyId : { inq: ids } },
+								where: oFilter,
 								fields: {
 									JobName: false,
 									UpdatedOn: false,
