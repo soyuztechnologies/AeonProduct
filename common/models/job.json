@@ -52,6 +52,10 @@
 		"UpdatedOn": {
 			"type": "date"
 		},
+		"ExpectedDeliveryDate": {
+			"type": "date",
+			"default": null
+		},
 		"poNo": {
 			"type": "string",
 			"default": null

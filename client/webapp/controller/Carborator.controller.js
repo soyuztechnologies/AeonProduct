@@ -19,7 +19,7 @@ sap.ui.define([
       this._oRouter = this.getRouter();
       this.getRouter().getRoute("Carborator").attachPatternMatched(this._matchedHandler, this);
     },
-    _matchedHandler: function () {
+    _matchedHandler: async function () {
       var oModel = this.getModel("appView");
       oModel.setProperty("/layout", "OneColumn");
       oModel.setProperty("/visibleHeader", false);
@@ -47,8 +47,12 @@ sap.ui.define([
       }
       oModel.updateBindings();
       // this.selectCompany();
-      this.getUserRoleData();
-      this.getCompanyName();
+      try {
+          await this.getUserRoleData();
+          this.getCompanyName();
+      } catch (e) {
+          MessageToast.show("Failed to fetch user role");
+      }
       this.getJobsData();
     },
     onPressNavigate: function () {

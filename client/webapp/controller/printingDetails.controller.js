@@ -1905,6 +1905,35 @@ sap.ui.define([
 			});
 		},
 
+		onExpectedDeliveryDateChange: function (oEvent) {
+			var that = this;
+			var ids = this.getView().getModel('appView').getProperty("/jobId");
+
+			var oDatePicker = oEvent.getSource();
+			var jsDate = oDatePicker.getDateValue();
+
+			if (!jsDate) {
+				console.error("Invalid date selected");
+				return;
+			}
+
+			var formattedDate = jsDate.toISOString().replace("Z", "+00:00");
+
+			var payload = {
+				id: ids,
+				ExpectedDeliveryDate: formattedDate
+			};
+
+			this.middleWare.callMiddleWare("ExpectedDeliveryDate", "PATCH", payload)
+				.then(function (data) {
+					MessageToast.show("Saved successfully");
+					// console.log("ExpectedDeliveryDate updated successfully:", data);
+				})
+				.catch(function (jqXhr, textStatus, error) {
+					that.middleWare.errorHandler(error, that);
+				});
+		},
+
 		// * at here we are going to edit the row data for the entries.
 		editJobstatusEntry: function (oEvent) {
 			var sUserRole = this.getView().getModel("appView").getProperty("/UserRole");
@@ -3389,21 +3418,32 @@ sap.ui.define([
 			if (alreadyUrgentJobs < maxUrgentJobs) {
 				// selectedJob.Urgent = "Yes"
 				var id = this.oArgs;
-				const sEntityPath = `/Jobs('${id}')`;
+				// const sEntityPath = `/Jobs('${id}')`;
 				var payload = {
+					id: id,
 					"Urgent": "Yes"
 				}
-				oModel.update(sEntityPath, payload, {
-					success: function (oUpdatedData) {
-						MessageToast.show("Marked as Urgent Successfully")
-						that.getView().getModel("appView").setProperty("/asUrgentVis", false);
-						that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", true);
-						that.getJobsDataByCompanyFilter();
-					},
-					error: function (error) {
-						that.middleWare.errorHandler(error, that);
-					}
+				this.middleWare.callMiddleWare("onMarkAsUrgent", "PATCH", payload)
+				.then(function (data) {
+					MessageToast.show("Marked as Urgent Successfully")
+					that.getView().getModel("appView").setProperty("/asUrgentVis", false);
+					that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", true);
+					that.getJobsDataByCompanyFilter();
+				})
+				.catch(function (jqXhr, textStatus, error) {
+					that.middleWare.errorHandler(error, that);
 				});
+				// oModel.update(sEntityPath, payload, {
+				// 	success: function (oUpdatedData) {
+				// 		MessageToast.show("Marked as Urgent Successfully")
+				// 		that.getView().getModel("appView").setProperty("/asUrgentVis", false);
+				// 		that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", true);
+				// 		that.getJobsDataByCompanyFilter();
+				// 	},
+				// 	error: function (error) {
+				// 		that.middleWare.errorHandler(error, that);
+				// 	}
+				// });
 
 			}
 			else {
@@ -3455,30 +3495,41 @@ sap.ui.define([
 			if (!oEvent.getSource().getBindingContext("appView")) {
 				var data = that.getView().getModel("appView").getProperty("/Jobs");
 				var id = data.jobCardNo;
-				var sPath = `/Jobs('${id}')`
+				// var sPath = `/Jobs('${id}')`
 			}
 			else {
 				var isSelectedJob = oEvent.getSource().getBindingContext("appView").getObject();
 				var id = isSelectedJob.jobCardNo;
-				var sPath = `/Jobs('${id}')`
+				// var sPath = `/Jobs('${id}')`
 			}
 			// var sPath = `/Job/('${id}')`;
 			var payload = {
+				id: id,
 				"Urgent": "No"
 			}
-			oModel.update(sPath, payload, {
-				success: function (data) {
+			this.middleWare.callMiddleWare("onMarkAsUrgent", "PATCH", payload)
+				.then(function (data) {
 					MessageToast.show("Successfully Removed")
 					that.getJobsDataByCompanyFilter();
 					that.getView().getModel("appView").setProperty("/asUrgentVis", true);
 					that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
-
-				},
-				error: function (error) {
+				})
+				.catch(function (jqXhr, textStatus, error) {
 					that.middleWare.errorHandler(error, that);
+				});
+			// oModel.update(sPath, payload, {
+			// 	success: function (data) {
+			// 		MessageToast.show("Successfully Removed")
+			// 		that.getJobsDataByCompanyFilter();
+			// 		that.getView().getModel("appView").setProperty("/asUrgentVis", true);
+			// 		that.getView().getModel("appView").setProperty("/RemoveasUrgentVis", false);
 
-				}
-			});
+			// 	},
+			// 	error: function (error) {
+			// 		that.middleWare.errorHandler(error, that);
+
+			// 	}
+			// });
 
 
 		},

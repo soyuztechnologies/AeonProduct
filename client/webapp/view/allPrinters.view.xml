@@ -20,7 +20,7 @@
 				<content>
 					<Title text="Printers  ( {appView>/countJobs} )"/>
 					<ToolbarSpacer ></ToolbarSpacer>
-					<Label text="Dispatched Jobs:"></Label>
+					<Label text="Show the Jobs that are not dispatched:"></Label>
 					<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
 					<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />
 					<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
@@ -87,11 +87,11 @@
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
 									<HBox alignItems="Center" >
 										<Label text="{appView>Company/CompanyName}" class ="sapUiTinyMarginBottom" wrapping="true"/>
-										<ObjectMarker class="sapUiMediumMarginBottom sapUiMediumMarginBegin sapUiSmallMarginTop urgentStar" type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" />
-										<ObjectMarker class="sapUiMediumMarginBottom sapUiMediumMarginBegin sapUiSmallMarginTop remarkFlag" type="{parts:[{path: 'appView>JobStatus/0/remark1'},{path: 'appView>JobStatus/0/remark2'},{path: 'appView>JobStatus/0/remark3'}],formatter:'.formatter.RemarkStarFormatter'}" />
+										<ObjectMarker class="sapUiMediumMarginBottom sapUiMediumMarginBegin sapUiSmallMarginTop urgentStar" type="{path: 'appView>Urgent' ,formatter:'.formatter.urgentFormatter'}" visible="{= ${appView>Urgent} ? true : false }"/>
+										<ObjectMarker class="sapUiMediumMarginBottom sapUiMediumMarginBegin sapUiSmallMarginTop remarkFlag" type="{parts:[{path: 'appView>JobStatus/0/remark1'},{path: 'appView>JobStatus/0/remark2'},{path: 'appView>JobStatus/0/remark3'}],formatter:'.formatter.RemarkStarFormatter'}" visible="{= ${appView>JobStatus/0/remark1} || ${appView>JobStatus/0/remark2} || ${appView>JobStatus/0/remark3} ? true : false }"/>
 									</HBox>
-									<Text text="{appView>jobCardNo}__{appView>jobCode}__{appView>nameOFTheProduct}"/>
-									<HBox alignContent="Center" alignItems="Center">
+									<Text text="{= ${appView>/UserRole} === 'Customer' ? (${appView>nameOFTheProduct} ? ${appView>nameOFTheProduct} : 'JobName') : ${appView>jobCardNo} + '__' + ${appView>jobCode} + '__' + (${appView>nameOFTheProduct} ? ${appView>nameOFTheProduct} : 'JobName')}"/>
+									<HBox alignContent="Center" alignItems="Center" wrap="Wrap">
 										<ObjectStatus class="sapUiSmallMarginTop" text="{appView>status}" state="{path: 'appView>status', formatter: '.formatter.getStatusColor'}" />
 										<suite:MicroProcessFlow id="processFlow" class="sapUiSmallMarginBegin sapUiSmallMarginTop" width="100%">
 											<suite:content>
@@ -148,7 +148,17 @@
 											</suite:content>
 										</suite:MicroProcessFlow> 
 									</HBox>
-									
+									<Text text="Expected Delivery Date : {
+												path: 'appView>ExpectedDeliveryDate',
+												type: 'sap.ui.model.type.Date',
+												formatOptions: {
+													source: { pattern: 'yyyy-MM-ddTHH:mm:ss.SSSX' },
+													pattern: 'dd-MM-yyyy'
+												}
+											}" 
+											class="sapUiSmallMarginTop" 
+											visible="{= ${appView>ExpectedDeliveryDate} ? true : false }">
+									</Text>
 								</VBox>
 								<!-- <ToolbarSpacer /> -->
 								
