@@ -18,7 +18,7 @@
 		<subHeader>
 			<OverflowToolbar >
 				<content>
-					<Title text="Printers  ( {appView>/countJobs} )"/>
+					<Title text="Printers  ( {= ${appView>/countJobs} === ${appView>/filteredJobs} ? ${appView>/countJobs} : ${appView>/filteredJobs} + ' / ' + ${appView>/countJobs} } )"/>
 					<ToolbarSpacer ></ToolbarSpacer>
 					<Label text="Show the Jobs that are not dispatched:"></Label>
 					<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
@@ -67,11 +67,17 @@
 						</fb:FilterGroupItem>
 						<fb:FilterGroupItem name="company" label="Company" groupName="Group4" visibleInFilterBar="true">
 							<fb:control>
-								<Select  items="{appView>/companyDetails}" forceSelection="false" change="selectedCompany" width="200px" >
+								<!-- <Select  items="{appView>/companyDetails}" forceSelection="false" change="selectedCompany" width="200px" >
 									<core:Item text="{appView>CompanyName}" key="{appView>id}" />
-									</Select>
-								</fb:control>
-							</fb:FilterGroupItem>
+								</Select> -->
+								 <ComboBox items="{appView>/companyDetails}" placeholder="Company Name" change="selectedCompany" width="200px" showClearIcon="true" >
+									<items>
+										<core:Item enabled="true" text="{appView>CompanyName}" key="{appView>id}" />
+									</items>
+								</ComboBox>
+
+							</fb:control>
+						</fb:FilterGroupItem>
 						<!-- <fb:FilterGroupItem name="text" label="Show the Jobs that are not dispatched" groupName="Group1" visibleInFilterBar="true">
 							<fb:control>
 								<Switch class="sapUiSmallMarginBegin sapUiMediumMarginBottom" tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData" ></Switch>
@@ -79,7 +85,7 @@
 						</fb:FilterGroupItem> -->
 					</fb:filterGroupItems>
 				</fb:FilterBar>
-			 <List id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}">
+			 <List growing="true" growingScrollToLoad="true" growingThreshold="50" id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}">
 				<items>
 					<custom:customListItem type="Navigation" backgroundColor="{path : 'appView>status', formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
 						<HBox alignItems="Center" justifyContent="SpaceBetween">
