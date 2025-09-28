@@ -1,0 +1,96 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+
+
+    <Dialog contentWidth="100%" contentHeight="100%" title="Attachments that already Present" >
+        <content>
+        <!-- <MessageStrip
+        text="Warning! Those Jobs already exist with CompanyName"
+        type="Warning"
+        showIcon="true"
+        showCloseButton="true">
+    </MessageStrip> -->
+            <Table items="{path: 'appView>/oldAttachmentFiles'}">
+                <columns>
+                    <Column>
+                        <Label text="File Name" />
+                    </Column>
+                    <Column hAlign="Center" >
+                        <Label text="Type" />
+                    </Column>
+                    <Column hAlign="Center" >
+                        <Label text="Action" />
+                    </Column>
+                    <Column hAlign="End" >
+                        <Label text="Remove" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem   >
+                        <cells>
+                            <Text text="{appView>Label}">
+                            </Text>
+                            <Text text="{appView>Type}">
+                            </Text>
+                            <core:Icon color="Negative" src="sap-icon://alert" ></core:Icon>
+                            <!-- <Button enabled="false" tooltip="Remove the Job" icon="sap-icon://alert"></Button> -->
+                            <Button press="removeAttachment" tooltip="Remove the Attachment" icon="sap-icon://decline"></Button>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            <!-- <MessageStrip
+				text="Those Jobs already exist without CompanyName"
+				showIcon="true"
+				showCloseButton="true">
+			</MessageStrip> -->
+            <!-- <Table items="{path: 'appView>/allExcelData', filters: [{ path: 'operation', operator: 'EQ', value1: 'RU'},{ path: 'CompanyId', operator: 'EQ', value1: null}]}">
+                <columns>
+                    <Column>
+                        <Label text="File Name" />
+                    </Column>
+                    <Column hAlign="Center" >
+                        <Label text="Company" />
+                    </Column>
+                    <Column hAlign="Center" >
+                        <Label text="Action" />
+                    </Column>
+                    <Column hAlign="End" >
+                        <Label text="Remove" />
+                    </Column>
+                </columns>
+                <items>
+                    
+                    <ColumnListItem  highlight="{parts:[ {path:'appView>operation'}, { path: 'appView>CompanyId'}] ,formatter:'.formatter.highlightFormatter'}">
+                        <cells>
+                            <Text text="{appView>fileName}">
+                            </Text>
+                            <ComboBox selectedKey="{appView>CompanyId}" items="{appView>/companyDetails}" 
+                                editable="false"
+                                placeholder="Company Name"
+                                change="onPopinLayoutChanged"
+                                class="sapUiTinyMarginEnd">
+                                <items>
+                                    <core:Item enabled="true"  text="{appView>CompanyName}" 
+                                        key="{appView>id}"/>
+                                </items>
+                            </ComboBox>
+                            <core:Icon color="Critical" src="sap-icon://alert" ></core:Icon>
+                            <Button press="removeJobwithoutCompId"  tooltip="Remove the Job" icon="sap-icon://decline"></Button>   
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table> -->
+
+
+        </content>
+        <endButton>
+            <Button text="Replace" type="Emphasized" press="onCloseAttachmentValDialog" />
+        </endButton>
+    </Dialog>
+                                
+   
+</core:FragmentDefinition>

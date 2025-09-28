@@ -17,15 +17,19 @@ sap.ui.define([
 		},
 
 		// * RMh funciton
-		_matchedHandler: function (oEvent) {
+		_matchedHandler: async function (oEvent) {
 			var oModel = this.getView().getModel("appView");
 			oModel.setProperty("/layout", "OneColumn");
 			oModel.setProperty("/visibleHeader", true);
 			oModel.setProperty("/hamburgerVisibility", true);
 			oModel.setProperty("/sideExpanded", false);
 			// oModel.setProperty("/aeonHeaderVis", true);
-			this.getUserRoleData();
-			this.getCompanyName();
+			try {
+				await this.getUserRoleData();
+				this.getCompanyName();
+			} catch (e) {
+				MessageToast.show("Failed to fetch user role");
+			}
 			// this.onSelectItem();
 		},
 		// get for Company
@@ -72,25 +76,100 @@ sap.ui.define([
 					actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
 					onClose: function (sAction) {
 						if (sAction === MessageBox.Action.OK) {
-							oModel.remove(`/Company('${id}')`, {
-								success: function () {
-									// Do something after successful deletion
-									MessageToast.show("Company Deleted Successfully");
-									that.getCompanyName();
-									oModel.updateBindings();
-									BusyIndicator.hide();
-								},
-								error: function (error) {
-									BusyIndicator.hide();
-									that.middleWare.errorHandler(error, that);
-									MessageToast.show("Error deleting data");
+
+							var filteredJobDatas = [];
+							that.middleWare.callMiddleWare("getJobsWithCompanyDetails", "get")
+							.then(function (data, status, xhr) {
+								data.forEach(element => {
+									if (id === element.CompanyId) {
+										filteredJobDatas.push(element);
+									}
+								});
+								if(filteredJobDatas.length > 0){
+									that.getView().getModel("appView").setProperty("/jobsOfThisCompany", filteredJobDatas);
+									that.getView().getModel("appView").updateBindings()
+									that.companyValiation()
+								}else{
+									that.deleteCompany(id);
 								}
+							})
+							.catch(function (jqXhr, textStatus, errorMessage) {
+								that.middleWare.errorHandler(jqXhr, that);
 							});
+							
 						}
 					}
 				});
 			}
 		},
+
+		deleteCompany: function(id) {
+			var that = this;
+			var oModel = this.getView().getModel();
+			console.log('company deleted')
+			oModel.remove(`/Company('${id}')`, {
+				success: function () {
+					MessageToast.show("Company Deleted Successfully");
+					that.getCompanyName();
+					oModel.updateBindings();
+					BusyIndicator.hide();
+				},
+				error: function (error) {
+					BusyIndicator.hide();
+					that.middleWare.errorHandler(error, that);
+					MessageToast.show("Error deleting data");
+				}
+			});
+		},
+
+		companyValiation: function(){
+			var that = this;
+			that.oCompanyValidation().then(function(oDialog){
+				oDialog.open();
+			})
+		},
+
+		oCompanyValidation: function(){
+			var oView = this.getView();
+			var that = this;
+			if (!this.oCompanyValidationDialog) {
+				this.oCompanyValidationDialog = Fragment.load({
+				id: oView.getId(),
+				name: "ent.ui.ecommerce.fragments.CompanyValidation",
+				controller: this
+				}).then(function (oDialog) {
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.oCompanyValidationDialog
+		},
+
+		onCancelCompany: function(){
+			var that = this;
+			this.oCompanyValidationDialog.then(function(oDialog){
+				oDialog.close();
+			})
+		},
+
+		onDeleteJobsAndCompany: function() {
+			var that = this;
+			var oModel = this.getView().getModel();
+			var id = this.getView().getModel("appView").getProperty("/companyIdToDelete");
+			this.deleteCompany(id);
+			var payload = id;
+			that.middleWare.callMiddleWare("deleteJobsWithCompanyId", "POST", payload)
+				.then(function (data, status, xhr) {
+					MessageToast.show("Jobs Deleted Successfully");
+					that.getCompanyName();
+					oModel.updateBindings();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+			this.onCancelCompany()
+		},
+
 		// * this function will load the smae fragement for user add and edit the user data too.
 
 		openUserDialog: function () {
@@ -395,6 +474,10 @@ sap.ui.define([
 					var selectedCompany = that.getView().getModel("appView").getProperty("/compNameForFilter");
 					that.getView().getModel("appView").setProperty("/jobsData", data);
 					data.forEach(element => {
+						// This will return those companies id whose company name is not found
+						// if (!element.Company && element.CompanyId){
+						// 	console.log(element.CompanyId)
+						// }
 						if (selectedCompany === element.Company.CompanyName) {
 							filteredJobDatas.push(element);
 						}

@@ -18,9 +18,9 @@
 		<subHeader>
 			<OverflowToolbar >
 				<content>
-					<Title text="Printers  ( {= ${appView>/countJobs} === ${appView>/filteredJobs} ? ${appView>/countJobs} : ${appView>/filteredJobs} + ' / ' + ${appView>/countJobs} } )"/>
+					<Title text="Printers  ( {appView>/countJobs} )"/>
 					<ToolbarSpacer ></ToolbarSpacer>
-					<Label text="Show the Jobs that are not dispatched:"></Label>
+					<Label text="Non Dispatched Jobs:"></Label>
 					<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
 					<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />
 					<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
@@ -70,7 +70,7 @@
 								<!-- <Select  items="{appView>/companyDetails}" forceSelection="false" change="selectedCompany" width="200px" >
 									<core:Item text="{appView>CompanyName}" key="{appView>id}" />
 								</Select> -->
-								 <ComboBox items="{appView>/companyDetails}" placeholder="Company Name" change="selectedCompany" width="200px" showClearIcon="true" >
+								 <ComboBox items="{appView>/companyDetails}" placeholder="Company Name" change="selectedCompany" width="200px" showClearIcon="true" showSecondaryValues="true" filterSecondaryValues="true">
 									<items>
 										<core:Item enabled="true" text="{appView>CompanyName}" key="{appView>id}" />
 									</items>

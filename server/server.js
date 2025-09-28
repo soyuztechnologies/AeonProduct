@@ -1629,6 +1629,29 @@ app.start = function () {
 
 		});
 
+		app.post('/deleteJobsWithCompanyId', (req, res) => {
+			const Job = app.models.Job;	
+			const companyId = req.body;   
+
+			if (!companyId) {
+				return res.status(400).json({ message: "companyId required hai" });
+			}
+
+			Job.destroyAll({ CompanyId: companyId }, (err, info) => {
+				if (err) {
+				console.error("Error deleting jobs:", err);
+				return res.status(500).json({ message: "Error deleting jobs" });
+				}
+
+				if (info) {
+				return res.status(200).json({
+					message: "Jobs deleted successfully",
+				});
+				}
+			});
+			});
+
+
 		app.post('/jobWithCompany', (req, res) => {
 
 		})

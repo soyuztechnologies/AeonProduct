@@ -207,6 +207,55 @@ sap.ui.define([
 //       // this.onUserDataChange();
 // },
 
+// onUploadChange: function (oEvent) {
+  
+//   return new Promise((resolve, reject) => {
+    
+//    var type=  this.getView().getModel("appView").getProperty("/valueType")
+//     var files = oEvent.getParameter("files");
+//     var that = this;
+//     var route = that.getRouter().oHashChanger.hash;
+//     that.files = [];
+//     that.file = [];
+//     that.count = 0;
+//     function processFile(index) {
+//       if (index < files.length) {
+//         var reader = new FileReader();
+//         var key;
+//         if (type == "ArtworkNo") {
+//           key = files[index].name.replace(/\s+/g, "").split('.')[0] + type;
+//         } else {
+//           key = files[index].name.split('_')[0] + type;
+//         }
+//         that.files.push({ "Label": files[index].name, "Key": key, "Type": route });
+//         reader.onload = function (e) {
+//           var vContent = e.currentTarget.result;
+//           that.oFileContentJson = {};
+//           that.content = that.convertFileToUrl(vContent);
+//           that.oFileContentJson.Key = that.files[index].Key;
+//           that.oFileContentJson.Label = that.files[index].Label;
+//           that.oFileContentJson.Attachment = vContent;
+//           that.oFileContentJson.Type = that.files[index].Type;
+//           that.file[index] = that.oFileContentJson;
+//           that.count++;
+//           processFile(index + 1);
+//         };
+
+//         reader.onerror = function (error) {
+//           reject(error);
+//         };
+
+//         reader.readAsDataURL(files[index]);
+//       } else {
+//         resolve();
+//       }
+//     }
+
+//     processFile(0);
+
+//   });
+  
+// },
 onUploadChange: function (oEvent) {
   
   return new Promise((resolve, reject) => {
@@ -239,6 +288,11 @@ onUploadChange: function (oEvent) {
           that.file[index] = that.oFileContentJson;
           that.count++;
           processFile(index + 1);
+
+          if (that.count === files.length){
+            that.allAttachmentsKeyToString()
+            that.checkInAttachments()
+          }
         };
 
         reader.onerror = function (error) {
@@ -254,29 +308,140 @@ onUploadChange: function (oEvent) {
     processFile(0);
 
   });
+  
+},
+allAttachmentsKeyToString: function() {
+  var data = this.files
+  var array = []
+  for (var i = 0; i < data.length; i++) {
+    array.push(data[i].Label)
+  }
+  this.getView().getModel("appView").setProperty("/allAttachmentsKey", array)
+},
+checkInAttachments:function(){
+  this.Flag = false;
+  var that = this;
+  var allAttachmentsKey = this.getView().getModel("appView").getProperty("/allAttachmentsKey")
+  var oUploadedAttachments = this.files
+  var newAttachments = []
+  var filters = allAttachmentsKey.map(function(key) {
+    return '{"Label": "' + key + '"}';
+  });
+  var filter = encodeURIComponent('{"where": {"or": [' + filters.join(",") + ']}}');
+  var url = 'api/Attachments?filter=' + filter
+  this.middleWare.callMiddleWare(url, "GET")
+  .then(function(data, status, xhr){
+    for(let index = 0; index < data.length; index++){
+      const element = data[index];
+      var oIndex = oUploadedAttachments.findIndex((ele) => {
+        return ele.Label === element.Label
+      });
+      that.Flag = true;
+      that.validateAttachments()   
+    }
+    for(let j = 0; j < oUploadedAttachments.length; j++){
+      const ele = oUploadedAttachments[j];
+      var oIndex = data.findIndex((element) => {
+        return ele.Label === element.Label
+      });
+      if(oIndex == -1){
+        newAttachments.push(ele)
+      }
+    }
+    that.getView().getModel("appView").setProperty("/oldAttachmentFiles", data);
+    that.getView().getModel("appView").setProperty("/newlyAddedAttachments", newAttachments);
+    that.getView().getModel('appView').updateBindings();
+  })
+  .catch(function (jqXhr, textStatus, errorMessage) {
 
+      that.middleWare.errorHandler(jqXhr, that);
+    });
+},
 
+validateAttachments: function(){
+  var that = this;
+  that.oAttachmentValidation().then(function(oDialog){
+    oDialog.open();
+  })
+},
 
+oAttachmentValidation: function(){
+  var oView = this.getView();
+  var that = this;
+  if (!this.oAttachmentValidationDialog) {
+    this.oAttachmentValidationDialog = Fragment.load({
+      id: oView.getId(),
+      name: "ent.ui.ecommerce.fragments.AttachmentValidation",
+      controller: this
+    }).then(function (oDialog) {
+      // Add dialog to view hierarchy
+      oView.addDependent(oDialog);
+      return oDialog;
+    }.bind(this));
+  }
+  return this.oAttachmentValidationDialog
+},
+
+onCloseAttachmentValDialog: function(){
+  var that = this;
+  this.oAttachmentValidationDialog.then(function(oDialog){
+    oDialog.close();
+  })
+},
+
+removeAttachment: function(oEvent){
+  var selectedAttachment = oEvent.getSource().getBindingContext("appView").getObject();
+  var AllAttachementFiles = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
+  
+  var index =  AllAttachementFiles.findIndex((ele) => {
+    return ele.Label === selectedAttachment.Label
+  });
+  if(index != -1){
+    AllAttachementFiles.splice(index, 1);
+  }
+  this.getView().getModel('appView').updateBindings();
 },
 
       onSaveDocuments:function(){
         
         var oModel = this.getView().getModel();
-        var file = this.file;
+        // var file = this.file;
+        var newAttachments = this.getView().getModel("appView").getProperty("/newlyAddedAttachments");
+        var replaceAttachments = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
         var that = this;
-        for (let i = 0; i < file.length; i++) {
-          const element = file[i];
-        oModel.create('/Attachments', element, {
-          success: function (data) {
-            // that.getAttachmentDatas();
-          },
-          error: function (error) {
-            // Error callback
-            that.middleWare.errorHandler(error, that);
-            // MessageToast.show("Error reading data");
+        if(!newAttachments || newAttachments.length == 0 && !replaceAttachments || replaceAttachments.length == 0){
+          MessageToast.show("Please upload at least one document");
+          return;
+        }
+        // This call is used to upload new attachments in DB
+        if(newAttachments.length > 0){
+          for (let i = 0; i < newAttachments.length; i++) {
+            const element = newAttachments[i];
+            oModel.create('/Attachments', element, {
+              success: function (data) {
+                // that.getAttachmentDatas();
+              },
+              error: function (error) {
+                // Error callback
+                that.middleWare.errorHandler(error, that);
+                // MessageToast.show("Error reading data");
+              }
+            });
           }
-        });
-      }
+        }
+        // This call is used to replace existing attachments in DB
+        if(replaceAttachments.length > 0){
+          for(let j = 0; j < replaceAttachments.length; j++){
+            const element = replaceAttachments[j];
+            this.middleWare.callMiddleWare("api/Attachments", "PUT", element)
+            .then(function (data, status, xhr){
+              MessageToast.show("Successfully Uploaded")
+            })
+            .catch(function (jqXhr, textStatus, errorMessage) {
+                that.middleWare.errorHandler(jqXhr, that);
+              });
+          }
+        }
       },
       oDialogOpen: function () {
         var oView = this.getView();

@@ -565,7 +565,10 @@ sap.ui.define([
 			var oList = this.getView().byId("idListAllPrinters");
 			var oBinding = oList.getBinding("items");
 			oBinding.filter(oFilter);
-			this.getView().getModel("appView").setProperty("/filteredJobs", oBinding.getLength());
+			var filteredItems = oBinding.getLength();
+			var totalItems = oBinding.oList.length;	
+			var Jobs = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
+			this.getView().getModel("appView").setProperty("/countJobs", Jobs);
 		},
        // this function filter the job by company id and also send job as to spacific user
        getJobsDataByCompanyFilter: function(oState){
@@ -599,8 +602,7 @@ sap.ui.define([
 			.then(function (data, status, xhr) {
 			  
 			  that.getView().getModel("appView").setProperty("/jobsData", data);
-			  that.getView().getModel("appView").setProperty("/countJobs", data.length);	
-			  that.getView().getModel("appView").setProperty("/filteredJobs", data.length);	
+			  that.getView().getModel("appView").setProperty("/countJobs", data.length);		
 			  that.onSortDescending();				
 		  })
 			.catch(function (jqXhr, textStatus, errorMessage) {
@@ -620,8 +622,7 @@ sap.ui.define([
 			this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
 				.then(function (data, status, xhr) {
 					that.getView().getModel("appView").setProperty("/jobsData", data);
-					that.getView().getModel("appView").setProperty("/countJobs", data.length);
-					that.getView().getModel("appView").setProperty("/filteredJobs", data.length);	
+					that.getView().getModel("appView").setProperty("/countJobs", data.length);	
 					that.onSortDescending();
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
@@ -639,7 +640,6 @@ sap.ui.define([
 			.then(function (data, status, xhr) {
 				that.getView().getModel("appView").setProperty("/jobsData", data);
 				that.getView().getModel("appView").setProperty("/countJobs", data.length);
-				that.getView().getModel("appView").setProperty("/filteredJobs", data.length);	
 				
 				that.onSortDescending();
 				// that.getJobStatus();
@@ -1168,20 +1168,19 @@ sap.ui.define([
 		selectedCompany: function (oEvent) {
 			let selectedKey = oEvent.getSource().getSelectedKey();
 			var oList = this.getView().byId("idListAllPrinters");
-			let searchValue = oEvent.getParameter("value");
 			var oBinding = oList.getBinding("items");
 			let filter;
 			if(selectedKey){
 				filter = new Filter("CompanyId",FilterOperator.EQ,selectedKey);
 				oBinding.filter(filter);
-			}else if (searchValue){
-				filter = new Filter("Company/CompanyName",FilterOperator.Contains,typedValue);
-				oBinding.filter(filter);
 			}else{
 				oBinding.filter();
 				// delete this.tableFilters[filterProperty];
-			}		
-			this.getView().getModel("appView").setProperty("/filteredJobs", oBinding.getLength());	
+			}	
+			var filteredItems = oBinding.getLength();
+			var totalItems = oBinding.oList.length;	
+			var Jobs = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
+			this.getView().getModel("appView").setProperty("/countJobs", Jobs);	
 		},
 
 		openStatusLegend: function (oEvent) {

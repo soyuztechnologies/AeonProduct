@@ -58,7 +58,7 @@
 			  </fb:FilterGroupItem>
 			</fb:filterGroupItems>
 		  </fb:FilterBar> -->
-		<Table mode="SingleSelectLeft" items="{appView>/companyDetails}" id="idJobAttachmentTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressCompany">  
+		<Table mode="SingleSelectLeft" items="{appView>/companyDetails}" id="idCompanyTable" sticky="HeaderToolbar,ColumnHeaders" itemPress="rowItemsPressCompany">  
 			<columns>
 				<Column width="12em">
 					<Text text="Company Name" />

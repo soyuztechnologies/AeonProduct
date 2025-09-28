@@ -18,7 +18,8 @@
 			  <fb:FilterGroupItem name="Role" label="Role" groupName="Group1" visibleInFilterBar="true">
 				<fb:control>
 				  <ComboBox
-					change="onSelectRoleForSearch">
+					change="onSelectRoleForSearch"
+					showClearIcon="true">
 					<items>
 					  <core:Item key="Customer" text="Customer" />
 					  <core:Item key="Admin" text="Admin" />
@@ -38,8 +39,11 @@
 				<fb:control>
 				  <ComboBox
 					items="{appView>/companyNames}"
-					selectedKey="{appView>CompanyId}"
-					change="onSelectCompanyForSearch">
+					change="onSelectCompanyForSearch"
+					showSecondaryValues="true"
+					filterSecondaryValues="true"
+					showClearIcon="true"
+					>
 					<items>
 					  <core:Item text="{appView>CompanyName}" key="{appView>id}" />
 					</items>

@@ -4,9 +4,11 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
 	"sap/ui/core/BusyIndicator",
-	"sap/m/MessageBox"
+	"sap/m/MessageBox",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator"
 
-], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator,MessageBox) {
+], function (BaseController, MessageToast, JSONModel, Fragment, BusyIndicator,MessageBox, Filter, FilterOperator) {
 	"use strict";
 
 	return BaseController.extend("ent.ui.ecommerce.controller.userDetails", {
@@ -227,28 +229,20 @@ sap.ui.define([
 		//* For search Company from Combo Box
 
         onSelectCompanyForSearch: function(oEvent){
-
             
-
             var oSelectedItem = oEvent.getParameter("value");
+			var oTable = this.getView().byId("idProductsTable");
+			var oBinding = oTable.getBinding("items");
 
             if(!oSelectedItem){
 
-                var oFilter = new sap.ui.model.Filter("CompanyName", sap.ui.model.FilterOperator.NEQ, oSelectedItem);
-
-                var oTable = this.getView().byId("idProductsTable");
-
-                var oBinding = oTable.getBinding("items");
+                var oFilter = new Filter("CompanyName", FilterOperator.NEQ, oSelectedItem);
 
                 oBinding.filter([oFilter]);
 
             }else{
 
-                var oFilter = new sap.ui.model.Filter("CompanyName", sap.ui.model.FilterOperator.EQ, oSelectedItem);
-
-                var oTable = this.getView().byId("idProductsTable");
-
-                var oBinding = oTable.getBinding("items");
+                var oFilter = new Filter("CompanyName", FilterOperator.EQ, oSelectedItem);
 
                 oBinding.filter([oFilter]);
 
