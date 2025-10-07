@@ -16,13 +16,40 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("dispatchedList").attachPatternMatched(this._matchedHandler, this);
+			let defaultselectedValues = ['Client_PO', 'Artwork', 'Delivery_No', 'Invoice_No']
+			var oAppViewModel = this.getOwnerComponent().getModel('appView');
+			if (oAppViewModel) {
+				oAppViewModel.setProperty('/defaultAttachmentTypes', defaultselectedValues);
+			} else {
+				console.error("appView model not found!");
+			}
+
+			var today = new Date();
+            var startDate = new Date();
+            startDate.setMonth(today.getMonth() - 3);
+
+            var formatDate = function(date) {
+                var d = date.getDate().toString().padStart(2, '0');
+                var m = (date.getMonth() + 1).toString().padStart(2, '0');
+                var y = date.getFullYear();
+                return y + "-" + m + "-" + d;
+            };
+
+            this._sDefaultStartDate = formatDate(startDate);
+            this._sDefaultEndDate = formatDate(today);
+
+            // Set default value in DateRangeSelection
+            var oDateRange = this.byId("dateRangeSelector");
+            if (oDateRange) {
+                oDateRange.setValue(this._sDefaultStartDate + " - " + this._sDefaultEndDate);
+            }													
 		},
 
 		_matchedHandler: function (oEvent) {
 			var oModel = this.getView().getModel("appView");
 			oModel.setProperty("/layout", "OneColumn");
 			this.getModel('appView').setProperty('/UserRole', "Admin");		//As by user role as admin all sidenavigation - navigation list items will visible.
-			this.jobsWithAtleastAttachment();
+			// this.jobsWithAtleastAttachment();
 			this.getCompanyData();
 			this.aFilters = [];
 			this.getModel("appView").updateBindings();
@@ -30,6 +57,7 @@ sap.ui.define([
 			this.getUserRoleData().then((data) => {
 				that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 			});
+			this.selectAttachmentType();
 		},
 
 		getCompanyData: function () {
@@ -51,9 +79,9 @@ sap.ui.define([
 
 
 		//Function to find job with atleast 1 attachment
-		jobsWithAtleastAttachment: function () {
+		jobsWithAtleastAttachment: function (url) {
 			var that = this;
-			this.middleWare.callMiddleWare("Jobs", "GET")		//Calling Server.js/API endpoint /Jobs
+			this.middleWare.callMiddleWare(url, "GET")		//Calling Server.js/API endpoint /Jobs
 				.then(function (data, status, xhr) {
 					if (typeof (data) == 'string') {
 						that.getView().getModel('appView').setProperty('/JobsData', [])
@@ -69,11 +97,60 @@ sap.ui.define([
 						that.getModel('appView').setProperty('/currentItems', data.length);
 					}
 					// that.serverPayload(data);		//Send coming data from /Jobs endpoint to function.
+
+					var oDateRange = that.byId("dateRangeSelector");
+                    if (oDateRange) {
+                        that.onDateRangeChange({ getSource: () => oDateRange });
+                    }
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 
+		},
+
+		selectAttachmentType: function (oEvent) {
+			var that = this;
+			
+			if(!oEvent){
+				var selectedValues = this.getView().getModel('appView').getProperty('/defaultAttachmentTypes')
+				var queryParam = selectedValues.join(','); 
+				var url = "Jobs?selectedValues=" + encodeURIComponent(queryParam);
+				this.showAttachmentTypes(selectedValues)
+			}
+			if(oEvent){
+				var selectedItems = oEvent.getParameter("selectedItems");
+   				var selectedValues = selectedItems.map(item => item.getText());
+				this.getView().getModel('appView').setProperty('/defaultAttachmentTypes', selectedValues)
+				var queryParam = selectedValues.join(','); 
+				var url = "Jobs?selectedValues=" + encodeURIComponent(queryParam);
+				this.showAttachmentTypes(selectedValues)
+			}
+			this.jobsWithAtleastAttachment(url)
+			if(selectedValues.length === 0){
+				MessageToast.show('Please select atleast one attachment type')
+			}
+		},
+
+		showAttachmentTypes: function(data) {
+			var defaultSelectedTypes = {
+				'Client_PO' : false,
+				'Artwork' : false,
+				'Delivery_No' : false,
+				'Invoice_No' : false
+			}
+			data.forEach(function(value) {
+				if (value === 'Client PO' || value === 'Client_PO') {
+					defaultSelectedTypes['Client_PO'] = true;
+				} else if (value === 'Artwork') {
+					defaultSelectedTypes['Artwork'] = true;
+				} else if (value === 'Delivery No' || value === 'Delivery_No') {
+					defaultSelectedTypes['Delivery_No'] = true;
+				} else if (value === 'Invoice No' || value === 'Invoice_No') {
+					defaultSelectedTypes['Invoice_No'] = true;
+				}
+			});
+			this.getView().getModel('appView').setProperty('/selectedAttachmentTypes', defaultSelectedTypes)
 		},
 
 		// Function used at only once for finding attachemnets without Job's.
@@ -88,16 +165,30 @@ sap.ui.define([
 		// },
 
 		// Date Filter function
-		onDateRangeChange: function (oEvent) {
-			// Get the selected date range
-			var sDateRange = oEvent.getSource().getValue().split(" - ");
-			if (sDateRange) {
-				this.tableFilter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]);
-			}
-			else {
-				this.tableFilter("date", FilterOperator.BT, sDateRange);
-			}
-		},
+		// onDateRangeChange: function (oEvent) {
+		// 	// Get the selected date range
+		// 	var sDateRange = oEvent.getSource().getValue().split(" - ");
+		// 	if (sDateRange) {
+		// 		this.tableFilter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]);
+		// 	}
+		// 	else {
+		// 		this.tableFilter("date", FilterOperator.BT, sDateRange);
+		// 	}
+		// },
+
+		 onDateRangeChange: function(oEvent) {
+            var oDateRange = oEvent.getSource();
+            var sDateRange = oDateRange.getValue().split(" - ");
+
+            // If empty or invalid, use default last 3 months
+            if (!sDateRange[0] || !sDateRange[1]) {
+                oDateRange.setValue(this._sDefaultStartDate + " - " + this._sDefaultEndDate);
+                this.tableFilter("date", FilterOperator.BT, this._sDefaultStartDate, this._sDefaultEndDate);
+            } else {
+                // User selected a date → overwrite previous filter
+                this.tableFilter("date", FilterOperator.BT, sDateRange[0], sDateRange[1]);
+            }
+        },
 
 		// Company Filter
 		selectedCompany: function (oEvent) {
@@ -131,27 +222,31 @@ sap.ui.define([
 		// Modifying data acc to fragment send data of row in array to bind with fragment.
 		updateFragmentData: function (sData) {
 			let aItems = [];
-			aItems.push({
-				attachmentName: 'Client PO Code',
+			sData.PoAttach && aItems.push({
+				attachmentName: 'Client_PO Code',
 				attachmentCode: sData.PoAttach
 			});
-			aItems.push({
+			sData.artworkCode && aItems.push({
 				attachmentName: 'Artwork Attchment',
 				attachmentCode: sData.artworkCode
 			});
-			let aInvNos = sData.InvNo;
-			let aDeliveryNos = sData.DeliveryNo;
-			for (let i = 0; i < aInvNos.length; i++) {
-				aItems.push({
-					attachmentName: 'Invoice No',
-					attachmentCode: aInvNos[i]
-				});
+			let aInvNos = sData.InvNo && sData.InvNo;
+			let aDeliveryNos = sData.DeliveryNo && sData.DeliveryNo;
+			if(aInvNos) {
+				for (let i = 0; i < aInvNos.length; i++) {
+					aItems.push({
+						attachmentName: 'Invoice_No',
+						attachmentCode: aInvNos[i]
+					});
+				}
 			}
-			for (let i = 0; i < aDeliveryNos.length; i++) {
-				aItems.push({
-					attachmentName: 'Delivery No',
-					attachmentCode: aDeliveryNos[i]
-				});
+			if(aDeliveryNos){
+				for (let i = 0; i < aDeliveryNos.length; i++) {
+					aItems.push({
+						attachmentName: 'Delivery_No',
+						attachmentCode: aDeliveryNos[i]
+					});
+				}
 			}
 
 			return aItems;
@@ -187,7 +282,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel("appView");
 			var url = "";
 
-			if (oData.attachmentName == "Client PO Code") {
+			if (oData.attachmentName == "Client_PO Code") {
 				var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
 			}
@@ -195,11 +290,11 @@ sap.ui.define([
 				var url = `/Attachments('${oData.attachmentCode}')`;
 				oModel.setProperty("/uploadDocumnetTitle", "Artwork Attachment");
 			}
-			if (oData.attachmentName == "Delivery No") {
+			if (oData.attachmentName == "Delivery_No") {
 				var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Delivery Attachment");
 			}
-			if (oData.attachmentName == "Invoice No") {
+			if (oData.attachmentName == "Invoice_No") {
 				var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Invoice Attachment");
 			}
@@ -261,16 +356,16 @@ sap.ui.define([
 
 			for (let i = 0; i < AttachmentDeletion.length; i++) {
 				let data = this.getModel('appView').getProperty(AttachmentDeletion[i]);
-				if (data.attachmentName == "Client PO Code") {
+				if (data.attachmentName == "Client_PO Code") {
 					payload.push(data.attachmentCode);
 				}
 				if (data.attachmentName == "Artwork Attchment") {
 					payload.push(data.attachmentCode);
 				}
-				if (data.attachmentName == "Delivery No") {
+				if (data.attachmentName == "Delivery_No") {
 					payload.push(data.attachmentCode);
 				}
-				if (data.attachmentName == "Invoice No") {
+				if (data.attachmentName == "Invoice_No") {
 					payload.push(data.attachmentCode);
 
 				}
@@ -312,7 +407,8 @@ sap.ui.define([
 					if (sAction === "OK") {
 						that.middleWare.callMiddleWare("deleteAttachments", "POST", newPayloadData)		//delete attachment api call
 							.then(function (data, status, xhr) {
-								that.jobsWithAtleastAttachment();
+								// that.jobsWithAtleastAttachment();
+								that.selectAttachmentType();
 								MessageToast.show(data);
 								that.ojobValidation().then(data => {
 									data.close();
@@ -392,7 +488,18 @@ sap.ui.define([
 					if (usedIndexes.includes(i.toString())) {		//No selected row here to show duplicates on which row 
 						let data = tableOject[i];
 						let attachArray = [];
-						attachArray.push(data.PoAttach, data.artworkCode, ...data.InvNo, ...data.DeliveryNo);
+						if (data.PoAttach) {
+							attachArray.push(data.PoAttach);
+						}
+						if (data.artworkCode) {
+							attachArray.push(data.artworkCode);
+						}
+						if (data.InvNo && data.InvNo.length > 0) {
+							attachArray.push(...data.InvNo);
+						}
+						if (data.DeliveryNo && data.DeliveryNo.length > 0) {
+							attachArray.push(...data.DeliveryNo);
+						}
 						newPayloadData.push({		//Payload sended to server
 							jobCardNo: data.jobCardNo,
 							attachments: attachArray
@@ -441,7 +548,8 @@ sap.ui.define([
 					if (sAction === "OK") {
 						that.middleWare.callMiddleWare("deleteAttachments", "POST", newPayloadData)		//delete attachment api call
 							.then(function (data, status, xhr) {
-								that.jobsWithAtleastAttachment();
+								// that.jobsWithAtleastAttachment();
+								that.selectAttachmentType();
 								MessageToast.show(data);
 								oTable.setSelectedContextPaths(false);
 							})

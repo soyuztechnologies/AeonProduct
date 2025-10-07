@@ -11,15 +11,15 @@
 		</subHeader>
 		<fb:FilterBar class="classFilterBar" id="filterbarAttachments" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>
-			  <fb:FilterGroupItem name="Date" label="Date(Range)" groupName="Group1" visibleInFilterBar="true" >
-                <fb:control> 
-				<DateRangeSelection
-					placeholder="Enter Date Range"
-					id="dateRangeSelector"
-					displayFormat="yyyy-MM-dd"
-					change="onDateRangeChange"/>
-                </fb:control>
-              </fb:FilterGroupItem>
+			  	<fb:FilterGroupItem name="Date" label="Date(Range)" groupName="Group1" visibleInFilterBar="true" >
+					<fb:control> 
+						<DateRangeSelection
+							placeholder="Enter Date Range"
+							id="dateRangeSelector"
+							displayFormat="yyyy-MM-dd"
+							change="onDateRangeChange"/>
+					</fb:control>
+				</fb:FilterGroupItem>
 
               <fb:FilterGroupItem name="Company" label="Company" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
@@ -34,6 +34,19 @@
 					<SearchField id="searchField" liveChange="onSearchCardCode"></SearchField>
 				</fb:control>
               </fb:FilterGroupItem>
+
+			  <fb:FilterGroupItem name="Attachment type" label="Attachment type" groupName="Group1" visibleInFilterBar="true">
+				<fb:control>
+					<MultiComboBox placeholder="Attachment type" selectionFinish="selectAttachmentType" showSecondaryValues="true" filterSecondaryValues="true" selectedKeys="{appView>/defaultAttachmentTypes}">
+						<items>
+							<core:Item enabled="true" text="Client_PO" key="Client_PO" />
+							<core:Item enabled="true" text="Artwork" key="Artwork" />
+							<core:Item enabled="true" text="Delivery_No" key="Delivery_No" />
+							<core:Item enabled="true" text="Invoice_No" key="Invoice_No" />
+						</items>
+					</MultiComboBox>
+				</fb:control>
+			  </fb:FilterGroupItem>
 
 			  <!-- <fb:FilterGroupItem name="Delete Attachment" label="Delete" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
@@ -69,16 +82,16 @@
 				<Column minScreenWidth="Tablet" demandPopin="true">
 					<Text text="Status" />
 				</Column>
-				<Column minScreenWidth="Tablet" demandPopin="true">
+				<Column minScreenWidth="Tablet" demandPopin="true" visible="{= ${appView>/selectedAttachmentTypes/Client_PO} === true ? true : false}">
 					<Text text="Client PO" />
 				</Column>
-				<Column minScreenWidth="Tablet" demandPopin="true">
+				<Column minScreenWidth="Tablet" demandPopin="true" visible="{= ${appView>/selectedAttachmentTypes/Artwork} === true ? true : false}">
 					<Text text="Artwork" />
 				</Column>
-				<Column minScreenWidth="Tablet" demandPopin="true">
+				<Column minScreenWidth="Tablet" demandPopin="true" visible="{= ${appView>/selectedAttachmentTypes/Delivery_No} === true ? true : false}">
 					<Text text="Delivery No" />
 				</Column>
-				<Column minScreenWidth="Tablet" demandPopin="true">
+				<Column minScreenWidth="Tablet" demandPopin="true" visible="{= ${appView>/selectedAttachmentTypes/Invoice_No} === true ? true : false}">
 					<Text text="Invoice No" />
 				</Column>
 		

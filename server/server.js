@@ -1235,6 +1235,15 @@ app.start = function () {
 			var payload = [];
 			var attachmentArray = [];
 
+			let selectedValues = req.query.selectedValues;
+			let filterFields = [];
+
+			if (selectedValues) {
+				filterFields = selectedValues.split(',');
+			} else {
+				// filterFields = ['Client_PO', 'Artwork', 'Delivery_No', 'Invoice_No'];
+			}
+
 			Job.find({
 				where: {
 					status: "Dispatched"
@@ -1266,87 +1275,121 @@ app.start = function () {
 							jobName: job.JobName,
 							jobCardNo: job.jobCardNo,
 							date: job.UpdatedOn,
-							status: job.status,
-							PoAttach: job.PoAttach + 'PoNo',   // Assuming PoAttach is a field in the Job model
-							artworkCode: job.artworkCode + 'ArtworkNo',   // Assuming artworkCode is a field in the Job model
-							InvNo: job.JobStatus() && job.JobStatus().length > 0
-								? job.JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo') : '',   // Check if JobStatus exists before accessing
-							DeliveryNo: job.JobStatus() && job.JobStatus().length > 0
-								? job.JobStatus()[0].DeliveryNo.split(',').map(del => del + 'DelNo') : '' // Similar check for DeliveryNo
+							status: job.status
 						};
+
+						if (filterFields.includes('Client_PO')) {
+							jobPayload.PoAttach = job.PoAttach + 'PoNo';
+						}
+						if (filterFields.includes('Artwork')) {
+							jobPayload.artworkCode = job.artworkCode + 'ArtworkNo';
+						}
+						if (filterFields.includes('Invoice_No')) {
+							jobPayload.InvNo = job.JobStatus() && job.JobStatus().length > 0
+								? job.JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo') : '';
+						}
+						if (filterFields.includes('Delivery_No')) {
+							jobPayload.DeliveryNo = job.JobStatus() && job.JobStatus().length > 0
+								? job.JobStatus()[0].DeliveryNo.split(',').map(del => del + 'DelNo') : '';
+						}
+
 						payload.push(jobPayload);
 					})
 					// return res.status(200).json(payload)
+					// for (let i = 0; i < jobs.length; i++) {
+					// 	attachmentArray.push(jobs[i].PoAttach + 'PoNo');
+					// 	attachmentArray.push(jobs[i].artworkCode + 'ArtworkNo');
+					// 	if (jobs[i].JobStatus() && jobs[i].JobStatus().length > 0) {
+					// 		attachmentArray.push(...jobs[i].JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'));
+					// 		attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
+					// 	}
+					// }
+
+					// Build attachmentArray ONLY for selected fields
 					for (let i = 0; i < jobs.length; i++) {
-						attachmentArray.push(jobs[i].PoAttach + 'PoNo');
-						attachmentArray.push(jobs[i].artworkCode + 'ArtworkNo');
+						if (filterFields.includes('Client_PO')) {
+							attachmentArray.push(jobs[i].PoAttach + 'PoNo');
+						}
+						if (filterFields.includes('Artwork')) {
+							attachmentArray.push(jobs[i].artworkCode + 'ArtworkNo');
+						}
 						if (jobs[i].JobStatus() && jobs[i].JobStatus().length > 0) {
-							attachmentArray.push(...jobs[i].JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'));
-							attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
+							if (filterFields.includes('Invoice_No')) {
+								attachmentArray.push(...jobs[i].JobStatus()[0].InvNo.split(',').map(inv => inv + 'InvNo'));
+							}
+							if (filterFields.includes('Delivery_No')) {
+								attachmentArray.push(...jobs[i].JobStatus()[0].DeliveryNo.split(',').map(inv => inv + 'DelNo'));
+							}
 						}
 					}
 
-					attachmentTable.find({
-						where: {
-							Key: { inq: attachmentArray }
-						},
-						fields: {
-							Attachment: false
-						}
-					}, (error, attachmentGet) => {
-						if (error) {
-							console.error(error);
-							return res.status(500).json({ error: 'No Attachments Found' });
-						}
-						if (attachmentGet.length > 0) {
+					if(filterFields.length !== 0){
 
-							const validAttachments = attachmentGet.filter(item => item && item.__data && item.__data.Key);
-
-							for (let i = 0; i < payload.length; i++) {
-								let flag = false;
-								validAttachments.forEach(getData => {
-									if (getData.Type == 'PoNo' && payload[i].PoAttach == getData.Key) {
-										flag = true;
-										return;
-									} else if (getData.Type == 'ArtworkCode' && payload[i].artworkCode == getData.Key) {
-										flag = true;
-										return;
-									}
-									else if (getData.Type == 'InvNo' && payload[i].InvNo) {
-										if (payload[i].InvNo.length > 0) {
-											let invArr = payload[i].InvNo;
-											invArr.forEach(data => {
-												if (data == getData.Key) {
-													flag = true;
-													return;
-												}
-											})
-										}
-									}
-									else if (getData.Type == 'DelNo' && payload[i].DeliveryNo) {
-										if (payload[i].DeliveryNo.length > 0) {
-											let delArr = payload[i].DeliveryNo;
-											delArr.forEach(data => {
-												if (data == getData.Key) {
-													flag = true;
-													return;
-												}
-											})
-										}
-									}
-								})
-								if (flag == false) {
-									delete payload[i];
-								}
-
-
+						attachmentTable.find({
+							where: {
+								Key: { inq: attachmentArray }
+							},
+							fields: {
+								Attachment: false
 							}
-							payload = payload.filter(payload => payload !== null);
-							return res.status(200).json(payload)
-						} else {
-							return res.status(200).json("No data found with at least one attachment");
-						}
-					});
+						}, (error, attachmentGet) => {
+							if (error) {
+								console.error(error);
+								return res.status(500).json({ error: 'No Attachments Found' });
+							}
+							if (attachmentGet.length > 0) {
+
+								const validAttachments = attachmentGet.filter(item => item && item.__data && item.__data.Key);
+								
+								for (let i = 0; i < payload.length; i++) {
+									let flag = false;
+									validAttachments.forEach(getData => {
+										if (filterFields.includes('Client_PO') && getData.Type == 'PoNo' && payload[i].PoAttach == getData.Key) {
+											flag = true;
+											return;
+										} else if (filterFields.includes('Artwork') && getData.Type == 'ArtworkCode' && payload[i].artworkCode == getData.Key) {
+											flag = true;
+											return;
+										}
+										else if (filterFields.includes('Invoice_No') && getData.Type == 'InvNo' && payload[i].InvNo) {
+											if (payload[i].InvNo.length > 0) {
+												let invArr = payload[i].InvNo;
+												invArr.forEach(data => {
+													if (data == getData.Key) {
+														flag = true;
+														return;
+													}
+												})
+											}
+										}
+										else if (filterFields.includes('Delivery_No') && getData.Type == 'DelNo' && payload[i].DeliveryNo) {
+											if (payload[i].DeliveryNo.length > 0) {
+												let delArr = payload[i].DeliveryNo;
+												delArr.forEach(data => {
+													if (data == getData.Key) {
+														flag = true;
+														return;
+													}
+												})
+											}
+										}
+									})
+									if (flag == false) {
+										delete payload[i];
+									}
+									
+									
+								}
+								payload = payload.filter(payload => payload !== null);
+								return res.status(200).json(payload)
+							} else {
+								return res.status(200).json("No data found with at least one attachment");
+							}
+						});
+					}else{
+						return res.status(200).json(payload)
+						// return res.status(200).json("No data found with at least one attachment");
+					}
 				}
 			});
 		});
