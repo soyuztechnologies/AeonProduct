@@ -265,7 +265,7 @@ onUploadChange: function (oEvent) {
     var that = this;
     var route = that.getRouter().oHashChanger.hash;
     that.files = [];
-    that.file = [];
+    // that.file = [];
     that.count = 0;
     function processFile(index) {
       if (index < files.length) {
@@ -285,7 +285,7 @@ onUploadChange: function (oEvent) {
           that.oFileContentJson.Label = that.files[index].Label;
           that.oFileContentJson.Attachment = vContent;
           that.oFileContentJson.Type = that.files[index].Type;
-          that.file[index] = that.oFileContentJson;
+          that.files[index] = that.oFileContentJson;
           that.count++;
           processFile(index + 1);
 
@@ -346,6 +346,8 @@ checkInAttachments:function(){
       });
       if(oIndex == -1){
         newAttachments.push(ele)
+      }else{
+        data[oIndex] = ele
       }
     }
     that.getView().getModel("appView").setProperty("/oldAttachmentFiles", data);
@@ -409,7 +411,7 @@ removeAttachment: function(oEvent){
         var newAttachments = this.getView().getModel("appView").getProperty("/newlyAddedAttachments");
         var replaceAttachments = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
         var that = this;
-        if(!newAttachments || newAttachments.length == 0 && !replaceAttachments || replaceAttachments.length == 0){
+        if(!newAttachments && (newAttachments.length == 0 && !replaceAttachments) && replaceAttachments.length == 0){
           MessageToast.show("Please upload at least one document");
           return;
         }
