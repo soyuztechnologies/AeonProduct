@@ -165,6 +165,12 @@ sap.ui.define(
         if (nav === "Dispatched"){
           this.getRouter().navTo("Dispatched")
         }
+        if (nav === "PoDetails"){
+          this.getRouter().navTo("PoDetails")
+        }
+        if (nav === "SentEmail"){
+          this.getRouter().navTo("SentEmail")
+        }
 
         if (nav === "Others"){
           this.getRouter().navTo("Others")

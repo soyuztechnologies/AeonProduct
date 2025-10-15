@@ -53,7 +53,7 @@ sap.ui.define([
 					that.getCompanyData();
 				},
 				function (oErr) {
-					that.middleWare.errorHandler(jqXhr, that);
+					that.middleWare.errorHandler(oErr, that);
 				}
 			);
 

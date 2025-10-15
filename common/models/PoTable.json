@@ -1,0 +1,86 @@
+{
+	"name": "PoTable",
+	"plural": "PoTables",
+	"base": "PersistedModel",
+	"idInjection": true,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"PoNo": {
+            "type": "string",
+            "default": null,
+            "required": true,
+            "id": true
+        },
+		"SupplierName":{
+			"type": "string",
+			"default": ""
+		},
+		"Mill":{
+			"type": "string",
+			"default": ""
+		},
+		"QualityOfMaterial":{
+			"type": "string",
+			"default": ""
+		},
+		"TypeOfBoard":{
+			"type": "string",
+			"default": ""
+		},
+		"Rate":{
+			"type": "number",
+			"default": null
+		},
+		"GSM":{
+			"type": "number",
+			"default": null
+		},
+		"Height":{
+			"type": "number",
+			"default": null
+		},
+		"Width":{
+			"type": "number",
+			"default": null
+		},
+		"OpeningStock":{
+			"type": "number",
+			"default": null
+		},
+		"Status":{
+			"type": "string",
+			"default": ""
+		},
+		"UpdatedOn": {
+			"type": "date"
+		},
+		"CreatedOn": {
+			"type": "date"
+		}
+	},
+	"scope": {
+		"order": "CreatedOn ASC"
+	},
+	"validations": [],
+  	"relations": {
+        "UsedSheets": {
+            "type": "hasMany",
+            "model": "UsedSheets",
+            "foreignKey": "PoNo"
+		},
+		"Job": {
+			"type": "hasMany",
+			"model": "Job",
+			"foreignKey": "jobCardNo"
+		}
+    },
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}

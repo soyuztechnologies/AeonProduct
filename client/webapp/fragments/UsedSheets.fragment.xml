@@ -1,0 +1,85 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core" xmlns:f="sap.ui.layout.form">
+
+<Dialog titleAlignment="Center" contentWidth="auto" contentHeight="auto" title="List of Used Sheets for PO No: {appView>/selectedPoNo}" resizable="false" >
+	
+	<content>
+		<Table autoPopinMode="true" popinLayout="GridSmall" items="{path : 'appView>/selectedPoDetails'}"  sticky="HeaderToolbar,ColumnHeaders" mode="Delete" delete="onDeleteUsedSheet" >  
+			<headerToolbar>
+				<Toolbar >
+					<Title text="Used Sheets ({= ${appView>/selectedPoDetails}.length})"></Title>
+					<ToolbarSpacer ></ToolbarSpacer>
+					<!-- <ToolbarSeparator/> -->
+				</Toolbar>
+			</headerToolbar>
+			<columns>
+				<Column demandPopin="true" hAlign="Center">
+					<Text text="Quantity Of Sheets" />
+				</Column>
+				<Column demandPopin="true" hAlign="Center">
+					<Text text="Job Card No." />
+				</Column>
+				<!-- <Column demandPopin="true" hAlign="End">
+					<Text text="Delete" />
+				</Column> -->
+			</columns>
+			<items>
+				<ColumnListItem type="Active">
+					<cells>
+						<Text text="{appView>QuantityOfSheets}" />
+						<Text text="{appView>JobCardNo}" />
+						<!-- <Button icon="sap-icon://delete" text="Delete" type="Negative" press="onDeleteUsedSheet" /> -->
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+          <Table inset="false" items="{appView>/UsedSheetsFields}" mode="Delete" delete="onDeleteUsedSheetFields" >
+            <headerToolbar>
+              <Toolbar>
+                <Title text="Add Used Sheets" />
+                <ToolbarSpacer />
+				<Button text="Add" type="Neutral" press="onAddUsedSheetFields" icon="sap-icon://add"/>
+              </Toolbar>
+            </headerToolbar>
+            <columns>
+              <Column hAlign="Center">
+                <Text text="Quantity Of Sheets"/>
+              </Column>
+              <Column hAlign="Center">
+                <Text text="Job Card No." />
+              </Column>
+            </columns>
+            <items>
+              <ColumnListItem>
+                <cells>
+					<Input type="Number" value="{appView>QuantityOfSheets}" editable="true"/>
+					<Input type="Text" value="{appView>JobCardNo}" editable="true"/>
+                </cells>
+              </ColumnListItem>
+            </items>
+          </Table>
+	    <!-- <f:SimpleForm id="UsedSheetsDialog"
+				editable="true"
+				layout="ColumnLayout"
+				columnsM="1"
+				columnsL="3"
+				class="sapUiNoMargin sapUiNoPadding"
+				singleContainerFullSize="false" >
+				<f:content>
+					<Label text="Quantity Of Sheets"/>
+					<Input id="inpQuantityOfSheets" liveChange="onLiveChangeQuantityOfSheets" type="Text" value="" editable="true"/>
+					<Label text="Job Card No."/>
+					<Input id="inpJobCardNo" liveChange="onLiveChangeJobCardNo" type="Text" value="" editable="true"/>
+					<Label text="Remove"/>
+					<Button text="Remove" press="onRemoveUsedSheet" type="Reject" icon="sap-icon://decline"></Button>
+				</f:content>
+		</f:SimpleForm> -->
+	</content>
+	<beginButton>
+		<Button text="Save" type="Accept" press="onSubmitUsedSheetsData" visible="{= ${appView>/UsedSheetsFields}.length > 0 ? true : false}" enabled="true"/>
+	</beginButton>
+	<endButton>
+		<Button text="Cancel" type="Reject" press="onUsedSheetsClose" enabled="true"/>
+	</endButton>
+</Dialog>	
+
+</core:FragmentDefinition>

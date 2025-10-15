@@ -1,0 +1,56 @@
+{
+	"name": "SentEmail",
+	"plural": "SentEmail",
+	"base": "PersistedModel",
+	"idInjection": true,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"EMAIL_TO":{
+			"type": "string",
+			"default": ""
+		},
+		"EMAIL_CC":{
+			"type": "string",
+			"default": ""
+		},
+		"EMAIL_BCC":{
+			"type": "string",
+			"default": ""
+		},
+		"EMAIL_SUBJECT":{
+			"type": "string",
+			"default": ""
+		},
+		"EMAIL_BODY":{
+			"type": "string",
+			"default": ""
+		},
+		"Attachment":{
+			"type": "string",
+			"default": ""
+		},
+		"CreatedOn": {
+			"type": "date"
+		}
+	},
+	"scope": {
+		"order": "CreatedOn ASC"
+	},
+	"validations": [],
+  	"relations": {
+        "attachments": {
+            "type": "hasOne",
+            "model": "attachments",
+            "foreignKey": "Key"
+		}
+    },
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}

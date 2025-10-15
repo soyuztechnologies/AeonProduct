@@ -384,6 +384,16 @@
 					"pattern": "vendorDetails",
 					"name": "vendorDetails",
 					"target": "vendorDetails"
+				},
+				{
+					"pattern": "PoDetails",
+					"name": "PoDetails",
+					"target": "PoDetails"
+				},
+				{
+					"pattern": "SentEmail",
+					"name": "SentEmail",
+					"target": "SentEmail"
 				}
 			],
 			"targets": {
@@ -536,6 +546,18 @@
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
 					"viewId": "dispatchedList"
+				},
+				"PoDetails": {
+					"viewName": "PoDetails",
+					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
+					"viewId": "PoDetails"
+				},
+				"SentEmail": {
+					"viewName": "SentEmail",
+					"viewLevel": 1,
+					"controlAggregation": "beginColumnPages",
+					"viewId": "SentEmail"
 				}
 			}
 		}

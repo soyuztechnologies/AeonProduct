@@ -1269,7 +1269,7 @@ downloadAttachmentVis:function(value){
       var sOutput = oDateFormat.format(new Date(dateString));
       return sOutput;
     }
-  }
+  },
     // equalFormatter: function(noOfUps-1, noOfUps-1, noOfUps-1) {
     //   var parts = [];
 
@@ -1288,5 +1288,57 @@ downloadAttachmentVis:function(value){
     //   return parts.join('x');
     // }
 
+    formatLengthinInches: function (lengthInMm) {
+      if (lengthInMm) {
+        var lengthInInches = lengthInMm / 25.4;
+        return lengthInInches.toFixed(2) + " `";
+      }
+      return "";
+    },
+    formatRate: function (rate) {
+      if (rate) {
+        return "₹ " + rate.toFixed(2);
+      } return "₹ 0.00";
+    },
+    formatWeight: function (height, width, GSM, Stock) {
+      if (height && width && GSM && Stock) {
+        var result = (height / 1000) * (width / 1000) * (GSM / 1000) * Stock;
+        return result.toFixed() + ' KG';
+      }
+      return "0 KG";
+    },
+    formatGSM: function (GSM) {
+      if(GSM){
+        return GSM + ' GSM';
+      }
+      return "0 GSM";
+    },
+    formatSheets: function (sheets){
+      if(sheets){
+        return sheets + ' Sheets';
+      }
+      return "0 Sheets";
+    },
+    formatClosingStock: function (openingStock, UsedSheets){
+      if(openingStock && UsedSheets){
+        return (openingStock) + (UsedSheets.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0)) + ' Sheets';
+      }
+      return "0 Sheets";
+    },
+    formatFinalPrice: function (Rate, Height, Width, GSM, OpeningStock, UsedSheets){
+      if(Rate && Height && Width && GSM && OpeningStock && UsedSheets){
+        var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * (OpeningStock + UsedSheets.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0));
+        return "₹ " + price.toFixed(2);
+      }
+      return "₹ 0.00";
+    },
+    formatClosingWeight: function (height, width, GSM, OpeningStock, UsedSheets) {
+      if (height && width && GSM && OpeningStock && UsedSheets) {
+        var totalSheets = OpeningStock + UsedSheets.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0);
+        var result = (height / 1000) * (width / 1000) * (GSM / 1000) * totalSheets;
+        return result.toFixed() + ' KG';
+      }
+      return "0 KG";
+    },
   };
 });

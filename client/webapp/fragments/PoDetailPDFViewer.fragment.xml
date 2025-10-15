@@ -1,0 +1,22 @@
+<core:FragmentDefinition  xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:i="sap.ui.core"
+    xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+    <Dialog contentWidth="100%" contentHeight="90vh" title="Purchase Order PDF" id="PoDetailPDFViewer">
+        <content>
+			<PDFViewer
+				id="pdfViewer"
+				showDownloadButton="false"
+				isTrustedSource="true"
+				source="{path: 'appView>/GeneratedPDF', formatter:'.formatter.getBase64ToPdf'}"
+				width="100%"
+				height="calc(90vh - 60px)" />
+		</content>
+        <buttons>
+            <Button icon="sap-icon://download"  press="onDownloadReceipt" text="Download"  type="Neutral" />
+            <Button icon="sap-icon://email"  press="onSendEmail" text="Send Email"  type="Neutral" />
+            <Button text="Close" type="Reject" press="onClosePoPDF" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

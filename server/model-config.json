@@ -80,5 +80,17 @@
   "otp": {
     "dataSource": "mongoatlas",
     "public": true
+  },
+  "PoTable": {
+    "dataSource": "mongoatlas",
+    "public": true
+  },
+  "SentEmail": {
+    "dataSource": "mongoatlas",
+    "public": true
+  },
+  "UsedSheets": {
+    "dataSource": "mongoatlas",
+    "public": true
   }
 }

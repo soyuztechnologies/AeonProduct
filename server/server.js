@@ -321,6 +321,97 @@ app.start = function () {
 
 		// * this fucntion working to replace the dynamic characters in the email body,like usernameand and emaol etc.
 
+		async function sendEmailTemp(email) {
+			return new Promise((resolve, reject) => {
+				try {
+					const nodemailer = require("nodemailer");
+					const smtpTransport = require("nodemailer-smtp-transport");
+					const xoauth2 = require("xoauth2");
+
+					//PoTransporter Yash's Creds
+
+					const emailContent = {
+						to: email.EMAIL_TO,
+						cc: email.EMAIL_CC ? email.EMAIL_CC : undefined,
+						bcc: email.EMAIL_BCC ? email.EMAIL_BCC : undefined,
+						subject: email.EMAIL_SUBJECT,
+						html: email.EMAIL_BODY,
+						attachments: email.GENERATED_PDF ? [
+							{
+								filename: `PO_${email.PDF_PONo}.pdf`,
+								content: Buffer.from(email.GENERATED_PDF.split(",")[1], 'base64'),
+								contentType: 'application/pdf'
+							}
+						] : []
+					};
+
+					PoTransporter.sendMail(emailContent, function (error, info) {
+						if (error) {
+							console.error("Email send failed:", error);
+							reject(error);
+						} else {
+							console.log("Email sent successfully to:", info.accepted);
+							resolve(info);
+						}
+					});
+
+				} catch (err) {
+					reject(err);
+				}
+			});
+		}
+
+
+		app.post('/onSendPoEmail', async (req, res) => {
+			const Email = req.body;
+			const attachmentTable = app.models.Attachments;
+			const sentEmailTable = app.models.SentEmail;
+
+			try {
+				const info = await sendEmailTemp(Email);
+
+				const oEmailData = {
+					EMAIL_TO: Email.EMAIL_TO,
+					EMAIL_CC: Email.EMAIL_CC ? Email.EMAIL_CC.toString() : "",
+					EMAIL_BCC: Email.EMAIL_BCC ? Email.EMAIL_BCC.toString() : "",
+					EMAIL_SUBJECT: Email.EMAIL_SUBJECT,
+					EMAIL_BODY: Email.EMAIL_BODY,
+					Attachment: `PO_${Email.PDF_PONo}`
+				};
+				await sentEmailTable.create(oEmailData);
+
+				const attachmentKey = `PO_${Email.PDF_PONo}`;
+
+				const existingAttachment = await attachmentTable.findOne({ where: { Key: attachmentKey } });
+
+				if (existingAttachment) {
+				await existingAttachment.updateAttribute('Attachment', Email.GENERATED_PDF);
+				} else {
+					const oEmailAttachmentData = {
+						Key: attachmentKey,
+						Label: `${attachmentKey}.pdf`,
+						Attachment: Email.GENERATED_PDF,
+						Type: 'PoReceipt'
+					};
+					await attachmentTable.create(oEmailAttachmentData);
+				}
+
+				res.status(200).json({
+					message: 'Email sent successfully',
+					accepted: info.accepted,
+					response: info.response
+				});
+
+			} catch (error) {
+					console.error(" Error in onSendPoEmail:", error);
+					res.status(500).json({
+					error: 'Failed to send email or process attachment',
+					details: error.message
+				});
+			}
+			});
+
+		
 		async function replaceTemplatePlaceholders(content, replacements) {
 			let replacedContent = content;
 			for (const placeholder in replacements) {
@@ -2949,6 +3040,166 @@ app.start = function () {
 					return res.status(500).send('Internal server error');
 				});
 		});
+
+		app.get('/getPoDetails', function (req, res) {
+			try {
+				const PoTable = app.models.PoTable;
+				PoTable.find({
+					order: 'PoNo',
+					fields: {
+						PoNo: true,
+						SupplierName: true,
+						Mill: true,
+						QualityOfMaterial: true,
+						TypeOfBoard: true,
+						Rate: true,
+						GSM: true,
+						Height: true,
+						Width: true,
+						Weight: true,
+						OpeningStock: true,
+						Status: true,
+						CreatedOn: true
+					},
+					where: { "PoNo": { "neq": null } },
+					include: [{
+						relation: 'UsedSheets',
+						scope: {
+							order: 'id',
+							fields: { 
+								"QuantityOfSheets": true, 
+								"PoNo": true,
+								"JobCardNo": true,
+								"id": true,
+							 }
+						}
+					}]
+				}, function (err, jobs) {
+					if (err) {
+						return res.status(500).send(err);
+					}
+					res.send(jobs);
+				});
+			} catch (error) {
+				return res.status(500).send(error);
+			}
+		});
+		
+		app.get('/getSentEmails', (req,res) => {
+			try {
+				const SentEmails = app.models.SentEmail;
+				SentEmails.find({
+					order: 'CreatedOn',
+					fields: {
+						EMAIL_TO: true,
+						EMAIL_CC: true,
+						EMAIL_BCC: true,
+						EMAIL_SUBJECT: true,
+						EMAIL_BODY: true,
+						Attachment: true,
+						CreatedOn: true
+					},
+				}, function (err, jobs) {
+					if (err) {
+						return res.status(500).send(err);
+					}
+					res.send(jobs);
+				});
+			} catch (error) {
+				return res.status(500).send(error);
+			}
+		})
+		
+		app.post('/onSaveUsedSheets', (req, res) => {
+			const UsedSheets = app.models.UsedSheets;
+			const NewUsedSheets = req.body;
+
+			UsedSheets.create(NewUsedSheets, (err, createdUsedSheets) => {
+				if (err) {
+					return res.status(500).send(err);
+				}
+				res.status(201).send(createdUsedSheets);
+			});
+		});
+
+		app.post('/onUpdatePoStatus', (req, res) => {
+			const payload = req.body;
+			const PoTable = app.models.PoTable;
+			const Job = app.models.Job;
+			const JobStatus = app.models.JobStatus;
+
+			const PoNo = payload.PoNo;
+			const Status = payload.Status;
+
+			// first it will update status in PoTable
+			PoTable.findOne({ where: { PoNo } }, (poError, poRecord) => {
+				if (poError) {
+				console.error('Error finding PoTable:', poError);
+				return res.status(500).send('Internal server error');
+				}
+
+				if (!poRecord) {
+				return res.status(404).send('PoTable not found');
+				}
+
+				poRecord.updateAttributes({ Status }, async (updateError, updatedPoTable) => {
+				if (updateError) {
+					console.error('Error updating PoTable:', updateError);
+					return res.status(500).send('Internal server error');
+				}
+
+				// Now it wil Update all Job's Raw Material to 'In Stock' if status is Received
+				if (Status === "Received") {
+					try {
+					// First it will find all jobs which have same PoNo
+					const JobList = await Job.find({
+						fields: { jobCardNo: true, poNo: true },
+						where: { poNo: PoNo }
+					});
+
+					if (JobList && JobList.length > 0) {
+						const plainJobs = JobList.map(job => job.toJSON());
+
+						const date = new Date().toLocaleDateString("en-US");
+
+						// it will loop all jobs 
+						for (const job of plainJobs) {
+						const jobCardNo = job.jobCardNo;
+
+						// it will check wether any JobStatus found or not for that jobCardNo
+						const existingStatus = await JobStatus.findOne({
+							where: { JobStatusId: jobCardNo }
+						});
+
+						// if no JobStatus founds then it will create new one 
+						if (!existingStatus) {
+							const oNewJobStatus = {
+								JobStatusId: jobCardNo,
+								CreatedOn: date,
+								rawMaterial: "In Stock",
+							};
+
+							await JobStatus.create(oNewJobStatus);
+							console.log(`Created JobStatus for ${jobCardNo}`);
+						} else {
+							console.log(`JobStatus already exists for ${jobCardNo}`);
+						}
+						}
+					} else {
+						console.log("No Jobs found for PoNo:", PoNo);
+					}
+					} catch (err) {
+					console.error("Error processing JobStatus creation:", err);
+					return res.status(500).send('Error processing JobStatus creation');
+					}
+				}
+
+				return res.status(200).send(updatedPoTable);
+				});
+			});
+			});
+
+
 	});
 };
 

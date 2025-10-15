@@ -1,0 +1,67 @@
+<mvc:View controllerName="ent.ui.ecommerce.controller.SentEmail"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:uiTable="sap.ui.table"
+	xmlns:fb="sap.ui.comp.filterbar">
+	<Page showHeader="false">
+		<!-- <subHeader>
+			<OverflowToolbar>
+			   <Title text="Sent Email  ({appView>/poDetailsCount})" level="H2"/>
+		   </OverflowToolbar>
+		</subHeader> -->
+		<!-- <fb:FilterBar class="classFilterBar" id="filterbarPo" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+			<fb:filterGroupItems>
+				<fb:FilterGroupItem name="Search" label="Search" groupName="Group1" visibleInFilterBar="true" >
+					<fb:control>
+						<SearchField id="searchPoDetails" liveChange="onSearchPoDetails" showClearButton="true"></SearchField>
+					</fb:control>
+				</fb:FilterGroupItem>
+			</fb:filterGroupItems>
+		  </fb:FilterBar> -->
+		
+		
+
+		<Table id="sentEmailTable" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/sentEmails', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" itemPress="onEmailRowPress" mode="None" >  
+			<headerToolbar>
+				<Toolbar >
+					<Title text="Sent Email ({appView>/sentEmailCount})"></Title>
+					<ToolbarSpacer ></ToolbarSpacer>
+					<!-- <ToolbarSeparator/> -->
+				</Toolbar>
+			</headerToolbar>
+			<columns>
+				<Column demandPopin="true" minScreenWidth="Phone" >
+					<Text text="Email To" />
+				</Column>
+				<Column demandPopin="true" minScreenWidth="Phone" >
+					<Text text="Email CC" />
+				</Column>
+				<Column demandPopin="true" minScreenWidth="Phone" >
+					<Text text="Email BCC" />
+				</Column>
+				<Column demandPopin="true" minScreenWidth="Phone" >
+					<Text text="Subject" />
+				</Column>
+				<Column demandPopin="true" minScreenWidth="Phone" >
+					<Text text="Body" />
+				</Column>
+				<Column demandPopin="true" minScreenWidth="Phone" >
+					<Text text="Attachment" />
+				</Column>		
+			</columns>
+			<items>
+				<ColumnListItem type="Active">
+					<cells>
+						<Text text="{appView>EMAIL_TO}"/>							
+						<Text text="{appView>EMAIL_CC}"/>							
+						<Text text="{appView>EMAIL_BCC}"/>							
+						<Text text="{appView>EMAIL_SUBJECT}"/>							
+						<Text text="{appView>EMAIL_BODY}"/>							
+						<Link text="{appView>Attachment}" press="showPoAttachment"/>							
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</Page>
+</mvc:View>

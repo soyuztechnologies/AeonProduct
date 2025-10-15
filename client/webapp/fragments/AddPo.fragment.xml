@@ -1,0 +1,54 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
+
+<Dialog contentWidth="auto" contentHeight="auto" title="Add New PO" resizable="false" >
+	<content>
+		<f:SimpleForm id="AddPoDialog"
+				editable="true"
+				layout="ColumnLayout"
+				columnsM="2"
+				columnsL="3"
+				class="sapUiNoMargin sapUiNoPadding"
+				singleContainerFullSize="false" >
+				<f:content>
+					<Label text="PoNo"/>
+					<Input id="inpPoNo" liveChange="onLiveChangePoNo" type="Text" value="" editable="true"/>
+
+					<Label text="Supplier Name"/>
+					<Input id="inpSupplierName" liveChange="onLiveChangeSupplierName" type="Text" value="" editable="true"/>
+
+					<Label text="Mill"/>
+					<Input id="inpMill" liveChange="onLiveChangeMill" type="Text" value="" editable="true"/>
+
+					<Label text="Quality Of Material"/>
+					<Input id="inpQualityOfMaterial" liveChange="onLiveChangeQualityOfMaterial" type="Text" value="" editable="true"/>
+
+					<Label text="Type Of Board"/>
+					<Input id="inpTypeOfBoard" liveChange="onLiveChangeTypeOfBoard" type="Text" value="" editable="true"/>
+
+					<Label text="Rate"/>
+					<Input id="inpRate" liveChange="onLiveChangeRate" type="Number" value="" editable="true"/>
+
+					<Label text="GSM"/>
+					<Input id="inpGSM" liveChange="onLiveChangeGSM" type="Number" value="" editable="true"/>
+
+					<Label text="Height In mm"/>
+					<Input id="inpHeightInMm" liveChange="onLiveChangeHeightInMm" type="Number" value="" editable="true"/>
+
+					<Label text="Width In mm"/>
+					<Input id="inpWidthInMm" liveChange="onLiveChangeWidthInMm" type="Number" value="" editable="true"/>
+
+					<Label text="Opening Stock"/>
+					<Input id="inpOpeningStock" liveChange="onLiveChangeOpeningStock" type="Number" value="" editable="true"/>
+
+				</f:content>
+			</f:SimpleForm>
+	</content>
+	<beginButton>
+		<Button text="Save" type="Accept" press="onSubmitData" enabled="true"/>
+	</beginButton>
+	<endButton>
+		<Button text="Cancel" type="Reject" press="onClose" enabled="true"/>
+	</endButton>
+</Dialog>	
+
+</core:FragmentDefinition>

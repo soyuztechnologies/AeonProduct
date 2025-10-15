@@ -73,6 +73,8 @@
 			        </tnt:NavigationListItem>
 
                     <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Job with Attachments" icon="sap-icon://attachment"  key="dispatchedList"/>
+                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="PO Details" icon="sap-icon://customer-order-entry"  key="PoDetails"/>
+                    <tnt:NavigationListItem visible="{=${appView>/UserRole} === 'Admin' ? true : false}" text="Sent Email" icon="sap-icon://paper-plane"  key="SentEmail"/>
                         
                     </tnt:NavigationList>
             </tnt:SideNavigation>
