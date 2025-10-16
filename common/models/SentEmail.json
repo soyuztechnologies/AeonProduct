@@ -1,6 +1,6 @@
 {
 	"name": "SentEmail",
-	"plural": "SentEmail",
+	"plural": "SentEmails",
 	"base": "PersistedModel",
 	"idInjection": true,
 	"options": {
@@ -39,13 +39,7 @@
 		"order": "CreatedOn ASC"
 	},
 	"validations": [],
-  	"relations": {
-        "attachments": {
-            "type": "hasOne",
-            "model": "attachments",
-            "foreignKey": "Key"
-		}
-    },
+  	"relations": { },
 	"acls": [{
 		"accessType": "*",
 		"principalType": "ROLE",

@@ -132,7 +132,20 @@ sap.ui.define([
 				MessageToast.show("PO Added Successfully");
               },
               error: function (error) {
-                that.middleWare.errorHandler(error, that);
+				if(error.statusCode === 500){
+					MessageBox.show("PO No. already exists", {
+						icon: MessageBox.Icon.ERROR,
+						title: "Error",
+						actions: [MessageBox.Action.OK],
+						onClose: function (oAction) {
+							if (oAction === MessageBox.Action.OK) {
+								that.onClose();
+							}
+						}
+					})
+				}else{
+					that.middleWare.errorHandler(error, that);
+				}
               }
             });
 		},
@@ -344,6 +357,8 @@ sap.ui.define([
 			var oBinding = oTable.getBinding("items");
 			oBinding.filter(oCombinedFilter);
 
+			var aFilteredContexts = oBinding.getContexts();
+			this.getModel("appView").setProperty("/poDetailsCount", aFilteredContexts.length);
 		},
 
 		onGeneratePDF: async function (oEvent) {
@@ -429,10 +444,10 @@ sap.ui.define([
 				doc.fontSize(14).text("Item Description", 255 , tableTop + 5);
 				doc.font("Helvetica-Bold");
 				doc.moveTo(LEFT_MARGIN, tableTop + 20).lineTo(RIGHT_MARGIN, tableTop + 20).stroke();
-				doc.fontSize(12).text("Sr.No", 30, tableTop + 25);
-				doc.text("Mill", 85, tableTop + 25);
-				doc.text("Quality", 145, tableTop + 25);
-				doc.text("GSM", 220, tableTop + 25);
+				doc.fontSize(12).text("Sr.No", 20, tableTop + 25);
+				doc.text("Mill", 75, tableTop + 25);
+				doc.text("Quality", 135, tableTop + 25);
+				doc.text("GSM", 210, tableTop + 25);
 				doc.text("Size", 290, tableTop + 25);
 				doc.text("Weight/Sheets", 360, tableTop + 25);
 				doc.text("Rate", 460, tableTop + 25);
@@ -441,10 +456,10 @@ sap.ui.define([
 
 				
 				// vertical lines
-				doc.moveTo(65, tableTop + 20).lineTo(65, tableTop + 120).stroke();
-				doc.moveTo(130, tableTop + 20).lineTo(130, tableTop + 120).stroke();
-				doc.moveTo(200, tableTop + 20).lineTo(200, tableTop + 120).stroke();
-				doc.moveTo(270, tableTop + 20).lineTo(270, tableTop + 120).stroke();
+				doc.moveTo(55, tableTop + 20).lineTo(55, tableTop + 120).stroke();
+				doc.moveTo(120, tableTop + 20).lineTo(120, tableTop + 120).stroke();
+				doc.moveTo(190, tableTop + 20).lineTo(190, tableTop + 120).stroke();
+				doc.moveTo(260, tableTop + 20).lineTo(260, tableTop + 120).stroke();
 				doc.moveTo(350, tableTop + 20).lineTo(350, tableTop + 120).stroke();
 				doc.moveTo(450, tableTop + 20).lineTo(450, tableTop + 120).stroke();
 				doc.moveTo(515, tableTop + 20).lineTo(515, tableTop + 120).stroke();
@@ -455,15 +470,15 @@ sap.ui.define([
 
 				// --- TABLE ROW (Example) ---
 				doc.moveTo(LEFT_MARGIN, tableTop + 40).lineTo(RIGHT_MARGIN, tableTop + 40).stroke();
-				doc.fontSize(11).text("1", 40, tableTop + 45);
-				doc.text(oPoDetails.Mill, 70, tableTop + 45);
-				doc.text(oPoDetails.QualityOfMaterial, 140, tableTop + 45);
-				doc.text(`${oPoDetails.GSM} GSM`, 210, tableTop + 45);
-				doc.text(`${oPoDetails.Height}x${oPoDetails.Width} mm`, 280, tableTop + 45).text(`${HeightInInches}x${WidthInInches} '`, 280, tableTop + 60);
-				doc.text(`${OpeningWeight} KG`, 370, tableTop + 45).text(`${oPoDetails.OpeningStock} Sheets`, 370, tableTop + 60);
-				doc.text(`${currecySymbol} ${oPoDetails.Rate}`, 455, tableTop + 45);
+				doc.fontSize(11).text("1", 30, tableTop + 45);
+				doc.text(oPoDetails.Mill, 60, tableTop + 45, {  width: 60 });
+				doc.text(oPoDetails.QualityOfMaterial, 125, tableTop + 45, { width: 70 });
+				doc.text(`${oPoDetails.GSM} GSM`, 200, tableTop + 45, { width: 60 });
+				doc.text(`${oPoDetails.Height}x${oPoDetails.Width} mm`, 270, tableTop + 45, { width: 90 }).text(`${HeightInInches}x${WidthInInches} '`, 270, tableTop + 60, { width: 90 });
+				doc.text(`${OpeningWeight} KG`, 370, tableTop + 45, { width: 80 }).text(`${oPoDetails.OpeningStock} Sheets`, 370, tableTop + 60, { width: 80});
+				doc.text(`${currecySymbol} ${oPoDetails.Rate}`, 455, tableTop + 45, { width: 60 });
 				const price = +((oPoDetails.Rate * OpeningWeight).toFixed(2));
-				doc.text(`${currecySymbol} ${price}`, 520, tableTop + 45);
+				doc.text(`${currecySymbol} ${price}`, 520, tableTop + 45, { width: 70 });
 				doc.moveTo(LEFT_MARGIN, tableTop + 120).lineTo(RIGHT_MARGIN, tableTop + 120).stroke();
 
 				doc.moveDown(1);
@@ -516,7 +531,7 @@ sap.ui.define([
 
 				doc.end();
 				stream.on("finish", async () => {
-				const blobPDF = stream.toBlob();
+				const blobPDF = stream.toBlob('application/pdf');
 				const reader2 = new FileReader();
 				reader2.onloadend = async () => {
 					const base64PDF = reader2.result; 
@@ -572,6 +587,7 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/GeneratedPDF", null);
 			this.getView().getModel("appView").setProperty("/PDFPoNo", null);
 			this.getView().byId("tablePoDetails").removeSelections();
+			this.onGetAllPo()
 		},
 
 		onSendEmail: async function () {
@@ -647,14 +663,14 @@ sap.ui.define([
 			this.middleWare.callMiddleWare("onSendPoEmail", "POST", payload)
 				.then( (data, status, xhr)=> {
 					MessageToast.show(`Email Sent Successfully`);		
-					that.handleCloseMail();			
+					that.handleCloseMail();
 
 					var statusPayload = {
 						PoNo : PDF_PONo,
 						Status : "Sent"
 					}
 
-					this.middleWare.callMiddleWare("onUpdatePoStatus", "POST", statusPayload)
+					that.middleWare.callMiddleWare("onUpdatePoStatus", "POST", statusPayload)
 						.then( (data, status, xhr)=> {
 							// MessageToast.show("Status Updated Successfully")	
 						})

@@ -174,23 +174,14 @@
 					"target":"Attachments"
 				},
 				{
-
                     "pattern":"PaperCutting/{jobId}",
-
                     "name":"sideNavPaperCutting",
-
                     "target":["allPrinters","printingDetails"]
-
                 },
-
                 {
-
                     "pattern":"Paper Cutting",
-
                     "name":"Paper Cutting",
-
                     "target":["allPrinters"]
-
                 },
 				{
 					"pattern": "Profile",
@@ -232,11 +223,6 @@
 					"name":"Foiling",
 					"target":["allPrinters"]
 				},
-
-
-
-
-
 				{
 					"pattern":"SpotUV/{jobId}",
 					"name":"sideNavSpotUV",
@@ -247,9 +233,6 @@
 					"name":"SpotUV",
 					"target":["allPrinters"]
 				},
-
-
-
 				{
 					"pattern":"Embossing/{jobId}",
 					"name":"sideNavEmbossing",

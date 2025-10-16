@@ -16,33 +16,26 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("dispatchedList").attachPatternMatched(this._matchedHandler, this);
-			let defaultselectedValues = ['Client_PO', 'Artwork', 'Delivery_No', 'Invoice_No']
-			var oAppViewModel = this.getOwnerComponent().getModel('appView');
-			if (oAppViewModel) {
-				oAppViewModel.setProperty('/defaultAttachmentTypes', defaultselectedValues);
-			} else {
-				console.error("appView model not found!");
-			}
-
 			var today = new Date();
             var startDate = new Date();
             startDate.setMonth(today.getMonth() - 3);
-
+			
             var formatDate = function(date) {
-                var d = date.getDate().toString().padStart(2, '0');
+				var d = date.getDate().toString().padStart(2, '0');
                 var m = (date.getMonth() + 1).toString().padStart(2, '0');
                 var y = date.getFullYear();
                 return y + "-" + m + "-" + d;
             };
-
+			
             this._sDefaultStartDate = formatDate(startDate);
             this._sDefaultEndDate = formatDate(today);
-
+			
             // Set default value in DateRangeSelection
             var oDateRange = this.byId("dateRangeSelector");
             if (oDateRange) {
-                oDateRange.setValue(this._sDefaultStartDate + " - " + this._sDefaultEndDate);
-            }													
+				oDateRange.setValue(this._sDefaultStartDate + " - " + this._sDefaultEndDate);
+            }	
+														
 		},
 
 		_matchedHandler: function (oEvent) {
@@ -54,6 +47,12 @@ sap.ui.define([
 			this.aFilters = [];
 			this.getModel("appView").updateBindings();
 			var that = this;
+			let defaultselectedValues = ['Client_PO', 'Artwork', 'Delivery_No', 'Invoice_No']
+			if (oModel) {
+				oModel.setProperty('/defaultAttachmentTypes', defaultselectedValues);
+			} else {
+				console.error("appView model not found!");
+			}	
 			this.getUserRoleData().then((data) => {
 				that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 			});
@@ -303,6 +302,7 @@ sap.ui.define([
 			dModel.read(url, {
 				success: function (data) {
 					that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+					that.getModel("appView").setProperty("/attachmentName", data.Label);
 					that.oDialogOpen().then(function (oDialog) {
 						oDialog.open();
 					});
@@ -559,6 +559,22 @@ sap.ui.define([
 					}
 				}
 			});
-		}
+		},
+
+		downloadAttachments: function () {
+			const base64PDF = this.getView().getModel("appView").getProperty("/attachmentFiles");
+			const attachmentName = this.getView().getModel("appView").getProperty("/attachmentName");
+
+			if (!base64PDF) {
+				MessageToast.show("No PDF available to download.");
+				return;
+			}
+
+			// Convert Base64 to Blob for download
+			const link = document.createElement("a");
+			link.href = base64PDF;
+			link.download = `${attachmentName}`;
+			link.click();
+		},
 	});
 });

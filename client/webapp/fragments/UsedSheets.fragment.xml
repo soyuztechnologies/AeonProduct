@@ -13,10 +13,10 @@
 			</headerToolbar>
 			<columns>
 				<Column demandPopin="true" hAlign="Center">
-					<Text text="Quantity Of Sheets" />
+					<Text text="Job Card No." />
 				</Column>
 				<Column demandPopin="true" hAlign="Center">
-					<Text text="Job Card No." />
+					<Text text="Quantity Of Sheets" />
 				</Column>
 				<!-- <Column demandPopin="true" hAlign="End">
 					<Text text="Delete" />
@@ -25,8 +25,8 @@
 			<items>
 				<ColumnListItem type="Active">
 					<cells>
-						<Text text="{appView>QuantityOfSheets}" />
 						<Text text="{appView>JobCardNo}" />
+						<Text text="{appView>QuantityOfSheets}" />
 						<!-- <Button icon="sap-icon://delete" text="Delete" type="Negative" press="onDeleteUsedSheet" /> -->
 					</cells>
 				</ColumnListItem>
@@ -41,18 +41,18 @@
               </Toolbar>
             </headerToolbar>
             <columns>
+				<Column hAlign="Center">
+				  <Text text="Job Card No." />
+				</Column>
               <Column hAlign="Center">
                 <Text text="Quantity Of Sheets"/>
-              </Column>
-              <Column hAlign="Center">
-                <Text text="Job Card No." />
               </Column>
             </columns>
             <items>
               <ColumnListItem>
                 <cells>
-					<Input type="Number" value="{appView>QuantityOfSheets}" editable="true"/>
 					<Input type="Text" value="{appView>JobCardNo}" editable="true"/>
+					<Input type="Number" value="{appView>QuantityOfSheets}" editable="true"/>
                 </cells>
               </ColumnListItem>
             </items>

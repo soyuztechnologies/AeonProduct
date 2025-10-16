@@ -86,18 +86,18 @@
 
 tbody > tr[data-po-status="Pending"] .sapMListTblCell,
 tbody > tr[data-po-status="Pending"] .sapMListTblSubRow {
-    background-color: #0f5690 !important;
-    color: #d2d0d0 !important;
+    background-color: orange !important;
+    color: white !important;
 }
 
 tr[data-po-status="Sent"] .sapMListTblCell,
 tr[data-po-status="Sent"] .sapMListTblSubCell {
-    background-color: #f9d67a !important;
-    color: #000000;
+    background-color: gray !important;
+    color: white;
 }
 
 tr[data-po-status="Received"] .sapMListTblCell,
 tr[data-po-status="Received"] .sapMListTblSubRowCell {
-    background-color: #d4edda !important;
+    background-color: yellow !important;
     color: #000000;
 }

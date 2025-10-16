@@ -3153,8 +3153,8 @@ app.start = function () {
 					try {
 					// First it will find all jobs which have same PoNo
 					const JobList = await Job.find({
-						fields: { jobCardNo: true, poNo: true },
-						where: { poNo: PoNo }
+						fields: { jobCardNo: true, paperPoNo: true },
+						where: { paperPoNo: PoNo }
 					});
 
 					if (JobList && JobList.length > 0) {

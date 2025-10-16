@@ -7,7 +7,7 @@
 	<Page showHeader="false">
 		<subHeader>
 			<OverflowToolbar>
-			   <Title text="PO Details  ({appView>/poDetailsCount})" level="H2"/>
+			   <Title text="PO Details" level="H2"/>
 		   </OverflowToolbar>
 		</subHeader>
 		<fb:FilterBar class="classFilterBar" id="filterbarPo" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
@@ -30,7 +30,7 @@
 		
 		
 
-		<Table id="tablePoDetails" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/poDetails', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" itemPress="onRowPress" mode="SingleSelectLeft" >  
+		<Table id="tablePoDetails" growing="true" growingScrollToLoad="true" growingThreshold="20" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/poDetails', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" itemPress="onRowPress" mode="SingleSelectLeft" >  
 			<headerToolbar>
 				<Toolbar >
 					<Title text="PO Table ({appView>/poDetailsCount})"></Title>
@@ -115,7 +115,7 @@
 						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingWeight'}" />	
 						<Select forceSelection="false" change="onSelectPoStatus" selectedKey="{appView>Status}">
 							<core:Item text="Pending" key="Pending" /> 
-							<core:Item text="Sent" key="Sent" />
+							<core:Item text="Email Sent" key="Sent" />
 							<core:Item text="Received" key="Received"/>
 						</Select>
 					</cells>

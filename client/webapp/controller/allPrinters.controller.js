@@ -19,6 +19,7 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("allPrinters").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavallPrinters").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("Paper Cutting").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Printing").attachPatternMatched(this._printingMatchedHandler, this);
 			this.getRouter().getRoute("Coating").attachPatternMatched(this._printingMatchedHandler, this);
@@ -56,8 +57,10 @@ sap.ui.define([
 					that.middleWare.errorHandler(oErr, that);
 				}
 			);
-
-			this.getModel("appView").setProperty("/layout", "OneColumn");
+			var sJobId = oEvent.getParameter("arguments").jobId;
+			if (!sJobId) {
+				this.getModel("appView").setProperty("/layout", "OneColumn");
+			}
 			this.getModel("appView").setProperty("/visibleHeader", true);
 			this.getModel("appView").setProperty("/userRoleVis", true);
 			this.getModel("appView").setProperty("/sideExpanded", true);

@@ -83,6 +83,7 @@ sap.ui.define([
 			
 			var url = `/Attachments('${oData.Attachment}')`
 			oModel.setProperty("/uploadDocumnetTitle", "PoReciept Attachment");
+			oModel.setProperty("/PDFPoNo", oData.Attachment);
 
 			//getting api attachment data
 			dModel.read(url, {
@@ -121,6 +122,22 @@ sap.ui.define([
 			this.oDialogOpen().then(function (oDialog) {
 				oDialog.close();
 			})
+		},
+
+		downloadAttachments: function () {
+			const base64PDF = this.getView().getModel("appView").getProperty("/attachmentFiles");
+			const PoNo = this.getView().getModel("appView").getProperty("/PDFPoNo");
+
+			if (!base64PDF) {
+				MessageToast.show("No PDF available to download.");
+				return;
+			}
+
+			// Convert Base64 to Blob for download
+			const link = document.createElement("a");
+			link.href = base64PDF;
+			link.download = `${PoNo}.pdf`;
+			link.click();
 		},
 	});
 });

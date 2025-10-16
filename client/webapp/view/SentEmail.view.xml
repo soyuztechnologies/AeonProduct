@@ -22,7 +22,7 @@
 		
 		
 
-		<Table id="sentEmailTable" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/sentEmails', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" itemPress="onEmailRowPress" mode="None" >  
+		<Table id="sentEmailTable" growing="true" growingScrollToLoad="true" growingThreshold="20" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/sentEmails', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" itemPress="onEmailRowPress" mode="None" >  
 			<headerToolbar>
 				<Toolbar >
 					<Title text="Sent Email ({appView>/sentEmailCount})"></Title>
