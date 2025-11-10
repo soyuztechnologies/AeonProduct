@@ -12,16 +12,16 @@
     <Text text="{appView>plate2}"/>
 
     <Label text="Pantone Inks" 	design="Bold"/>
-    <Text text = "{appView>pantoneInks}"  editable="false" />
+    <Text text = "{appView>pantoneInksPart}"  editable="false" />
 
     <Label text="Foil Blocks" 	design="Bold"/>
-    <Text text = "{appView>foilBlocks}" editable="false" />
+    <Text text = "{appView>foilBlocksPart}" editable="false" />
     <Label text="Positive" 	design="Bold"/>
-    <Text text = "{appView>positive}" editable="false" />
+    <Text text = "{appView>positivePart}" editable="false" />
     <Label text="Emboss Block" 	design="Bold"/>
-    <Text text = "{appView>embossBlock}" editable="false" />
+    <Text text = "{appView>embossBlockPart}" editable="false" />
     <Label text="Punch" 	design="Bold"/>
-    <!-- <Text tooltip="{appView>punch}" value = "{appView>punch}" editable="false"/> -->
+    <Text tooltip="{appView>punchPart}" text = "{appView>punchPart}" editable="false"/>
     <Text tooltip="{appView>punch1}" text = "{appView>punch1}" editable="false" />
     <Text tooltip="{appView>punch2}" text = "{appView>punch2}" editable="false" />
     <Label text="Reference" 	design="Bold"/>

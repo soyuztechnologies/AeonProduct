@@ -3041,7 +3041,7 @@ app.start = function () {
 				});
 		});
 
-		app.get('/getPoDetails', function (req, res) {
+		app.get('/getPoSheet', function (req, res) {
 			try {
 				const PoTable = app.models.PoTable;
 				PoTable.find({
@@ -3071,6 +3071,7 @@ app.start = function () {
 								"PoNo": true,
 								"JobCardNo": true,
 								"id": true,
+								"Type": true
 							 }
 						}
 					}]
@@ -3130,6 +3131,7 @@ app.start = function () {
 
 			const PoNo = payload.PoNo;
 			const Status = payload.Status;
+			const OpeningStock = payload.ReceivedSheets ? payload.ReceivedSheets : null;
 
 			// first it will update status in PoTable
 			PoTable.findOne({ where: { PoNo } }, (poError, poRecord) => {
@@ -3149,8 +3151,14 @@ app.start = function () {
 				}
 
 				// Now it wil Update all Job's Raw Material to 'In Stock' if status is Received
-				if (Status === "Received") {
+				if (Status === "Received" && OpeningStock !== null) {
 					try {
+						poRecord.updateAttributes({ OpeningStock }, async (updateError, newUpdatedPoTable) => {
+							if (updateError) {
+								console.error('Error updating PoTable:', updateError);
+								return res.status(500).send('Internal server error');
+							}
+						})
 					// First it will find all jobs which have same PoNo
 					const JobList = await Job.find({
 						fields: { jobCardNo: true, paperPoNo: true },
@@ -3197,8 +3205,338 @@ app.start = function () {
 				return res.status(200).send(updatedPoTable);
 				});
 			});
-			});
+		});
 
+		app.post('/savePoSheet', (req, res) => {
+			const payload = req.body;
+			const PoTable = app.models.PoTable;
+			const UsedSheets = app.models.UsedSheets;
+			const Job = app.models.Job;
+
+			const PoNo = payload.PoNo;
+
+			PoTable.findOne({ where: { PoNo: payload.PoNo } }, (err, existingPo) => {
+				if (err) {
+					return res.status(500).send('PO No. already exists');
+				}
+
+				if (existingPo) {
+					return res.status(500).send('PO No. already exists');
+				}
+
+				// Create new PO if it doesn't exist
+				PoTable.create(payload, (err, createdPoSheet) => {
+					if (err) {
+						return res.status(500).send('Error creating PO');
+					}
+
+					Job.find({
+						where: { paperPoNo: PoNo },
+						fields: { jobCardNo: true, noOfSheets3: true }
+					}, (err, jobs) => {
+						if (err) {
+							return res.status(500).send('Error finding jobs');
+						}
+
+						const usedSheetsData = jobs.map(job => ({
+							JobCardNo: job.jobCardNo,
+							PoNo: PoNo,
+							QuantityOfSheets: -Math.abs(job.noOfSheets3), // Make sure it's always negative
+							Type: "UsedSheets"
+						}));
+
+						UsedSheets.create(usedSheetsData, (err, createdUsedSheets) => {
+							if (err) {
+								return res.status(500).send('Error creating UsedSheets');
+							}
+						});
+					});
+
+					return res.status(200).json({
+						success: true,
+						data: createdPoSheet,
+						message: "PO created successfully"
+					});
+				});
+			});
+		});
+
+		app.post('/updateAncillaryPartStatus', (req, res) => {
+			const payload = req.body;
+			const Job = app.models.Job;
+			const jobId = payload.JobId;
+
+			if (!jobId) {
+				return res.status(400).json({
+					error: {
+						statusCode: 400,
+						message: "JobId is required"
+					}
+				});
+			}
+
+			// First check if job exists
+			Job.findById(jobId, (err, job) => {
+				if (err) {
+					return res.status(500).json({
+						error: {
+							statusCode: 500,
+							message: err.message || "Error finding job"
+						}
+					});
+				}
+
+				if (!job) {
+					return res.status(404).json({
+						error: {
+							statusCode: 404,
+							message: "Job not found"
+						}
+					});
+				}
+
+				// Update ancillary part statuses (fields will be created if they don't exist)
+				var updateData = {
+					plateStatus: payload.plateStatus,
+					pantoneInksPartStatus: payload.pantoneInksPartStatus,
+					foilBlocksPartStatus: payload.foilBlocksPartStatus,
+					positivePartStatus: payload.positivePartStatus,
+					embossBlockPartStatus: payload.embossBlockPartStatus,
+					punchPartStatus: payload.punchPartStatus
+				};
+				
+
+				// Update the job
+				job.updateAttributes(updateData, (err, updatedJob) => {
+					if (err) {
+						return res.status(500).json({
+							error: {
+								statusCode: 500,
+								message: err.message || "Error updating job"
+							}
+						});
+					}
+
+					return res.status(200).json({
+						success: true,
+						message: "Ancillary part statuses updated successfully",
+						data: updatedJob
+					});
+				});
+			});
+		});
+
+		app.post('/onTransferPoSheets', (req, res) => {
+			const payload = req.body;
+			const PoTable = app.models.PoTable;
+			const UsedSheets = app.models.UsedSheets;
+
+			const FromPoNo = payload.FromPoNo;
+			const ToPoNo = payload.ToPoNo;
+			const TransferSheets = Number(payload.TransferSheets);
+
+			// Validation
+			if (!FromPoNo || !ToPoNo || !TransferSheets || TransferSheets <= 0) {
+				return res.status(400).json({
+					error: {
+						statusCode: 400,
+						message: "Invalid payload"
+					}
+				});
+			}
+
+			PoTable.find({
+				where: { PoNo: FromPoNo },
+				include: [{
+					relation: 'UsedSheets',
+					scope: {
+						order: 'id',
+						fields: { 
+							"QuantityOfSheets": true, 
+							"PoNo": true,
+							"JobCardNo": true,
+						}
+					}
+				}]
+			}, (err, poTable) => {
+				if (err) {
+					return res.status(500).send('Database error');
+				}
+				if (poTable.length === 0) {
+					return res.status(404).send('FROM PoTable not found');
+				}
+
+				const poRecord = poTable[0];
+				const currentSheets = Number(poRecord.OpeningStock) || 0;
+
+				poRecord.UsedSheets((err, usedSheets) => {
+					if (err) {
+						return res.status(500).send('Error fetching used sheets');
+					}
+
+					const totalUsedSheets = UsedSheets.reduce(function(acc, item) {
+						var q = Number(item.QuantityOfSheets) || 0;
+						return acc + (q < 0 ? q : 0);
+						}, 0)
+
+					const closingStock = currentSheets + totalUsedSheets;
+
+					if (closingStock < TransferSheets) {
+						return res.status(500).send('Not enough sheets to transfer');
+					}
+
+					// Update FROM PO
+					const updatedFromSheets = currentSheets - TransferSheets;
+					poRecord.updateAttributes({ OpeningStock: updatedFromSheets }, (updateError, updatedPoTable) => {
+						if (updateError) {
+							return res.status(500).send('Error updating FROM PO');
+						}
+
+						const TransferFrom = {
+							PoNo: FromPoNo,
+							QuantityOfSheets: -Math.abs(TransferSheets),
+							Type: "Transfer",
+							JobCardNo: "Transfer to PO " + ToPoNo
+						}
+						UsedSheets.create(TransferFrom, (usedSheetsError, createdUsedSheets) => {
+							if (usedSheetsError) {
+								return res.status(500).send('Error logging used sheets for FROM PO');
+							}
+							
+							// Find TO PO
+							PoTable.findOne({ where: { PoNo: ToPoNo } }, (err, toPoRecord) => {
+								if (err) {
+									// Rollback FROM PO
+									poRecord.updateAttributes({ OpeningStock: currentSheets });
+									return res.status(500).send('Error finding TO PO');
+								}
+	
+								if (!toPoRecord) {
+									// Rollback FROM PO
+									poRecord.updateAttributes({ OpeningStock: currentSheets });
+									return res.status(404).send('TO PoTable not found')
+								}
+	
+								// Update TO PO
+								const toCurrentSheets = Number(toPoRecord.OpeningStock) || 0;
+								const updatedToSheets = toCurrentSheets + TransferSheets;
+	
+								toPoRecord.updateAttributes({ OpeningStock: updatedToSheets }, (updateError, updatedToPoTable) => {
+									if (updateError) {
+										// Rollback FROM PO
+										poRecord.updateAttributes({ OpeningStock: currentSheets });
+										return res.status(500).send('Error updating TO PO');
+									}
+
+									const TransferTo = {
+										PoNo: ToPoNo,
+										QuantityOfSheets: TransferSheets,
+										Type: "Transfer",
+										JobCardNo: "Transfer from PO " + FromPoNo
+									}
+									UsedSheets.create(TransferTo, (toUsedSheetsError, toCreatedUsedSheets) => {
+										if (toUsedSheetsError) {
+											// Rollback both FROM and TO PO
+											return res.status(500).send('Error logging used sheets for TO PO');
+										}
+
+										return res.status(200).json({
+											success: true,
+											message: `Successfully transferred ${TransferSheets} sheets from ${FromPoNo} to ${ToPoNo}`,
+											data: {
+												from: {
+													PoNo: FromPoNo,
+													previousStock: currentSheets,
+													newStock: updatedFromSheets
+												},
+												to: {
+													PoNo: ToPoNo,
+													previousStock: toCurrentSheets,
+													newStock: updatedToSheets
+												}
+											}
+										});
+									});
+	
+								});
+							});
+						})
+
+					});
+				});
+			});
+		});
+
+		app.post('/onSplitPoSheets', (req, res) => {
+			var payload = req.body;
+			const PoTable = app.models.PoTable;
+			const UsedSheets = app.models.UsedSheets;
+			
+			for(let i = 0; i < 2; i++) {
+				var poData = {
+					PoNo: payload.NewPoNo[i],
+					SupplierName: payload.SelectedPo.SupplierName || "",
+					Mill: payload.SelectedPo.Mill || "",
+					QualityOfMaterial: payload.SelectedPo.QualityOfMaterial || "",
+					TypeOfBoard: payload.SelectedPo.TypeOfBoard || "",
+					Rate: payload.SelectedPo.Rate || 0,
+					GSM: payload.SelectedPo.GSM || 0,
+					Height: Number(payload.Height[i]) || 0,
+					Width: Number(payload.Width[i]) || 0,
+					OpeningStock: payload.QuantityOfSheets || 0,
+					Status: "Received",
+					CreatedBy: payload.userId
+				};
+				
+				PoTable.create(poData, (err, createdPoSheet) => {
+					if (err && !hasError) {
+						hasError = true;
+						return res.status(500).send('Error creating PO');
+					}
+				});
+
+				var usedSheetsData = {
+					JobCardNo: "Split from PO " + payload.SelectedPo.PoNo,
+					PoNo: payload.NewPoNo[i],
+					QuantityOfSheets: payload.QuantityOfSheets,
+					Type: "Split"
+				};
+				
+				UsedSheets.create(usedSheetsData, (err, createdUsedSheets) => {
+					if (err && !hasError) {
+						hasError = true;
+						return res.status(500).send('Error creating UsedSheets');
+					}
+				});
+			}
+			// PoTable.findOne({ where: { PoNo: payload.SelectedPo.PoNo } }, (err, existingPo) => {
+			// 	if (err && !hasError) {
+			// 		hasError = true;
+			// 		return res.status(500).send('Error finding existing PO');
+			// 	}
+			// 	const updatedOpeningStock = Number(existingPo.OpeningStock) - Number(payload.QuantityOfSheets);
+			// 	existingPo.updateAttributes({ OpeningStock: updatedOpeningStock }, (updateError, updatedPoTable) => {
+			// 		if (updateError && !hasError) {
+			// 			hasError = true;
+			// 			return res.status(500).send('Error updating existing PO');
+			// 		}	
+			// 	});
+			// });
+
+			var selectedUsedSheets = {
+				PoNo: payload.SelectedPo.PoNo,
+				JobCardNo: "Split to PO " + payload.NewPoNo[0] + " and " + payload.NewPoNo[1],
+				QuantityOfSheets: -Math.abs(payload.QuantityOfSheets),
+				Type: "Split"
+			}
+			UsedSheets.create(selectedUsedSheets, (usedSheetsError, createdUsedSheets) => {
+				if (usedSheetsError && !hasError) {
+					hasError = true;
+					return res.status(500).send('Error logging used sheets for existing PO');
+				}
+			});
+			return res.status(200).send("POs created successfully");
+		});
 
 	});
 };

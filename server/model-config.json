@@ -92,5 +92,9 @@
   "UsedSheets": {
     "dataSource": "mongoatlas",
     "public": true
+  },
+  "DropdownOptions": {
+    "dataSource": "mongoatlas",
+    "public": true
   }
 }

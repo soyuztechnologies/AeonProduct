@@ -3,10 +3,10 @@
 <Dialog titleAlignment="Center" contentWidth="auto" contentHeight="auto" title="List of Used Sheets for PO No: {appView>/selectedPoNo}" resizable="false" >
 	
 	<content>
-		<Table autoPopinMode="true" popinLayout="GridSmall" items="{path : 'appView>/selectedPoDetails'}"  sticky="HeaderToolbar,ColumnHeaders" mode="Delete" delete="onDeleteUsedSheet" >  
+		<Table autoPopinMode="true" popinLayout="GridSmall" items="{path : 'appView>/selectedPoSheet'}"  sticky="HeaderToolbar,ColumnHeaders" mode="Delete" delete="onDeleteUsedSheet" >  
 			<headerToolbar>
 				<Toolbar >
-					<Title text="Used Sheets ({= ${appView>/selectedPoDetails}.length})"></Title>
+					<Title text="Used Sheets ({= ${appView>/selectedPoSheet}.length})"></Title>
 					<ToolbarSpacer ></ToolbarSpacer>
 					<!-- <ToolbarSeparator/> -->
 				</Toolbar>
@@ -25,9 +25,11 @@
 			<items>
 				<ColumnListItem type="Active">
 					<cells>
-						<Text text="{appView>JobCardNo}" />
+						<HBox alignContent="Center" justifyContent="Center">
+							<Link text="{appView>JobCardNo}" press="onNavigateToJob" visible="{= ${appView>Type} === 'UsedSheets'}"/>
+							<Text text="{appView>JobCardNo}" visible="{= ${appView>Type} !== 'UsedSheets'}" />
+						</HBox>
 						<Text text="{appView>QuantityOfSheets}" />
-						<!-- <Button icon="sap-icon://delete" text="Delete" type="Negative" press="onDeleteUsedSheet" /> -->
 					</cells>
 				</ColumnListItem>
 			</items>

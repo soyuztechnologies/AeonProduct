@@ -280,6 +280,10 @@
 			"type": "string",
 			"default": null
 		},
+		"plateStatus": {
+			"type": "string",
+			"default": ""
+		},
 		"plate1": {
 			"type": "string",
 			"default": null
@@ -292,21 +296,61 @@
 			"type": "string",
 			"default": null
 		},
+		"pantoneInksPart": {
+			"type": "string",
+			"default": null
+		},
+		"pantoneInksPartStatus": {
+			"type": "string",
+			"default": ""
+		},
 		"foilBlocks": {
 			"type": "string",
 			"default": null
+		},
+		"foilBlocksPart": {
+			"type": "string",
+			"default": null
+		},
+		"foilBlocksPartStatus": {
+			"type": "string",
+			"default": ""
 		},
 		"positive": {
 			"type": "string",
 			"default": null
 		},
+		"positivePart": {
+			"type": "string",
+			"default": null
+		},
+		"positivePartStatus": {
+			"type": "string",
+			"default": ""
+		},
 		"embossBlock": {
 			"type": "string",
 			"default": null
 		},
+		"embossBlockPart": {
+			"type": "string",
+			"default": null
+		},
+		"embossBlockPartStatus": {
+			"type": "string",
+			"default": ""
+		},
 		"punch": {
 			"type": "string",
 			"default": null
+		},
+		"punchPart": {
+			"type": "string",
+			"default": null
+		},
+		"punchPartStatus": {
+			"type": "string",
+			"default": ""
 		},
 		"punch1": {
 			"type": "string",

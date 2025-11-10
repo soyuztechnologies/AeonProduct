@@ -7,14 +7,14 @@
 	<Page showHeader="false">
 		<!-- <subHeader>
 			<OverflowToolbar>
-			   <Title text="Sent Email  ({appView>/poDetailsCount})" level="H2"/>
+			   <Title text="Sent Email  ({appView>/PoSheetCount})" level="H2"/>
 		   </OverflowToolbar>
 		</subHeader> -->
 		<!-- <fb:FilterBar class="classFilterBar" id="filterbarPo" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>
 				<fb:FilterGroupItem name="Search" label="Search" groupName="Group1" visibleInFilterBar="true" >
 					<fb:control>
-						<SearchField id="searchPoDetails" liveChange="onSearchPoDetails" showClearButton="true"></SearchField>
+						<SearchField id="searchPoSheet" liveChange="onSearchPoSheet" showClearButton="true"></SearchField>
 					</fb:control>
 				</fb:FilterGroupItem>
 			</fb:filterGroupItems>
@@ -53,11 +53,11 @@
 			<items>
 				<ColumnListItem type="Active">
 					<cells>
-						<Text text="{appView>EMAIL_TO}"/>							
-						<Text text="{appView>EMAIL_CC}"/>							
-						<Text text="{appView>EMAIL_BCC}"/>							
-						<Text text="{appView>EMAIL_SUBJECT}"/>							
-						<Text text="{appView>EMAIL_BODY}"/>							
+						<Text text="{appView>EMAIL_TO}" wrapping="true" maxLines="2" wrappingType="Hyphenated"/>							
+						<Text text="{appView>EMAIL_CC}" wrapping="true" maxLines="2" wrappingType="Hyphenated"/>							
+						<Text text="{appView>EMAIL_BCC}" wrapping="true" maxLines="2" wrappingType="Hyphenated"/>							
+						<Text text="{appView>EMAIL_SUBJECT}" wrapping="true" maxLines="2" wrappingType="Hyphenated"/>							
+						<Text text="{appView>EMAIL_BODY}" wrapping="true" maxLines="2" wrappingType="Hyphenated"/>							
 						<Link text="{appView>Attachment}" press="showPoAttachment"/>							
 					</cells>
 				</ColumnListItem>

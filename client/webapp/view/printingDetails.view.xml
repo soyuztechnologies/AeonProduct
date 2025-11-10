@@ -72,7 +72,8 @@
 							editable="{= ${appView>/UserRole} === 'Admin' ? true : false}"/>
 				</f:content>
 		</f:SimpleForm>
-		<core:Fragment fragmentName="ent.ui.ecommerce.fragments.Jobstatus" type="XML"></core:Fragment>
+		<core:Fragment fragmentName="ent.ui.ecommerce.fragments.AncillaryPartOption" type="XML"></core:Fragment>
+		<core:Fragment fragmentName="ent.ui.ecommerce.fragments.Jobstatus" type="XML" ></core:Fragment>
 		<footer>
 			<Toolbar>
 			<ToolbarSpacer/>

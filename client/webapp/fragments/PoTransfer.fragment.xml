@@ -1,45 +1,9 @@
-<mvc:View controllerName="ent.ui.ecommerce.controller.PoDetails"
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:core="sap.ui.core"
-	xmlns="sap.m"
-	xmlns:uiTable="sap.ui.table"
-	xmlns:fb="sap.ui.comp.filterbar">
-	<Page showHeader="false">
-		<subHeader>
-			<OverflowToolbar>
-			   <Title text="PO Details" level="H2"/>
-		   </OverflowToolbar>
-		</subHeader>
-		<fb:FilterBar class="classFilterBar" id="filterbarPo" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
-			<fb:filterGroupItems>
-				<fb:FilterGroupItem name="Search" label="Search" groupName="Group1" visibleInFilterBar="true" >
-					<fb:control>
-						<SearchField id="searchPoDetails" liveChange="onSearchPoDetails" showClearButton="true"></SearchField>
-					</fb:control>
-				</fb:FilterGroupItem>
-				
-				<!-- <fb:FilterGroupItem name="Company" label="Company" groupName="Group1" visibleInFilterBar="true" >
-				  <fb:control>
-					  <Select  items="{appView>/CompanyDetails}" forceSelection="false" change="selectedCompany" >
-							  <core:Item text="{appView>CompanyName}" key="{appView>id}" />
-						  </Select>
-				  </fb:control>
-				</fb:FilterGroupItem> -->
-			</fb:filterGroupItems>
-		  </fb:FilterBar>
-		
-		
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core" xmlns:f="sap.ui.layout.form">
 
-		<Table id="tablePoDetails" growing="true" growingScrollToLoad="true" growingThreshold="20" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/poDetails', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" itemPress="onRowPress" mode="SingleSelectLeft" >  
-			<headerToolbar>
-				<Toolbar >
-					<Title text="PO Table ({appView>/poDetailsCount})"></Title>
-					<ToolbarSpacer ></ToolbarSpacer>
-					<!-- <ToolbarSeparator/> -->
-					<Button text="Generate PDF" type="Attention" press="onGeneratePDF" icon="sap-icon://pdf-attachment"/>
-					<Button text="Add" type="Neutral" press="onAddPO" icon="sap-icon://add"/>
-				</Toolbar>
-			</headerToolbar>
+<Dialog titleAlignment="Center" contentWidth="auto" contentHeight="auto" title="Transfer Sheets from PO: {appView>/selectedPoNo} to -" resizable="false" >
+	
+	<content>
+		<Table id="TransferablePo" growing="true" growingScrollToLoad="true" growingThreshold="20" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/TransferablePoList', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" mode="SingleSelectLeft" >  
 			<columns>
 				<Column demandPopin="true" minScreenWidth="Phone" >
 					<Text text="Po No" />
@@ -89,9 +53,6 @@
 				<Column demandPopin="true" minScreenWidth="Phone" >
 					<Text text="Wt." />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Status" />
-				</Column>
 		
 			</columns>
 			<items>
@@ -108,26 +69,22 @@
 						<Text text="{appView>Width}" />	
 						<Text text="{path : 'appView>Height', formatter: '.formatter.formatLengthinInches'}" />	
 						<Text text="{path : 'appView>Width', formatter: '.formatter.formatLengthinInches'}" />	
-						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}], formatter: '.formatter.formatWeight'}" />	
+						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}], formatter: '.formatter.formatOpeningWeight'}" />	
 						<Text text="{path: 'appView>OpeningStock', formatter: '.formatter.formatSheets'}" />	
 						<Text text="{parts: [{path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingStock'}" />	
 						<Text text="{parts: [{path: 'appView>Rate'}, {path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatFinalPrice'}" />	
 						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingWeight'}" />	
-						<Select forceSelection="false" change="onSelectPoStatus" selectedKey="{appView>Status}">
-							<core:Item text="Pending" key="Pending" /> 
-							<core:Item text="Email Sent" key="Sent" />
-							<core:Item text="Received" key="Received"/>
-						</Select>
 					</cells>
-					<customData>
-						<core:CustomData 
-							key="po-status"
-							value="{appView>Status}"
-							writeToDom="true"
-						></core:CustomData>
-					</customData>
 				</ColumnListItem>
 			</items>
 		</Table>
-	</Page>
-</mvc:View>
+	</content>
+	<beginButton>
+		<Button text="Transfer" type="Accept" press="onTransferPo" visible="{= ${appView>/TransferablePos}.length > 0 ? true : false}" enabled="true"/>
+	</beginButton>
+	<endButton>
+		<Button text="Cancel" type="Reject" press="onClosePoTransfer" enabled="true"/>
+	</endButton>
+</Dialog>	
+
+</core:FragmentDefinition>

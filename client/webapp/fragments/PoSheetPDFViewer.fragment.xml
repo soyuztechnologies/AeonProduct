@@ -3,7 +3,7 @@
     xmlns:i="sap.ui.core"
     xmlns:u="sap.ui.unified"	 xmlns:f = "sap.ui.layout.form"
     xmlns:html="http://www.w3.org/1999/xhtml">
-    <Dialog contentWidth="100%" contentHeight="90vh" title="Purchase Order PDF" id="PoDetailPDFViewer">
+    <Dialog contentWidth="100%" contentHeight="90vh" title="Purchase Order PDF" id="PoSheetPDFViewer">
         <content>
 			<PDFViewer
 				id="pdfViewer"

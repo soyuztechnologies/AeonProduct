@@ -33,6 +33,10 @@
 		},
 		"CreatedOn": {
 			"type": "date"
+		},
+		"CreatedBy": {
+			"type": "string",
+			"required": true
 		}
 	},
 	"scope": {

@@ -1,27 +1,19 @@
 {
-	"name": "UsedSheets",
-	"plural": "UsedSheets",
+	"name": "DropdownOptions",
+	"plural": "DropdownOptions",
 	"base": "PersistedModel",
 	"idInjection": true,
 	"options": {
 		"validateUpsert": true
 	},
 	"properties": {
-		"PoNo":{
+		"OptionName":{
 			"type": "string",
 			"default": ""
-		},
-		"JobCardNo":{
-			"type": "string",
-			"default": ""
-		},
-		"QuantityOfSheets":{
-			"type": "number",
-			"default": null
 		},
 		"Type":{
 			"type": "string",
-			"default": ""
+			"required": true
 		},
 		"CreatedOn": {
 			"type": "date"

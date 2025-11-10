@@ -2262,7 +2262,7 @@ sap.ui.define([
 
         "label": "Pantone Inks :",
 
-        "dbField": "pantoneInks",
+        "dbField": "pantoneInksPart",
 
         "group": "Ancillary Parts",
 
@@ -2278,7 +2278,7 @@ sap.ui.define([
 
         "label": "Foil Blocks :",
 
-        "dbField": "foilBlocks",
+        "dbField": "foilBlocksPart",
 
         "group": "Ancillary Parts",
 
@@ -2294,7 +2294,7 @@ sap.ui.define([
 
         "label": "Positive :",
 
-        "dbField": "positive",
+        "dbField": "positivePart",
 
         "group": "Ancillary Parts",
 
@@ -2310,7 +2310,7 @@ sap.ui.define([
 
         "label": "Emboss Block :",
 
-        "dbField": "embossBlock",
+        "dbField": "embossBlockPart",
 
         "group": "Ancillary Parts",
 
@@ -2326,7 +2326,7 @@ sap.ui.define([
 
         "label": "Punch :",
 
-        "dbField": "punch",
+        "dbField": "punchPart",
 
         "group": "Ancillary Parts",
 

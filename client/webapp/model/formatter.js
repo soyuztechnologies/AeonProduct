@@ -1300,10 +1300,15 @@ downloadAttachmentVis:function(value){
         return "₹ " + rate.toFixed(2);
       } return "₹ 0.00";
     },
-    formatWeight: function (height, width, GSM, Stock) {
+    formatOpeningWeight: function (height, width, GSM, Stock) {
       if (height && width && GSM && Stock) {
         var result = (height / 1000) * (width / 1000) * (GSM / 1000) * Stock;
-        return result.toFixed() + ' KG';
+         if (result >= 1000) {
+            return (result / 1000).toFixed(2) + " Tons"; 
+        } else if (result >= 1) {
+            return result.toFixed(2) + " Kg";         
+        }
+        return "0 KG";
       }
       return "0 KG";
     },
@@ -1321,24 +1326,48 @@ downloadAttachmentVis:function(value){
     },
     formatClosingStock: function (openingStock, UsedSheets){
       if(openingStock && UsedSheets){
-        return (openingStock) + (UsedSheets.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0)) + ' Sheets';
+        var negativeSum = UsedSheets.reduce(function(acc, item) {
+          var q = Number(item.QuantityOfSheets) || 0;
+          return acc + (q < 0 ? q : 0);
+        }, 0);
+        return (Number(openingStock) + negativeSum) + ' Sheets';
       }
       return "0 Sheets";
     },
     formatFinalPrice: function (Rate, Height, Width, GSM, OpeningStock, UsedSheets){
       if(Rate && Height && Width && GSM && OpeningStock && UsedSheets){
-        var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * (OpeningStock + UsedSheets.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0));
+        var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * (OpeningStock + UsedSheets.reduce(function(acc, item) {
+          var q = Number(item.QuantityOfSheets) || 0;
+          return acc + (q < 0 ? q : 0);
+        }, 0));
         return "₹ " + price.toFixed(2);
       }
       return "₹ 0.00";
     },
     formatClosingWeight: function (height, width, GSM, OpeningStock, UsedSheets) {
       if (height && width && GSM && OpeningStock && UsedSheets) {
-        var totalSheets = OpeningStock + UsedSheets.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0);
+        var totalSheets = OpeningStock + UsedSheets.reduce(function(acc, item) {
+          var q = Number(item.QuantityOfSheets) || 0;
+          return acc + (q < 0 ? q : 0);
+        }, 0);
         var result = (height / 1000) * (width / 1000) * (GSM / 1000) * totalSheets;
-        return result.toFixed() + ' KG';
+        if (result >= 1000) {
+            return (result / 1000).toFixed(2) + " Tons"; 
+        } else if (result >= 1) {
+            return result.toFixed(2) + " Kg";         
+        }
+        return "0 KG";
       }
       return "0 KG";
     },
+    formatWeight: function (weight) {
+      if (weight == null) 
+          return "0 KG";
+      if (weight >= 1000) {
+          return (weight / 1000).toFixed(2) + " Tons"; 
+      } else if (weight >= 1) {
+          return weight.toFixed(2) + " Kg";         
+      }
+    }
   };
 });

@@ -976,6 +976,19 @@ sap.ui.define([
 			that.getRemJobsStatus();
 			var sumOfJobStatus = oModel.getProperty("/sumOfJobsData")
 
+			// Get all ancillary part statuses from the fragment
+			var ancillaryPartStatuses = {
+				plateStatus: oModel.getProperty("/Jobs/plateStatus") || "",
+				pantoneInksPartStatus: oModel.getProperty("/Jobs/pantoneInkPartStatus") || "",
+				foilBlocksPartStatus: oModel.getProperty("/Jobs/foilBlocksPartStatus") || "",
+				positivePartStatus: oModel.getProperty("/Jobs/positivePartStatus") || "",
+				embossBlockPartStatus: oModel.getProperty("/Jobs/embossBlockPartStatus") || "",
+				punchPartStatus: oModel.getProperty("/Jobs/punchPartStatus") || ""
+			};
+			
+			// job id
+			var currentJobId = this.oArgs;
+
 			// var selectedjobStatus = this.getView().getModel("appView").getProperty("/selectStatus");
 
 
@@ -1058,6 +1071,19 @@ sap.ui.define([
 
 			}
 
+			// Update Jobs table with ancillary part statuses
+			if (currentJobId) {
+				ancillaryPartStatuses.JobId = currentJobId
+
+				that.middleWare.callMiddleWare("updateAncillaryPartStatus", "POST", ancillaryPartStatuses)
+				.then(function (data) {
+					MessageToast.show("Saved successfully");
+					// console.log("ExpectedDeliveryDate updated successfully:", data);
+				})
+				.catch(function (jqXhr, textStatus, error) {
+					that.middleWare.errorHandler(error, that);
+				});
+			}
 		},
 
 		onClickCancel: function () {
@@ -1097,7 +1123,9 @@ sap.ui.define([
 		loadForm: function () {
 
 			var oSimpleForm = this.getView().byId('jobDetails')
+			var oAncillaryPartSimpleForm = this.getView().byId('AncillaryPartOption')
 			// oSimpleForm.setModel('appView');
+			oAncillaryPartSimpleForm.bindElement('appView>/Jobs');
 			oSimpleForm.bindElement('appView>/Jobs');
 			// MessageToast.show("Checking...")
 		},

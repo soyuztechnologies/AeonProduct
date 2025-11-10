@@ -1,0 +1,61 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:l="sap.ui.layout">
+
+<Dialog contentWidth="60rem" titleAlignment="Center" contentHeight="auto" title="Split Sheets" resizable="true">
+	<content>
+		<HBox class="sapUiMediumMargin">
+			<!-- Left Column - First 4 fields -->
+			<VBox class="sapUiSmallMarginEnd" width="48%">
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="New PoNo 1" class="sapUiTinyMarginBottom"/>
+					<Input id="inpNewPoNo1" liveChange="onLiveChangePoNo1" type="Text" value="{appView>/SplitSheet/NewPoNo/0}" editable="false" width="100%"/>
+				</VBox>
+				
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="QuantityOfSheets" class="sapUiTinyMarginBottom"/>
+					<Input id="inpQuantityOfSheets1" liveChange="onLiveChangeQuantityOfSheetsToSplit" placeholder="Max Quantity for Split : {appView>/SplitSheet/MaxSplitQuantity}" type="Number" value="{appView>/SplitSheet/QuantityOfSheets}" editable="true" width="100%"/>
+				</VBox>
+				
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="Height" class="sapUiTinyMarginBottom"/>
+					<Input id="inpHeight1" liveChange="onLiveChangeHeight1" type="Number" value="{appView>/SplitSheet/Height/0}" editable="true" width="100%"/>
+				</VBox>
+				
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="Width" class="sapUiTinyMarginBottom"/>
+					<Input id="inpWidth1" liveChange="onLiveChangeWidth1" type="Number" value="{appView>/SplitSheet/Width/0}" editable="true" width="100%"/>
+				</VBox>
+			</VBox>
+
+			<!-- Right Column - Last 4 fields -->
+			<VBox class="sapUiSmallMarginBegin" width="48%">
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="New PoNo 2" class="sapUiTinyMarginBottom"/>
+					<Input id="inpNewPoNo2" liveChange="onLiveChangePoNo2" type="Text" value="{appView>/SplitSheet/NewPoNo/1}" editable="false" width="100%"/>
+				</VBox>
+				
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="QuantityOfSheets" class="sapUiTinyMarginBottom"/>
+					<Input id="inpQuantityOfSheets2" liveChange="onLiveChangeQuantityOfSheetsToSplit" placeholder="Max Quantity for Split : {appView>/SplitSheet/MaxSplitQuantity}" type="Number" value="{appView>/SplitSheet/QuantityOfSheets}" editable="true" width="100%"/>
+				</VBox>
+				
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="Height" class="sapUiTinyMarginBottom"/>
+					<Input id="inpHeight2" liveChange="onLiveChangeHeight2" type="Number" value="{appView>/SplitSheet/Height/1}" editable="true" width="100%"/>
+				</VBox>
+				
+				<VBox class="sapUiSmallMarginBottom">
+					<Label text="Width" class="sapUiTinyMarginBottom"/>
+					<Input id="inpWidth2" liveChange="onLiveChangeWidth2" type="Number" value="{appView>/SplitSheet/Width/1}" editable="true" width="100%"/>
+				</VBox>
+			</VBox>
+		</HBox>
+	</content>
+	<beginButton>
+		<Button text="Split" type="Accept" press="onSubmitSplitSheets" icon="sap-icon://split" enabled="true"/>
+	</beginButton>
+	<endButton>
+		<Button text="Cancel" type="Reject" press="onCloseSplitSheets" icon="sap-icon://decline" enabled="true"/>
+	</endButton>
+</Dialog>	
+
+</core:FragmentDefinition>

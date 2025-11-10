@@ -1,0 +1,38 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:f = "sap.ui.layout.form">
+
+<Dialog contentWidth="auto" contentHeight="auto" title="Generate PDF" resizable="false" >
+	<content>
+		<f:SimpleForm id="PDFinfoDialog"
+				editable="true"
+				layout="ColumnLayout"
+				columnsM="2"
+				columnsL="3"
+				class="sapUiNoMargin sapUiNoPadding"
+				singleContainerFullSize="false" >
+				<f:content>
+					<Label text="Transport"/>
+					<Input id="inpTransport" type="Text" value="" editable="true"/>
+					<Label text="Payment Terms"/>
+					<Input id="inpPaymentTerms" type="Text" value="" editable="true"/>
+					<Label text="Enter Discount"/>
+					<Input id="inpDiscount" type="Number" value="" editable="true"/>
+					<Label text="Enter Transportation Cost"/>
+					<Input id="inpTransportaion" type="Number" value="" editable="true"/>
+					<Label text="Remarks"/>
+					<Input id="inpRemarks" type="Text" value="" editable="true"/>
+					<Label text="PreparedBy"/>
+					<Input id="inpPreparedBy" type="Text" value="" editable="true"/>
+					<Label text="CheckedBy"/>
+					<Input id="inpCheckedBy" type="Text" value="" editable="true"/>
+				</f:content>
+			</f:SimpleForm>
+	</content>
+	<beginButton>
+		<Button text="Generate" type="Attention" press="onGeneratePDF" enabled="true"/>
+	</beginButton>
+	<endButton>
+		<Button text="Cancel" type="Reject" press="onCloseGeneratePDF" enabled="true"/>
+	</endButton>
+</Dialog>	
+
+</core:FragmentDefinition>

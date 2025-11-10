@@ -369,9 +369,9 @@
 					"target": "vendorDetails"
 				},
 				{
-					"pattern": "PoDetails",
-					"name": "PoDetails",
-					"target": "PoDetails"
+					"pattern": "PoSheet",
+					"name": "PoSheet",
+					"target": "PoSheet"
 				},
 				{
 					"pattern": "SentEmail",
@@ -530,11 +530,11 @@
 					"controlAggregation": "beginColumnPages",
 					"viewId": "dispatchedList"
 				},
-				"PoDetails": {
-					"viewName": "PoDetails",
+				"PoSheet": {
+					"viewName": "PoSheet",
 					"viewLevel": 1,
 					"controlAggregation": "beginColumnPages",
-					"viewId": "PoDetails"
+					"viewId": "PoSheet"
 				},
 				"SentEmail": {
 					"viewName": "SentEmail",
