@@ -297,9 +297,9 @@ sap.ui.define([
 			}
 			var PoNo = this.getModel("appView").getProperty("/selectedPoNo");
 			var closingStock = (selectedRowData.OpeningStock + (selectedRowData.UsedSheets ? selectedRowData.UsedSheets.reduce(function(acc, item) {
-						var q = Number(item.QuantityOfSheets) || 0;
-						return acc + (q < 0 ? q : 0);
-						}, 0) : 0));
+					var q = Number(item.QuantityOfSheets) || 0;
+					return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+				}, 0) : 0));
 			var currentUsedSheetsData = usedSheetsFields.reduce((acc, curr) => acc + Math.abs(curr.QuantityOfSheets), 0);
 			if(closingStock < currentUsedSheetsData){
 				MessageBox.error("Not have enough Sheets for use");
@@ -705,9 +705,9 @@ sap.ui.define([
 			const WidthInInches = +((oPoSheet.Width / 25.4).toFixed(2));
 			const OpeningWeight = +(((oPoSheet.Height / 1000) * (oPoSheet.Width / 1000) * (oPoSheet.GSM / 1000) * oPoSheet.OpeningStock).toFixed(2));
 			const ClosingStock = (oPoSheet.OpeningStock + (oPoSheet.UsedSheets ? oPoSheet.UsedSheets.reduce(function(acc, item) {
-						var q = Number(item.QuantityOfSheets) || 0;
-						return acc + (q < 0 ? q : 0);
-						}, 0) : 0));
+					var q = Number(item.QuantityOfSheets) || 0;
+					return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+					}, 0) : 0));
 			const ClosingWeight = +(((oPoSheet.Height / 1000) * (oPoSheet.Width / 1000) * (oPoSheet.GSM / 1000) * ClosingStock).toFixed(2));
 			const FinalPrice = +((oPoSheet.Rate * ClosingWeight).toFixed(2));
 
@@ -1310,8 +1310,8 @@ sap.ui.define([
 				(UsedSheets.length
 					? UsedSheets.reduce(function(acc, item) {
 						var q = Number(item.QuantityOfSheets) || 0;
-						return acc + (q < 0 ? q : 0);
-						}, 0)
+						return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+					}, 0)
 					: 0);
 
 			if (ClosingStock <= 0) {

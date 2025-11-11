@@ -3374,10 +3374,10 @@ app.start = function () {
 						return res.status(500).send('Error fetching used sheets');
 					}
 
-					const totalUsedSheets = UsedSheets.reduce(function(acc, item) {
-						var q = Number(item.QuantityOfSheets) || 0;
-						return acc + (q < 0 ? q : 0);
-						}, 0)
+					const totalUsedSheets = usedSheets.reduce(function(acc, item) {
+					var q = Number(item.QuantityOfSheets) || 0;
+					return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+				}, 0)
 
 					const closingStock = currentSheets + totalUsedSheets;
 
@@ -3386,11 +3386,11 @@ app.start = function () {
 					}
 
 					// Update FROM PO
-					const updatedFromSheets = currentSheets - TransferSheets;
-					poRecord.updateAttributes({ OpeningStock: updatedFromSheets }, (updateError, updatedPoTable) => {
-						if (updateError) {
-							return res.status(500).send('Error updating FROM PO');
-						}
+					// const updatedFromSheets = currentSheets - TransferSheets;
+					// poRecord.updateAttributes({ OpeningStock: updatedFromSheets }, (updateError, updatedPoTable) => {
+					// 	if (updateError) {
+					// 		return res.status(500).send('Error updating FROM PO');
+					// 	}
 
 						const TransferFrom = {
 							PoNo: FromPoNo,
@@ -3418,15 +3418,15 @@ app.start = function () {
 								}
 	
 								// Update TO PO
-								const toCurrentSheets = Number(toPoRecord.OpeningStock) || 0;
-								const updatedToSheets = toCurrentSheets + TransferSheets;
+								// const toCurrentSheets = Number(toPoRecord.OpeningStock) || 0;
+								// const updatedToSheets = toCurrentSheets + TransferSheets;
 	
-								toPoRecord.updateAttributes({ OpeningStock: updatedToSheets }, (updateError, updatedToPoTable) => {
-									if (updateError) {
-										// Rollback FROM PO
-										poRecord.updateAttributes({ OpeningStock: currentSheets });
-										return res.status(500).send('Error updating TO PO');
-									}
+								// toPoRecord.updateAttributes({ OpeningStock: updatedToSheets }, (updateError, updatedToPoTable) => {
+								// 	if (updateError) {
+								// 		// Rollback FROM PO
+								// 		poRecord.updateAttributes({ OpeningStock: currentSheets });
+								// 		return res.status(500).send('Error updating TO PO');
+								// 	}
 
 									const TransferTo = {
 										PoNo: ToPoNo,
@@ -3440,29 +3440,14 @@ app.start = function () {
 											return res.status(500).send('Error logging used sheets for TO PO');
 										}
 
-										return res.status(200).json({
-											success: true,
-											message: `Successfully transferred ${TransferSheets} sheets from ${FromPoNo} to ${ToPoNo}`,
-											data: {
-												from: {
-													PoNo: FromPoNo,
-													previousStock: currentSheets,
-													newStock: updatedFromSheets
-												},
-												to: {
-													PoNo: ToPoNo,
-													previousStock: toCurrentSheets,
-													newStock: updatedToSheets
-												}
-											}
-										});
+										return res.status(200).send(`Successfully transferred ${TransferSheets} sheets from ${FromPoNo} to ${ToPoNo}`);
 									});
 	
-								});
+								// });
 							});
 						})
 
-					});
+					// });
 				});
 			});
 		});

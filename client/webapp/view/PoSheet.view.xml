@@ -87,53 +87,53 @@
 				</Toolbar>
 			</headerToolbar>
 			<columns>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="4rem" minScreenWidth="Phone" >
 					<Text text="Po No" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Supplier Name" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Mill" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Quality Of Material" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Type Of Board" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Rate" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="GSM" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="4rem" minScreenWidth="Phone" >
 					<Text text="Size in" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="4rem" minScreenWidth="Phone" >
 					<Text text="mm" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="4rem" minScreenWidth="Phone" >
 					<Text text="Size in" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="4rem" minScreenWidth="Phone" >
 					<Text text="Inches" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Wt." />
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
+					<Text text="Opening Wt." />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Opening Stock" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Closing Stock" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
 					<Text text="Final Price" />
 				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Wt." />
+				<Column demandPopin="true" width="6rem" minScreenWidth="Phone" >
+					<Text text="Closing Wt." />
 				</Column>
 				<Column demandPopin="true" minScreenWidth="Phone" >
 					<Text text="Status" />

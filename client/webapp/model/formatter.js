@@ -1323,33 +1323,34 @@ downloadAttachmentVis:function(value){
         return sheets + ' Sheets';
       }
       return "0 Sheets";
-    },
-    formatClosingStock: function (openingStock, UsedSheets){
-      if(openingStock && UsedSheets){
-        var negativeSum = UsedSheets.reduce(function(acc, item) {
-          var q = Number(item.QuantityOfSheets) || 0;
-          return acc + (q < 0 ? q : 0);
-        }, 0);
-        return (Number(openingStock) + negativeSum) + ' Sheets';
-      }
-      return "0 Sheets";
-    },
-    formatFinalPrice: function (Rate, Height, Width, GSM, OpeningStock, UsedSheets){
-      if(Rate && Height && Width && GSM && OpeningStock && UsedSheets){
-        var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * (OpeningStock + UsedSheets.reduce(function(acc, item) {
-          var q = Number(item.QuantityOfSheets) || 0;
-          return acc + (q < 0 ? q : 0);
-        }, 0));
-        return "₹ " + price.toFixed(2);
-      }
+      },
+      formatClosingStock: function (openingStock, UsedSheets){
+        if(openingStock && UsedSheets){
+          var negativeSum = UsedSheets.reduce(function(acc, item) {
+            var q = Number(item.QuantityOfSheets) || 0;
+            return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+          }, 0);
+          return (Number(openingStock) + negativeSum) + ' Sheets';
+        }
+        return "0 Sheets";
+      },
+      formatFinalPrice: function (Rate, Height, Width, GSM, OpeningStock, UsedSheets){
+        if(Rate && Height && Width && GSM && OpeningStock && UsedSheets){
+          var totalSheets = OpeningStock + UsedSheets.reduce(function(acc, item) {
+            var q = Number(item.QuantityOfSheets) || 0;
+            return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+          }, 0);
+          var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * totalSheets;
+          return "₹ " + price.toFixed(2);
+        }
       return "₹ 0.00";
     },
     formatClosingWeight: function (height, width, GSM, OpeningStock, UsedSheets) {
       if (height && width && GSM && OpeningStock && UsedSheets) {
         var totalSheets = OpeningStock + UsedSheets.reduce(function(acc, item) {
-          var q = Number(item.QuantityOfSheets) || 0;
-          return acc + (q < 0 ? q : 0);
-        }, 0);
+            var q = Number(item.QuantityOfSheets) || 0;
+            return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+          }, 0);
         var result = (height / 1000) * (width / 1000) * (GSM / 1000) * totalSheets;
         if (result >= 1000) {
             return (result / 1000).toFixed(2) + " Tons"; 
