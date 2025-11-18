@@ -136,7 +136,7 @@ sap.ui.define([
 
 		onAddPO: function() {
 			var that = this;
-			this.oDialogOpen().then(function (oDialog) {
+			this.oAddPoDialogOpen().then(function (oDialog) {
 				oDialog.open();
 			});
 		},
@@ -231,7 +231,7 @@ sap.ui.define([
 			this.getView().byId("inpOpeningStock").setValue("");
 		},
 
-		oDialogOpen: function () {
+		oAddPoDialogOpen: function () {
 			var oView = this.getView();
 			var that = this;
 			if (!this.oPoDialog) {
@@ -250,7 +250,7 @@ sap.ui.define([
 
 		onClose: function () {
 			var that = this;
-			this.oDialogOpen().then(function (oDialog) {
+			this.oAddPoDialogOpen().then(function (oDialog) {
 				oDialog.close();
 				that.clearFields();
 			})

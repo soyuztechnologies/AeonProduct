@@ -82,7 +82,7 @@
 
 		<Table id="tablePoSheet" growing="true" growingScrollToLoad="true" growingThreshold="20" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/PoSheet', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders,InfoToolbar" itemPress="onRowPress" mode="SingleSelectLeft" >  
 			<headerToolbar>
-				<Toolbar >
+				<OverflowToolbar >
 					<Title text="PO Table ({appView>/PoSheetCount})"></Title>
 					<ToolbarSpacer ></ToolbarSpacer>
 					<!-- <ToolbarSeparator/> -->
@@ -90,7 +90,7 @@
 					<Button text="Split" type="Critical" press="onSpiltPoSheets" icon="sap-icon://split"/>
 					<Button text="Generate PDF" type="Attention" press="beforeGeneratePDF" icon="sap-icon://pdf-attachment"/>
 					<Button text="Add" type="Neutral" press="onAddPO" icon="sap-icon://add"/>
-				</Toolbar>
+				</OverflowToolbar>
 			</headerToolbar>
 			<columns>
 				<Column demandPopin="true" width="4rem" minScreenWidth="Phone" >
@@ -182,15 +182,53 @@
 				</ColumnListItem>
 			</items>
 			<infoToolbar>
-				<Toolbar design="Info">
-					<Title text="Total:" class="sapUiSmallMarginEnd"/>
-					<ToolbarSpacer/>
-					<Text text="Opening Wt: {path: 'appView>/totals/openingWeight', formatter: '.formatter.formatWeight'}" class="sapUiSmallMarginEnd"/>
-					<Text text="Opening Stock: {appView>/totals/openingStock} Sheets" class="sapUiSmallMarginEnd"/>
-					<Text text="Closing Stock: {appView>/totals/closingStock} Sheets" class="sapUiSmallMarginEnd"/>
-					<Text text="Final Price: Rs. {appView>/totals/finalPrice}" class="sapUiSmallMarginEnd"/>
-					<Text text="Closing Wt: {path: 'appView>/totals/closingWeight', formatter: '.formatter.formatWeight'}" class="sapUiSmallMarginEnd"/>
-				</Toolbar>
+				<OverflowToolbar design="Info">
+					<Title text="Total:" class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow"/>
+						</layoutData>
+					</Title>
+					
+					<ToolbarSpacer>
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="0"/>
+						</layoutData>
+					</ToolbarSpacer>
+					
+					<Label text="Opening Wt: {path: 'appView>/totals/openingWeight', formatter: '.formatter.formatWeight'}" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Opening Stock: {appView>/totals/openingStock} Sheets" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Closing Stock: {appView>/totals/closingStock} Sheets" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Final Price: Rs. {appView>/totals/finalPrice}" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Closing Wt: {path: 'appView>/totals/closingWeight', formatter: '.formatter.formatWeight'}">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low"/>
+						</layoutData>
+					</Label>
+				</OverflowToolbar>
 			</infoToolbar>
 		</Table>
 	</Page>
