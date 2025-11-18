@@ -1211,58 +1211,54 @@ sap.ui.define([
 		selectSupplierName: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim();          
+			var sValue = oSource.getValue().trim().toUpperCase();;          
 
 			if (sKey) {
 				return;
 			}
 
 			if (sValue) {
-				var supplierName = sValue.charAt(0).toUpperCase() + sValue.slice(1).toLowerCase();
-				this.handleSaveDropdownOption("Supplier_Name", supplierName)
+				this.handleSaveDropdownOption("Supplier_Name", sValue)
 			}
 		},
 
 		selectMill: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim();          
+			var sValue = oSource.getValue().trim().toUpperCase();;          
 
 			if (sKey) {
 				return;
 			}
 
 			if (sValue) {
-				var MillName = sValue.charAt(0).toUpperCase() + sValue.slice(1).toLowerCase();
-				this.handleSaveDropdownOption("Mill", MillName)
+				this.handleSaveDropdownOption("Mill", sValue)
 			}
 		},
 		selectQualityOfMaterial: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim();          
+			var sValue = oSource.getValue().trim().toUpperCase();;          
 
 			if (sKey) {
 				return;
 			}
 
 			if (sValue) {
-				var QualityOfMaterialName = sValue.charAt(0).toUpperCase() + sValue.slice(1).toLowerCase();
-				this.handleSaveDropdownOption("Quality_Of_Material", QualityOfMaterialName)
+				this.handleSaveDropdownOption("Quality_Of_Material", sValue)
 			}
 		},
 		selectTypeOfBoard: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim();          
+			var sValue = oSource.getValue().trim().toUpperCase();        
 
 			if (sKey) {
 				return;
 			}
 
 			if (sValue) {
-				var TypeOfBoardName = sValue.charAt(0).toUpperCase() + sValue.slice(1).toLowerCase();
-				this.handleSaveDropdownOption("Type_Of_Board", TypeOfBoardName)
+				this.handleSaveDropdownOption("Type_Of_Board", sValue)
 			}
 		},
 
@@ -1276,7 +1272,7 @@ sap.ui.define([
 			};
 
 			MessageBox.confirm(
-				"This Supplier Name does not exist. Do you want to create it?",
+				`This ${type} does not exist. Do you want to create it?`,
 				{
 					actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
 					onClose: function (sAction) {
@@ -1290,6 +1286,17 @@ sap.ui.define([
 									that.middleWare.errorHandler(oError, that);
 								}
 							});
+						}
+						if (sAction === MessageBox.Action.CLOSE) {
+							if (type === "Supplier_Name") {
+								that.getView().byId("inpSupplierName").setValue("");
+							} else if (type === "Mill") {
+								that.getView().byId("inpMill").setValue("");
+							} else if (type === "Quality_Of_Material") {
+								that.getView().byId("inpQualityOfMaterial").setValue("");
+							} else if (type === "Type_Of_Board") {
+								that.getView().byId("inpTypeOfBoard").setValue("");
+							}
 						}
 					}
 				}

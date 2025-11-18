@@ -101,3 +101,7 @@ tr[data-po-status="Received"] .sapMListTblSubRowCell {
     background-color: yellow !important;
     color: #000000;
 }
+
+.fonts .sapMInputBaseInner {
+    text-transform: uppercase !important;
+}
