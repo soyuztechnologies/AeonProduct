@@ -7,7 +7,8 @@
 	<Page showHeader="false">
 		<subHeader>
 			<OverflowToolbar>
-			   <Title text="PO Sheet" level="H2"/>
+				<Title text="PO Sheet" level="H2"/>
+				<ToolbarSpacer ></ToolbarSpacer>
 		   </OverflowToolbar>
 		</subHeader>
 		<fb:FilterBar class="classFilterBar" id="filterbarPo" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch"  clear="onClearFilters" showClearOnFB="true" >
@@ -66,6 +67,11 @@
 				<fb:FilterGroupItem name="Width in mm" label="Width in mm" groupName="Group8" visibleInFilterBar="true" >
 					<fb:control>
 						<Input id="searchWidth" ></Input>
+					</fb:control>
+				</fb:FilterGroupItem>
+				<fb:FilterGroupItem name="InStock Sheets" label="InStock Sheets" groupName="Group9" visibleInFilterBar="true" >
+					<fb:control>
+						<Switch tooltip="This will show all InStock Sheets" id="idSwitchSheets" customTextOn="In" customTextOff="All" change="onGetInStockSheets"></Switch>
 					</fb:control>
 				</fb:FilterGroupItem>
 				
@@ -156,9 +162,10 @@
 						<Text text="{path : 'appView>Width', formatter: '.formatter.formatLengthinInches'}" />	
 						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}], formatter: '.formatter.formatOpeningWeight'}" />	
 						<Text text="{path: 'appView>OpeningStock', formatter: '.formatter.formatSheets'}" />	
-						<Text text="{parts: [{path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingStock'}" />	
-						<Text text="{parts: [{path: 'appView>Rate'}, {path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatFinalPrice'}" />	
-						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingWeight'}" />	
+						<!-- <Text text="{parts: [{path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingStock'}" />	 -->
+						<Text text="{appView>ClosingStock} Sheets" />	
+						<Text text="{parts: [{path: 'appView>Rate'}, {path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>ClosingStock'}], formatter: '.formatter.formatFinalPrice'}" />	
+						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>ClosingStock'}], formatter: '.formatter.formatClosingWeight'}" />	
 						<Select forceSelection="false" change="onSelectPoStatus" selectedKey="{appView>Status}">
 							<core:Item text="Pending" key="Pending" /> 
 							<core:Item text="Email Sent" key="Sent" />

@@ -4050,10 +4050,239 @@ sap.ui.define([
 			};
 			oData.push(oPaylaod);
 			this.getModel("appView").setProperty("/pdfItems/tableData", oData);
-		}
+		},
 
+		onSendEmailForAncillaryPart: async function (oEvent) {
+			var that = this;
+			var oView = this.getView();
+			var dModel = this.getView().getModel();
+			var oModel = this.getView().getModel("appView");
+			var oButton = oEvent.getSource();
+			var sPartKey = oButton.data("partName"); 
+			var sPartStatus = oButton.data("status");
+			var selectedJob = this.getView().getModel("appView").getProperty("/Jobs");
+			var jobCardNo = selectedJob.jobCardNo;
 
+			var updatedPartName = sPartKey.replace(/Part/g, '');
+			this._PDFNAME = jobCardNo + '_Ancillary_' + updatedPartName;
 
+			var selectedStatus = oModel.getProperty("/Jobs/" + sPartStatus) || ""
+
+			if(selectedStatus === ""){
+				this.getView().getModel("appView").setProperty("/EmailTitle", 'Send Email for Ancillary Part - ' + sPartKey)
+				this.getView().getModel("appView").setProperty("/Email", {
+					PartStatus: sPartStatus,
+					jobCardNo: jobCardNo,
+				})
+	
+				if (!this.oSendEmailDialogForAncillary) {
+					this.oSendEmailDialogForAncillary = Fragment.load({
+						id: oView.getId() + "-ancillaryEmailFragment", 
+						name: "ent.ui.ecommerce.fragments.Email", 
+						controller: this
+					}).then(function (oDialog) {
+						oView.addDependent(oDialog);
+						oDialog.open();
+						return oDialog;
+					}.bind(this));
+				}else {
+					this.oSendEmailDialogForAncillary.then(function (oDialog) {
+						oDialog.open();
+					});
+				}
+			}else {
+				var url = `/Attachments('${this._PDFNAME}')`
+				oModel.setProperty("/uploadDocumnetTitle", "PoReciept Attachment");
+				oModel.setProperty("/PDFPoNo", this._PDFNAME);
+
+				//getting api attachment data
+				dModel.read(url, {
+					success: function (data) {
+						that.onPreviewAttachment(data)
+					},
+					error: function (error) {
+						MessageBox.show("Attachment Is Not Attached")
+					}
+				});
+			}
+			
+		},
+
+		handleCloseMail: function () {
+			this.oSendEmailDialogForAncillary.then(function (oDialog) {
+				oDialog.close();
+			});
+		},
+
+		handleSendMail: function () {
+			var that = this;			
+			var payload = this.getView().getModel("appView").getProperty("/Email");		
+			payload.userId = this.getModel('appView').getProperty('/UserId')
+
+			if (!payload.EMAIL_TO || !payload.EMAIL_SUBJECT || !payload.EMAIL_BODY) {
+				MessageToast.show("Please fill all required fields");
+				return;
+			}
+			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(payload.EMAIL_TO)) {
+				MessageToast.show("Please enter a valid email address");
+				return;
+			}
+
+			let ccEmails = [];
+			if (payload.EMAIL_CC) {
+				ccEmails = payload.EMAIL_CC.split(",").map(e => e.trim());
+				for (let email of ccEmails) {
+					if (!emailRegex.test(email)) {
+						MessageToast.show("Please enter a valid CC email address");
+						return;
+					}
+				}
+			}
+
+			let bccEmails = [];
+			if (payload.EMAIL_BCC) {
+				bccEmails = payload.EMAIL_BCC.split(",").map(e => e.trim());
+				for (let email of bccEmails) {
+					if (!emailRegex.test(email)) {
+						MessageToast.show("Please enter a valid BCC email address");
+						return;
+					}
+				}
+			}
+
+			payload.EMAIL_CC = ccEmails;
+    		payload.EMAIL_BCC = bccEmails;
+			payload.TYPE = "AncillaryPart"
+			
+			this.middleWare.callMiddleWare("onSendPoEmail", "POST", payload)
+				.then( (data, status, xhr)=> {
+					MessageToast.show(`Email Sent Successfully`);		
+					that.handleCloseMail();
+					that.oGetAgru();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+		},
+
+		onAttachmentUpload: function (oEvent) {
+			const file = oEvent.getParameter("files")[0];
+			if (!file) return;
+
+			if (file.type !== "application/pdf") {
+				sap.m.MessageToast.show("Only PDF files allowed!");
+				return;
+			}
+
+			let reader = new FileReader();
+			reader.onload = (e) => {
+				let base64 = e.target.result;
+
+				let oModel = this.getModel("appView");
+				oModel.setProperty("/Email/PDF_NAME", this._PDFNAME);
+				oModel.setProperty("/Email/GENERATED_PDF", base64);
+			};
+
+			reader.readAsDataURL(file);
+		},
+
+		onRemoveAttachment: function () {
+			let oModel = this.getModel("appView");
+
+			oModel.setProperty("/Email/PDF_NAME", "");
+			oModel.setProperty("/Email/GENERATED_PDF", "");
+
+			this._clearUploadAttachment()
+		},
+
+		_clearUploadAttachment: function () {
+			// var oFileUploader = this.byId("AttachmentUploader");
+			var oView = this.getView();
+			var oFileUploader = Fragment.byId(oView.getId() + "-ancillaryEmailFragment", "AttachmentUploader");
+    
+			if (!oFileUploader) {
+				var aControls = this.getView().getControlsByFieldGroupId() || [];
+				oFileUploader = this.getView().findAggregatedObjects(true).find(function(ctrl) {
+					return ctrl.getId && ctrl.getId().includes("AttachmentUploader");
+				});
+			}
+			
+			if (oFileUploader) {
+				console.log("Found FileUploader:", oFileUploader.getId());
+				oFileUploader.clear();
+				oFileUploader.setValue("");
+			} else {
+				console.error("FileUploader still not found!");
+			}
+		},
+
+		onPreviewAttachment: function (data) {
+			if(!data){
+				var pdfName = this.getModel("appView").getProperty("/Email/PDF_NAME");
+				var pdfContent = this.getModel("appView").getProperty("/Email/GENERATED_PDF"); 
+			}else{
+				var pdfName = data.Key
+				var pdfContent = data.Attachment
+			}
+
+			if (!pdfContent) {
+				MessageToast.show("No attachment found for preview");
+				return;
+			}
+
+			var oModel = this.getView().getModel("appView");
+			
+			oModel.setProperty("/uploadDocumnetTitle", "Ancillary Attachment");
+			oModel.setProperty("/PDFPoNo", pdfName);
+
+			this.getModel("appView").setProperty("/attachmentFiles", pdfContent);
+			this.oDialogOpen().then(function (oDialog) {
+				oDialog.open();
+			});
+			
+		},
+
+		oDialogOpen: function () {
+			var oView = this.getView();
+			var that = this;
+			if (!this.oUploadDialog) {
+				this.oUploadDialog = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.printingDetailFragment.uploadDoc",
+					controller: this
+				}).then(function (oDialog) {
+					// Add dialog to view hierarchy
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+
+			}
+			return this.oUploadDialog;
+		},
+
+		// Close the pdf format.
+		onReject: function () {
+			this.oDialogOpen().then(function (oDialog) {
+				oDialog.close();
+			})
+		},
+
+		downloadAttachments: function () {
+			const base64PDF = this.getView().getModel("appView").getProperty("/attachmentFiles");
+			const PoNo = this.getView().getModel("appView").getProperty("/PDFPoNo");
+
+			if (!base64PDF) {
+				MessageToast.show("No PDF available to download.");
+				return;
+			}
+
+			// Convert Base64 to Blob for download
+			const link = document.createElement("a");
+			link.href = base64PDF;
+			link.download = `${PoNo}`;
+			link.click();
+		},
 
 	});
 });

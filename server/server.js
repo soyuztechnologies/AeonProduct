@@ -338,7 +338,7 @@ app.start = function () {
 						html: email.EMAIL_BODY,
 						attachments: email.GENERATED_PDF ? [
 							{
-								filename: `PO_${email.PDF_PONo}.pdf`,
+								filename: `${email.PDF_NAME}`,
 								content: Buffer.from(email.GENERATED_PDF.split(",")[1], 'base64'),
 								contentType: 'application/pdf'
 							}
@@ -366,6 +366,7 @@ app.start = function () {
 			const Email = req.body;
 			const attachmentTable = app.models.Attachments;
 			const sentEmailTable = app.models.SentEmail;
+			const Job = app.models.Job;
 
 			try {
 				const info = await sendEmailTemp(Email);
@@ -376,24 +377,43 @@ app.start = function () {
 					EMAIL_BCC: Email.EMAIL_BCC ? Email.EMAIL_BCC.toString() : "",
 					EMAIL_SUBJECT: Email.EMAIL_SUBJECT,
 					EMAIL_BODY: Email.EMAIL_BODY,
-					Attachment: `PO_${Email.PDF_PONo}`
+					CreatedBy: Email.userId
 				};
+				var PDF_NAME = Email.PDF_NAME ? Email.PDF_NAME.trim().replace(/\.pdf$/i, '') : '';
+				var PDF_PoNo = Email.PDF_PONo;
+
+				if(PDF_NAME)
+				oEmailData.Attachment = PDF_NAME ? PDF_NAME : null;
+
 				await sentEmailTable.create(oEmailData);
+				
+				const attachmentKey = PDF_NAME ? PDF_NAME : null;
+				
+				if (attachmentKey !== null) {
+					const existingAttachment = await attachmentTable.findOne({ where: { Key: attachmentKey } });
+					
+					if (existingAttachment) {
+						await existingAttachment.updateAttribute('Attachment', Email.GENERATED_PDF);
+					} else {
+						const oEmailAttachmentData = {
+							Key: attachmentKey,
+							Label: `${attachmentKey}.pdf`,
+							Attachment: Email.GENERATED_PDF,
+							Type: Email.TYPE
+						};
+						await attachmentTable.create(oEmailAttachmentData);
+					}
+				}
+				
 
-				const attachmentKey = `PO_${Email.PDF_PONo}`;
+				var JobCardNo = Email.jobCardNo;
+				var partStatus = Email.PartStatus; 
 
-				const existingAttachment = await attachmentTable.findOne({ where: { Key: attachmentKey } });
-
-				if (existingAttachment) {
-				await existingAttachment.updateAttribute('Attachment', Email.GENERATED_PDF);
-				} else {
-					const oEmailAttachmentData = {
-						Key: attachmentKey,
-						Label: `${attachmentKey}.pdf`,
-						Attachment: Email.GENERATED_PDF,
-						Type: 'PoReceipt'
-					};
-					await attachmentTable.create(oEmailAttachmentData);
+				if(JobCardNo && partStatus){
+					const jobRecord = await Job.findOne({ where: { jobCardNo: JobCardNo } });
+					if(jobRecord) {
+						await jobRecord.updateAttribute(partStatus, 'EmailSent');
+					}
 				}
 
 				res.status(200).json({
@@ -561,8 +581,19 @@ app.start = function () {
 		}
 
 		app.post('/getJobsWithStatusFilter', function (req, res) {
-			const status = req.body;
+			const {minDate, maxDate, status} = req.body;
 			const Job = app.models.Job;
+
+			var oFilter = {
+					and: [
+						{ status: status }
+					]
+				};
+
+				if (minDate && maxDate) {
+					oFilter.and.push({ date: { gte: minDate } });
+					oFilter.and.push({ date: { lte: maxDate } });
+				}
 
 			try {
 				Job.find({
@@ -655,7 +686,7 @@ app.start = function () {
 						corrections2: false,
 						corrections3: false,
 					},
-					where: { status: status },
+					where: oFilter,
 					include: 'Company'
 				}, function (error, jobs) {
 					if (error) {
@@ -1606,161 +1637,296 @@ app.start = function () {
 
 		//* Delete job and job status using jobCardNo
 		// Delete Job,job status and their attachments using id--.jobcardNo:Lakshay
-		app.post('/deleteJobsWithJobStatus', (req, res) => {
-			const Job = app.models.Job;		//Getting Job table
-			const attachments = app.models.Attachments;    //Getting Job table
-			const id = req.body;		//Getting id as job-card no
-			var attachmentArray = [];	//array for storing attachment linked with job
+		// app.post('/deleteJobsWithJobStatus', (req, res) => {
+		// 	const Job = app.models.Job;		//Getting Job table
+		// 	const attachments = app.models.Attachments;    //Getting Job table
+		// 	const id = req.body;		//Getting id as job-card no
+		// 	var attachmentArray = [];	//array for storing attachment linked with job
 
-			// For Validation only to check same attachments are not present in other Jobs.
-			// let response;
-			// let allAttachments = [];
-			let restAllJobsObject = {};			//Here we store all attachment without our current job Id.
+		// 	// For Validation only to check same attachments are not present in other Jobs.
+		// 	// let response;
+		// 	// let allAttachments = [];
+		// 	let restAllJobsObject = {};			//Here we store all attachment without our current job Id.
+		// 	Job.find({
+		// 		include: {
+		// 			relation: 'JobStatus'		//hasMany Relation with JobStatus table
+		// 		}
+		// 	}, (err, response) => {
+		// 		if (err) {
+		// 			console.log('Error');
+		// 		}
+		// 		// Response as all job with jobstatus
+		// 		if (response) {
+		// 			response.forEach(data => {
+		// 				let attachments = [];
+		// 				if (!(data.jobCardNo === id)) {
+		// 					attachments.push(data.PoAttach + 'PoNo');
+		// 					attachments.push(data.artworkCode + 'ArtworkNo');
+		// 					if (data.JobStatus && data.JobStatus().length > 0) {
+		// 						if (data.JobStatus()['0'].InvNo) {	//check inv no is present or not
+		// 							attachments.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+		// 						}
+		// 						if (data.JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+		// 							attachments.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+		// 						}
+		// 					}
+		// 					restAllJobsObject[data.jobCardNo] = attachments;
+		// 				} else {
+		// 					attachmentArray.push(data.PoAttach + 'PoNo');
+		// 					attachmentArray.push(data.artworkCode + 'ArtworkNo');
+		// 					if (data.JobStatus && data.JobStatus().length > 0) {
+		// 						if (data.JobStatus()['0'].InvNo) {	//check inv no is present or not
+		// 							attachmentArray.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+		// 						}
+		// 						if (data.JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+		// 							attachmentArray.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+		// 						}
+		// 					}
+		// 				}
+
+
+		// 			})
+
+		// 			// let commonAttachment = [];
+		// 			let commonAttachmentObject = {};
+		// 			for (let jobId in restAllJobsObject) {
+		// 				if (restAllJobsObject.hasOwnProperty(jobId)) {
+		// 					let newArray = restAllJobsObject[jobId];
+
+		// 					// Find common values between attachmentArray and sendedArray
+		// 					let commonValues = newArray.filter(item => attachmentArray.includes(item));
+
+		// 					// If there are common values, add them to the result object
+		// 					if (commonValues.length > 0) {
+		// 						commonAttachmentObject[jobId] = commonValues;
+		// 					}
+		// 				}
+		// 			}
+		// 			// attachmentArray.forEach(data => {
+		// 			// 	if (allAttachments.includes(data)) {
+		// 			// 		commonAttachment.push(data);
+		// 			// 	}
+		// 			// })
+
+		// 			// if (commonAttachment.length > 0) {
+		// 			// 	res.status(200).json('Found common attachment in other Jobs : ' + commonAttachment);
+		// 			// 	return;
+		// 			// }
+
+		// 			// // To show job with attachments
+		// 			// if (Object.keys(commonAttachmentObject).length > 0) {
+		// 			// 	commonAttachmentObject = JSON.stringify(commonAttachmentObject);
+		// 			// 	res.status(207).json(commonAttachmentObject);
+		// 			// 	// res.status(501).json('Found common attachment in other Jobs : ' + commonAttachmentObject);
+		// 			// 	return;
+		// 			// }
+
+		// 			// Remove common attachments from attachmentArray 
+		// 			if (Object.keys(commonAttachmentObject).length > 0) {
+		// 				let commonAttachmentKeys = [];
+		// 				for (let jobId in commonAttachmentObject) {
+		// 					commonAttachmentKeys.push(...commonAttachmentObject[jobId]);
+		// 				}
+		// 				commonAttachmentKeys = [...new Set(commonAttachmentKeys)];
+		// 				attachmentArray = attachmentArray.filter(item => !commonAttachmentKeys.includes(item));
+		// 			}
+		// 		}
+
+		// 		Job.find({
+		// 			where: {
+		// 				jobCardNo: id			//passing jobcard as id 
+		// 			},
+		// 			include: {
+		// 				relation: 'JobStatus'		//hasMany Relation with JobStatus table
+		// 			}
+		// 		}, (jobError, jobData) => {		//returs jobTable data of this Id with linked JobStatus
+		// 			if (jobError) {		//If error in getting job
+		// 				console.error('Error finding job:', jobError);
+		// 				return res.status(500).send('Internal server error');
+		// 			}
+		// 			if (jobData) {		//If job is present
+		// 				// if (jobData['0'].PoAttach) {
+		// 				// 	attachmentArray.push(jobData['0'].PoAttach + 'PoNo')	//push ClientPo Attachment key in attachment array(key of Attachment Table)
+		// 				// }
+		// 				// if (jobData['0'].artworkCode) {
+		// 				// 	attachmentArray.push(jobData['0'].PoAttach + 'ArtworkNo')	//push artwork Attachment key in attachment array(key of Attachment Table) 
+		// 				// }
+		// 				// if (jobData['0'].JobStatus && jobData['0'].JobStatus().length > 0) {	//check jobStatus is present or not
+		// 				// 	if (jobData['0'].JobStatus()['0'].InvNo) {	//check inv no is present or not
+		// 				// 		attachmentArray.push(...jobData['0'].JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+		// 				// 	}
+		// 				// 	if (jobData['0'].JobStatus()['0'].DeliveryNo) {		//check del no is present or not
+		// 				// 		attachmentArray.push(...jobData['0'].JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+		// 				// 	}
+		// 				// }
+
+		// 				// To delete all attachments at once.
+		// 				attachments.destroyAll({
+		// 					Key: { inq: attachmentArray }		//pass attachment array as key of attachment table.
+		// 				}, (AttachmentError) => {
+		// 					if (AttachmentError) {
+		// 						console.error('Error finding Attachment:', AttachmentError);
+		// 						return res.status(500).json({ error: 'Internal server error' });
+		// 					}
+		// 				});
+
+		// 				// Removing job and job status
+		// 				let jobsRemoved = 0;
+		// 				jobData.forEach((job) => {
+		// 					job.remove((removeError) => {
+		// 						if (removeError) {
+		// 							console.error('Error deleting job:', removeError);
+		// 							return res.status(500).send('Error deleting job');
+		// 						}
+		// 						jobsRemoved++;
+		// 						if (jobsRemoved === jobData.length) {
+		// 							res.status(200).json('Job deleted successfully');
+		// 						}
+		// 					});
+		// 				});
+		// 			}
+		// 		})
+		// 	});
+		// });
+
+		// Modified API to delete multiple jobs with job status and their attachments
+		app.post('/deleteJobsWithJobStatus', (req, res) => {
+			const Job = app.models.Job;
+			const attachments = app.models.Attachments;
+			
+			let jobIds = Array.isArray(req.body) ? req.body : [req.body];
+			
+			var allAttachmentArray = [];  // All attachments from selected jobs
+			let restAllJobsObject = {};   // Attachments from other jobs
+
 			Job.find({
 				include: {
-					relation: 'JobStatus'		//hasMany Relation with JobStatus table
+					relation: 'JobStatus'
 				}
 			}, (err, response) => {
 				if (err) {
-					console.log('Error');
+					console.error('Error finding jobs:', err);
+					return res.status(500).send('Internal server error');
 				}
-				// Response as all job with jobstatus
+				
 				if (response) {
 					response.forEach(data => {
 						let attachments = [];
-						if (!(data.jobCardNo === id)) {
-							attachments.push(data.PoAttach + 'PoNo');
-							attachments.push(data.artworkCode + 'ArtworkNo');
+						
+						// Check if this job is NOT in our deletion list
+						if (!jobIds.includes(data.jobCardNo)) {
+							// Collect attachments from other jobs
+							if (data.PoAttach) {
+								attachments.push(data.PoAttach + 'PoNo');
+							}
+							if (data.artworkCode) {
+								attachments.push(data.artworkCode + 'ArtworkNo');
+							}
 							if (data.JobStatus && data.JobStatus().length > 0) {
-								if (data.JobStatus()['0'].InvNo) {	//check inv no is present or not
-									attachments.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+								if (data.JobStatus()['0'].InvNo) {
+									attachments.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));
 								}
-								if (data.JobStatus()['0'].DeliveryNo) {		//check del no is present or not
-									attachments.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+								if (data.JobStatus()['0'].DeliveryNo) {
+									attachments.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));
 								}
 							}
 							restAllJobsObject[data.jobCardNo] = attachments;
 						} else {
-							attachmentArray.push(data.PoAttach + 'PoNo');
-							attachmentArray.push(data.artworkCode + 'ArtworkNo');
+							// Collect attachments from jobs to be deleted
+							if (data.PoAttach) {
+								allAttachmentArray.push(data.PoAttach + 'PoNo');
+							}
+							if (data.artworkCode) {
+								allAttachmentArray.push(data.artworkCode + 'ArtworkNo');
+							}
 							if (data.JobStatus && data.JobStatus().length > 0) {
-								if (data.JobStatus()['0'].InvNo) {	//check inv no is present or not
-									attachmentArray.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
+								if (data.JobStatus()['0'].InvNo) {
+									allAttachmentArray.push(...data.JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));
 								}
-								if (data.JobStatus()['0'].DeliveryNo) {		//check del no is present or not
-									attachmentArray.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
+								if (data.JobStatus()['0'].DeliveryNo) {
+									allAttachmentArray.push(...data.JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));
 								}
 							}
 						}
+					});
 
-
-					})
-
-					// let commonAttachment = [];
+					// Find common attachments
 					let commonAttachmentObject = {};
 					for (let jobId in restAllJobsObject) {
 						if (restAllJobsObject.hasOwnProperty(jobId)) {
 							let newArray = restAllJobsObject[jobId];
-
-							// Find common values between attachmentArray and sendedArray
-							let commonValues = newArray.filter(item => attachmentArray.includes(item));
-
-							// If there are common values, add them to the result object
+							let commonValues = newArray.filter(item => allAttachmentArray.includes(item));
+							
 							if (commonValues.length > 0) {
 								commonAttachmentObject[jobId] = commonValues;
 							}
 						}
 					}
-					// attachmentArray.forEach(data => {
-					// 	if (allAttachments.includes(data)) {
-					// 		commonAttachment.push(data);
-					// 	}
-					// })
 
-					// if (commonAttachment.length > 0) {
-					// 	res.status(200).json('Found common attachment in other Jobs : ' + commonAttachment);
-					// 	return;
-					// }
-
-					// // To show job with attachments
-					// if (Object.keys(commonAttachmentObject).length > 0) {
-					// 	commonAttachmentObject = JSON.stringify(commonAttachmentObject);
-					// 	res.status(207).json(commonAttachmentObject);
-					// 	// res.status(501).json('Found common attachment in other Jobs : ' + commonAttachmentObject);
-					// 	return;
-					// }
-
-					// Remove common attachments from attachmentArray 
+					// Remove common attachments from deletion list
 					if (Object.keys(commonAttachmentObject).length > 0) {
 						let commonAttachmentKeys = [];
 						for (let jobId in commonAttachmentObject) {
 							commonAttachmentKeys.push(...commonAttachmentObject[jobId]);
 						}
 						commonAttachmentKeys = [...new Set(commonAttachmentKeys)];
-						attachmentArray = attachmentArray.filter(item => !commonAttachmentKeys.includes(item));
+						allAttachmentArray = allAttachmentArray.filter(item => !commonAttachmentKeys.includes(item));
 					}
 				}
 
+				// Find all jobs to delete
 				Job.find({
 					where: {
-						jobCardNo: id			//passing jobcard as id 
+						jobCardNo: { inq: jobIds }
 					},
 					include: {
-						relation: 'JobStatus'		//hasMany Relation with JobStatus table
+						relation: 'JobStatus'
 					}
-				}, (jobError, jobData) => {		//returs jobTable data of this Id with linked JobStatus
-					if (jobError) {		//If error in getting job
-						console.error('Error finding job:', jobError);
+				}, (jobError, jobData) => {
+					if (jobError) {
+						console.error('Error finding jobs:', jobError);
 						return res.status(500).send('Internal server error');
 					}
-					if (jobData) {		//If job is present
-						// if (jobData['0'].PoAttach) {
-						// 	attachmentArray.push(jobData['0'].PoAttach + 'PoNo')	//push ClientPo Attachment key in attachment array(key of Attachment Table)
-						// }
-						// if (jobData['0'].artworkCode) {
-						// 	attachmentArray.push(jobData['0'].PoAttach + 'ArtworkNo')	//push artwork Attachment key in attachment array(key of Attachment Table) 
-						// }
-						// if (jobData['0'].JobStatus && jobData['0'].JobStatus().length > 0) {	//check jobStatus is present or not
-						// 	if (jobData['0'].JobStatus()['0'].InvNo) {	//check inv no is present or not
-						// 		attachmentArray.push(...jobData['0'].JobStatus()['0'].InvNo.split(',').map(inv => inv + 'InvNo'));	//using spred operator if multiple entries then push all in attachment array
-						// 	}
-						// 	if (jobData['0'].JobStatus()['0'].DeliveryNo) {		//check del no is present or not
-						// 		attachmentArray.push(...jobData['0'].JobStatus()['0'].DeliveryNo.split(',').map(del => del + 'DelNo'));	//using spred operator if multiple entries then push all in attachment array
-						// 	}
-						// }
+					
+					if (!jobData || jobData.length === 0) {
+						return res.status(404).json({ error: 'No jobs found' });
+					}
 
-						// To delete all attachments at once.
-						attachments.destroyAll({
-							Key: { inq: attachmentArray }		//pass attachment array as key of attachment table.
-						}, (AttachmentError) => {
-							if (AttachmentError) {
-								console.error('Error finding Attachment:', AttachmentError);
-								return res.status(500).json({ error: 'Internal server error' });
+					// Delete attachments
+					attachments.destroyAll({
+						Key: { inq: allAttachmentArray }
+					}, (AttachmentError) => {
+						if (AttachmentError) {
+							console.error('Error deleting attachments:', AttachmentError);
+							return res.status(500).json({ error: 'Error deleting attachments' });
+						}
+					});
+
+					// Delete all jobs
+					let jobsRemoved = 0;
+					let totalJobs = jobData.length;
+					
+					jobData.forEach((job) => {
+						job.remove((removeError) => {
+							if (removeError) {
+								console.error('Error deleting job:', removeError);
+								return res.status(500).send('Error deleting job: ' + job.jobCardNo);
+							}
+							
+							jobsRemoved++;
+							
+							// Send response only after all jobs are deleted
+							if (jobsRemoved === totalJobs) {
+								res.status(200).json({
+									success: true,
+									message: `${jobsRemoved} job(s) deleted successfully`,
+									deleted: jobsRemoved
+								});
 							}
 						});
-
-						// Removing job and job status
-						let jobsRemoved = 0;
-						jobData.forEach((job) => {
-							job.remove((removeError) => {
-								if (removeError) {
-									console.error('Error deleting job:', removeError);
-									return res.status(500).send('Error deleting job');
-								}
-								jobsRemoved++;
-								if (jobsRemoved === jobData.length) {
-									res.status(200).json('Job deleted successfully');
-								}
-							});
-						});
-					}
-				})
-
+					});
+				});
 			});
-
-
-
-
 		});
 
 		app.post('/deleteJobsWithCompanyId', (req, res) => {
@@ -2263,16 +2429,34 @@ app.start = function () {
 				// var selectedYear = payload.selectedYear;
 				var maxDate = payload.maxDate;
 				var minDate = payload.minDate;
+				var status = payload.status;
 				// var selectedYear = selectedYear.toString();
+				// var oFilter = {
+				// 	and: [
+				// 		{ CompanyId: { neq: null } },
+				// 		{ date: { lte: maxDate } },
+				// 		{ date: { gte: minDate } },
+				// 	]};
+				// 	if (payload.State) {
+				// 	oFilter.and.push({ status: { nlike: "Dispatched" } 
+				// 	});
+				// }
+
 				var oFilter = {
 					and: [
-						{ CompanyId: { neq: null } },
-						{ date: { lte: maxDate } },
-						{ date: { gte: minDate } },
-					],
-					};
-					if (payload.State) {
-					oFilter.and.push({ status: { nlike: "Dispatched" } });
+						{ CompanyId: { neq: null } }
+					]
+				};
+
+				if (minDate && maxDate) {
+					oFilter.and.push({ date: { gte: minDate } });
+					oFilter.and.push({ date: { lte: maxDate } });
+				}
+				if (status !== null && status) {
+					oFilter.and.push({ status: { like: status } });
+				}
+				if (payload.State) {
+					oFilter.and.push({ status: { nlike: "Dispatched" }});
 				}
 
 				Job.find({
@@ -2557,16 +2741,21 @@ app.start = function () {
 				const startDate = CreatedOnStart;
 				const endDate = CreatedOnEnd;
 
+				var oFilter = {
+					and: [
+						{ CreatedOn: { gte: startDate } },
+						{ CreatedOn: { lte: endDate } }
+					]
+				};
+
+				if (cId !== null && cId) {
+					oFilter.and.push({ CompanyId: cId });
+				}
+
 				Job.find(
 					{
 						order: 'jobCardNo',
-						where: {
-							and: [
-								{ CreatedOn: { gte: startDate } },
-								{ CreatedOn: { lte: endDate } },
-								{ CompanyId: cId }
-							]
-						},
+						where: oFilter,
 						fields: { "JobStatus": true, "CompanyId": true, "jobCardNo": true, "qtyPcs": true, "jobCode": true, "poNo": true, "nameOFTheProduct": true, "paperPoNo": true },
 						include: [{
 							relation: 'Company',
@@ -2711,6 +2900,7 @@ app.start = function () {
 			// var selectedYear = payload.selectedYear;
 			var maxDate = payload.maxDate;
 			var minDate = payload.minDate;
+			var status = payload.status;
 			// var selectedYear = selectedYear.toString();
 			
 
@@ -2725,11 +2915,17 @@ app.start = function () {
 					if (CompanyId) {
 						var oFilter = {
 							and: [
-								{ CompanyId: { eq: CompanyId } },
-								{ date: { lte: maxDate } },
-								{ date: { gte: minDate } }
+								{ CompanyId: { eq: CompanyId } }
 							]
 						};
+
+						if (minDate && maxDate) {
+							oFilter.and.push({ date: { gte: minDate } });
+							oFilter.and.push({ date: { lte: maxDate } });
+						}
+						if (status !== null && status) {
+							oFilter.and.push({ status: { like: status } });
+						}
 						if (payload.State) {
 							oFilter.and.push({ status: { nlike: "Dispatched" }});
 						}
@@ -2853,6 +3049,7 @@ app.start = function () {
 			// var selectedYear = payload.selectedYear;
 			var maxDate = payload.maxDate;
 			var minDate = payload.minDate;
+			var status = payload.status;
 			// var selectedYear = selectedYear.toString();
 			
 
@@ -2868,10 +3065,16 @@ app.start = function () {
 						var oFilter = {
 							and: [
 								{ CompanyId : { inq: ids } },
-								{ date: { lte: maxDate } },
-								{ date: { gte: minDate } }
 							]
 						};
+
+						if (minDate && maxDate) {
+							oFilter.and.push({ date: { gte: minDate } });
+							oFilter.and.push({ date: { lte: maxDate } });
+						}
+						if (status !== null && status) {
+							oFilter.and.push({ status: { like: status } });
+						}
 						if (payload.State) {
 							oFilter.and.push({ status: { nlike: "Dispatched" }});
 						}
@@ -3328,15 +3531,16 @@ app.start = function () {
 
 		app.post('/onTransferPoSheets', (req, res) => {
 			const payload = req.body;
-			const PoTable = app.models.PoTable;
 			const UsedSheets = app.models.UsedSheets;
 
 			const FromPoNo = payload.FromPoNo;
 			const ToPoNo = payload.ToPoNo;
-			const TransferSheets = Number(payload.TransferSheets);
+			const TransferSheets = payload.TransferSheets;
+			const FromQuantity = Number(TransferSheets.transferFromAmount);
+			const ToQuantity = Number(TransferSheets.transferToAmount);
 
 			// Validation
-			if (!FromPoNo || !ToPoNo || !TransferSheets || TransferSheets <= 0) {
+			if (!FromPoNo || !ToPoNo) {
 				return res.status(400).json({
 					error: {
 						statusCode: 400,
@@ -3345,109 +3549,35 @@ app.start = function () {
 				});
 			}
 
-			PoTable.find({
-				where: { PoNo: FromPoNo },
-				include: [{
-					relation: 'UsedSheets',
-					scope: {
-						order: 'id',
-						fields: { 
-							"QuantityOfSheets": true, 
-							"PoNo": true,
-							"JobCardNo": true,
-						}
-					}
-				}]
-			}, (err, poTable) => {
-				if (err) {
-					return res.status(500).send('Database error');
+			const transferRecords = [
+				{
+					PoNo: FromPoNo,
+					QuantityOfSheets: -Math.abs(FromQuantity),
+					Type: "Transfer",
+					JobCardNo: "Transfer to PO " + ToPoNo
+				},
+				{
+					PoNo: ToPoNo,
+					QuantityOfSheets: ToQuantity,
+					Type: "Transfer",
+					JobCardNo: "Transfer from PO " + FromPoNo
 				}
-				if (poTable.length === 0) {
-					return res.status(404).send('FROM PoTable not found');
-				}
+			];
 
-				const poRecord = poTable[0];
-				const currentSheets = Number(poRecord.OpeningStock) || 0;
-
-				poRecord.UsedSheets((err, usedSheets) => {
-					if (err) {
-						return res.status(500).send('Error fetching used sheets');
-					}
-
-					const totalUsedSheets = usedSheets.reduce(function(acc, item) {
-					var q = Number(item.QuantityOfSheets) || 0;
-					return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
-				}, 0)
-
-					const closingStock = currentSheets + totalUsedSheets;
-
-					if (closingStock < TransferSheets) {
-						return res.status(500).send('Not enough sheets to transfer');
-					}
-
-					// Update FROM PO
-					// const updatedFromSheets = currentSheets - TransferSheets;
-					// poRecord.updateAttributes({ OpeningStock: updatedFromSheets }, (updateError, updatedPoTable) => {
-					// 	if (updateError) {
-					// 		return res.status(500).send('Error updating FROM PO');
-					// 	}
-
-						const TransferFrom = {
-							PoNo: FromPoNo,
-							QuantityOfSheets: -Math.abs(TransferSheets),
-							Type: "Transfer",
-							JobCardNo: "Transfer to PO " + ToPoNo
+			UsedSheets.create(transferRecords, (error, createdRecords) => {
+				if (error) {
+					return res.status(500).json({
+						error: {
+							statusCode: 500,
+							message: 'Error transferring sheets'
 						}
-						UsedSheets.create(TransferFrom, (usedSheetsError, createdUsedSheets) => {
-							if (usedSheetsError) {
-								return res.status(500).send('Error logging used sheets for FROM PO');
-							}
-							
-							// Find TO PO
-							PoTable.findOne({ where: { PoNo: ToPoNo } }, (err, toPoRecord) => {
-								if (err) {
-									// Rollback FROM PO
-									poRecord.updateAttributes({ OpeningStock: currentSheets });
-									return res.status(500).send('Error finding TO PO');
-								}
-	
-								if (!toPoRecord) {
-									// Rollback FROM PO
-									poRecord.updateAttributes({ OpeningStock: currentSheets });
-									return res.status(404).send('TO PoTable not found')
-								}
-	
-								// Update TO PO
-								// const toCurrentSheets = Number(toPoRecord.OpeningStock) || 0;
-								// const updatedToSheets = toCurrentSheets + TransferSheets;
-	
-								// toPoRecord.updateAttributes({ OpeningStock: updatedToSheets }, (updateError, updatedToPoTable) => {
-								// 	if (updateError) {
-								// 		// Rollback FROM PO
-								// 		poRecord.updateAttributes({ OpeningStock: currentSheets });
-								// 		return res.status(500).send('Error updating TO PO');
-								// 	}
-
-									const TransferTo = {
-										PoNo: ToPoNo,
-										QuantityOfSheets: TransferSheets,
-										Type: "Transfer",
-										JobCardNo: "Transfer from PO " + FromPoNo
-									}
-									UsedSheets.create(TransferTo, (toUsedSheetsError, toCreatedUsedSheets) => {
-										if (toUsedSheetsError) {
-											// Rollback both FROM and TO PO
-											return res.status(500).send('Error logging used sheets for TO PO');
-										}
-
-										return res.status(200).send(`Successfully transferred ${TransferSheets} sheets from ${FromPoNo} to ${ToPoNo}`);
-									});
-	
-								// });
-							});
-						})
-
-					// });
+					});
+				}
+				
+				return res.status(200).json({
+					success: true,
+					message: `Successfully transferred ${TransferSheets} sheets from ${FromPoNo} to ${ToPoNo}`,
+					records: createdRecords
 				});
 			});
 		});
@@ -3456,6 +3586,7 @@ app.start = function () {
 			var payload = req.body;
 			const PoTable = app.models.PoTable;
 			const UsedSheets = app.models.UsedSheets;
+			const QuantityOfSheets = Number(payload.QuantityOfSheets);
 			
 			for(let i = 0; i < 2; i++) {
 				var poData = {
@@ -3468,7 +3599,7 @@ app.start = function () {
 					GSM: payload.SelectedPo.GSM || 0,
 					Height: Number(payload.Height[i]) || 0,
 					Width: Number(payload.Width[i]) || 0,
-					OpeningStock: payload.QuantityOfSheets || 0,
+					OpeningStock: QuantityOfSheets || 0,
 					Status: "Received",
 					CreatedBy: payload.userId
 				};
@@ -3483,7 +3614,7 @@ app.start = function () {
 				var usedSheetsData = {
 					JobCardNo: "Split from PO " + payload.SelectedPo.PoNo,
 					PoNo: payload.NewPoNo[i],
-					QuantityOfSheets: payload.QuantityOfSheets,
+					QuantityOfSheets: QuantityOfSheets,
 					Type: "Split"
 				};
 				
@@ -3511,7 +3642,7 @@ app.start = function () {
 			var selectedUsedSheets = {
 				PoNo: payload.SelectedPo.PoNo,
 				JobCardNo: "Split to PO " + payload.NewPoNo[0] + " and " + payload.NewPoNo[1],
-				QuantityOfSheets: -Math.abs(payload.QuantityOfSheets),
+				QuantityOfSheets: -Math.abs(QuantityOfSheets),
 				Type: "Split"
 			}
 			UsedSheets.create(selectedUsedSheets, (usedSheetsError, createdUsedSheets) => {

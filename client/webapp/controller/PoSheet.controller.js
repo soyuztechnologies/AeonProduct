@@ -68,9 +68,21 @@ sap.ui.define([
 			var that = this;
 			this.middleWare.callMiddleWare("getPoSheet", "GET")
 				.then(function (data, status, xhr) {
-					that.getModel("appView").setProperty("/PoSheet", data);
-					that.getModel("appView").setProperty("/PoSheetCount", data.length);
-					that.calculateTotals(data)
+					var updatedData = data.map(function(item){
+						var OpeningStock = item.OpeningStock || 0;
+						var UsedSheets = item.UsedSheets || [];
+						if(OpeningStock && item.UsedSheets){
+							var negativeSum = UsedSheets.reduce(function(acc, item) {
+								var q = Number(item.QuantityOfSheets) || 0;
+								return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+							}, 0);
+							item.ClosingStock = (Number(OpeningStock) + negativeSum);
+						}
+						return item;
+					})
+					that.getModel("appView").setProperty("/PoSheet", updatedData);
+					that.getModel("appView").setProperty("/PoSheetCount", updatedData.length);
+					that.calculateTotals(updatedData)
 					that.getModel("appView").updateBindings();
 				}
 				)
@@ -107,7 +119,8 @@ sap.ui.define([
 
 				let OpeningWeight = +((currentItem.Height/1000) * (currentItem.Width/1000) * (currentItem.GSM/1000) * currentItem.OpeningStock).toFixed(2); 
 				let OpeningStock = currentItem.OpeningStock;
-				let ClosingStock = OpeningStock + UsedSheets?.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0)
+				// let ClosingStock = OpeningStock + UsedSheets?.map(item => item.QuantityOfSheets).reduce((prev, curr) => prev + curr, 0)
+				let ClosingStock = currentItem.ClosingStock;
 				let ClosingWeight = +((currentItem.Height/1000) * (currentItem.Width/1000) * (currentItem.GSM/1000) * ClosingStock).toFixed(2);
 				let FinalPrice = +(currentItem.Rate * ClosingWeight).toFixed(2)
 
@@ -296,10 +309,7 @@ sap.ui.define([
 				return;
 			}
 			var PoNo = this.getModel("appView").getProperty("/selectedPoNo");
-			var closingStock = (selectedRowData.OpeningStock + (selectedRowData.UsedSheets ? selectedRowData.UsedSheets.reduce(function(acc, item) {
-					var q = Number(item.QuantityOfSheets) || 0;
-					return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
-				}, 0) : 0));
+			var closingStock = selectedRowData.ClosingStock;
 			var currentUsedSheetsData = usedSheetsFields.reduce((acc, curr) => acc + Math.abs(curr.QuantityOfSheets), 0);
 			if(closingStock < currentUsedSheetsData){
 				MessageBox.error("Not have enough Sheets for use");
@@ -551,22 +561,9 @@ sap.ui.define([
 			const sMill = oFilterBar.determineControlByName("Mill").getValue();
 			const sQuality = oFilterBar.determineControlByName("Quality Of Material").getValue();
 			const sBoard = oFilterBar.determineControlByName("Type Of Board").getValue();
+			const oState = this.byId("idSwitchSheets").getState(); // This will filter InStock Sheets
 
 			const aFilters = [];
-
-			// if (sSearchValue) {
-			// 	aFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("PoNo", FilterOperator.Contains, sSearchValue),
-			// 			new Filter("SupplierName", FilterOperator.Contains, sSearchValue),
-			// 			new Filter("Mill", FilterOperator.Contains, sSearchValue),
-			// 			new Filter("QualityOfMaterial", FilterOperator.Contains, sSearchValue),
-			// 			new Filter("TypeOfBoard", FilterOperator.Contains, sSearchValue),
-			// 			new Filter("OpeningStock", FilterOperator.EQ, Number(sSearchValue))
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
 
 			if (sSearchValue) {
 				aFilters.push(new Filter("PoNo", FilterOperator.EQ, sSearchValue))
@@ -600,11 +597,31 @@ sap.ui.define([
 				aFilters.push(new Filter("Width", FilterOperator.EQ, Number(sWidthValue)));
 			}
 
-			const oCombinedFilter = new Filter(aFilters, true); 
-			oBinding.filter(oCombinedFilter);
+			if (oState) {
+				aFilters.push(new Filter("ClosingStock", FilterOperator.GT, 0));
+			}
 
-			const aFilteredContexts = oBinding.getContexts();
-			oAppViewModel.setProperty("/PoSheetCount", aFilteredContexts.length);
+			// const oCombinedFilter = new Filter(aFilters, true); 
+			// oBinding.filter(oCombinedFilter);
+
+			// const aFilteredContexts = oBinding.getContexts();
+			// oAppViewModel.setProperty("/PoSheetCount", aFilteredContexts.length);
+
+			// Apply filters
+			if (aFilters.length > 0) {
+				const oCombinedFilter = new Filter(aFilters, true);
+				oBinding.filter(oCombinedFilter, "Application");
+			} else {
+				oBinding.filter([], "Application");
+			}
+
+			// Immediate count update for client-side filtering
+			var filteredItems = oBinding.getLength();
+			var totalItems = oBinding.oList.length;	
+			var PoSheetsCount = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
+			oAppViewModel.setProperty("/PoSheetCount", PoSheetsCount);
+
+
 		},
 
 		
@@ -612,7 +629,9 @@ sap.ui.define([
 			const oFilterBar = oEvent.getSource();
 			const oTable = this.getView().byId("tablePoSheet");
 			const oBinding = oTable.getBinding("items");
+			const oAppViewModel = this.getView().getModel("appView");
 
+			// Clear all filter controls
 			const aFilterItems = oFilterBar.getAllFilterItems();
 			aFilterItems.forEach(item => {
 				const oControl = item.getControl();
@@ -620,12 +639,17 @@ sap.ui.define([
 					oControl.setSelectedKey("");  
 				} else if (oControl instanceof sap.m.Input || oControl instanceof sap.m.SearchField) {
 					oControl.setValue("");       
+				} else if (oControl instanceof sap.m.Switch) {
+					oControl.setState(false);
 				}
 			});
 
+			// Clear table filter
 			oBinding.filter([]);
 
-			this.getView().getModel("appView").setProperty("/PoSheetCount", oBinding.getContexts().length);
+			// Update count
+			const iLength = oBinding.getLength();
+			oAppViewModel.setProperty("/PoSheetCount", iLength);
 		},
 
 		beforeGeneratePDF: function (oEvent) {
@@ -704,10 +728,7 @@ sap.ui.define([
 			const HeightInInches = +((oPoSheet.Height / 25.4).toFixed(2));
 			const WidthInInches = +((oPoSheet.Width / 25.4).toFixed(2));
 			const OpeningWeight = +(((oPoSheet.Height / 1000) * (oPoSheet.Width / 1000) * (oPoSheet.GSM / 1000) * oPoSheet.OpeningStock).toFixed(2));
-			const ClosingStock = (oPoSheet.OpeningStock + (oPoSheet.UsedSheets ? oPoSheet.UsedSheets.reduce(function(acc, item) {
-					var q = Number(item.QuantityOfSheets) || 0;
-					return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
-					}, 0) : 0));
+			const ClosingStock = oPoSheet.ClosingStock;
 			const ClosingWeight = +(((oPoSheet.Height / 1000) * (oPoSheet.Width / 1000) * (oPoSheet.GSM / 1000) * ClosingStock).toFixed(2));
 			const FinalPrice = +((oPoSheet.Rate * ClosingWeight).toFixed(2));
 
@@ -916,12 +937,19 @@ sap.ui.define([
 
 		onSendEmail: async function () {
 			var oView = this.getView();
-			this.getView().getModel("appView").setProperty("/Email", {})
+			const PoNo = this.getView().getModel("appView").getProperty("/PDFPoNo");
+			const GENERATED_PDF = this.getView().getModel("appView").getProperty("/GeneratedPDF");
+			this.getView().getModel("appView").setProperty("/Email", {
+				PDF_NAME: `PO_${PoNo}.pdf`,
+				GENERATED_PDF: GENERATED_PDF
+			 })
+			this.getView().getModel("appView").setProperty("/EmailTitle", 'Send Po via Email')
 
 			if (!this.oSendEmailDialog) {
 				this.oSendEmailDialog = Fragment.load({
+					id: oView.getId() + "-poEmailFragment",
 					name: "ent.ui.ecommerce.fragments.Email", 
-					controller: this
+					controller: this,
 				}).then(function (oDialog) {
 					oView.addDependent(oDialog);
 					oDialog.open();
@@ -936,8 +964,10 @@ sap.ui.define([
 		},
 
 		handleCloseMail: function () {
+			var that = this;
 			this.oSendEmailDialog.then(function (oDialog) {
 				oDialog.close();
+				that._clearUploadAttachment()
 			});
 		},
 
@@ -945,7 +975,6 @@ sap.ui.define([
 			var that = this;			
 			var payload = this.getView().getModel("appView").getProperty("/Email");
 			payload.userId = this.getModel('appView').getProperty('/UserId')
-			payload.GENERATED_PDF = this.getView().getModel("appView").getProperty("/GeneratedPDF");
 			var PDF_PONo = this.getView().getModel("appView").getProperty("/PDFPoNo");
 			payload.PDF_PONo = PDF_PONo
 
@@ -984,6 +1013,7 @@ sap.ui.define([
 
 			payload.EMAIL_CC = ccEmails;
     		payload.EMAIL_BCC = bccEmails;
+			payload.TYPE = "PoReceipt"
 			
 			this.middleWare.callMiddleWare("onSendPoEmail", "POST", payload)
 				.then( (data, status, xhr)=> {
@@ -1006,6 +1036,121 @@ sap.ui.define([
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
+		},
+
+		onAttachmentUpload: function (oEvent) {
+			const file = oEvent.getParameter("files")[0];
+			if (!file) return;
+			
+			if (file.type !== "application/pdf") {
+				sap.m.MessageToast.show("Only PDF files allowed!");
+				return;
+			}
+			
+			let reader = new FileReader();
+			reader.onload = (e) => {
+				let base64 = e.target.result;
+				const PoNo = this.getView().getModel("appView").getProperty("/PDFPoNo");
+
+				let oModel = this.getModel("appView");
+				oModel.setProperty("/Email/PDF_NAME", 'PO_' + PoNo + '.pdf');
+				oModel.setProperty("/Email/GENERATED_PDF", base64);
+			};
+
+			reader.readAsDataURL(file);
+		},
+
+		onRemoveAttachment: function () {
+			let oModel = this.getModel("appView");
+			
+			oModel.setProperty("/Email/PDF_NAME", "");
+			oModel.setProperty("/Email/GENERATED_PDF", "");
+
+			this._clearUploadAttachment()
+		},
+
+		_clearUploadAttachment: function () {
+			// var oFileUploader = this.byId("AttachmentUploader");
+
+			var oView = this.getView();
+			var oFileUploader = Fragment.byId(oView.getId() + "-poEmailFragment", "AttachmentUploader");
+    
+			if (!oFileUploader) {
+				var aControls = this.getView().getControlsByFieldGroupId() || [];
+				oFileUploader = this.getView().findAggregatedObjects(true).find(function(ctrl) {
+					return ctrl.getId && ctrl.getId().includes("AttachmentUploader");
+				});
+			}
+			
+			if (oFileUploader) {
+				console.log("Found FileUploader:", oFileUploader.getId());
+				oFileUploader.clear();
+				oFileUploader.setValue("");
+			} else {
+				console.error("FileUploader still not found!");
+			}
+		},
+
+		onPreviewAttachment: function () {
+			var pdfName = this.getModel("appView").getProperty("/Email/PDF_NAME");
+			var pdfContent = this.getModel("appView").getProperty("/Email/GENERATED_PDF"); 
+
+			if (!pdfContent) {
+				MessageToast.show("No attachment found for preview");
+				return;
+			}
+
+			var oModel = this.getView().getModel("appView");
+			
+			oModel.setProperty("/uploadDocumnetTitle", "PoReciept Attachment");
+			oModel.setProperty("/PDFPoNo", pdfName);
+
+			this.getModel("appView").setProperty("/attachmentFiles", pdfContent);
+			this.oDialogOpen().then(function (oDialog) {
+				oDialog.open();
+			});
+			
+		},
+
+		oDialogOpen: function () {
+			var oView = this.getView();
+			var that = this;
+			if (!this.oUploadDialog) {
+				this.oUploadDialog = Fragment.load({
+					id: oView.getId(),
+					name: "ent.ui.ecommerce.fragments.printingDetailFragment.uploadDoc",
+					controller: this
+				}).then(function (oDialog) {
+					// Add dialog to view hierarchy
+					oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+
+			}
+			return this.oUploadDialog;
+		},
+
+		// Close the pdf format.
+		onReject: function () {
+			this.oDialogOpen().then(function (oDialog) {
+				oDialog.close();
+			})
+		},
+
+		downloadAttachments: function () {
+			const base64PDF = this.getView().getModel("appView").getProperty("/attachmentFiles");
+			const PoNo = this.getView().getModel("appView").getProperty("/PDFPoNo");
+
+			if (!base64PDF) {
+				MessageToast.show("No PDF available to download.");
+				return;
+			}
+
+			// Convert Base64 to Blob for download
+			const link = document.createElement("a");
+			link.href = base64PDF;
+			link.download = `${PoNo}`;
+			link.click();
 		},
 
 		loadDropdownOptions: function () {
@@ -1180,9 +1325,7 @@ sap.ui.define([
 			
 			// Find matching jobs based on height and width
 			var matchingPos = allPoData.filter(function(po) {
-				return po.PoNo !== selectedPo.PoNo && 
-					po.Height === selectedPo.Height && 
-					po.Width === selectedPo.Width;
+				return po.PoNo !== selectedPo.PoNo 
 			});
 
 			if (matchingPos.length === 0) {
@@ -1192,7 +1335,12 @@ sap.ui.define([
 			}
 
 			this.getModel("appView").setProperty("/TransferablePoList", matchingPos);
-			this.getModel("appView").setProperty("/selectedPoNo", selectedPo.PoNo);
+			this.getModel("appView").setProperty("/selectedPoNo", selectedPo);
+			this.getModel("appView").setProperty("/TransferSheetsAmount", {
+				maxSheets: selectedPo.ClosingStock || 0,
+				transferFromAmount: selectedPo.ClosingStock || 0,
+				transferToAmount: 0
+			})
 			
 			if (!this._oMatchingJobsDialog) {
 				Fragment.load({
@@ -1212,74 +1360,38 @@ sap.ui.define([
 		onTransferPo: function () {
 			var oView = this.getView();
 			var that = this;
-			var oItem = oView.byId("TransferablePo").getSelectedItem();
-			if (!oItem) {
-				MessageToast.show("Please select a Purchase Order first.");
+		
+			var TransferPoTo = this.getModel("appView").getProperty("/selectedTransferPo");
+			if(!TransferPoTo){
+				MessageToast.show("Please select a Purchase Order to transfer sheets to.");
 				return;
 			}
+			var TransferPoFrom = this.getModel("appView").getProperty("/selectedPoNo");
+			var transferSheetsAmount = this.getModel("appView").getProperty("/TransferSheetsAmount");
 
-			var TransferPoTo = oItem.getBindingContext("appView").getObject();
-			var TransferPoFrom = this.selectedPo;
+			var TransferFromAmount = Number(transferSheetsAmount.transferFromAmount);
+			var TransferToAmount = Number(transferSheetsAmount.transferToAmount);
 
-			if(!this.TransferPoDialog) {
-				this.TransferPoDialog = new sap.m.Dialog({
-					type: sap.m.DialogType.Message,
-					title: "",
-					content: new sap.m.Input({
-						placeholder: "Enter Transfer Sheets",
-						type: sap.m.InputType.Number,
-						id: this.createId("inpTransferSheets")
-					}),
-					beginButton: new sap.m.Button({
-						type: sap.m.ButtonType.Emphasized,
-						text: "Transfer",
-						press: function() {
-							var sTransferSheets = that.byId('inpTransferSheets').getValue();
-							
-							if(!sTransferSheets) {
-								MessageToast.show("Please enter Transfer Sheets");
-								return;
-							}
-							var payload = {
-								FromPoNo: TransferPoFrom.PoNo,
-								ToPoNo: TransferPoTo.PoNo,
-								TransferSheets: sTransferSheets
-							};
-							that.middleWare.callMiddleWare("onTransferPoSheets", "POST", payload)
-								.then(function (data, status, xhr) {
-									MessageToast.show("Sheets Transferred Successfully");
-									that.onGetAllPo();
-									that.onClosePoTransfer();
-									that.TransferPoDialog.close();
-								})
-								.catch(function (jqXhr, textStatus, errorMessage) {
-									that.middleWare.errorHandler(jqXhr, that);
-								});
-							that.TransferPoDialog.close();
-							oView.byId("TransferablePo").removeSelections();
-						}
-					}),
-					endButton: new sap.m.Button({
-						type: sap.m.ButtonType.Reject, 
-						text: "Cancel",
-						press: function() {
-							that.TransferPoDialog.close();
-							oView.byId("TransferablePo").removeSelections();
-						}
-					}),
-					afterClose: function() {
-						that.byId('inpTransferSheets').setValue("");
-						oView.byId("TransferablePo").removeSelections();
-					},
-					styleClass: "appDialog"
-				});
+			if (TransferToAmount <= 0 || TransferToAmount === "" || TransferFromAmount <= 0 || TransferFromAmount === "" ) {
+				MessageToast.show("Please enter a valid number of sheets to transfer.");
+				return;
 			}
 			
-			this.TransferPoDialog.setTitle(`Transfer Sheets to ${TransferPoTo.PoNo}`);
-						
-			this.byId('inpTransferSheets').setValue("");
-			
-			this.TransferPoDialog.open();
+			var payload = {
+				FromPoNo: TransferPoFrom.PoNo,
+				ToPoNo: TransferPoTo.PoNo,
+				TransferSheets: transferSheetsAmount
+			};
+			that.middleWare.callMiddleWare("onTransferPoSheets", "POST", payload)
+				.then(function (data, status, xhr) {
+					MessageToast.show("Sheets Transferred Successfully");
+					that.onGetAllPo();
+					that.onClosePoTransfer();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+		
 		},
 		 
 		onClosePoTransfer: function () {
@@ -1287,7 +1399,11 @@ sap.ui.define([
 			if (this._oMatchingJobsDialog) {
 				this._oMatchingJobsDialog.close();
 				oView.byId("tablePoSheet").removeSelections();
+				oView.byId("transferPoList").removeSelections();
+				oView.byId("searchTransferPo").setValue("");
+				oView.byId("transferPoList").getBinding("items").filter([]);
 				this.getModel("appView").setProperty("/TransferablePoList", []);
+				this.getModel("appView").setProperty("/selectedTransferPo", null);
 			}
 		},
 
@@ -1303,16 +1419,7 @@ sap.ui.define([
 
 			var selectedPo = oItem.getBindingContext("appView").getObject();
 
-			var OpeningStock = selectedPo.OpeningStock || 0;
-			var UsedSheets = selectedPo.UsedSheets || [];
-			var ClosingStock =
-				OpeningStock +
-				(UsedSheets.length
-					? UsedSheets.reduce(function(acc, item) {
-						var q = Number(item.QuantityOfSheets) || 0;
-						return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
-					}, 0)
-					: 0);
+			var ClosingStock = selectedPo.ClosingStock || 0;
 
 			if (ClosingStock <= 0) {
 				MessageToast.show("No Sheets Available to Split");
@@ -1360,8 +1467,8 @@ sap.ui.define([
 				SelectedPo: selectedPo,
 				NewPoNo: [newPoNo1, newPoNo2],    
 				QuantityOfSheets: ClosingStock,
-				Height: [selectedPo.Height, 0],   
-				Width: [selectedPo.Width, 0], 
+				Height: [selectedPo.Height, selectedPo.Height],   
+				Width: [selectedPo.Width, selectedPo.Width], 
 				originalHeight: selectedPo.Height,
 				originalWidth: selectedPo.Width,
 				MaxSplitQuantity: ClosingStock,
@@ -1402,65 +1509,73 @@ sap.ui.define([
 
 		onLiveChangeHeight1: function (oEvent) {
 			var inputValue = oEvent.getParameter("value");
+			var numberValue = Number(inputValue);
 
 			var originalHeight = this.getModel("appView").getProperty("/SplitSheet/originalHeight");
-			if(inputValue > originalHeight) {
+			if(numberValue > originalHeight) {
 				MessageToast.show("Height exceeds original height");
 				oEvent.getSource().setValue(originalHeight); 
 				this.getModel("appView").setProperty("/SplitSheet/Height/0", originalHeight);
-				this.getModel("appView").setProperty("/SplitSheet/Height/1", 0);
+				this.getModel("appView").setProperty("/SplitSheet/Height/1", originalHeight);
 				return;
 			}else {
-				var remainingHeight = originalHeight - inputValue;
+				var remainingHeight = originalHeight - numberValue;
+				this.getModel("appView").setProperty("/SplitSheet/Height/0", numberValue);
 				this.getModel("appView").setProperty("/SplitSheet/Height/1", remainingHeight);
 			}
 		},
 
 		onLiveChangeHeight2: function (oEvent) {
 			var inputValue = oEvent.getParameter("value");
+			var numberValue = Number(inputValue);
 
 			var originalHeight = this.getModel("appView").getProperty("/SplitSheet/originalHeight");
-			if(inputValue > originalHeight) {
+			if(numberValue > originalHeight) {
 				MessageToast.show("Height exceeds original height");
 				oEvent.getSource().setValue(originalHeight); 
 				this.getModel("appView").setProperty("/SplitSheet/Height/0", originalHeight);
-				this.getModel("appView").setProperty("/SplitSheet/Height/1", 0);
+				this.getModel("appView").setProperty("/SplitSheet/Height/1", originalHeight);
 				return;
 			}else {
-				var remainingHeight = originalHeight - inputValue;
-				this.getModel("appView").setProperty("/SplitSheet/Height/1", remainingHeight);
+				var remainingHeight = originalHeight - numberValue;
+				this.getModel("appView").setProperty("/SplitSheet/Height/1", numberValue);
+				this.getModel("appView").setProperty("/SplitSheet/Height/0", remainingHeight);
 			}
 		},
 
 		onLiveChangeWidth1: function (oEvent) {
 			var inputValue = oEvent.getParameter("value");
+			var numberValue = Number(inputValue)
 
 			var originalWidth = this.getModel("appView").getProperty("/SplitSheet/originalWidth");
-			if(inputValue > originalWidth) {
+			if(numberValue > originalWidth) {
 				MessageToast.show("Width exceeds original width");
 				oEvent.getSource().setValue(originalWidth); 
 				this.getModel("appView").setProperty("/SplitSheet/Width/0", originalWidth);
-				this.getModel("appView").setProperty("/SplitSheet/Width/1", 0);
+				this.getModel("appView").setProperty("/SplitSheet/Width/1", originalWidth);
 				return;
 			}else {
-				var remainingWidth = originalWidth - inputValue;
+				var remainingWidth = originalWidth - numberValue;
+				this.getModel("appView").setProperty("/SplitSheet/Width/0", numberValue);
 				this.getModel("appView").setProperty("/SplitSheet/Width/1", remainingWidth);
 			}
 		},
 
 		onLiveChangeWidth2: function (oEvent) {
 			var inputValue = oEvent.getParameter("value");
+			var numberValue = Number(inputValue)
 
 			var originalWidth = this.getModel("appView").getProperty("/SplitSheet/originalWidth");
-			if(inputValue > originalWidth) {
+			if(numberValue > originalWidth) {
 				MessageToast.show("Width exceeds original width");
 				oEvent.getSource().setValue(originalWidth); 
 				this.getModel("appView").setProperty("/SplitSheet/Width/1", originalWidth);
-				this.getModel("appView").setProperty("/SplitSheet/Width/0", 0);
+				this.getModel("appView").setProperty("/SplitSheet/Width/0", originalWidth);
 				return;
 			}else {
-				var remainingWidth = originalWidth - inputValue;
+				var remainingWidth = originalWidth - numberValue;
 				this.getModel("appView").setProperty("/SplitSheet/Width/0", remainingWidth);
+				this.getModel("appView").setProperty("/SplitSheet/Width/1", numberValue);
 			}
 		},
 
@@ -1468,11 +1583,17 @@ sap.ui.define([
 			var that = this;
 			var splitData = this.getModel("appView").getProperty("/SplitSheet");
 
-			if (!splitData.QuantityOfSheets || splitData.QuantityOfSheets <= 0) {
+			var QuantityOfSheets = Number(splitData.QuantityOfSheets);
+			var Height1 = Number(splitData.Height[0]);
+			var Height2 = Number(splitData.Height[1]);
+			var Width1 = Number(splitData.Width[0]);
+			var Width2 = Number(splitData.Width[1]);
+
+			if (!QuantityOfSheets || QuantityOfSheets <= 0) {
 				MessageToast.show("Please enter valid Quantity of Sheets to split");
 				return;
 			}
-			if(!splitData.Height[0] || splitData.Height[0] <=0 || !splitData.Height[1] || splitData.Height[1] <=0 || !splitData.Width[0] || splitData.Width[0] <=0 || !splitData.Width[1] || splitData.Width[1] <=0) {
+			if(!Height1 || Height1 <=0 || !Height2 || Height2 <=0 || !Width1 || Width1 <=0 || !Width2 || Width2 <=0 || (Height1 === Height2 && Width1 === Width2) ) {
 				MessageToast.show("Please enter valid dimensions for both sheets");
 				return;
 			}
@@ -1496,6 +1617,48 @@ sap.ui.define([
 				this.getModel("appView").setProperty("/SplitSheet", {} )
 			}
 		},
+
+		liveTransferPoSearch: function (oEvent) {
+			var sValue = oEvent.getParameter("query");
+			if(!sValue){
+				var sValue = oEvent.getParameter("newValue");
+			}
+			var oFilter1 = new Filter("PoNo", FilterOperator.Contains, sValue);
+
+
+			var oCombinedFilter = new Filter({
+				filters: [oFilter1],
+				and: false
+			});
+			var oTable = this.getView().byId("transferPoList");
+			var oBinding = oTable.getBinding("items");
+			oBinding.filter(oCombinedFilter);
+		},
+
+		onTransferPoListPress: function (oEvent) {
+			var oItem = oEvent.getParameter("listItem");
+			var oCtx = oItem.getBindingContext("appView");
+			var oData = oCtx.getObject();
+
+			this.getModel("appView").setProperty("/selectedTransferPo", oData);
+		},
+
+		onTransferFromAmountChange: function (oEvent) {
+			var inputValue = oEvent.getParameter("value");
+			var preValue = this._lastTransferSheetValue || ""; // previous cached value
+
+			var maxTransferQuantity = this.getModel("appView").getProperty("/TransferSheetsAmount/maxSheets");
+
+			if (inputValue > maxTransferQuantity) {
+				MessageToast.show("Quantity exceeds available sheets to transfer");
+				oEvent.getSource().setValue(preValue); // revert field
+				this.getModel("appView").setProperty("/TransferSheetsAmount/transferFromAmount", preValue);
+				return;
+			}
+
+			this.getModel("appView").setProperty("/TransferSheetsAmount/transferFromAmount", inputValue);
+			this._lastTransferSheetValue = inputValue; // cache new value
+		}
 
 	});
 });

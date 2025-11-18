@@ -22,11 +22,11 @@
 					<ToolbarSpacer ></ToolbarSpacer>
 					<Label text="Non Dispatched Jobs:"></Label>
 					<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
-					<Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" />
-					<Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>     
+					<!-- <Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" /> -->
+					<!-- <Button icon="sap-icon://filter" press="onFilterPressJobStatus"  tooltip="Status Filter"/>      -->
 					<Button icon="sap-icon://excel-attachment" press="onPressExportData"  tooltip="Export Data" visible="{=${appView>/UserRole} === 'Admin'|| ${appView>/UserRole} === 'Factory Manager' ? true :false}"/>    
-					<Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
-					<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Sort Descending"/>
+					<!-- <Button icon="sap-icon://sort-ascending" press="onSortAscending" tooltip="Sort Ascending"/>
+					<Button icon="sap-icon://sort-descending" press="onSortDescending" tooltip="Sort Descending"/> -->
 					<Button  text="Delete" type="Reject" icon="sap-icon://delete" press="onDeleteJobs" tooltip="Delete Job" visible="{=${appView>/UserRole} === 'Admin' ? true : false }"/>
 					<Button icon="sap-icon://legend" text="Legend" press="openStatusLegend"/>
 				</content>
@@ -60,6 +60,15 @@
 			  </List> -->
 			  <fb:FilterBar useToolbar="false" persistencyKey="myPersKey" >
 					<fb:filterGroupItems>
+							<fb:FilterGroupItem name="Date" label="Date (Range)" groupName="Group1" visibleInFilterBar="true" >
+								<fb:control> 
+									<DateRangeSelection
+										placeholder="Enter Date Range"
+										id="dateRangeSelectors"
+										displayFormat="dd-MM-yyyy"
+										change="onDateRangeChangeForJob"/>
+								</fb:control>
+							</fb:FilterGroupItem>
 						<fb:FilterGroupItem name="search" label="Search"  groupName="Group3" visibleInFilterBar="true">
 							<fb:control>
 								<SearchField liveChange="onSearchJob" width="250px" />
@@ -85,7 +94,17 @@
 						</fb:FilterGroupItem> -->
 					</fb:filterGroupItems>
 				</fb:FilterBar>
-			 <List growing="true" growingScrollToLoad="true" growingThreshold="50" id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'SingleSelectLeft' :'None'}">
+			<List growing="true" growingScrollToLoad="true" growingThreshold="50" id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'MultiSelect' :'None'}" selectionChange="onSelectionChange">
+				<infoToolbar>
+					<OverflowToolbar visible="{=${appView>/UserRole} === 'Admin' ? true : false}">
+						<CheckBox 
+							id="selectAllCheckbox"
+							text="Select All" 
+							select="onSelectAllJobs"
+						/>
+						<ToolbarSpacer/>
+					</OverflowToolbar>
+				</infoToolbar>
 				<items>
 					<custom:customListItem type="Navigation" backgroundColor="{path : 'appView>status', formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
 						<HBox alignItems="Center" justifyContent="SpaceBetween">

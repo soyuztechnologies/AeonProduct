@@ -16,69 +16,108 @@
             <f:content>
                 
                 <Label	design="Bold" text="Plate" />
-                <Text text="{appView>plate}"  />
-                <Select visible="{= ${appView>plate} !== null &amp;&amp; ${appView>plate} !== 'None :' }" forceSelection="false" selectedKey="{appView>plateStatus}" change="">
+                <Text text="{appView>plate}"  /> 
+                <Select width="100%" visible="{= ${appView>plate} !== null &amp;&amp; ${appView>plate} !== 'None :'}" forceSelection="false" selectedKey="{appView>plateStatus}" change="">
                     <items>
+                        <core:Item text="" key=""></core:Item>
                         <core:Item text="Email Sent" key="EmailSent" enabled="{= ${appView>plate} === 'New :' }"/>
                         <core:Item text="Received" key="Received" enabled="{= ${appView>plate} === 'New :' }"/>
                         <core:Item text="Found" key="Found" enabled="{= ${appView>plate} === 'Old :' }"/>
                     </items>
                 </Select>
+                <Button width="100%" text="{= ${appView>plate} === 'New :' &amp;&amp; ${appView>plateStatus} === '' ? 'Send Email' : 'View'}" press="onSendEmailForAncillaryPart" visible="{= ${appView>plate} === 'New :' ? true : false}">
+                    <customData>
+                        <core:CustomData key="partName" value="plate" />
+                        <core:CustomData key="status" value="plateStatus" />
+                    </customData>
+                </Button>
                             
                 <Label text="Pantone Inks" design="Bold"/>
                 <Text text="{appView>pantoneInksPart}"/>
                     <Select visible="{= ${appView>pantoneInksPart} !== null &amp;&amp; ${appView>pantoneInksPart} !== 'None :' }" forceSelection="false" selectedKey="{appView>pantoneInkPartStatus}" change="">
                     <items>
+                        <core:Item text="" key=""></core:Item>
                         <core:Item text="Email Sent" key="EmailSent" enabled="{= ${appView>pantoneInksPart} === 'New :' }"/>
                         <core:Item text="Received" key="Received" enabled="{= ${appView>pantoneInksPart} === 'New :' }"/>
                         <core:Item text="Found" key="Found" enabled="{= ${appView>pantoneInksPart} === 'Old :' }"/>
                     </items>
                 </Select>
+                <Button width="100%" text="{= ${appView>pantoneInksPart} === 'New :' &amp;&amp; ${appView>pantoneInkPartStatus} === '' ? 'Send Email' : 'View'}" press="onSendEmailForAncillaryPart" visible="{= ${appView>pantoneInksPart} === 'New :' ? true : false}">
+                    <customData>
+                        <core:CustomData key="partName" value="pantoneInksPart"/>
+                        <core:CustomData key="status" value="pantoneInkPartStatus"/>
+                    </customData>
+                </Button>
             
                 <Label text="Foil Blocks" design="Bold"/>
                 <Text text="{appView>foilBlocksPart}"/>
                     <Select visible="{= ${appView>foilBlocksPart} !== null &amp;&amp; ${appView>foilBlocksPart} !== 'None :' }" forceSelection="false" selectedKey="{appView>foilBlocksPartStatus}" change="">
                     <items>
+                        <core:Item text="" key=""></core:Item>
                         <core:Item text="Email Sent" key="EmailSent" enabled="{= ${appView>foilBlocksPart} === 'New :' }"/>
                         <core:Item text="Received" key="Received" enabled="{= ${appView>foilBlocksPart} === 'New :' }"/>
                         <core:Item text="Found" key="Found" enabled="{= ${appView>foilBlocksPart} === 'Old :' }"/>
                     </items>
                 </Select>
+                <Button width="100%" text="{= ${appView>foilBlocksPart} === 'New :' &amp;&amp; ${appView>foilBlocksPartStatus} === '' ? 'Send Email' : 'View'}" press="onSendEmailForAncillaryPart" visible="{= ${appView>foilBlocksPart} === 'New :' ? true : false}">
+                    <customData>
+                        <core:CustomData key="partName" value="foilBlocksPart"/>
+                        <core:CustomData key="status" value="foilBlocksPartStatus"/>
+                    </customData>
+                </Button>
             
                 <Label text="Positive" design="Bold"/>
                 <Text text="{appView>positivePart}"/>
                     <Select visible="{= ${appView>positivePart} !== null &amp;&amp; ${appView>positivePart} !== 'None :' }" forceSelection="false" selectedKey="{appView>positivePartStatus}" change="">
                     <items>
+                        <core:Item text="" key=""></core:Item>
                         <core:Item text="Email Sent" key="EmailSent" enabled="{= ${appView>positivePart} === 'New :' }"/>
                         <core:Item text="Received" key="Received" enabled="{= ${appView>positivePart} === 'New :' }"/>
                         <core:Item text="Found" key="Found" enabled="{= ${appView>positivePart} === 'Old :' }"/>
                     </items>
                 </Select>
+                <Button width="100%" text="{= ${appView>positivePart} === 'New :' &amp;&amp; ${appView>positivePartStatus} === '' ? 'Send Email' : 'View'}" press="onSendEmailForAncillaryPart" visible="{= ${appView>positivePart} === 'New :' ? true : false}">
+                    <customData>
+                        <core:CustomData key="partName" value="positivePart"/>
+                        <core:CustomData key="status" value="positivePartStatus"/>
+                    </customData>
+                </Button>
                     
                 <Label text="Emboss Block" design="Bold"/>
                 <Text text="{appView>embossBlockPart}"/>
                     <Select visible="{= ${appView>embossBlockPart} !== null &amp;&amp; ${appView>embossBlockPart} !== 'None :' }" forceSelection="false" selectedKey="{appView>embossBlockPartStatus}" change="">
                     <items>
+                        <core:Item text="" key=""></core:Item>
                         <core:Item text="Email Sent" key="EmailSent" enabled="{= ${appView>embossBlockPart} === 'New :' }"/>
                         <core:Item text="Received" key="Received" enabled="{= ${appView>embossBlockPart} === 'New :' }"/>
                         <core:Item text="Found" key="Found" enabled="{= ${appView>embossBlockPart} === 'Old :' }"/>
                     </items>
                 </Select>
+                <Button width="100%" text="{= ${appView>embossBlockPart} === 'New :' &amp;&amp; ${appView>embossBlockPartStatus} === '' ? 'Send Email' : 'View'}" press="onSendEmailForAncillaryPart" visible="{= ${appView>embossBlockPart} === 'New :' ? true : false}">
+                    <customData>
+                        <core:CustomData key="partName" value="embossBlockPart"/>
+                        <core:CustomData key="status" value="embossBlockPartStatus"/>
+                    </customData>
+                </Button>
             
                 <Label text="Punch" design="Bold"/>
                 <Text text="{appView>punchPart}"/>
                     <Select visible="{= ${appView>punchPart} !== null &amp;&amp; ${appView>punchPart} !== 'None :' }" forceSelection="false" selectedKey="{appView>punchPartStatus}" change="">
                     <items>
+                        <core:Item text="" key=""></core:Item>
                         <core:Item text="Email Sent" key="EmailSent" enabled="{= ${appView>punchPart} === 'New :' }"/>
                         <core:Item text="Received" key="Received" enabled="{= ${appView>punchPart} === 'New :' }"/>
                         <core:Item text="Found" key="Found" enabled="{= ${appView>punchPart} === 'Old :' }"/>
                     </items>
                 </Select>
+                <Button width="100%" text="{= ${appView>punchPart} === 'New :' &amp;&amp; ${appView>punchPartStatus} === '' ? 'Send Email' : 'View'}" press="onSendEmailForAncillaryPart" visible="{= ${appView>punchPart} === 'New :' ? true : false}">
+                    <customData>
+                        <core:CustomData key="partName" value="punchPart"/>
+                        <core:CustomData key="status" value="punchPartStatus"/>
+                    </customData>
+                </Button>
 
             </f:content>
         </f:SimpleForm>
 
-
-                                
-   
 </core:FragmentDefinition>

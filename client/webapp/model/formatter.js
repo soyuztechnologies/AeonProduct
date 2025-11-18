@@ -1323,35 +1323,38 @@ downloadAttachmentVis:function(value){
         return sheets + ' Sheets';
       }
       return "0 Sheets";
-      },
-      formatClosingStock: function (openingStock, UsedSheets){
-        if(openingStock && UsedSheets){
-          var negativeSum = UsedSheets.reduce(function(acc, item) {
-            var q = Number(item.QuantityOfSheets) || 0;
-            return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
-          }, 0);
-          return (Number(openingStock) + negativeSum) + ' Sheets';
-        }
-        return "0 Sheets";
-      },
-      formatFinalPrice: function (Rate, Height, Width, GSM, OpeningStock, UsedSheets){
-        if(Rate && Height && Width && GSM && OpeningStock && UsedSheets){
-          var totalSheets = OpeningStock + UsedSheets.reduce(function(acc, item) {
-            var q = Number(item.QuantityOfSheets) || 0;
-            return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
-          }, 0);
-          var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * totalSheets;
-          return "₹ " + price.toFixed(2);
-        }
-      return "₹ 0.00";
     },
-    formatClosingWeight: function (height, width, GSM, OpeningStock, UsedSheets) {
-      if (height && width && GSM && OpeningStock && UsedSheets) {
-        var totalSheets = OpeningStock + UsedSheets.reduce(function(acc, item) {
-            var q = Number(item.QuantityOfSheets) || 0;
-            return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
-          }, 0);
-        var result = (height / 1000) * (width / 1000) * (GSM / 1000) * totalSheets;
+    // formatClosingStock: function (openingStock, UsedSheets){
+    //   if(openingStock && UsedSheets){
+    //     var negativeSum = UsedSheets.reduce(function(acc, item) {
+    //       var q = Number(item.QuantityOfSheets) || 0;
+    //       return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+    //     }, 0);
+    //     return (Number(openingStock) + negativeSum) + ' Sheets';
+    //   }
+    //   return "0 Sheets";
+    // },
+    formatFinalPrice: function (Rate, Height, Width, GSM, ClosingStock){
+      if(Rate && Height && Width && GSM && ClosingStock){
+        var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * ClosingStock;
+        return "₹ " + price.toFixed(2);
+      }
+    return "₹ 0.00";
+    },
+    // formatFinalPrice: function (Rate, Height, Width, GSM, OpeningStock, UsedSheets){
+    //   if(Rate && Height && Width && GSM && OpeningStock && UsedSheets){
+    //     var totalSheets = OpeningStock + UsedSheets.reduce(function(acc, item) {
+    //       var q = Number(item.QuantityOfSheets) || 0;
+    //       return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+    //     }, 0);
+    //     var price = (Rate) * (Height / 1000) * (Width / 1000) * (GSM / 1000) * totalSheets;
+    //     return "₹ " + price.toFixed(2);
+    //   }
+    // return "₹ 0.00";
+    // },
+    formatClosingWeight: function (height, width, GSM, ClosingStock) {
+      if (height && width && GSM && ClosingStock) {
+        var result = (height / 1000) * (width / 1000) * (GSM / 1000) * ClosingStock;
         if (result >= 1000) {
             return (result / 1000).toFixed(2) + " Tons"; 
         } else if (result >= 1) {
@@ -1361,6 +1364,22 @@ downloadAttachmentVis:function(value){
       }
       return "0 KG";
     },
+    // formatClosingWeight: function (height, width, GSM, OpeningStock, UsedSheets) {
+    //   if (height && width && GSM && OpeningStock && UsedSheets) {
+    //     var totalSheets = OpeningStock + UsedSheets.reduce(function(acc, item) {
+    //         var q = Number(item.QuantityOfSheets) || 0;
+    //         return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
+    //       }, 0);
+    //     var result = (height / 1000) * (width / 1000) * (GSM / 1000) * totalSheets;
+    //     if (result >= 1000) {
+    //         return (result / 1000).toFixed(2) + " Tons"; 
+    //     } else if (result >= 1) {
+    //         return result.toFixed(2) + " Kg";         
+    //     }
+    //     return "0 KG";
+    //   }
+    //   return "0 KG";
+    // },
     formatWeight: function (weight) {
       if (weight == null) 
           return "0 KG";

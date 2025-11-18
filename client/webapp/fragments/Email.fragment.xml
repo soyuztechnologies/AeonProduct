@@ -7,14 +7,19 @@
  <Dialog showHeader="false" title="" contentHeight="100%" contentWidth="100%" stretch="true" id="EmailTemplate">
   <subHeader>
    <Toolbar>
-    <Title text="Send Po via Email" />
+    <Title text="{appView>/EmailTitle}" />
     <ToolbarSpacer/>
-    <!-- <Title level="H1" text=""></Title> -->
-    <!-- <Switch state="true" customTextOn="On" visible="false" customTextOff="Off" change="onHTMLEditFrag" >
-        <layoutData>
-        <FlexItemData growFactor="1" />
-        </layoutData>
-    </Switch> -->
+    <unified:FileUploader id="AttachmentUploader"
+                        fileType="pdf"
+                        uploadUrl=""
+                        sameFilenameAllowed="true"
+                        change="onAttachmentUpload"
+                        buttonText="Add Attachment"
+                        style="Emphasized"
+                        placeholder="Upload PDF Attachment"
+                        uploadOnChange="false"
+                        width="400px"
+                        visible="{= ${appView>/Email/ReadOnly} === true || ${appView>/Email/PDF_NAME} ? false : true}"/>
    </Toolbar>
   </subHeader>
   <content>
@@ -33,6 +38,27 @@
       <VBox >
         <RTE:RichTextEditor id="EMAIL_BODY" visible="true" value="{appView>/Email/EMAIL_BODY}" editorType="TinyMCE6" customToolbar="true" showGroupFont="true" height="450px" width="100%" editable="{= ${appView>/Email/ReadOnly} === true ? false : true}"></RTE:RichTextEditor>
       </VBox>
+      <Label text="Attachment" visible="{= ${appView>/Email/PDF_NAME} ? true : false}"/>
+      <HBox alignItems="Center">
+          <!-- <Text text="{appView>/Email/PDF_NAME}" class="sapUiSmallMarginBegin"
+                visible="{= ${appView>/Email/PDF_NAME} ? true : false}"/>  -->
+
+          <!-- Preview Button -->
+          <Button icon=""
+                  text="{appView>/Email/PDF_NAME}"
+                  type="Transparent"
+                  class="sapUiTinyMarginBegin"
+                  visible="{= ${appView>/Email/PDF_NAME} ? true : false}"
+                  press="onPreviewAttachment"/>
+
+          <!-- Remove Button -->
+          <Button icon="sap-icon://decline"
+                  type="Transparent"
+                  class="sapUiTinyMarginBegin"
+                  visible="{= ${appView>/Email/PDF_NAME} ? true : false}"
+                  press="onRemoveAttachment"/>
+      </HBox>
+
      </f:content>
     </f:SimpleForm>
    </VBox>

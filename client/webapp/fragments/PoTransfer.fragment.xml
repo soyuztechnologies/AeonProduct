@@ -1,83 +1,55 @@
-<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core" xmlns:f="sap.ui.layout.form">
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:custom="ent.ui.ecommerce.controller.controls" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:grid="sap.ui.layout.cssgrid">
 
-<Dialog titleAlignment="Center" contentWidth="auto" contentHeight="auto" title="Transfer Sheets from PO: {appView>/selectedPoNo} to -" resizable="false" >
+<Dialog titleAlignment="Center" contentWidth="auto" contentHeight="auto" icon="sap-icon://share-2" title="Transfer Sheets from PO: {appView>/selectedPoNo/PoNo} to - {appView>/selectedTransferPo/PoNo}" resizable="false" >
 	
 	<content>
-		<Table id="TransferablePo" growing="true" growingScrollToLoad="true" growingThreshold="20" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/TransferablePoList', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" mode="SingleSelectLeft" >  
-			<columns>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Po No" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Supplier Name" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Mill" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Quality Of Material" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Type Of Board" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Rate" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="GSM" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Size in" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="mm" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Size in" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Inches" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Wt." />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Opening Stock" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Closing Stock" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Final Price" />
-				</Column>
-				<Column demandPopin="true" minScreenWidth="Phone" >
-					<Text text="Wt." />
-				</Column>
-		
-			</columns>
-			<items>
-				<ColumnListItem type="Active">
-					<cells>
-						<Text text="{appView>PoNo}"/>	
-						<Text text="{appView>SupplierName}" />	
-						<Text text="{appView>Mill}" />	
-						<Text text="{appView>QualityOfMaterial}" />	
-						<Text text="{appView>TypeOfBoard}" />	
-						<Text text="{path : 'appView>Rate', formatter: '.formatter.formatRate'}" />	
-						<Text text="{path : 'appView>GSM', formatter: '.formatter.formatGSM'}" />	
-						<Text text="{appView>Height}" />	
-						<Text text="{appView>Width}" />	
-						<Text text="{path : 'appView>Height', formatter: '.formatter.formatLengthinInches'}" />	
-						<Text text="{path : 'appView>Width', formatter: '.formatter.formatLengthinInches'}" />	
-						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}], formatter: '.formatter.formatOpeningWeight'}" />	
-						<Text text="{path: 'appView>OpeningStock', formatter: '.formatter.formatSheets'}" />	
-						<Text text="{parts: [{path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingStock'}" />	
-						<Text text="{parts: [{path: 'appView>Rate'}, {path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatFinalPrice'}" />	
-						<Text text="{parts: [{path: 'appView>Height'}, {path: 'appView>Width'}, {path: 'appView>GSM'}, {path: 'appView>OpeningStock'}, {path: 'appView>UsedSheets'}], formatter: '.formatter.formatClosingWeight'}" />	
-					</cells>
-				</ColumnListItem>
-			</items>
-		</Table>
+        <grid:CSSGrid gridTemplateColumns="1fr 1fr" gridGap="1rem">
+            <!-- Left Column -->
+            <VBox class="sapUiSmallMargin" justifyContent="SpaceBetween">
+				<VBox class="sapUiLargeMarginBottom">
+					<Title text="PoNo - {appView>/selectedPoNo/PoNo}" level="H6"></Title>
+					<Text text="Dimensions - {appView>/selectedPoNo/Height} x {appView>/selectedPoNo/Width}"></Text>
+					<HBox justifyContent="End" class="sapUiSmallMarginTop">
+						<Text text="Closing Stock - {appView>/selectedPoNo/ClosingStock}" ></Text>
+					</HBox>
+				</VBox>
+                <!-- <TileContent footer="Closing Stock - {appView>/selectedPoNo/ClosingStock}" class="" width="300px">
+                    <NewsContent contentText="PoNo - {appView>/selectedPoNo/PoNo}"
+                        subheader="Dimensions - {appView>/selectedPoNo/Height} x {appView>/selectedPoNo/Width}" />
+                </TileContent> -->
+
+				<VBox class="sapUiLargeMarginTop">
+					<Label text="Transfer Sheets from PoNo: {appView>/selectedPoNo/PoNo}" ></Label>
+					<Input type="Number" value="{appView>/TransferSheetsAmount/transferFromAmount}" liveChange="onTransferFromAmountChange"></Input>
+					<Label text="Transfered Sheets To PoNo: {appView>/selectedTransferPo/PoNo}" class="sapUiSmallMarginTop"></Label> 
+					<Input type="Number" value="{appView>/TransferSheetsAmount/transferToAmount}" editable="{= ${appView>/selectedTransferPo} ? true : false}"></Input>
+				</VBox>
+            </VBox>
+
+            <!-- Right Column -->
+            <VBox class="sapUiSmallMargin" height="60vh" width="350px">
+               <ScrollContainer vertical="true" horizontal="false" height="100%">
+                   <List id="transferPoList" growing="true" growingScrollToLoad="true" sticky="HeaderToolbar" growingThreshold="10" items="{appView>/TransferablePoList}" mode="SingleSelectMaster" itemPress="onTransferPoListPress">
+					 <headerToolbar>
+						<Toolbar >
+							<SearchField liveChange="liveTransferPoSearch" placeholder="Po Search" id="searchTransferPo"></SearchField>
+						</Toolbar>
+					 </headerToolbar>
+                        <items>
+                            <custom:customListItem type="Active">
+								<VBox class="sapUiTinyMargin">
+									<Title text="PoNo - {appView>PoNo}" level="H6"></Title>
+									<Text text="Dimensions - {appView>Height} x {appView>Width}"></Text>
+									<HBox justifyContent="End" class="sapUiSmallMarginTop">
+										<Text text="Closing Stock - {appView>ClosingStock}" ></Text>
+									</HBox>
+								</VBox>
+                            </custom:customListItem>
+                        </items>
+                   </List>
+               </ScrollContainer>
+            </VBox>
+        </grid:CSSGrid>	
 	</content>
 	<beginButton>
 		<Button text="Transfer" type="Accept" press="onTransferPo" visible="{= ${appView>/TransferablePos}.length > 0 ? true : false}" enabled="true"/>

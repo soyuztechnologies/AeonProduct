@@ -1650,8 +1650,17 @@ sap.ui.define([
 			
 			var path = this.getView().getModel('appView').getProperty('/path');
 			var that = this;
+
+			var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
+			var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
+
+			var payload = {
+				"minDate": minDate,
+				"maxDate": maxDate,
+				"status": path
+			}
 	
-				this.middleWare.callMiddleWare("getJobsWithStatusFilter", "post", path)
+			this.middleWare.callMiddleWare("getJobsWithStatusFilter", "post", payload)
 				.then(function (data, status, xhr) {
 					that.getView().getModel("appView").setProperty("/jobsData", data);
 					that.getView().getModel("appView").setProperty("/countJobs", data.length);

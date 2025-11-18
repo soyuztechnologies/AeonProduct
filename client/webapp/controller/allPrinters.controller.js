@@ -41,6 +41,12 @@ sap.ui.define([
 		_matchedHandler: async function (oEvent) {
 
 			var that = this;
+			var path = this.getRouter().oHashChanger.hash.split("/")[0];
+			this.getView().getModel('appView').setProperty('/path', path);
+
+			var oList = this.getView().byId("idListAllPrinters");
+			oList.removeSelections();
+			
 			await this.getUserRoleData().then(
 				function (data) {
 					var role = data.role.Role
@@ -48,10 +54,11 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
-					that.openYearPickar();
-					that.getJobsDataByCompanyFilter();
+					// that.openYearPickar();
 					// that.getCompanyName();
 					that.getCompanyData();
+					that._setDefaultDateRange();
+					that.getJobsDataByCompanyFilter();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(oErr, that);
@@ -78,26 +85,66 @@ sap.ui.define([
 			// this.getJobAccordingCustomer();
 		},
 
+		_setDefaultDateRange: function() {
+			var oDateRangeSelector = this.byId("dateRangeSelectors");
+			
+			if (oDateRangeSelector) {
+				var currentDate = new Date();
+				var currentYear = currentDate.getFullYear();
+				var currentMonth = currentDate.getMonth(); 
+				
+				var financialYearStartDate;
+				
+				if (currentMonth >= 3) { 
+					financialYearStartDate = new Date(currentYear, 3, 1); 
+				} else { 
+					financialYearStartDate = new Date(currentYear - 1, 3, 1);
+				}
+				
+				oDateRangeSelector.setDateValue(financialYearStartDate);
+				oDateRangeSelector.setSecondDateValue(currentDate);
+				
+				var oModel = this.getView().getModel("appView");
+				oModel.setProperty("/getMaxDateForFilterJobs", currentDate);
+				oModel.setProperty("/getMinDateForFilterJobs", financialYearStartDate);
+				
+				console.log("Financial Year Start Date:", financialYearStartDate);
+				console.log("Current Date:", currentDate);
+			}
+		},
+
    //* Delete Call for jobs with there crossponding job status
         onDeleteJobs:function(){
 
-            
-            var that= this;
-            var oModel = this.getView().getModel();
-           var oItem= this.getView().byId("idListAllPrinters").getSelectedItem();
-           if(!oItem){
-               MessageToast.show("Please select a JOB to delete")
-           }else{
-               var Jobs = oItem.getBindingContext("appView").getObject();
-               var id = Jobs.jobCardNo;
-               var payload = id;
-			   let dbData;
-               MessageBox.confirm("Are you sure you want to delete this " + id + " Job ?", {
-                   actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
-                   onClose: function (sAction) {
-                     if(sAction === "OK"){
-                        that.middleWare.callMiddleWare("deleteJobsWithJobStatus", "POST", payload)
-                        .then( (data, status, xhr)=> {
+			var that= this;
+			var oModel = this.getView().getModel();
+			var oList = this.getView().byId("idListAllPrinters");
+			var aSelectedItems = oList.getSelectedItems(); 
+			var path = this.getView().getModel('appView').getProperty('/path');
+			
+			if (!aSelectedItems || aSelectedItems.length === 0) {
+				MessageToast.show("Please select at least one JOB to delete");
+				return;
+			}
+			  // Get all selected job IDs
+			var aJobIds = aSelectedItems.map(function(oItem) {
+				var oJob = oItem.getBindingContext("appView").getObject();
+				return oJob.jobCardNo;
+			});
+			var confirmMsg = aJobIds.length === 1 
+				? "Are you sure you want to delete this " + aJobIds[0] + " Job?"
+				: "Are you sure you want to delete " + aJobIds.length + " Jobs? \n(" + aJobIds.join(", ") + ")";
+			// var Jobs = oItem.getBindingContext("appView").getObject();
+			// var id = Jobs.jobCardNo;
+			// var payload = id;
+			// let dbData;
+			MessageBox.confirm(confirmMsg, {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CLOSE],
+				onClose: function (sAction) {
+					if(sAction === "OK"){
+						var payload = aJobIds;
+						that.middleWare.callMiddleWare("deleteJobsWithJobStatus", "POST", payload)
+						.then( (data, status, xhr)=> {
 							if(data.statusCode === 207){
 								let obj = JSON.parse(data.data);
 								let response = 'Duplicate Jobs with Attachments are : \n';
@@ -108,8 +155,9 @@ sap.ui.define([
 							}else{
 									MessageToast.show("Job Deleted Successfully");
 									that.getJobsDataByCompanyFilter();
-									that.getRouter().navTo("allPrinters");
+									that.getRouter().navTo(path);
 									oModel.updateBindings();
+									oList.removeSelections();
 							}
 							// if(typeof(data) === 'string'){
 							// 	// MessageToast.show(data);
@@ -120,30 +168,24 @@ sap.ui.define([
 							// 	that.getRouter().navTo("allPrinters");
 							// 	oModel.updateBindings();
 							// }
-                        })
-                        .catch(function (jqXhr, textStatus, errorMessage) {
-                            that.middleWare.errorHandler(jqXhr, that);
-                        });
-                   }
-                   else{
+						})
+						.catch(function (jqXhr, textStatus, errorMessage) {
+							that.middleWare.errorHandler(jqXhr, that);
+						});
+					}
+				    if(sAction === "CLOSE"){
+						oList.removeSelections();
+					}}
+				});
+		},
 
-                         
-
- 
-
-                     }
-
-                   }
-
-                 });
-
-           }
-
-       },
 		_printingMatchedHandler: async  function(oEvent){
 			
 			var path = this.getRouter().oHashChanger.hash.split("/")[0];
 			this.getView().getModel('appView').setProperty('/path', path);
+
+			var oList = this.getView().byId("idListAllPrinters");
+			oList.removeSelections();
 			
 			var that = this;
 			await this.getUserRoleData().then(
@@ -153,6 +195,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
+					that._setDefaultDateRange();
 					that.getJobsDataByStatusFilter();
 					// that.getCompanyName();
 				},
@@ -547,175 +590,198 @@ sap.ui.define([
 		},
 
 		//* this fcuntion is working to search the data into the allPrinters screen.
-		onSearchJob: function (oEvent) {
+		// onSearchJob: function (oEvent) {
 			
-			var sValue = oEvent.getParameter("query");
-			if (!sValue) {
-				var sValue = oEvent.getParameter("newValue")
-			}
-			var oFilter1 = new Filter("jobCardNo", FilterOperator.Contains, sValue);
-			var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
-			var oFilter3 = new Filter("jobCode", FilterOperator.Contains, sValue);
-			var oFilter4 = new Filter("Company/CompanyName", FilterOperator.Contains, sValue);
-			var oFilter5 = new Filter("status", FilterOperator.Contains, sValue);
-			// var oFilter4 = new Filter("userName", FilterOperator.Contains, sValue);
-			// var oFilter5 = new Filter("LastName", FilterOperator.Contains, sValue);
-			var aFilters = [oFilter1, oFilter2, oFilter3, oFilter4,oFilter5];
-			var oFilter = new Filter({
-				filters: aFilters,
-				and: false
-			});
-			var oList = this.getView().byId("idListAllPrinters");
-			var oBinding = oList.getBinding("items");
-			oBinding.filter(oFilter);
-			var filteredItems = oBinding.getLength();
-			var totalItems = oBinding.oList.length;	
-			var Jobs = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
-			this.getView().getModel("appView").setProperty("/countJobs", Jobs);
-		},
+		// 	var sValue = oEvent.getParameter("query");
+		// 	if (!sValue) {
+		// 		var sValue = oEvent.getParameter("newValue")
+		// 	}
+		// 	var oFilter1 = new Filter("jobCardNo", FilterOperator.Contains, sValue);
+		// 	var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
+		// 	var oFilter3 = new Filter("jobCode", FilterOperator.Contains, sValue);
+		// 	var oFilter4 = new Filter("Company/CompanyName", FilterOperator.Contains, sValue);
+		// 	var oFilter5 = new Filter("status", FilterOperator.Contains, sValue);
+		// 	// var oFilter4 = new Filter("userName", FilterOperator.Contains, sValue);
+		// 	// var oFilter5 = new Filter("LastName", FilterOperator.Contains, sValue);
+		// 	var aFilters = [oFilter1, oFilter2, oFilter3, oFilter4,oFilter5];
+		// 	var oFilter = new Filter({
+		// 		filters: aFilters,
+		// 		and: false
+		// 	});
+		// 	var oList = this.getView().byId("idListAllPrinters");
+		// 	var oBinding = oList.getBinding("items");
+		// 	oBinding.filter(oFilter);
+		// 	var filteredItems = oBinding.getLength();
+		// 	var totalItems = oBinding.oList.length;	
+		// 	var Jobs = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
+		// 	this.getView().getModel("appView").setProperty("/countJobs", Jobs);
+		// },
+
        // this function filter the job by company id and also send job as to spacific user
-       getJobsDataByCompanyFilter: function(oState){
-		if(!oState){
-			var oState = this.getModel('appView').getProperty('/oState');
-		}
-		var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
-		var id = this.getModel('appView').getProperty('/UserId');
-		// var payLoad = {
-		// 	id,
-		// }
-		var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
-		var url = 'api/Jobs?filter='+oFilter
-		var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
-		var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
-		var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
-		// sPath = `/Jobs('${id}')/Company`;
-		
-		var that = this;
-		if(sUserRole === "Customer"){
-			let companyId = this.getModel('appView').getProperty('/CompanyId');
-			this.getCompanyName(companyId)
-			var payload = {
-				id: id,
-				"selectedYear": selectedYear,
-				"maxDate": maxDate,
-				"minDate": minDate,
-				"State":oState?oState:false
+       	getJobsDataByCompanyFilter: function(oState){
+			if(!oState){
+				var oState = this.getModel('appView').getProperty('/oState');
 			}
-			this.middleWare.callMiddleWare("JobsCustomer", "POST" , payload)
-			.then(function (data, status, xhr) {
-			  
-			  that.getView().getModel("appView").setProperty("/jobsData", data);
-			  that.getView().getModel("appView").setProperty("/countJobs", data.length);		
-			  that.onSortDescending();				
-		  })
-			.catch(function (jqXhr, textStatus, errorMessage) {
-			  that.middleWare.errorHandler(jqXhr, that);
-			});
-		}else if(sUserRole === "SalesPerson"){
-			let companyId = this.getModel('appView').getProperty('/CompanyId');
-			this.getCompanyName(companyId)
-			let payload = {
-				id: id,
-				"selectedYear": selectedYear,
-				"maxDate": maxDate,
-				"minDate": minDate,
-				"State":oState?oState:false,
-				companyId: companyId
+			var path = this.getView().getModel('appView').getProperty('/path');
+			var status = null
+			if(path && path !== "allPrinters"){
+				status = path;
 			}
-			this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
+
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+			var id = this.getModel('appView').getProperty('/UserId');
+			// var payLoad = {
+			// 	id,
+			// }
+			var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
+			var url = 'api/Jobs?filter='+oFilter
+			// var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
+			var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
+			var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
+			// sPath = `/Jobs('${id}')/Company`;
+			
+			var that = this;
+			if(sUserRole === "Customer"){
+				let companyId = this.getModel('appView').getProperty('/CompanyId');
+				this.getCompanyName(companyId)
+				var payload = {
+					id: id,
+					// "selectedYear": selectedYear,
+					"maxDate": maxDate,
+					"minDate": minDate,
+					"State":oState?oState:false,
+					"status": status
+				}
+				this.middleWare.callMiddleWare("JobsCustomer", "POST" , payload)
+				.then(function (data, status, xhr) {
+				
+				that.getView().getModel("appView").setProperty("/jobsData", data);
+				that.getView().getModel("appView").setProperty("/countJobs", data.length);		
+				that.onSortDescending();				
+			})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+				that.middleWare.errorHandler(jqXhr, that);
+				});
+			}else if(sUserRole === "SalesPerson"){
+				let companyId = this.getModel('appView').getProperty('/CompanyId');
+				this.getCompanyName(companyId)
+				let payload = {
+					id: id,
+					// "selectedYear": selectedYear,
+					"maxDate": maxDate,
+					"minDate": minDate,
+					"State":oState?oState:false,
+					"companyId": companyId,
+					"status": status
+				}
+				this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
+					.then(function (data, status, xhr) {
+						that.getView().getModel("appView").setProperty("/jobsData", data);
+						that.getView().getModel("appView").setProperty("/countJobs", data.length);	
+						that.onSortDescending();
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						that.middleWare.errorHandler(jqXhr, that);
+					});
+			}else{
+				var payload = {
+					// "selectedYear": selectedYear,
+					"maxDate": maxDate,
+					"minDate": minDate,
+					"State":oState?oState:false,
+					"status": status
+				}
+				this.getCompanyName()
+				this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
 				.then(function (data, status, xhr) {
 					that.getView().getModel("appView").setProperty("/jobsData", data);
-					that.getView().getModel("appView").setProperty("/countJobs", data.length);	
+					that.getView().getModel("appView").setProperty("/countJobs", data.length);
+					
 					that.onSortDescending();
+					// that.getJobStatus();
+					// var jobData = 
+					// for (let i = 0; i < data.length; i++) {
+					//   const element = data[i].jobCardNo;
+					//   jobData.push(element)
+					// }
+					// that.getView().getModel("appView").setProperty("/jobsId", data);
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
-		}else{
-			var payload = {
-				"selectedYear": selectedYear,
-				"maxDate": maxDate,
-				"minDate": minDate,
-				"State":oState?oState:false
 			}
-			this.getCompanyName()
-			this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
-			.then(function (data, status, xhr) {
-				that.getView().getModel("appView").setProperty("/jobsData", data);
-				that.getView().getModel("appView").setProperty("/countJobs", data.length);
-				
-				that.onSortDescending();
-				// that.getJobStatus();
-				// var jobData = 
-				// for (let i = 0; i < data.length; i++) {
-				//   const element = data[i].jobCardNo;
-				//   jobData.push(element)
-				// }
-				// that.getView().getModel("appView").setProperty("/jobsId", data);
-			})
-			.catch(function (jqXhr, textStatus, errorMessage) {
-				that.middleWare.errorHandler(jqXhr, that);
-			});
-		}
-	   },
+		},
          //this function hits when year select for filter jobs
-		openYearPickar: function(oEvent){
+		// openYearPickar: function(oEvent){
 			
-			var that = this;
-			var oModel = this.getView().getModel("appView");
-			if(oEvent){
-			   if (!this._oPopover) {
-					var oDateRangeSelection = new sap.m.DateRangeSelection({
-					width: "100%",
+		// 	var that = this;
+		// 	var oModel = this.getView().getModel("appView");
+		// 	if(oEvent){
+		// 	   if (!this._oPopover) {
+		// 			var oDateRangeSelection = new sap.m.DateRangeSelection({
+		// 			width: "100%",
 					
-					dateValue: new Date(), // Set to January 1st of the current year
-					displayFormat: "yyyy", // Display only the year
-					change: function (oDateChangeEvent) {
-						var getYear = oDateChangeEvent.getParameter("from").getFullYear();
-						var maxDate = new Date(getYear + 1, 2, 31);
-						const uploadDateMaxDate = maxDate ; 
-						var minDate = new Date(getYear, 3, 1);
-						const uploadDateMinDate = minDate ;
-						oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
-						oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
-						oModel.setProperty("/getYearForFilterJobs", getYear);
-						that.getJobsDataByCompanyFilter();
-					},
-					});
+		// 			dateValue: new Date(), // Set to January 1st of the current year
+		// 			displayFormat: "yyyy", // Display only the year
+		// 			change: function (oDateChangeEvent) {
+		// 				var getYear = oDateChangeEvent.getParameter("from").getFullYear();
+		// 				var maxDate = new Date(getYear + 1, 2, 31);
+		// 				const uploadDateMaxDate = maxDate ; 
+		// 				var minDate = new Date(getYear, 3, 1);
+		// 				const uploadDateMinDate = minDate ;
+		// 				oModel.setProperty("/getMaxDateForFilterJobs", uploadDateMaxDate);
+		// 				oModel.setProperty("/getMinDateForFilterJobs", uploadDateMinDate);
+		// 				oModel.setProperty("/getYearForFilterJobs", getYear);
+		// 				that.getJobsDataByCompanyFilter();
+		// 			},
+		// 			});
 			
-				this._oPopover = new sap.m.Popover({
-				  title: "Select a Year",
-				  contentWidth: "290px",
-				  placement: sap.m.PlacementType.Auto,
-				  content: oDateRangeSelection, // Set the DateRangeSelection as the popover's content
-				});
+		// 		this._oPopover = new sap.m.Popover({
+		// 		  title: "Select a Year",
+		// 		  contentWidth: "290px",
+		// 		  placement: sap.m.PlacementType.Auto,
+		// 		  content: oDateRangeSelection, // Set the DateRangeSelection as the popover's content
+		// 		});
 				
-				this.getView().addDependent(this._oPopover);
-			  }
-			  // Open the popover
-			  this._oPopover.openBy(oEvent.getSource());
+		// 		this.getView().addDependent(this._oPopover);
+		// 	  }
+		// 	  // Open the popover
+		// 	  this._oPopover.openBy(oEvent.getSource());
 		  
-			}else{
-				// var currentYear = new Date().getFullYear();
-				// var currentYear = currentYear - 1;
-				// var maxDate = new Date(currentYear + 1, 2, 31);
-				// const uploadDateMaxDate = maxDate
-				// var minDate = new Date(currentYear, 3, 1);
-				// const uploadDateMinDate = minDate;
-				var currentDate = new Date();
-				var currentYear = currentDate.getFullYear();
+		// 	}else{
+		// 		// var currentYear = new Date().getFullYear();
+		// 		// var currentYear = currentYear - 1;
+		// 		// var maxDate = new Date(currentYear + 1, 2, 31);
+		// 		// const uploadDateMaxDate = maxDate
+		// 		// var minDate = new Date(currentYear, 3, 1);
+		// 		// const uploadDateMinDate = minDate;
+		// 		var currentDate = new Date();
+		// 		var currentYear = currentDate.getFullYear();
 
-				if (currentDate.getMonth() < 3 || (currentDate.getMonth() === 3 && currentDate.getDate() < 1)) {
-					currentYear = currentYear - 1;
-				}
-				var financialYearStart = new Date(currentYear, 3, 1);
+		// 		if (currentDate.getMonth() < 3 || (currentDate.getMonth() === 3 && currentDate.getDate() < 1)) {
+		// 			currentYear = currentYear - 1;
+		// 		}
+		// 		var financialYearStart = new Date(currentYear, 3, 1);
 
-				var financialYearEnd = new Date(currentYear + 1, 2, 31);
-				oModel.setProperty("/getMaxDateForFilterJobs", financialYearEnd);
-				oModel.setProperty("/getMinDateForFilterJobs", financialYearStart);
-				oModel.setProperty("/getYearForFilterJobs", currentYear);
-			}
+		// 		var financialYearEnd = new Date(currentYear + 1, 2, 31);
+		// 		oModel.setProperty("/getMaxDateForFilterJobs", financialYearEnd);
+		// 		oModel.setProperty("/getMinDateForFilterJobs", financialYearStart);
+		// 		oModel.setProperty("/getYearForFilterJobs", currentYear);
+		// 	}
 
+		// },
+
+		onDateRangeChangeForJob: function(oEvent) {
+			var oDateRangeSelector = oEvent.getSource();
+			var fromDate = oDateRangeSelector.getDateValue();
+			var toDate = oDateRangeSelector.getSecondDateValue();
+			
+			var oModel = this.getView().getModel("appView");
+			oModel.setProperty("/getMinDateForFilterJobs", fromDate);
+			oModel.setProperty("/getMaxDateForFilterJobs", toDate);
+			
+			// Filter jobs
+			this.getJobsDataByCompanyFilter();
 		},
         // Ascending Sort Jobs List
 
@@ -838,7 +904,7 @@ sap.ui.define([
 		var payload = {
 			"CreatedOnStart":startDate,
 			"CreatedOnEnd":endDate,
-			"cId": company
+			"cId": company ? company : null
 		}
 		if( !startDate || !endDate ){
 			MessageToast.show("Please Select the date");
@@ -1044,10 +1110,15 @@ sap.ui.define([
 		}
 		aCols = this.createColumnConfig();
 		
-		oSettings = {
-			workbook: { columns: aCols },
+		 oSettings = {
+			workbook: { 
+				columns: aCols,
+				context: {
+					sheetName: 'Job Details'  // Sheet ka naam
+				}
+			},
 			dataSource: jobStatusArray,
-			// __filename : oBinding.jobCardNo
+			fileName: 'Job Details.xlsx'  // File ka naam
 		};
 			// aAllJobStatus.push(oSheet);
 			oSheet = new Spreadsheet(oSettings);
@@ -1092,7 +1163,7 @@ sap.ui.define([
 							// var date = this.getView().getModel("appView").getProperty("/dateAndTime");
 							// var formattedDate = date.replace(/[:-]/g, "");
             				var albumName = "Download"
-            				var filename = "myTest.xlsx"
+            				var filename = "Job Details.xlsx"
                             var oModel = this.getView().getModel("appView");
                             var content = oModel.getProperty("/arrayBufferToBase64");
                             // var fileExtension = content.split('/')[1];
@@ -1101,7 +1172,6 @@ sap.ui.define([
 							// 	ext = 'xlsx'
 							// }else{
 							// }
-                            var filename = "myTest.xlsx"
                             // var filename = "File"+formattedDate+"." + ext;
                             var DataBlob = this.convertFileToUrl(content)
                             
@@ -1168,23 +1238,23 @@ sap.ui.define([
 			this.getJobsDataByCompanyFilter(oState)
 		},
 
-		selectedCompany: function (oEvent) {
-			let selectedKey = oEvent.getSource().getSelectedKey();
-			var oList = this.getView().byId("idListAllPrinters");
-			var oBinding = oList.getBinding("items");
-			let filter;
-			if(selectedKey){
-				filter = new Filter("CompanyId",FilterOperator.EQ,selectedKey);
-				oBinding.filter(filter);
-			}else{
-				oBinding.filter();
-				// delete this.tableFilters[filterProperty];
-			}	
-			var filteredItems = oBinding.getLength();
-			var totalItems = oBinding.oList.length;	
-			var Jobs = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
-			this.getView().getModel("appView").setProperty("/countJobs", Jobs);	
-		},
+		// selectedCompany: function (oEvent) {
+		// 	let selectedKey = oEvent.getSource().getSelectedKey();
+		// 	var oList = this.getView().byId("idListAllPrinters");
+		// 	var oBinding = oList.getBinding("items");
+		// 	let filter;
+		// 	if(selectedKey){
+		// 		filter = new Filter("CompanyId",FilterOperator.EQ,selectedKey);
+		// 		oBinding.filter(filter);
+		// 	}else{
+		// 		oBinding.filter();
+		// 		// delete this.tableFilters[filterProperty];
+		// 	}	
+		// 	var filteredItems = oBinding.getLength();
+		// 	var totalItems = oBinding.oList.length;	
+		// 	var Jobs = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
+		// 	this.getView().getModel("appView").setProperty("/countJobs", Jobs);	
+		// },
 
 		openStatusLegend: function (oEvent) {
 			var oSource = oEvent.getSource(),
@@ -1207,8 +1277,106 @@ sap.ui.define([
 				}
 			});
 
-			},
+		},
 
+		selectedCompany: function (oEvent) {
+			let selectedKey = oEvent.getSource().getSelectedKey();
+			
+			// Store the company filter in a property
+			if (selectedKey) {
+				this._companyFilter = new Filter("CompanyId", FilterOperator.EQ, selectedKey);
+			} else {
+				this._companyFilter = null;
+			}
+			
+			// Apply combined filters
+			this._applyFilters();
+		},
+
+		onSearchJob: function (oEvent) {
+			var sValue = oEvent.getParameter("query");
+			if (!sValue) {
+				sValue = oEvent.getParameter("newValue");
+			}
+			
+			// Store the search filter
+			if (sValue) {
+				var oFilter1 = new Filter("jobCardNo", FilterOperator.Contains, sValue);
+				var oFilter2 = new Filter("nameOFTheProduct", FilterOperator.Contains, sValue);
+				var oFilter3 = new Filter("jobCode", FilterOperator.Contains, sValue);
+				var oFilter4 = new Filter("Company/CompanyName", FilterOperator.Contains, sValue);
+				var oFilter5 = new Filter("status", FilterOperator.Contains, sValue);
+				
+				var aFilters = [oFilter1, oFilter2, oFilter3, oFilter4, oFilter5];
+				this._searchFilter = new Filter({
+					filters: aFilters,
+					and: false
+				});
+			} else {
+				this._searchFilter = null;
+			}
+			
+			// Apply combined filters
+			this._applyFilters();
+		},
+
+		_applyFilters: function () {
+			var oList = this.getView().byId("idListAllPrinters");
+			var oBinding = oList.getBinding("items");
+			
+			var aCombinedFilters = [];
+			
+			// Add company filter if exists
+			if (this._companyFilter) {
+				aCombinedFilters.push(this._companyFilter);
+			}
+			
+			// Add search filter if exists
+			if (this._searchFilter) {
+				aCombinedFilters.push(this._searchFilter);
+			}
+			
+			// Apply filters with AND logic (both filters must match)
+			if (aCombinedFilters.length > 0) {
+				var oFinalFilter = new Filter({
+					filters: aCombinedFilters,
+					and: true  // Company AND Search both must match
+				});
+				oBinding.filter(oFinalFilter);
+			} else {
+				oBinding.filter();  // Clear all filters
+			}
+			
+			// Update count
+			var filteredItems = oBinding.getLength();
+			var totalItems = oBinding.oList.length;	
+			var Jobs = filteredItems === totalItems ? totalItems : filteredItems + " / " + totalItems;
+			this.getView().getModel("appView").setProperty("/countJobs", Jobs);
+		},
+
+		onSelectAllJobs: function(oEvent) {
+			var bSelected = oEvent.getParameter("selected");
+			var oList = this.byId("idListAllPrinters");
+			
+			if (bSelected) {
+				oList.selectAll();
+			} else {
+				oList.removeSelections(true);
+			}
+		},
+
+		onSelectionChange: function(oEvent) {
+			var oList = this.byId("idListAllPrinters");
+			var oCheckBox = this.byId("selectAllCheckbox");
+			var aSelectedItems = oList.getSelectedItems();
+			var aAllItems = oList.getItems();
+			
+			if (aSelectedItems.length === aAllItems.length && aAllItems.length > 0) {
+				oCheckBox.setSelected(true);
+			} else {
+				oCheckBox.setSelected(false);
+			}
+		}
 
 
 });

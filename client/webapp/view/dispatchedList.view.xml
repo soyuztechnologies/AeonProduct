@@ -11,7 +11,7 @@
 		</subHeader>
 		<fb:FilterBar class="classFilterBar" id="filterbarAttachments" persistencyKey="myPersKey" useToolbar="false" showFilterConfiguration="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
 			<fb:filterGroupItems>
-			  	<fb:FilterGroupItem name="Date" label="Date(Range)" groupName="Group1" visibleInFilterBar="true" >
+			  	<fb:FilterGroupItem name="Date" label="Date (Range)" groupName="Group1" visibleInFilterBar="true" >
 					<fb:control> 
 						<DateRangeSelection
 							placeholder="Enter Date Range"
