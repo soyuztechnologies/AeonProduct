@@ -96,5 +96,9 @@
   "DropdownOptions": {
     "dataSource": "mongoatlas",
     "public": true
+  },
+  "Notifications": {
+    "dataSource": "mongoatlas",
+    "public": true
   }
 }

@@ -116,6 +116,7 @@ sap.ui.define([
 
 			}
 			this.getModel("appView").updateBindings();
+			this.getNotification();
 		},
 
 		setAppModel: function () {
@@ -1698,6 +1699,142 @@ sap.ui.define([
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
+		},
+
+		// getNotificationCountOnly: function () {
+		// 	var that = this;
+		// 	var oModel = this.getView().getModel();
+		// 	var companyId = this.getModel("appView").getProperty("/CompanyId");
+		// 	var role = this.getModel("appView").getProperty("/UserRole");
+
+		// 	var url;
+
+		// 	// Admin → get total count
+		// 	if (role === "Admin") {
+		// 		url = 'api/Notifications/count';
+		// 	} 
+		// 	else {
+		// 		// Build filter for count API
+		// 		var whereFilter = encodeURIComponent(JSON.stringify({
+		// 			where: { Company: { like: companyId } }
+		// 		}));
+
+		// 		url = 'api/Notifications/count?filter=' + whereFilter;
+		// 	}
+
+		// 	this.middleWare.callMiddleWare(url, "GET")
+		// 		.then(function (data, status, xhr) {
+		// 			// Loopback returns: { count: X }
+		// 			var count = data && data.count ? data.count : 0;
+
+		// 			that.getModel("appView").setProperty("/NotificationCount", count);
+		// 			that.getModel("appView").refresh(true);
+		// 		})
+		// 		.catch(function (jqXhr, textStatus, errorMessage) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		});
+		// },
+
+		getNotification: function () {
+			var that = this;
+			var oModel = this.getView().getModel(); 
+			var companyId = this.getModel('appView').getProperty('/CompanyId');
+			var role = this.getModel('appView').getProperty('/UserRole');
+
+			var url;
+
+			// Admin → get total count
+			if (role === "Admin") {
+				url = 'api/Notifications/count';
+			} 
+			else {
+				// Build filter for count API
+				var whereFilter = encodeURIComponent(JSON.stringify({
+					where: { Company: { like: companyId } }
+				}));
+
+				url = 'api/Notifications/count?filter=' + whereFilter;
+			}
+
+			this.middleWare.callMiddleWare(url, "GET")
+				.then(function (data, status, xhr) {
+					// Loopback returns: { count: X }
+					var count = data && data.count ? data.count : 0;
+					var oldCount = that.getModel("appView").getProperty("/NotificationCount");
+
+					if(count !== oldCount){
+						if(role === "Admin"){
+							url = 'api/Notifications';
+						}
+						else{
+							var oFilter = encodeURIComponent('{"where":{"Company":{"like":"' + companyId + '"}}}');
+							url = 'api/Notifications?filter=' + oFilter;
+						}
+						
+			
+						that.middleWare.callMiddleWare(url, "GET")
+							.then(function(data, status, xhr){
+								if (data && data.length > 0) {
+									that.getModel("appView").setProperty("/Notification", data);
+									that.getModel("appView").setProperty("/NotificationCount", data.length);
+								} else {
+									that.getModel("appView").setProperty("/Notification", []);
+									that.getModel("appView").setProperty("/NotificationCount", 0);
+								}
+								that.getModel("appView").refresh(true);
+							})
+							.catch(function (jqXhr, textStatus, errorMessage) {
+			
+								that.middleWare.errorHandler(jqXhr, that);
+								});
+
+					}
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+
+
+				
+		},
+
+		newNotification: function(data){
+
+			if(data.length <= 0){
+				return MessageToast.show("Notification not created"); // this is only used for testing purpose ONLY
+			}
+
+			var that = this;
+			// var oModel = this.getView().getModel(); 
+			
+			var payload = data.map((item) => {
+				return {
+					Title: item.Title,
+					Description: item.Description,
+					Company: item.Company ? item.Company : null,
+					Role: item.Role ? item.Role : null,
+					UserId: item.UserId ? item.UserId : null
+				}
+			})
+
+			this.middleWare.callMiddleWare("api/Notifications", "post", payload)
+				.then(function (data, status, xhr) {
+					MessageToast.show("Notification is Sent"); 
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+
+			// oModel.create('/Notifications', payload, {
+			// 	success: function (data) {
+			// 		MessageToast.show("Notification is Sent"); 
+			// 	},
+			// 	error: function (error) {
+			// 		that.middleWare.errorHandler(error, that);
+
+			// 	}
+            // });
+
 		}
 
 	});

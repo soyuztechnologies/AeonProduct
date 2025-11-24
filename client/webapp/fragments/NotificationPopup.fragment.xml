@@ -1,0 +1,43 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:custom="ent.ui.ecommerce.controller.controls">
+    <ResponsivePopover
+        id="NotificationPopup"
+        title="Notifications"
+        placement="Bottom"
+        contentWidth="400px"
+        titleAlignment="Center">
+        <content>
+            <List noDataText="No Notifications" id="notificationList" growing="true" sticky="HeaderToolbar" growingScrollToLoad="true" growingThreshold="10" items="{appView>/Notification}" mode="None"  itemPress="">
+                <headerToolbar>
+                    <OverflowToolbar >
+                        <SearchField liveChange="liveSearchNotification" placeholder="Notification Search" id="searchNotification"></SearchField>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <items>
+                    <custom:customListItem type="Active" >
+                         <HBox width="100%" justifyContent="SpaceBetween" alignItems="Start">
+                            <VBox class="sapUiSmallMargin">
+                                <HBox alignItems="Center" >
+                                    <Title text="{appView>Title}" class="sapUiTinyMarginTop"></Title>
+                                    <ObjectStatus
+                                        class="sapUiSmallMarginBegin"
+                                        text="New"
+                                        inverted="true"
+                                        state="Information" 
+                                        visible="{path: 'appView>CreatedOn', formatter: '.formatter.isNewNotification'}"/>
+                                </HBox>
+                                <Text text="{appView>Description}"></Text>
+                                <Label text="{path: 'appView>CreatedOn', formatter: '.formatter.formatNotificationTime'}" class="sapUiTinyMarginTop"></Label>
+                            </VBox>
+                            <!-- <Button 
+                                icon="sap-icon://decline" 
+                                type="Transparent" 
+                                press="onDeleteNotification"
+                                class="sapUiTinyMargin"
+                                tooltip="Delete"/> -->
+                        </HBox>
+                    </custom:customListItem>
+                </items>
+            </List>
+        </content>
+    </ResponsivePopover>
+</core:FragmentDefinition>

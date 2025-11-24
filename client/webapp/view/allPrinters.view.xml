@@ -79,7 +79,7 @@
 								<!-- <Select  items="{appView>/companyDetails}" forceSelection="false" change="selectedCompany" width="200px" >
 									<core:Item text="{appView>CompanyName}" key="{appView>id}" />
 								</Select> -->
-								 <ComboBox items="{appView>/companyDetails}" placeholder="Company Name" change="selectedCompany" width="200px" showClearIcon="true" showSecondaryValues="true" filterSecondaryValues="true">
+								 <ComboBox items="{appView>/companyDetails}" placeholder="Company Name" change="selectedCompany" width="200px" showClearIcon="true" >
 									<items>
 										<core:Item enabled="true" text="{appView>CompanyName}" key="{appView>id}" />
 									</items>

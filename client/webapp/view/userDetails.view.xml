@@ -40,8 +40,6 @@
 				  <ComboBox
 					items="{appView>/companyNames}"
 					change="onSelectCompanyForSearch"
-					showSecondaryValues="true"
-					filterSecondaryValues="true"
 					showClearIcon="true"
 					>
 					<items>

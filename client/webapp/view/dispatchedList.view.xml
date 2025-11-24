@@ -23,9 +23,14 @@
 
               <fb:FilterGroupItem name="Company" label="Company" groupName="Group1" visibleInFilterBar="true" >
                 <fb:control>
-					<Select  items="{appView>/CompanyDetails}" forceSelection="false" change="selectedCompany" >
+					<!-- <Select  items="{appView>/CompanyDetails}" forceSelection="false" change="selectedCompany" >
 							<core:Item text="{appView>CompanyName}" key="{appView>id}" />
-						</Select>
+						</Select> -->
+					<ComboBox items="{appView>/CompanyDetails}" placeholder="Company Name" change="selectedCompany" width="200px" showClearIcon="true" >
+						<items>
+							<core:Item enabled="true" text="{appView>CompanyName}" key="{appView>id}" />
+						</items>
+					</ComboBox>
 				</fb:control>
               </fb:FilterGroupItem>
 

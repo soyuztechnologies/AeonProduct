@@ -1,9 +1,15 @@
 sap.ui.define(
-  ["./BaseController","sap/ui/model/json/JSONModel","sap/ui/core/Fragment"],
-  function (BaseController, JSONModel, Fragment) {
+  ["./BaseController",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Fragment", 
+    "sap/m/MessageToast",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+  ],
+  function (BaseController, JSONModel, Fragment, MessageToast, Filter, FilterOperator) {
     "use strict";
     var userRole;
-    
+
     return BaseController.extend("ent.ui.ecommerce.controller.App", {
       onInit: function () {
         this._oRouter = this.getRouter();
@@ -107,21 +113,13 @@ sap.ui.define(
           this.getRouter().navTo("PONumber")
         }
         if (nav === "Artwork") {
-
           this.getRouter().navTo("ArtworkNumber");
-
         }
-
         if (nav === "InvNo") {
-
           this.getRouter().navTo("InvNumber");
-
         }
-
         if (nav === "DelNo") {
-
           this.getRouter().navTo("DelNumber");
-
         }
         if (nav === "userDetails"){
           this.getRouter().navTo("userDetails")
@@ -175,6 +173,7 @@ sap.ui.define(
         if (nav === "Others"){
           this.getRouter().navTo("Others")
         }
+        // this.getNotification()
       },
 
       whatsappSupport: function (oEvent) {
@@ -197,6 +196,77 @@ sap.ui.define(
       },
 
 
+      onNotificationPopup: function (oEvent) {
+        var oView = this.getView();
+        var oButton = oEvent.getSource();
+        
+        this.getNotification();
+        
+        // Destroy existing popover to force recreation
+        if (this._onNotificationPopover) {
+            this._onNotificationPopover.destroy();
+            this._onNotificationPopover = null;
+        }
+        
+        // Always create fresh popover
+        Fragment.load({
+            id: oView.getId(),
+            name: "ent.ui.ecommerce.fragments.NotificationPopup",
+            controller: this
+        }).then(function (oPopover) {
+            this._onNotificationPopover = oPopover;
+            oView.addDependent(this._onNotificationPopover);
+            
+            // Close popover when clicking outside
+            this._onNotificationPopover.attachAfterClose(function() {
+                this._onNotificationPopover.destroy();
+                this._onNotificationPopover = null;
+            }.bind(this));
+            
+            this._onNotificationPopover.openBy(oButton);
+        }.bind(this));
+      },
+
+      // onDeleteNotification: function (oEvent) {
+      //   var oButton = oEvent.getSource();
+
+      //   var oItem = oButton.getParent();       
+      //   oItem = oItem.getParent();          
+
+      //   var oCtx = oItem.getBindingContext("appView");
+      //   var oData = oCtx.getObject();         
+
+      //   var oModel = this.getView().getModel(); 
+      //   var that = this;
+      //   oModel.remove("/Notifications(" + oData.id + ")", {
+      //       success: function () {
+      //           MessageToast.show("Notification deleted");
+      //           that.getNotification();
+      //       },
+      //       error: function (err) {
+      //           MessageToast.show("Delete failed");
+      //       }
+      //   });
+      // },
+
+      liveSearchNotification: function (oEvent) {
+        var sValue = oEvent.getParameter("query");
+        if(!sValue){
+          var sValue = oEvent.getParameter("newValue");
+        }
+        var oFilter1 = new Filter("Description", FilterOperator.Contains, sValue);
+        var oFilter2 = new Filter("Title", FilterOperator.Contains, sValue);
+
+
+        var oCombinedFilter = new Filter({
+          filters: [oFilter1, oFilter2],
+          and: false
+        });
+        var oTable = this.getView().byId("notificationList");
+        var oBinding = oTable.getBinding("items");
+        oBinding.filter(oCombinedFilter);
+      },
+      
       onChatWithUs: function () {
           var sPhone = "918850137836"; 
           var sMsg = encodeURIComponent("Hello, I need support on CDS.");

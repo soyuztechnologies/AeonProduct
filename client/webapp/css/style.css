@@ -105,3 +105,13 @@ tr[data-po-status="Received"] .sapMListTblSubRowCell {
 .fonts .sapMInputBaseInner {
     text-transform: uppercase !important;
 }
+
+.notificationBell .sapMBadgeIndicator  {
+    
+    line-height: 2rem !important;
+    display: inline-block !important;
+    top: -0.26rem !important;
+    right: 0rem !important;
+    padding-right: 0rem !important;
+  
+}

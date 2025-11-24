@@ -2743,6 +2743,46 @@ sap.ui.define([
 					that.middleWare.errorHandler(jqXhr, that);
 				});
 
+			var description = ``
+			if(oUpdatedData.status === "Paper Cutting"){
+				description = `Paper Cutting has started  for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "Printing"){
+				description = `Printing has started for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "Coating"){
+				description = `Coating has started for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "Foiling"){
+				description = `Foiling has started for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "SpotUV"){
+				description = `SpotUV has started for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "Embossing"){
+				description = `Embossing has started for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "Punching"){
+				description = `Punching has started for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "Pasting"){
+				description = `Pasting has started for Job: ${oJobs.jobCardNo} `
+			}
+			else if(oUpdatedData.status === "Ready For Dispatch"){
+				description = `Job: ${oJobs.jobCardNo} is Ready For Dispatch'`
+			}
+			else if(oUpdatedData.status === "Dispatched"){
+				description = `Job: ${oJobs.jobCardNo} has been Dispatched`
+			}
+			else{
+				description = `Status has been updated to ${oUpdatedData.status} for Job: ${oJobs.jobCardNo}`
+			}
+			var notification = [{
+				Title: "Job Status Updated",
+				Description: description,
+				Company: oJobs.CompanyId
+			}]
+			this.newNotification(notification)
 			if(oUpdatedData.status === "Dispatched" && oJobs.ArtworkAttach) {
 				var ArtWork = oJobs.ArtworkAttach.replace(/\s+/g, "") + 'ArtworkNo';
 				// this.middleWare.callMiddleWare("deleteArtworkAfterDispatch", "POST", ArtWork)

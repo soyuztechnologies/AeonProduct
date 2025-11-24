@@ -1,0 +1,45 @@
+{
+	"name": "Notifications",
+	"plural": "Notifications",
+	"base": "PersistedModel",
+	"idInjection": true,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"Title":{
+			"type": "string",
+			"default": "",
+			"required": true
+		},
+		"Description":{
+			"type": "string",
+			"default": "",
+			"required": true
+		},
+		"Role":{
+			"type": "string",
+			"default": ""
+		},
+		"Company":{
+			"type": "string",
+			"default": ""
+		},
+		"UsedId": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"scope": {
+		"order": "CreatedOn DESC"
+	},
+	"validations": [],
+  	"relations": { },
+	"acls": [{
+		"accessType": "*",
+		"principalType": "ROLE",
+		"principalId": "$unauthenticated",
+		"permission": "DENY"
+	}],
+	"methods": {}
+}

@@ -291,9 +291,9 @@ sap.ui.define([
                   oModel.create('/Company', payLoad, {
                     success: function (data) {
 
-                      if (change.operation === "N") {
-                        change.operation = 'U'
-                      }
+                      // if (change.operation === "N") {
+                      //   change.operation = 'U'
+                      // }
                       if (change.operation === 'R') {
                         change.operation = 'U'
                       }
@@ -315,9 +315,9 @@ sap.ui.define([
           }
         } else {
           // var change = oEvent.getSource().getParent().getBindingContext("appView").getObject()
-          if (change.operation === "N") {
-            change.operation = 'U'
-          }
+          // if (change.operation === "N") {
+          //   change.operation = 'U'
+          // }
           if (change.operation === 'R') {
             change.operation = 'U'
           }
@@ -373,6 +373,7 @@ sap.ui.define([
       that.getView().getModel("appView").setProperty("/aAllExcelFilesCount", aAllExcelFiles.length);
       var aNewFetchedExcel = [];
       var aExcelToBeUploaded = [];
+      var notification = []
       var date = new Date()
       var formattedDate = date.toLocaleDateString("en-US");
       for (let i = 0; i < aAllExcelFiles.length; i++) {
@@ -386,18 +387,24 @@ sap.ui.define([
           aExcelToBeUploaded.push(element)
         }
       }
-      for (let i = 0; i < aNewFetchedExcel.length; i++) {
-
-        const element = aNewFetchedExcel[i];
-
-        element.ArtworkAttach = element.artworkCode.split("_")[0]
-
-        element.PoAttach = element.clientPONo.split("_")[0]
-
-      }
       //*This call is used to Upload the data that was not already present on the backend!
       if (aNewFetchedExcel.length > 0) {
-        this.middleWare.callMiddleWare("api/Jobs", "post", aNewFetchedExcel)
+        for (let i = 0; i < aNewFetchedExcel.length; i++) {
+              const element = aNewFetchedExcel[i];
+              element.ArtworkAttach = element.artworkCode.split("_")[0];
+              if(typeof(element.clientPONo) === 'number'){
+                element.clientPONo = element.clientPONo.toString();
+              }
+              element.PoAttach = element.clientPONo.split("_")[0];
+              aNewFetchedExcel[i] = element;
+
+              notification.push({
+                Title: "New Job Alert",
+                Description: `A New Job: ${element.jobCardNo} has been created.`,
+                Company: element.CompanyId
+              })
+            }
+          this.middleWare.callMiddleWare("api/Jobs", "post", aNewFetchedExcel)
           .then(function (data, status, xhr) {
 
             MessageToast.show("Successfully Uploaded")
@@ -415,7 +422,6 @@ sap.ui.define([
 
       if (aExcelToBeUploaded.length > 0) {
         for (let i = 0; i < aExcelToBeUploaded.length; i++) {
-
           const element = aExcelToBeUploaded[i];
           // element.UpdatedOn = formattedDate;
           element.ArtworkAttach = element.artworkCode.split("_")[0]
@@ -423,17 +429,18 @@ sap.ui.define([
             element.clientPONo =  element.clientPONo.toString();
           }
           element.PoAttach = element.clientPONo.split("_")[0]
-
+          // aExcelToBeUploaded[i] = element;
+          
           this.middleWare.callMiddleWare("api/Jobs", "PUT", element)
-            .then(function (data, status, xhr) {
-
-              MessageToast.show("Successfully Uploaded")
-              // that.getView().getModel("appView").setProperty("/customerUser", data);
-            })
-            .catch(function (jqXhr, textStatus, errorMessage) {
-
-              that.middleWare.errorHandler(jqXhr, that);
-            });
+          .then(function (data, status, xhr) {
+            
+            MessageToast.show("Successfully Uploaded")
+            // that.getView().getModel("appView").setProperty("/customerUser", data);
+          })
+          .catch(function (jqXhr, textStatus, errorMessage) {
+            
+            that.middleWare.errorHandler(jqXhr, that);
+          });
         }
         // that.getJobsData();
       }
@@ -445,8 +452,29 @@ sap.ui.define([
         this.getJobsData();
 
       }
+      this.newNotification(notification)
+      this._clearUploadAttachment();
 
     },
+
+    _clearUploadAttachment: function () {
+            var oFileUploader = this.byId("NewExcelUpload");
+   
+            if (!oFileUploader) {
+                var aControls = this.getView().getControlsByFieldGroupId() || [];
+                oFileUploader = this.getView().findAggregatedObjects(true).find(function(ctrl) {
+                    return ctrl.getId && ctrl.getId().includes("NewExcelUpload");
+                });
+            }
+           
+            if (oFileUploader) {
+                console.log("Found FileUploader:", oFileUploader.getId());
+                oFileUploader.clear();
+                oFileUploader.setValue("");
+            } else {
+                console.error("FileUploader still not found!");
+            }
+        },
     // onUpdateJob: function () {
     //
     //   BusyIndicator.show(0);
@@ -490,7 +518,7 @@ sap.ui.define([
 
       var oldData = this.getView().getModel('appView').getProperty("/storeDBJobs");
       this.getView().getModel('appView').setProperty("/allExcelData", oldData);
-      this.getView().byId("fileUploader").setValue("")
+      this.getView().byId("NewExcelUpload").setValue("")
       // this.getView().getModel('appView').setProperty("/jsonValue", "");
       // this.getView().getModel('appView').setProperty("/customerId", "");
       // this.getView().getModel('appView').setProperty("/allExcelData", "");

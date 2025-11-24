@@ -1388,6 +1388,79 @@ downloadAttachmentVis:function(value){
       } else if (weight >= 1) {
           return weight.toFixed(2) + " Kg";         
       }
-    }
+    },
+
+    formatNotificationTime: function (timeString) {
+      if (!timeString) return "";
+
+      // Convert DB time → Date object
+      const time = new Date(timeString);
+      const now = new Date();
+
+      const diffMs = now - time;
+      const diffSec = Math.floor(diffMs / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHr  = Math.floor(diffMin / 60);
+
+      // --- Seconds ---
+      if (diffSec < 60) {
+          return diffSec + " sec ago";
+      }
+
+      // --- Minutes ---
+      if (diffMin < 60) {
+          return diffMin + " min ago";
+      }
+
+      // --- Hours ---
+      if (diffHr < 24) {
+          return diffHr + " hours ago";
+      }
+
+      // --- Yesterday ---
+      const yesterday = new Date();
+      yesterday.setDate(now.getDate() - 1);
+
+      if (
+          time.getDate() === yesterday.getDate() &&
+          time.getMonth() === yesterday.getMonth() &&
+          time.getFullYear() === yesterday.getFullYear()
+      ) {
+          return "Yesterday";
+      }
+
+      // --- Older → return formatted date ---
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      return time.getDate() + " " + months[time.getMonth()] + " " + time.getFullYear();
+    },
+
+    isNewNotification: function (timeString) {
+       if (!timeString) return "";
+
+      // Convert DB time → Date object
+      const time = new Date(timeString);
+      const now = new Date();
+
+      const diffMs = now - time;
+      const diffSec = Math.floor(diffMs / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHr  = Math.floor(diffMin / 60);
+
+      // --- Seconds ---
+      if (diffSec < 60) return true;
+
+      // --- Minutes ---
+      if (diffMin < 60) return true;
+
+      // --- Hours ---
+      if (diffHr < 24) return true;
+
+      else{
+        return false;
+      }
+    }  
+
   };
 });

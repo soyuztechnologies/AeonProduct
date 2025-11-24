@@ -5,34 +5,44 @@
     xmlns:core="sap.ui.core"
     xmlns:fiori="sap.ui.webc.fiori"
     xmlns:tnt="sap.tnt">
-    <tnt:ToolPage sideExpanded="{appView>/sideNavExpended}">
-        
+    <tnt:ToolPage sideExpanded="{appView>/sideNavExpended}">    
         <tnt:header >
             <OverflowToolbar height="100%" width="100%" id="otb3">
-               
-                   <Button visible="{appView>/hamburgerVisibility}"
+                <Button visible="{appView>/hamburgerVisibility}"
                     press="onClickMenuButton"
                     class="sapUiTinyMarginEnd"
-                   icon="sap-icon://menu2" >
-                   <layoutData>
-                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    icon="sap-icon://menu2" >
+                        <layoutData>
+                            <OverflowToolbarLayoutData priority="NeverOverflow" />
+                        </layoutData>
+                </Button>
+                <Image src="logo/logo.png" width="4%"/>
+                <Title text="Aeon Products"></Title>
+
+                <ToolbarSpacer/> 
+
+                <Button priority="High" class="notificationBell" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" icon="sap-icon://bell" 
+                    tooltip="Notifications" press="onNotificationPopup">
+                    <customData>
+                        <BadgeCustomData
+                            key="badge"
+                            writeToDom="true"
+                            value="{appView>/NotificationCount}"
+                            visible="true" />
+                    </customData>
+                </Button>
+                <Button priority="High" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" icon="logo/whatsapp.png" tooltip="WhatsApp Support" press="whatsappSupport">
+                </Button>
+                <Button visible="{appView>/userRoleVis}" enabled="false" wrapping="true" text="{appView>/UserEmail}({appView>/UserRole})" >
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="High" />
                     </layoutData>
-                   </Button>
-                   <Image src="logo/logo.png" width="4%"/>
-                   <Title text="Aeon Products"></Title>
-                   <ToolbarSpacer/> 
-                   <Button priority="High" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" icon="logo/whatsapp.png" press="whatsappSupport">
-                   </Button>
-                        <Button visible="{appView>/userRoleVis}" enabled="false" wrapping="true" text="{appView>/UserEmail}({appView>/UserRole})" >
-                            <layoutData>
-                                <OverflowToolbarLayoutData priority="High" />
-                            </layoutData>
-                        </Button>
-                   <Button press="onPressLogout" text="Logout" icon="sap-icon://log" class="sapUiTinyMarginEnd"  visible="{appView>/logoutVisibility}">
+                </Button>
+                <Button press="onPressLogout" text="Logout" icon="sap-icon://log" class="sapUiTinyMarginEnd"  visible="{appView>/logoutVisibility}">
                     <layoutData>
                         <OverflowToolbarLayoutData priority="Low" />
                     </layoutData>
-                  </Button>
+                </Button>
             </OverflowToolbar>
         </tnt:header>
         <tnt:mainContents>
