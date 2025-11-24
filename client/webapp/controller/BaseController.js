@@ -29,7 +29,6 @@ sap.ui.define([
 			// this.getShopCartData(true);
 			// Controller.prototype.onInit.apply(this, arguments);
 
-
 		},
 		getUserRoleData: function () {
 			
@@ -115,6 +114,7 @@ sap.ui.define([
 				
 
 			}
+			this.getModel('appView').setProperty('/WhatsappVis', true)
 			this.getModel("appView").updateBindings();
 			this.getNotification();
 		},
@@ -215,6 +215,8 @@ sap.ui.define([
 					sessionStorage.session_id = null;
 					that.getModel("appView").setProperty("/layout", "OneColumn");
 					that.getModel("appView").setProperty("/logOut", true);
+					that.getModel("appView").setProperty("/NotificationVis", false);
+					that.getModel('appView').setProperty('/WhatsappVis', false)
 					that.getRouter().navTo("login");
 					that.getView().getModel("appView").setProperty("/sideNavExpended", true);
 					// window.refresh();
@@ -1740,6 +1742,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel(); 
 			var companyId = this.getModel('appView').getProperty('/CompanyId');
 			var role = this.getModel('appView').getProperty('/UserRole');
+			this.getModel('appView').setProperty('/NotificationVis', true)
 
 			var url;
 

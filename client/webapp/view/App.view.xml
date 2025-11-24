@@ -21,7 +21,7 @@
 
                 <ToolbarSpacer/> 
 
-                <Button priority="High" class="notificationBell" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" icon="sap-icon://bell" 
+                <Button priority="High" class="notificationBell" visible="{= ${appView>/NotificationVis} === true ? true : false}" icon="sap-icon://bell" 
                     tooltip="Notifications" press="onNotificationPopup">
                     <customData>
                         <BadgeCustomData
@@ -31,7 +31,7 @@
                             visible="true" />
                     </customData>
                 </Button>
-                <Button priority="High" visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' || ${appView>/UserRole} === 'SalesPerson' ? true : false }" icon="logo/whatsapp.png" tooltip="WhatsApp Support" press="whatsappSupport">
+                <Button priority="High" visible="{= ${appView>/WhatsappVis} === true ? true : false }" icon="logo/whatsapp.png" tooltip="WhatsApp Support" press="whatsappSupport">
                 </Button>
                 <Button visible="{appView>/userRoleVis}" enabled="false" wrapping="true" text="{appView>/UserEmail}({appView>/UserRole})" >
                     <layoutData>
