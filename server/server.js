@@ -328,7 +328,19 @@ app.start = function () {
 					const smtpTransport = require("nodemailer-smtp-transport");
 					const xoauth2 = require("xoauth2");
 
-					//PoTransporter Yash's Creds
+					
+					const PoTransporter = nodemailer.createTransport(smtpTransport({
+						service: 'gmail',
+						host: 'smtp.gmail.com',
+						auth: {
+							xoauth2: xoauth2.createXOAuth2Generator({
+								user: key.user,
+								clientId: key.clientId,
+								clientSecret: key.clientSecret,
+								refreshToken: key.refreshToken
+							})
+						}
+					}));
 
 					const emailContent = {
 						to: email.EMAIL_TO,
