@@ -409,21 +409,23 @@ sap.ui.define(
         }
 
         // Mark as Read
-        var paylaod = {
-          ReadBy: this.getModel('appView').getProperty('/UserId'),
-          NotificationId: [
-            {
-              id: selectedNotification.id
-            }
-          ]
-        }
-        this.middleWare.callMiddleWare("markAsReadNotification", "POST", paylaod)
+        if(selectedNotification.Status === "Unread"){
+          var paylaod = {
+            ReadBy: this.getModel('appView').getProperty('/UserId'),
+            NotificationId: [
+              {
+                id: selectedNotification.id
+              }
+            ]
+          }
+          this.middleWare.callMiddleWare("markAsReadNotification", "POST", paylaod)
           .then(function (data, status, xhr) {
             this.getNotification();
           }.bind(this))
           .catch(function (jqXhr, textStatus, errorMessage) {
             this.middleWare.errorHandler(jqXhr, this);
           }.bind(this));
+        }
       },
 
       markAllAsReadNotification: function () {
@@ -434,7 +436,9 @@ sap.ui.define(
           NotificationId: []
         };
         oData.forEach(function (oNotification) {
-          Payload.NotificationId.push({ id: oNotification.id });
+          if (oNotification.Status === "Unread") {
+            Payload.NotificationId.push({ id: oNotification.id });
+          }
         });
         this.middleWare.callMiddleWare("markAsReadNotification", "POST", Payload)
           .then(function (data, status, xhr) {

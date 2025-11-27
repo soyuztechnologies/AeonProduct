@@ -374,6 +374,7 @@ sap.ui.define([
       var aNewFetchedExcel = [];
       var aExcelToBeUploaded = [];
       var notification = []
+      var createUsedSheetPayload = []
       var date = new Date()
       var formattedDate = date.toLocaleDateString("en-US");
       for (let i = 0; i < aAllExcelFiles.length; i++) {
@@ -402,6 +403,12 @@ sap.ui.define([
                 Title: "New Job Alert",
                 Description: `A New Job: ${element.jobCardNo} has been created.`,
                 Company: element.CompanyId
+              })
+              createUsedSheetPayload.push({
+                PoNo: element.paperPoNo,   
+                QuantityOfSheets: element.noOfSheets3,
+                JobCardNo: element.jobCardNo,
+                Type: "UsedSheets"
               })
             }
           this.middleWare.callMiddleWare("api/Jobs", "post", aNewFetchedExcel)
@@ -453,8 +460,20 @@ sap.ui.define([
 
       }
       this.newNotification(notification)
+      this.createUsedSheetsForNewJob(createUsedSheetPayload)
       this._clearUploadAttachment();
 
+    },
+    
+    createUsedSheetsForNewJob: function(payload) {
+
+      this.middleWare.callMiddleWare("createUsedSheetsForNewJob", "post", payload)
+          .then(function (data, status, xhr) {
+            // UsedSheets are created
+          })
+          .catch(function (jqXhr, textStatus, errorMessage) { 
+            that.middleWare.errorHandler(jqXhr, that);
+          });
     },
 
     _clearUploadAttachment: function () {

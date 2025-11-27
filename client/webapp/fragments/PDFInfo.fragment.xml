@@ -11,9 +11,9 @@
 				singleContainerFullSize="false" >
 				<f:content>
 					<Label text="Transport"/>
-					<Input id="inpTransport" type="Text" value="DOOR DELIVERY" editable="true"/>
+					<Input id="inpTransport" type="Text" value="" editable="true"/>
 					<Label text="Payment Terms"/>
-					<Input id="inpPaymentTerms" type="Text" value="60 DAYS" editable="true"/>
+					<Input id="inpPaymentTerms" type="Text" value="" editable="true"/>
 					<Label text="Enter Discount"/>
 					<Input id="inpDiscount" type="Number" value="" editable="true"/>
 					<Label text="Enter Transportation Cost"/>

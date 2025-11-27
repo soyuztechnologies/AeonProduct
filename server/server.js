@@ -322,41 +322,72 @@ app.start = function () {
 		// * this fucntion working to replace the dynamic characters in the email body,like usernameand and emaol etc.
 
 		async function sendEmailTemp(email) {
-			return new Promise((resolve, reject) => {
-				try {
-					const nodemailer = require("nodemailer");
-					const smtpTransport = require("nodemailer-smtp-transport");
-					const xoauth2 = require("xoauth2");
+			var nodemailer = require('nodemailer');
+			var smtpTransport = require('nodemailer-smtp-transport');
+			this.Param = app.models.Param;
+			const xoauth2 = require('xoauth2');
 
-					
-					const PoTransporter = nodemailer.createTransport(smtpTransport({
-						service: 'gmail',
-						host: 'smtp.gmail.com',
-						auth: {
-							xoauth2: xoauth2.createXOAuth2Generator({
-								user: key.user,
-								clientId: key.clientId,
-								clientSecret: key.clientSecret,
-								refreshToken: key.refreshToken
-							})
-						}
-					}));
-
-					const emailContent = {
-						to: email.EMAIL_TO,
-						cc: email.EMAIL_CC ? email.EMAIL_CC : undefined,
-						bcc: email.EMAIL_BCC ? email.EMAIL_BCC : undefined,
-						subject: email.EMAIL_SUBJECT,
-						html: email.EMAIL_BODY,
-						attachments: email.GENERATED_PDF ? [
-							{
-								filename: `${email.PDF_NAME}`,
-								content: Buffer.from(email.GENERATED_PDF.split(",")[1], 'base64'),
-								contentType: 'application/pdf'
+			try {
+				const array = ["user", "clientId", "clientSecret", "refreshToken"];
+				const Param = this.Param;
+				const key = {};
+				const sParam = await Param.find({
+					where: {
+						and: [{
+							Code: {
+								inq: array
 							}
-						] : []
-					};
+						}]
+					}
+				});
 
+				for (const element of sParam) {
+					switch (element.Code) {
+						case "user":
+							key.user = element.Value;
+							break;
+						case "clientId":
+							key.clientId = element.Value;
+							break;
+						case "clientSecret":
+							key.clientSecret = element.Value;
+							break;
+						case "refreshToken":
+							key.refreshToken = element.Value;
+							break;
+					}
+				}
+
+				const PoTransporter = nodemailer.createTransport(smtpTransport({
+					service: 'gmail',
+					host: 'smtp.gmail.com',
+					auth: {
+						xoauth2: xoauth2.createXOAuth2Generator({
+							user: key.user,
+							clientId: key.clientId,
+							clientSecret: key.clientSecret,
+							refreshToken: key.refreshToken
+						})
+					}
+				}));
+
+				const emailContent = {
+					to: email.EMAIL_TO,
+					cc: email.EMAIL_CC ? email.EMAIL_CC : undefined,
+					bcc: email.EMAIL_BCC ? email.EMAIL_BCC : undefined,
+					subject: email.EMAIL_SUBJECT,
+					html: email.EMAIL_BODY,
+					attachments: email.GENERATED_PDF ? [
+						{
+							filename: `${email.PDF_NAME}`,
+							content: Buffer.from(email.GENERATED_PDF.split(",")[1], 'base64'),
+							contentType: 'application/pdf'
+						}
+					] : []
+				};
+
+				// Convert callback to Promise
+				return new Promise((resolve, reject) => {
 					PoTransporter.sendMail(emailContent, function (error, info) {
 						if (error) {
 							console.error("Email send failed:", error);
@@ -366,11 +397,11 @@ app.start = function () {
 							resolve(info);
 						}
 					});
-
-				} catch (err) {
-					reject(err);
-				}
-			});
+				});
+			} catch (error) {
+				console.error(error);
+				res.status(500).send('Internal server error');
+			}
 		}
 
 
@@ -441,7 +472,7 @@ app.start = function () {
 					details: error.message
 				});
 			}
-			});
+		});
 
 		
 		async function replaceTemplatePlaceholders(content, replacements) {
@@ -3468,7 +3499,7 @@ app.start = function () {
 						const usedSheetsData = jobs.map(job => ({
 							JobCardNo: job.jobCardNo,
 							PoNo: PoNo,
-							QuantityOfSheets: -Math.abs(Number(job.noOfSheets3).toFixed(2)), // Make sure it's always negative with 2 decimal places
+							QuantityOfSheets: -Math.abs(Math.round(Number(job.noOfSheets3))), 
 						}));
 
 						UsedSheets.create(usedSheetsData, (err, createdUsedSheets) => {
@@ -3804,7 +3835,7 @@ app.start = function () {
 			}
 		});
 
-		app.get('/api/Notifications/unread', async (req, res) => {
+		app.get('/api/Notifications', async (req, res) => {
 			try {
 				const Notification = app.models.Notifications;
 				const userId = req.query.userId;
@@ -3819,36 +3850,52 @@ app.start = function () {
 				
 				// Build base filter
 				if (role === "Admin") {
-					// Admin sees all companies
 					whereCondition = {};
 				} else {
-					// Other roles see only their company
 					whereCondition = { Company: { like: companyId } };
 				}
 				
-				// Fetch all notifications
-				const notifications = await Notification.find({ where: whereCondition });
-				
-				// Filter in JavaScript - exclude notifications where ReadBy contains userId
-				const unreadNotifications = notifications.filter(notification => {
-					if (!notification.ReadBy || notification.ReadBy === "") {
-						return true; // Include if ReadBy is null or empty
-					}
-					
-					// Split ReadBy by comma and check if userId exists
-					const readByArray = notification.ReadBy.split(',').map(id => id.trim());
-					return !readByArray.includes(userId); // Exclude if userId found
+				// Fetch all notifications sorted by CreatedOn descending
+				const notifications = await Notification.find({ 
+					where: whereCondition,
+					order: 'CreatedOn DESC'
 				});
 				
-				return res.status(200).json(unreadNotifications);
+				const unreadNotifications = [];
+				const readNotifications = [];
+				
+				// Separate read and unread notifications
+				notifications.forEach(notification => {
+					const isRead = notification.ReadBy && 
+								notification.ReadBy !== "" && 
+								notification.ReadBy.split(',').map(id => id.trim()).includes(userId);
+					
+					if (isRead) {
+						// Add status field
+						notification.Status = "Read";
+						readNotifications.push(notification);
+					} else {
+						// Add status field
+						notification.Status = "Unread";
+						unreadNotifications.push(notification);
+					}
+				});
+				
+				// Get last 5 read notifications
+				const last5ReadNotifications = readNotifications.slice(0, 5);
+				
+				// Combine: all unread + last 5 read
+				const finalNotifications = [...unreadNotifications, ...last5ReadNotifications];
+				
+				return res.status(200).json(finalNotifications);
 				
 			} catch (err) {
-				console.error("Error fetching unread notifications:", err);
+				console.error("Error fetching notifications:", err);
 				return res.status(500).json({ error: "Error fetching notifications" });
 			}
 		});
 
-		app.get('/api/Notifications/unread/count', async (req, res) => {
+		app.get('/api/Notifications/count', async (req, res) => {
 			try {
 				const Notification = app.models.Notifications;
 				const userId = req.query.userId;
@@ -3869,6 +3916,7 @@ app.start = function () {
 				
 				const notifications = await Notification.find({ where: whereCondition });
 				
+				// Count only unread notifications
 				const unreadNotifications = notifications.filter(notification => {
 					if (!notification.ReadBy || notification.ReadBy === "") {
 						return true;
@@ -3880,10 +3928,71 @@ app.start = function () {
 				return res.status(200).json({ count: unreadNotifications.length });
 				
 			} catch (err) {
-				console.error("Error counting unread notifications:", err);
+				console.error("Error counting notifications:", err);
 				return res.status(500).json({ error: "Error counting notifications" });
 			}
 		});
+
+		app.post('/createUsedSheetsForNewJob', async (req, res) => {
+			try {
+				const payload = req.body;   // Array of objects
+				const PoTable = app.models.PoTable;
+				const UsedSheets = app.models.UsedSheets;
+
+				if (!Array.isArray(payload)) {
+					return res.status(400).json({ 
+						success: false, 
+						message: "Payload must be an array of objects" 
+					});
+				}
+
+				let created = [];
+				let skipped = [];
+
+				for (let item of payload) {
+					const { PoNo, QuantityOfSheets, JobCardNo, Type } = item;
+
+					var stringPoNo = PoNo.toString();
+					// Validate required fields
+					if (!stringPoNo) {
+						skipped.push({ item });
+						continue;
+					}
+
+					// Check if PoNo exists in PoTable
+					const poExists = await PoTable.findOne({ where: { PoNo: stringPoNo } });
+
+					if (!poExists) {
+						skipped.push({ item });
+						continue;
+					}
+
+					// Create UsedSheets entry
+					const createdUsedSheet = await UsedSheets.create({
+						PoNo: stringPoNo,
+						QuantityOfSheets: -Math.abs(Math.round(Number(QuantityOfSheets))),
+						JobCardNo: JobCardNo,
+						Type: Type
+					});
+
+					created.push(createdUsedSheet);
+				}
+
+				return res.status(200).json({
+					success: true,
+					message: "Process completed"
+				});
+
+			} catch (err) {
+				console.error("Error creating UsedSheets:", err);
+				return res.status(500).json({
+					success: false,
+					message: "Internal server error",
+					error: err
+				});
+			}
+		});
+
 
 
 	});

@@ -76,7 +76,7 @@ sap.ui.define([
 								var q = Number(item.QuantityOfSheets) || 0;
 								return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
 							}, 0);
-							item.ClosingStock = +(Number(OpeningStock) + negativeSum).toFixed(2);
+							item.ClosingStock = Math.round(Number(OpeningStock) + negativeSum);
 						}
 						return item;
 					})
@@ -695,11 +695,15 @@ sap.ui.define([
 				}).then(function (oDialog) {
 					oView.addDependent(oDialog);
 					oDialog.open();  
+					that.byId('inpTransport').setValue("DOOR DELIVERY")
+					that.byId('inpPaymentTerms').setValue("60 DAYS")
 					return oDialog;
 				}.bind(this));
 			} else {
 				this.PDFinfoDialog.then(function(oDialog) {
 					oDialog.open();
+					that.byId('inpTransport').setValue("DOOR DELIVERY")
+					that.byId('inpPaymentTerms').setValue("60 DAYS")
 				});
 			}
 			
@@ -764,8 +768,13 @@ sap.ui.define([
 
 			//  Fetch image and convert to Base64
 			var sLogoPath = jQuery.sap.getModulePath("ent.ui.ecommerce") + "/img/Po_header.png";
-			const response = await fetch(sLogoPath);
-			const blob = await response.blob();
+			var Signature = jQuery.sap.getModulePath("ent.ui.ecommerce") + "/img/Signature.png";
+
+			const logoResponse = await fetch(sLogoPath);
+			const signatureResponse = await fetch(Signature);
+
+			const logoBlob = await logoResponse.blob();
+			const signatureBlob = await signatureResponse.blob();
 
 			// Calculations
 			const HeightInInches = +((oPoSheet.Height / 25.4).toFixed(2));
@@ -775,186 +784,194 @@ sap.ui.define([
 			const ClosingWeight = +(((oPoSheet.Height / 1000) * (oPoSheet.Width / 1000) * (oPoSheet.GSM / 1000) * ClosingStock).toFixed(2));
 			const FinalPrice = +((oPoSheet.Rate * ClosingWeight).toFixed(2));
 
-			const reader = new FileReader();
-
-			reader.onloadend = () => {
-				const base64Logo = reader.result; // Base64 image
-
-				// --- HEADER ---
-				doc.image(base64Logo, 50, 40, { width: 500, align: "center" }); 
-
-				const LEFT_MARGIN = 20; 
-				const RIGHT_MARGIN = 600;
-				doc.moveDown(0.3);
-				doc.moveTo(LEFT_MARGIN, 140)   // line start point
-					.lineTo(RIGHT_MARGIN, 140)   // line end point
-					.stroke();        // draw the line
-				doc.fontSize(14).text("Purchase Order", { align: "center" });
-				doc.moveTo(LEFT_MARGIN, 165)   
-				.lineTo(RIGHT_MARGIN, 165)   
-				.stroke();        
-
-				doc.moveDown(0.6);
-				// --- IMPORTANT NOTE ---
-				doc.fillColor("red").fontSize(11).text("Kindly mention Purchase Order No. in your Invoice or else the Invoice will not be accepted.", { align: "center", underline: true });
-				
-				
-				// --- ORDER DETAILS ---
-				const currentDate = new Date();
-				const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
-				const orderDetailsTop = 200;
-				// Header for Order details table
-				doc.moveTo(LEFT_MARGIN, orderDetailsTop - 5).lineTo(RIGHT_MARGIN, orderDetailsTop - 5).stroke();
-
-				doc.fillColor("black").fontSize(11).text(`Purchase Order No: ${oPoSheet.PoNo}`, 40, orderDetailsTop)
-				doc.fontSize(11).text(`Date: ${formattedDate}`, 240, orderDetailsTop)
-				doc.fontSize(11).text(`Delivery Date:`, 400, orderDetailsTop)
-
-				// vertical lines
-				doc.moveTo(230, orderDetailsTop - 5).lineTo(230, orderDetailsTop + 50).stroke();
-				doc.moveTo(390, orderDetailsTop - 5).lineTo(390, orderDetailsTop + 50).stroke();
-
-				// Order details
-				doc.moveTo(LEFT_MARGIN, orderDetailsTop + 12).lineTo(RIGHT_MARGIN, orderDetailsTop + 12).stroke();
-				doc.fontSize(11).text("To,", 40, orderDetailsTop + 17).text(`${oPoSheet.SupplierName}`, 40, orderDetailsTop + 32);
-				doc.fontSize(11).text(`Ship To,`, 240, orderDetailsTop + 17)
-				doc.fontSize(11).text(`Bill To,`, 400, orderDetailsTop + 17).text(`AEON Products`, 400, orderDetailsTop + 32)
-				doc.moveDown(2);
-
-				doc.moveTo(LEFT_MARGIN, orderDetailsTop + 50).lineTo(RIGHT_MARGIN, orderDetailsTop + 50).stroke();
-
-				
-
-				// --- TABLE HEADER ---
-				const tableTop = 300;
-				doc.moveTo(LEFT_MARGIN, tableTop).lineTo(RIGHT_MARGIN, tableTop).stroke();
-				doc.fontSize(14).text("Item Description", 255 , tableTop + 5);
-				doc.font("Helvetica-Bold");
-				doc.moveTo(LEFT_MARGIN, tableTop + 20).lineTo(RIGHT_MARGIN, tableTop + 20).stroke();
-				doc.fontSize(12).text("Sr.No", 20, tableTop + 25);
-				doc.text("Mill", 75, tableTop + 25);
-				doc.text("Quality", 135, tableTop + 25);
-				doc.text("GSM", 210, tableTop + 25);
-				doc.text("Size", 290, tableTop + 25);
-				doc.text("Weight/Sheets", 360, tableTop + 25);
-				doc.text("Rate", 460, tableTop + 25);
-				doc.text("Total", 540, tableTop + 25);
-				doc.font("Helvetica");
-
-				
-				// vertical lines
-				doc.moveTo(55, tableTop + 20).lineTo(55, tableTop + 120).stroke();
-				doc.moveTo(120, tableTop + 20).lineTo(120, tableTop + 120).stroke();
-				doc.moveTo(190, tableTop + 20).lineTo(190, tableTop + 120).stroke();
-				doc.moveTo(260, tableTop + 20).lineTo(260, tableTop + 120).stroke();
-				doc.moveTo(350, tableTop + 20).lineTo(350, tableTop + 120).stroke();
-				doc.moveTo(450, tableTop + 20).lineTo(450, tableTop + 120).stroke();
-				doc.moveTo(515, tableTop + 20).lineTo(515, tableTop + 120).stroke();
-
-				// const currecySymbol = '₹';
-				// const currecySymbol = '\u20B9'; 
-				const currecySymbol = 'Rs.'; 
-
-				const formatedRate = this.formatCurrency(oPoSheet.Rate);
-
-				// --- TABLE ROW (Example) ---
-				doc.moveTo(LEFT_MARGIN, tableTop + 40).lineTo(RIGHT_MARGIN, tableTop + 40).stroke();
-				doc.fontSize(11).text("1", 30, tableTop + 45);
-				doc.text(oPoSheet.Mill, 60, tableTop + 45, {  width: 60 });
-				doc.text(oPoSheet.QualityOfMaterial, 125, tableTop + 45, { width: 70 });
-				doc.text(`${oPoSheet.GSM} GSM`, 200, tableTop + 45, { width: 60 });
-				doc.text(`${oPoSheet.Height}x${oPoSheet.Width} mm`, 270, tableTop + 45, { width: 90 }).text(`${HeightInInches}x${WidthInInches} '`, 270, tableTop + 60, { width: 90 });
-				doc.text(`${OpeningWeight} KG`, 370, tableTop + 45, { width: 80 }).text(`${oPoSheet.OpeningStock} Sheets`, 370, tableTop + 60, { width: 80});
-				doc.text(`${currecySymbol} ${formatedRate}`, 455, tableTop + 45, { width: 60 });
-				const price = +((oPoSheet.Rate * OpeningWeight).toFixed(2));
-				const formatedPrice = this.formatCurrency(price);
-				doc.text(`${currecySymbol} ${formatedPrice}`, 520, tableTop + 45, { width: 70 });
-				doc.moveTo(LEFT_MARGIN, tableTop + 120).lineTo(RIGHT_MARGIN, tableTop + 120).stroke();
-
-				doc.moveDown(1);
-
-				doc.text('Transport: ', 30, tableTop + 130).text('Payment Terms: ', 30 , tableTop + 145);
-				doc.text(`${oPoSheet.Transport}`, 140, tableTop + 130).text(`${oPoSheet.PaymentTerms}`, 140 , tableTop + 145);
-
-				// calculations
-				const discount = +(oPoSheet.Discount) || 0.00;
-				const formatedDiscount = this.formatCurrency(discount);
-				const transportation = +(oPoSheet.Transportation) || 0.00;
-				const formatedTransportation = this.formatCurrency(transportation);
-				const SGST = 6;
-				const CGST = 6;
-				const SGSTAmount = (price + transportation) * SGST / 100;
-				const formatedSGSTAmount = this.formatCurrency(SGSTAmount);
-				const CGSTAmount = price * CGST / 100;
-				const formatedCGSTAmount = this.formatCurrency(CGSTAmount);
-				const grandTotal = (price + discount + transportation + SGSTAmount + CGSTAmount) * 1;
-				const formatedGrandTotal = this.formatCurrency(grandTotal);
-
-				doc.text('Total: ', 370, tableTop + 130).text(`${currecySymbol} ${formatedPrice}`, 470, tableTop + 130);
-				doc.text('Discount: ', 370, tableTop + 145).text(`${currecySymbol} ${formatedDiscount}`, 470, tableTop + 145);
-				doc.text('Transportation: ', 370, tableTop + 160).text(`${currecySymbol} ${formatedTransportation}`, 470, tableTop + 160);
-				doc.text(`SGST ${SGST}%: `, 370, tableTop + 175).text(`${currecySymbol} ${formatedSGSTAmount}`, 470, tableTop + 175);
-				doc.text(`CGST ${CGST}%: `, 370, tableTop + 190).text(`${currecySymbol} ${formatedCGSTAmount}`, 470, tableTop + 190);
-				doc.text('Grand Total: ', 370, tableTop + 205).text(`${currecySymbol} ${formatedGrandTotal}`, 470, tableTop + 205);
-
-				doc.moveTo(LEFT_MARGIN, tableTop + 220).lineTo(RIGHT_MARGIN, tableTop + 220).stroke();
+			// Read logo
+			const logoReader = new FileReader();
+			const signatureReader = new FileReader();
 
 
-				doc.moveTo(LEFT_MARGIN, tableTop + 235).lineTo(RIGHT_MARGIN, tableTop + 235).stroke();
-				doc.text('Remarks: ', 30, tableTop + 240).text(`${oPoSheet.Remarks}`, 100, tableTop + 240, { width: 250});
-				doc.text('For AEON Products', 460, tableTop + 240);
-				doc.text('Authorised Signatory', 460, tableTop + 300);
-				doc.moveTo(LEFT_MARGIN, tableTop + 315).lineTo(RIGHT_MARGIN, tableTop + 315).stroke();
+			logoReader.onloadend = () => {
+    			const base64Logo = logoReader.result;
 
-				// vertical line
-				doc.moveTo(300, tableTop + 235).lineTo(300, tableTop + 315).stroke();
+				signatureReader.onloadend = () => {
+					const base64Signature = signatureReader.result;
+					
+					// --- HEADER ---
+					doc.image(base64Logo, 50, 40, { width: 500, align: "center" }); 
 
-				// --- FOOTER ---
-				doc.moveDown(4);
-				doc.text("Prepared By: ___________________", 50, 700).text(`${oPoSheet.PreparedBy}`, 120, 695);
-				doc.text("Checked By: ___________________", 350, 700).text(`${oPoSheet.CheckedBy}`, 420, 695);
+					const LEFT_MARGIN = 20; 
+					const RIGHT_MARGIN = 600;
+					doc.moveDown(0.3);
+					doc.moveTo(LEFT_MARGIN, 140)   // line start point
+						.lineTo(RIGHT_MARGIN, 140)   // line end point
+						.stroke();        // draw the line
+					doc.fontSize(14).text("Purchase Order", { align: "center" });
+					doc.moveTo(LEFT_MARGIN, 165)   
+					.lineTo(RIGHT_MARGIN, 165)   
+					.stroke();        
 
-				// --- END & DOWNLOAD ---
-				// doc.end();
-				// stream.on("finish", function () {
-				// const blob = stream.toBlob("application/pdf");
-				// const url = stream.toBlobURL("application/pdf");
-				// const a = document.createElement("a");
-				// a.href = url;
-				// a.download = `PO_${oPoSheet.PoNo}.pdf`;
-				// a.click();
+					doc.moveDown(0.6);
+					// --- IMPORTANT NOTE ---
+					doc.fillColor("red").fontSize(11).text("Kindly mention Purchase Order No. in your Invoice or else the Invoice will not be accepted.", { align: "center", underline: true });
+					
+					
+					// --- ORDER DETAILS ---
+					const currentDate = new Date();
+					const formattedDate = currentDate.toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
+					const orderDetailsTop = 200;
+					// Header for Order details table
+					doc.moveTo(LEFT_MARGIN, orderDetailsTop - 5).lineTo(RIGHT_MARGIN, orderDetailsTop - 5).stroke();
 
-				doc.end();
-				stream.on("finish", async () => {
-				const blobPDF = stream.toBlob('application/pdf');
-				const reader2 = new FileReader();
-				reader2.onloadend = async () => {
-					const base64PDF = reader2.result; 
+					doc.fillColor("black").fontSize(11).text(`Purchase Order No: ${oPoSheet.PoNo}`, 40, orderDetailsTop)
+					doc.fontSize(11).text(`Date: ${formattedDate}`, 240, orderDetailsTop)
+					doc.fontSize(11).text(`Delivery Date:`, 400, orderDetailsTop)
 
-					this.getView().getModel("appView").setProperty("/GeneratedPDF", base64PDF);
-					this.getView().getModel("appView").setProperty("/PDFPoNo", oPoSheet.PoNo);
+					// vertical lines
+					doc.moveTo(230, orderDetailsTop - 5).lineTo(230, orderDetailsTop + 50).stroke();
+					doc.moveTo(390, orderDetailsTop - 5).lineTo(390, orderDetailsTop + 50).stroke();
 
-					if (!this._pPDFViewerDialog) {
-						this._pPDFViewerDialog = Fragment.load({
-							id: this.getView().getId(),
-							name: "ent.ui.ecommerce.fragments.PoSheetPDFViewer",
-							controller: this
-						}).then(function (oDialog) {
-							this.getView().addDependent(oDialog);
-							oDialog.open();
-							return oDialog;
-						}.bind(this));
-					} else {
-						(await this._pPDFViewerDialog).open();
-					}
+					// Order details
+					doc.moveTo(LEFT_MARGIN, orderDetailsTop + 12).lineTo(RIGHT_MARGIN, orderDetailsTop + 12).stroke();
+					doc.fontSize(11).text("To,", 40, orderDetailsTop + 17).text(`${oPoSheet.SupplierName}`, 40, orderDetailsTop + 32);
+					doc.fontSize(11).text(`Ship To,`, 240, orderDetailsTop + 17)
+					doc.fontSize(11).text(`Bill To,`, 400, orderDetailsTop + 17).text(`AEON Products`, 400, orderDetailsTop + 32)
+					doc.moveDown(2);
+
+					doc.moveTo(LEFT_MARGIN, orderDetailsTop + 50).lineTo(RIGHT_MARGIN, orderDetailsTop + 50).stroke();
+
+					
+
+					// --- TABLE HEADER ---
+					const tableTop = 300;
+					doc.moveTo(LEFT_MARGIN, tableTop).lineTo(RIGHT_MARGIN, tableTop).stroke();
+					doc.fontSize(14).text("Item Description", 255 , tableTop + 5);
+					doc.font("Helvetica-Bold");
+					doc.moveTo(LEFT_MARGIN, tableTop + 20).lineTo(RIGHT_MARGIN, tableTop + 20).stroke();
+					doc.fontSize(12).text("Sr.No", 20, tableTop + 25);
+					doc.text("Mill", 75, tableTop + 25);
+					doc.text("Quality", 135, tableTop + 25);
+					doc.text("GSM", 210, tableTop + 25);
+					doc.text("Size", 290, tableTop + 25);
+					doc.text("Weight/Sheets", 360, tableTop + 25);
+					doc.text("Rate", 460, tableTop + 25);
+					doc.text("Total", 540, tableTop + 25);
+					doc.font("Helvetica");
+
+					
+					// vertical lines
+					doc.moveTo(55, tableTop + 20).lineTo(55, tableTop + 120).stroke();
+					doc.moveTo(120, tableTop + 20).lineTo(120, tableTop + 120).stroke();
+					doc.moveTo(190, tableTop + 20).lineTo(190, tableTop + 120).stroke();
+					doc.moveTo(260, tableTop + 20).lineTo(260, tableTop + 120).stroke();
+					doc.moveTo(350, tableTop + 20).lineTo(350, tableTop + 120).stroke();
+					doc.moveTo(450, tableTop + 20).lineTo(450, tableTop + 120).stroke();
+					doc.moveTo(515, tableTop + 20).lineTo(515, tableTop + 120).stroke();
+
+					// const currecySymbol = '₹';
+					// const currecySymbol = '\u20B9'; 
+					const currecySymbol = 'Rs.'; 
+
+					const formatedRate = this.formatCurrency(oPoSheet.Rate);
+
+					// --- TABLE ROW (Example) ---
+					doc.moveTo(LEFT_MARGIN, tableTop + 40).lineTo(RIGHT_MARGIN, tableTop + 40).stroke();
+					doc.fontSize(11).text("1", 30, tableTop + 45);
+					doc.text(oPoSheet.Mill, 60, tableTop + 45, {  width: 60 });
+					doc.text(oPoSheet.QualityOfMaterial, 125, tableTop + 45, { width: 70 });
+					doc.text(`${oPoSheet.GSM} GSM`, 200, tableTop + 45, { width: 60 });
+					doc.text(`${oPoSheet.Height}x${oPoSheet.Width} mm`, 270, tableTop + 45, { width: 90 }).text(`${HeightInInches}x${WidthInInches} '`, 270, tableTop + 60, { width: 90 });
+					doc.text(`${OpeningWeight} KG`, 370, tableTop + 45, { width: 80 }).font("Helvetica-Bold").text(`${oPoSheet.OpeningStock} Sheets`, 370, tableTop + 60, { width: 80});
+					doc.font("Helvetica").text(`${currecySymbol} ${formatedRate}`, 455, tableTop + 45, { width: 60 });
+					const price = +((oPoSheet.Rate * OpeningWeight).toFixed(2));
+					const formatedPrice = this.formatCurrency(price);
+					doc.text(`${currecySymbol} ${formatedPrice}`, 520, tableTop + 45, { width: 70 });
+					doc.moveTo(LEFT_MARGIN, tableTop + 120).lineTo(RIGHT_MARGIN, tableTop + 120).stroke();
+
+					doc.moveDown(1);
+
+					doc.text('Transport: ', 30, tableTop + 130).text('Payment Terms: ', 30 , tableTop + 145);
+					doc.text(`${oPoSheet.Transport}`, 140, tableTop + 130).text(`${oPoSheet.PaymentTerms}`, 140 , tableTop + 145);
+
+					// calculations
+					const discount = +(oPoSheet.Discount) || 0.00;
+					const formatedDiscount = this.formatCurrency(discount);
+					const transportation = +(oPoSheet.Transportation) || 0.00;
+					const formatedTransportation = this.formatCurrency(transportation);
+					const SGST = 6;
+					const CGST = 6;
+					const SGSTAmount = (price + transportation) * SGST / 100;
+					const formatedSGSTAmount = this.formatCurrency(SGSTAmount);
+					const CGSTAmount = price * CGST / 100;
+					const formatedCGSTAmount = this.formatCurrency(CGSTAmount);
+					const grandTotal = (price + discount + transportation + SGSTAmount + CGSTAmount) * 1;
+					const formatedGrandTotal = this.formatCurrency(grandTotal);
+
+					doc.text('Total: ', 370, tableTop + 130).text(`${currecySymbol} ${formatedPrice}`, 470, tableTop + 130);
+					doc.text('Discount: ', 370, tableTop + 145).text(`${currecySymbol} ${formatedDiscount}`, 470, tableTop + 145);
+					doc.text('Transportation: ', 370, tableTop + 160).text(`${currecySymbol} ${formatedTransportation}`, 470, tableTop + 160);
+					doc.text(`SGST ${SGST}%: `, 370, tableTop + 175).text(`${currecySymbol} ${formatedSGSTAmount}`, 470, tableTop + 175);
+					doc.text(`CGST ${CGST}%: `, 370, tableTop + 190).text(`${currecySymbol} ${formatedCGSTAmount}`, 470, tableTop + 190);
+					doc.text('Grand Total: ', 370, tableTop + 205).text(`${currecySymbol} ${formatedGrandTotal}`, 470, tableTop + 205);
+
+					doc.moveTo(LEFT_MARGIN, tableTop + 220).lineTo(RIGHT_MARGIN, tableTop + 220).stroke();
+
+
+					doc.moveTo(LEFT_MARGIN, tableTop + 235).lineTo(RIGHT_MARGIN, tableTop + 235).stroke();
+					doc.text('Remarks: ', 30, tableTop + 240).text(`${oPoSheet.Remarks}`, 100, tableTop + 240, { width: 250});
+					doc.text('For AEON Products', 460, tableTop + 240);
+					// --- SIGNATURE IMAGE ---
+					doc.image(base64Signature, 480, tableTop + 250, { width: 70 }); 
+					doc.text('Authorised Signatory', 460, tableTop + 300);
+					doc.moveTo(LEFT_MARGIN, tableTop + 315).lineTo(RIGHT_MARGIN, tableTop + 315).stroke();
+
+					// vertical line
+					doc.moveTo(300, tableTop + 235).lineTo(300, tableTop + 315).stroke();
+
+					// --- FOOTER ---
+					doc.moveDown(4);
+					doc.text("Prepared By: ___________________", 50, 700).text(`${oPoSheet.PreparedBy}`, 120, 695);
+					doc.text("Checked By: ___________________", 350, 700).text(`${oPoSheet.CheckedBy}`, 420, 695);
+
+					// --- END & DOWNLOAD ---
+					// doc.end();
+					// stream.on("finish", function () {
+					// const blob = stream.toBlob("application/pdf");
+					// const url = stream.toBlobURL("application/pdf");
+					// const a = document.createElement("a");
+					// a.href = url;
+					// a.download = `PO_${oPoSheet.PoNo}.pdf`;
+					// a.click();
+
+					doc.end();
+					stream.on("finish", async () => {
+					const blobPDF = stream.toBlob('application/pdf');
+					const reader2 = new FileReader();
+					reader2.onloadend = async () => {
+						const base64PDF = reader2.result; 
+
+						this.getView().getModel("appView").setProperty("/GeneratedPDF", base64PDF);
+						this.getView().getModel("appView").setProperty("/PDFPoNo", oPoSheet.PoNo);
+
+						if (!this._pPDFViewerDialog) {
+							this._pPDFViewerDialog = Fragment.load({
+								id: this.getView().getId(),
+								name: "ent.ui.ecommerce.fragments.PoSheetPDFViewer",
+								controller: this
+							}).then(function (oDialog) {
+								this.getView().addDependent(oDialog);
+								oDialog.open();
+								return oDialog;
+							}.bind(this));
+						} else {
+							(await this._pPDFViewerDialog).open();
+						}
+					};
+						reader2.readAsDataURL(blobPDF);
+					});
 				};
-				reader2.readAsDataURL(blobPDF);
-			});
-
-				this.getView().byId("tablePoSheet").removeSelections();
+					signatureReader.readAsDataURL(signatureBlob);
+					this.getView().byId("tablePoSheet").removeSelections();
 			};
-
-			reader.readAsDataURL(blob); 
+				logoReader.readAsDataURL(logoBlob); 
 		},
 
 		onDownloadReceipt: function () {
@@ -990,9 +1007,11 @@ sap.ui.define([
 			var oView = this.getView();
 			const PoNo = this.getView().getModel("appView").getProperty("/PDFPoNo");
 			const GENERATED_PDF = this.getView().getModel("appView").getProperty("/GeneratedPDF");
+			var defaultBody = "<p>Dear Sir,</p>\n<p>Please find attached the PO for the material required. Kindly arrange to deliver the same at your earliest.</p>\n<p>&nbsp;</p>\n<p>Thanks,</p>\n<p>Purchase Department</p>\n<p>Aeon Products.</p>"
 			this.getView().getModel("appView").setProperty("/Email", {
 				PDF_NAME: `PO_${PoNo}.pdf`,
-				GENERATED_PDF: GENERATED_PDF
+				GENERATED_PDF: GENERATED_PDF,
+				EMAIL_BODY: defaultBody
 			 })
 			this.getView().getModel("appView").setProperty("/EmailTitle", 'Send Po via Email')
 
@@ -1041,7 +1060,14 @@ sap.ui.define([
 
 			let ccEmails = [];
 			if (payload.EMAIL_CC) {
-				ccEmails = payload.EMAIL_CC.split(",").map(e => e.trim());
+
+				var rawCC = String(payload.EMAIL_CC);
+
+				ccEmails = rawCC
+					.split(",")
+					.map(e => e.trim())
+					.filter(e => e); // remove empty ones
+
 				for (let email of ccEmails) {
 					if (!emailRegex.test(email)) {
 						MessageToast.show("Please enter a valid CC email address");
@@ -1049,10 +1075,16 @@ sap.ui.define([
 					}
 				}
 			}
-
 			let bccEmails = [];
 			if (payload.EMAIL_BCC) {
-				bccEmails = payload.EMAIL_BCC.split(",").map(e => e.trim());
+
+				var rawBCC = String(payload.EMAIL_BCC);
+
+				bccEmails = rawBCC
+					.split(",")
+					.map(e => e.trim())
+					.filter(e => e); // remove empty ones
+
 				for (let email of bccEmails) {
 					if (!emailRegex.test(email)) {
 						MessageToast.show("Please enter a valid BCC email address");

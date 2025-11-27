@@ -1745,7 +1745,7 @@ sap.ui.define([
 			this.getModel('appView').setProperty('/NotificationVis', true);
 			
 			// Build count URL with query params
-			var countUrl = 'api/Notifications/unread/count?userId=' + userId + 
+			var countUrl = 'api/Notifications/count?userId=' + userId + 
 						'&companyId=' + companyId + 
 						'&role=' + role;
 			
@@ -1756,18 +1756,25 @@ sap.ui.define([
 					
 					if (count !== oldCount) {
 						// Fetch actual notification data
-						var dataUrl = 'api/Notifications/unread?userId=' + userId + 
+						var dataUrl = 'api/Notifications?userId=' + userId + 
 									'&companyId=' + companyId + 
 									'&role=' + role;
 						
 						that.middleWare.callMiddleWare(dataUrl, "GET")
 							.then(function(data, status, xhr) {
+								let unreadData = [];
 								if (data && data.length > 0) {
 									that.getModel("appView").setProperty("/Notification", data);
 									that.getModel("appView").setProperty("/NotificationCount", data.length);
+									unreadData = data.filter(item => item.Status === "Unread");
 								} else {
 									that.getModel("appView").setProperty("/Notification", []);
 									that.getModel("appView").setProperty("/NotificationCount", 0);
+								}
+								if(unreadData.length > 0){
+									that.getModel("appView").setProperty("/MarkAllAsReadBtnVis", true);
+								}else{
+									that.getModel("appView").setProperty("/MarkAllAsReadBtnVis", false);
 								}
 								that.getModel("appView").refresh(true);
 							})

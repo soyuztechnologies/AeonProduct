@@ -8,7 +8,7 @@
                 <content>
                     <Title text="Notifications"></Title>
                     <ToolbarSpacer ></ToolbarSpacer>
-                    <Button visible="{= ${appView>/Notification}.length !== 0 ? true : false}" type="Emphasized" text="Mark All As Read" icon="sap-icon://multiselect-all" press="markAllAsReadNotification"></Button>
+                    <Button visible="{= ${appView>/MarkAllAsReadBtnVis} === true ? true : false}" type="Emphasized" text="Mark All As Read" icon="sap-icon://multiselect-all" press="markAllAsReadNotification"></Button>
                 </content>
             </OverflowToolbar>
         </customHeader>
@@ -41,7 +41,8 @@
                                 type="Neutral" 
                                 press="onSingleMarkAsRead"
                                 class="sapUiTinyMargin"
-                                tooltip="Mark As Read"/>
+                                tooltip="Mark As Read"
+                                visible="{= ${appView>Status} === 'Unread' ? true : false}"/>
                             <!-- <Button 
                                 icon="sap-icon://decline" 
                                 type="Transparent" 
