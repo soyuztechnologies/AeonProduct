@@ -86,12 +86,63 @@
 					<Title text="PO Table ({appView>/PoSheetCount})"></Title>
 					<ToolbarSpacer ></ToolbarSpacer>
 					<!-- <ToolbarSeparator/> -->
+					<Button text="Delete" type="Negative" press="onDeletePoSheet" icon="sap-icon://delete"/>
+					<Button text="Edit" type="Default" press="onEditPoSheet" icon="sap-icon://edit"/>
 					<Button text="Transfer" type="Emphasized" press="onTransferPoSheets" icon="sap-icon://share-2"/>
 					<Button text="Split" type="Critical" press="onSpiltPoSheets" icon="sap-icon://split"/>
 					<Button text="Generate PDF" type="Attention" press="beforeGeneratePDF" icon="sap-icon://pdf-attachment"/>
 					<Button text="Add" type="Neutral" press="onAddPO" icon="sap-icon://add"/>
 				</OverflowToolbar>
 			</headerToolbar>
+			<infoToolbar>
+				<OverflowToolbar design="Info">
+					<Title text="Total:" class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow"/>
+						</layoutData>
+					</Title>
+					
+					<ToolbarSpacer>
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="0"/>
+						</layoutData>
+					</ToolbarSpacer>
+					
+					<Label text="Opening Wt: {path: 'appView>/totals/openingWeight', formatter: '.formatter.formatWeight'}" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Opening Stock: {appView>/totals/openingStock} Sheets" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="High"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Closing Stock: {appView>/totals/closingStock} Sheets" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Final Price: Rs. {appView>/totals/finalPrice}" 
+						class="sapUiTinyMarginEnd">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low"/>
+						</layoutData>
+					</Label>
+					
+					<Label text="Closing Wt: {path: 'appView>/totals/closingWeight', formatter: '.formatter.formatWeight'}">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low"/>
+						</layoutData>
+					</Label>
+				</OverflowToolbar>
+			</infoToolbar>
 			<columns>
 				<Column demandPopin="true" width="4rem" minScreenWidth="Phone" >
 					<Text text="Po No" />
@@ -169,7 +220,10 @@
 						<Select forceSelection="false" change="onSelectPoStatus" selectedKey="{appView>Status}">
 							<core:Item text="Pending" key="Pending" /> 
 							<core:Item text="Email Sent" key="Sent" />
-							<core:Item text="Received" key="Received"/>
+							<core:Item text="Material Received" key="MaterialReceived"/>
+							<core:Item text="Invoice Received" key="InVoiceReceived"/>
+							<core:Item text="Invoice Issue" key="InvoiceIssue"/>
+							<core:Item text="Issue in Paper" key="PaperIssue"/>
 						</Select>
 					</cells>
 					<customData>
@@ -181,55 +235,6 @@
 					</customData>
 				</ColumnListItem>
 			</items>
-			<infoToolbar>
-				<OverflowToolbar design="Info">
-					<Title text="Total:" class="sapUiTinyMarginEnd">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="NeverOverflow"/>
-						</layoutData>
-					</Title>
-					
-					<ToolbarSpacer>
-						<layoutData>
-							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="0"/>
-						</layoutData>
-					</ToolbarSpacer>
-					
-					<Label text="Opening Wt: {path: 'appView>/totals/openingWeight', formatter: '.formatter.formatWeight'}" 
-						class="sapUiTinyMarginEnd">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="High"/>
-						</layoutData>
-					</Label>
-					
-					<Label text="Opening Stock: {appView>/totals/openingStock} Sheets" 
-						class="sapUiTinyMarginEnd">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="High"/>
-						</layoutData>
-					</Label>
-					
-					<Label text="Closing Stock: {appView>/totals/closingStock} Sheets" 
-						class="sapUiTinyMarginEnd">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="Low"/>
-						</layoutData>
-					</Label>
-					
-					<Label text="Final Price: Rs. {appView>/totals/finalPrice}" 
-						class="sapUiTinyMarginEnd">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="Low"/>
-						</layoutData>
-					</Label>
-					
-					<Label text="Closing Wt: {path: 'appView>/totals/closingWeight', formatter: '.formatter.formatWeight'}">
-						<layoutData>
-							<OverflowToolbarLayoutData priority="Low"/>
-						</layoutData>
-					</Label>
-				</OverflowToolbar>
-			</infoToolbar>
 		</Table>
 	</Page>
 </mvc:View>

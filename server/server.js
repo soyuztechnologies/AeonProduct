@@ -2469,6 +2469,10 @@ app.start = function () {
 				}
 				if (payload.State) {
 					oFilter.and.push({ status: { nlike: "Dispatched" }});
+					oFilter.and.push({ status: { nlike: "Value Mismatched" }});
+				}
+				if (payload.nonValueMismatched) {
+					oFilter.and.push({ status: { like: "Value Mismatched" }});
 				}
 
 				Job.find({
@@ -2940,6 +2944,10 @@ app.start = function () {
 						}
 						if (payload.State) {
 							oFilter.and.push({ status: { nlike: "Dispatched" }});
+							oFilter.and.push({ status: { nlike: "Value Mismatched" }});
+						}
+						if (payload.nonValueMismatched) {
+							oFilter.and.push({ status: { like: "Value Mismatched" }});
 						}
 						Job.find(
 							{
@@ -3089,6 +3097,10 @@ app.start = function () {
 						}
 						if (payload.State) {
 							oFilter.and.push({ status: { nlike: "Dispatched" }});
+							oFilter.and.push({ status: { nlike: "Value Mismatched" }});
+						}
+						if (payload.nonValueMismatched) {
+							oFilter.and.push({ status: { like: "Value Mismatched" }});
 						}
 						Job.find(
 							{
@@ -3366,7 +3378,7 @@ app.start = function () {
 				}
 
 				// Now it wil Update all Job's Raw Material to 'In Stock' if status is Received
-				if (Status === "Received" && OpeningStock !== null) {
+				if (Status === "MaterialReceived" && OpeningStock !== null) {
 					try {
 						poRecord.updateAttributes({ OpeningStock }, async (updateError, newUpdatedPoTable) => {
 							if (updateError) {
@@ -3456,8 +3468,7 @@ app.start = function () {
 						const usedSheetsData = jobs.map(job => ({
 							JobCardNo: job.jobCardNo,
 							PoNo: PoNo,
-							QuantityOfSheets: -Math.abs(job.noOfSheets3), // Make sure it's always negative
-							Type: "UsedSheets"
+							QuantityOfSheets: -Math.abs(Number(job.noOfSheets3).toFixed(2)), // Make sure it's always negative with 2 decimal places
 						}));
 
 						UsedSheets.create(usedSheetsData, (err, createdUsedSheets) => {
@@ -3471,6 +3482,48 @@ app.start = function () {
 						success: true,
 						data: createdPoSheet,
 						message: "PO created successfully"
+					});
+				});
+			});
+		});
+
+		app.post('/updatePoSheet', (req, res) => {
+			const payload = req.body;
+			const PoTable = app.models.PoTable;
+
+			const PoNo = payload.PoNo;
+
+			const updatedPayload = {
+				"SupplierName" : payload.SupplierName,
+				"Mill": payload.Mill,
+				"QualityOfMaterial" : payload.QualityOfMaterial,
+				"TypeOfBoard" : payload.TypeOfBoard,
+				"Rate": payload.Rate,
+				"GSM": payload.GSM,
+				"Height": payload.Height,
+				"Width": payload.Width,
+				"OpeningStock": payload.OpeningStock
+			}
+
+			PoTable.findOne({ where: { PoNo: PoNo } }, (err, existingPo) => {
+				if (err) {
+					return res.status(500).send('Error finding PO');
+				}
+
+				if (!existingPo) {
+					return res.status(404).send('PO not found');
+				}
+
+				// Update existing PO
+				existingPo.updateAttributes(updatedPayload, (err, updatedPoSheet) => {
+					if (err) {
+						return res.status(500).send('Error updating PO');
+					}
+
+					return res.status(200).json({
+						success: true,
+						data: updatedPoSheet,
+						message: "PO updated successfully"
 					});
 				});
 			});
@@ -3665,6 +3718,173 @@ app.start = function () {
 			});
 			return res.status(200).send("POs created successfully");
 		});
+
+		app.post('/deletePoSheet', (req, res) => {
+			const payload = req.body;
+			const PoTable = app.models.PoTable;
+			const UsedSheets = app.models.UsedSheets;
+
+			const PoNo = payload.PoNo;
+
+			// Delete PO from PoTable
+			PoTable.destroyById(PoNo, (err) => {
+				if (err) {
+					return res.status(500).send('Error deleting PO');
+				}
+
+				// Delete all UsedSheets with same PoNo
+				UsedSheets.destroyAll({ PoNo: { like : PoNo } }, (err) => { 
+					if (err) {
+						return res.status(500).send('Error deleting UsedSheets');
+					}
+
+					return res.status(200).json({
+						success: true,
+						message: "PO and associated UsedSheets deleted successfully"
+					});
+				});
+			});
+		});
+
+		app.post('/markAsReadNotification', async (req, res) => {
+			try {
+				const payload = req.body;
+				const Notification = app.models.Notifications;
+				
+				// Extract IDs from NotificationId array
+				const notificationIds = payload.NotificationId.map(item => item.id);
+				
+				if (!notificationIds || notificationIds.length === 0) {
+					return res.status(400).json({
+						success: false,
+						message: "No notification IDs provided"
+					});
+				}
+				
+				// First, fetch the notifications to get existing ReadBy values
+				const notifications = await Notification.find({
+					where: { id: { inq: notificationIds } }
+				});
+				
+				// Update each notification by appending ReadBy
+				const updatePromises = notifications.map(notification => {
+					let existingReadBy = notification.ReadBy || "";
+					let newReadBy = payload.ReadBy;
+					
+					// Check if user already in ReadBy list
+					if (!existingReadBy.includes(newReadBy)) {
+						// Append new ReadBy with comma separator
+						let updatedReadBy = existingReadBy 
+							? existingReadBy + "," + newReadBy 
+							: newReadBy;
+						
+						return Notification.updateAll(
+							{ id: notification.id },
+							{ ReadBy: updatedReadBy }
+						);
+					}
+					return Promise.resolve(); // Already read by this user
+				});
+				
+				await Promise.all(updatePromises);
+				
+				return res.status(200).json({
+					success: true,
+					message: `${notificationIds.length} notification(s) marked as read successfully`,
+					count: notificationIds.length
+				});
+				
+			} catch (err) {
+				console.error("Error marking notification as read:", err);
+				return res.status(500).json({
+					success: false,
+					message: 'Error marking notification as read',
+					error: err.message
+				});
+			}
+		});
+
+		app.get('/api/Notifications/unread', async (req, res) => {
+			try {
+				const Notification = app.models.Notifications;
+				const userId = req.query.userId;
+				const companyId = req.query.companyId;
+				const role = req.query.role;
+				
+				if (!userId) {
+					return res.status(400).json({ error: "userId is required" });
+				}
+				
+				let whereCondition = {};
+				
+				// Build base filter
+				if (role === "Admin") {
+					// Admin sees all companies
+					whereCondition = {};
+				} else {
+					// Other roles see only their company
+					whereCondition = { Company: { like: companyId } };
+				}
+				
+				// Fetch all notifications
+				const notifications = await Notification.find({ where: whereCondition });
+				
+				// Filter in JavaScript - exclude notifications where ReadBy contains userId
+				const unreadNotifications = notifications.filter(notification => {
+					if (!notification.ReadBy || notification.ReadBy === "") {
+						return true; // Include if ReadBy is null or empty
+					}
+					
+					// Split ReadBy by comma and check if userId exists
+					const readByArray = notification.ReadBy.split(',').map(id => id.trim());
+					return !readByArray.includes(userId); // Exclude if userId found
+				});
+				
+				return res.status(200).json(unreadNotifications);
+				
+			} catch (err) {
+				console.error("Error fetching unread notifications:", err);
+				return res.status(500).json({ error: "Error fetching notifications" });
+			}
+		});
+
+		app.get('/api/Notifications/unread/count', async (req, res) => {
+			try {
+				const Notification = app.models.Notifications;
+				const userId = req.query.userId;
+				const companyId = req.query.companyId;
+				const role = req.query.role;
+				
+				if (!userId) {
+					return res.status(400).json({ error: "userId is required" });
+				}
+				
+				let whereCondition = {};
+				
+				if (role === "Admin") {
+					whereCondition = {};
+				} else {
+					whereCondition = { Company: { like: companyId } };
+				}
+				
+				const notifications = await Notification.find({ where: whereCondition });
+				
+				const unreadNotifications = notifications.filter(notification => {
+					if (!notification.ReadBy || notification.ReadBy === "") {
+						return true;
+					}
+					const readByArray = notification.ReadBy.split(',').map(id => id.trim());
+					return !readByArray.includes(userId);
+				});
+				
+				return res.status(200).json({ count: unreadNotifications.length });
+				
+			} catch (err) {
+				console.error("Error counting unread notifications:", err);
+				return res.status(500).json({ error: "Error counting notifications" });
+			}
+		});
+
 
 	});
 };

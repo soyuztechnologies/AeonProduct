@@ -19,20 +19,33 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("allPrinters").attachPatternMatched(this._matchedHandler, this);
-			this.getRouter().getRoute("sideNavallPrinters").attachPatternMatched(this._matchedHandler, this);
-			this.getRouter().getRoute("Paper Cutting").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Printing").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Coating").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Foiling").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("SpotUV").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Embossing").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Punching").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Pasting").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Ready For Dispatch").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Packing").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Dispatched").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Delivering").attachPatternMatched(this._printingMatchedHandler, this);
-			this.getRouter().getRoute("Others").attachPatternMatched(this._printingMatchedHandler, this);
+			this.getRouter().getRoute("sideNavallPrinters").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavPaperCutting").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavPrinting").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavCoating").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavFoiling").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavSpotUV").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavEmbossing").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavPunching").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavPasting").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavReadyForDispatch").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavOthers").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("Paper Cutting").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Printing").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Coating").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Foiling").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("SpotUV").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Embossing").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Punching").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Pasting").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Ready For Dispatch").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Packing").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Dispatched").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Delivering").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Others").attachPatternMatched(this._matchedHandler, this);
 			this.oViewSettingsDialog = sap.ui.xmlfragment("ent.ui.ecommerce.fragments.allPrinterScreenFragment.Jobstatuspopup", this);
 			this.getView().addDependent(this.oViewSettingsDialog);
 		},
@@ -42,9 +55,18 @@ sap.ui.define([
 
 			var that = this;
 			var path = this.getRouter().oHashChanger.hash.split("/")[0];
-			this.getView().getModel('appView').setProperty('/path', path);
+			var oldPath = this.getModel('appView').getProperty('/path');
+			if(oldPath !== path){
+				this.getModel('appView').setProperty('/path', path);
+				this.getModel("appView").setProperty("/PauseJobFilter", false)
+			}
+			// this.getView().getModel('appView').setProperty('/path', path);
 
 			var oList = this.getView().byId("idListAllPrinters");
+			var pauseJobFilter = that.getModel("appView").getProperty("/PauseJobFilter");
+				if(pauseJobFilter !== true){
+					this.onClearFilters()
+				}
 			oList.removeSelections();
 			
 			await this.getUserRoleData().then(
@@ -58,7 +80,11 @@ sap.ui.define([
 					// that.getCompanyName();
 					that.getCompanyData();
 					that._setDefaultDateRange();
-					that.getJobsDataByCompanyFilter();
+					var pauseJobFilter = that.getModel("appView").getProperty("/PauseJobFilter");
+					if(pauseJobFilter !== true){
+						that.getJobsDataByCompanyFilter();
+						that.getModel("appView").setProperty("/PauseJobFilter", false)
+					}
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(oErr, that);
@@ -85,33 +111,125 @@ sap.ui.define([
 			// this.getJobAccordingCustomer();
 		},
 
-		_setDefaultDateRange: function() {
-			var oDateRangeSelector = this.byId("dateRangeSelectors");
+		_sideNavMatchedHandler: function () {
+			this._setDefaultDateRange();
+		},
+
+		onClearFilters: function(oEvent) {
+			var oFilterBar;
+			var oList = this.getView().byId("idListAllPrinters");
+			var oBinding = oList.getBinding("items");
+			var oAppViewModel = this.getView().getModel("appView");
+
+			// Check if called from event or programmatically
+			if (oEvent && oEvent.getSource) {
+				oFilterBar = oEvent.getSource();
+			} else {
+				// Get FilterBar by ID when called without event
+				oFilterBar = this.getView().byId("filterbarPrinters"); // Add ID to your FilterBar
+			}
+
+			if (oFilterBar) {
+				// Clear all filter controls
+				var aFilterItems = oFilterBar.getAllFilterItems();
+				aFilterItems.forEach(function(item) {
+					var oControl = item.getControl();
+					if (oControl instanceof sap.m.ComboBox) {
+						oControl.setSelectedKey("");  
+					} else if (oControl instanceof sap.m.Input || oControl instanceof sap.m.SearchField) {
+						oControl.setValue("");       
+					} else if (oControl instanceof sap.m.Switch) {
+						oControl.setState(false);
+					} else if (oControl instanceof sap.m.DateRangeSelection) {
+						oControl.setValue("");
+					}
+				});
+			}
+
+			// Also clear switches in subHeader
+			var oSwitch = this.getView().byId("idSwitch");
+			if (oSwitch) {
+				oSwitch.setState(false);
+			}
 			
-			if (oDateRangeSelector) {
-				var currentDate = new Date();
-				var currentYear = currentDate.getFullYear();
-				var currentMonth = currentDate.getMonth(); 
+			var oValueMismatchSwitch = this.getView().byId("ValueMismatchedSwitch");
+			if (oValueMismatchSwitch) {
+				oValueMismatchSwitch.setState(false);
+			}
+
+			// Clear table filter
+			if (oBinding) {
+				oBinding.filter([]);
 				
-				var financialYearStartDate;
-				
-				if (currentMonth >= 3) { 
-					financialYearStartDate = new Date(currentYear, 3, 1); 
-				} else { 
-					financialYearStartDate = new Date(currentYear - 1, 3, 1);
-				}
-				
-				oDateRangeSelector.setDateValue(financialYearStartDate);
-				oDateRangeSelector.setSecondDateValue(currentDate);
-				
-				var oModel = this.getView().getModel("appView");
-				oModel.setProperty("/getMaxDateForFilterJobs", currentDate);
-				oModel.setProperty("/getMinDateForFilterJobs", financialYearStartDate);
-				
-				console.log("Financial Year Start Date:", financialYearStartDate);
-				console.log("Current Date:", currentDate);
+				// Update count
+				var iLength = oBinding.getLength();
+				oAppViewModel.setProperty("/countJobs", iLength);
+			}
+			
+			// Clear select all checkbox
+			var oSelectAllCheckbox = this.getView().byId("selectAllCheckbox");
+			if (oSelectAllCheckbox) {
+				oSelectAllCheckbox.setSelected(false);
 			}
 		},
+
+		_printingMatchedHandler: async  function(oEvent){
+			
+			var path = this.getRouter().oHashChanger.hash.split("/")[0];
+			this.getView().getModel('appView').setProperty('/path', path);
+
+			var oList = this.getView().byId("idListAllPrinters");
+			oList.removeSelections();
+			
+			var that = this;
+			await this.getUserRoleData().then(
+				function (data) {
+					var role = data.role.Role
+					that.getView().getModel('appView').setProperty('/UserRole', role);
+					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
+					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
+					that.userRole();
+					that._setDefaultDateRange();
+					var pauseJobFilter = that.getModel("appView").getProperty("/PauseJobFilter");
+					if(pauseJobFilter !== true){
+						that.getJobsDataByCompanyFilter();
+						that.getModel("appView").setProperty("/PauseJobFilter", false)
+					}
+					// that.getCompanyName();
+				},
+				function (oErr) {
+					that.middleWare.errorHandler(jqXhr, that);
+				}
+			);
+			this.getCompanyName();
+			this.getModel("appView").setProperty("/layout", "OneColumn");
+			// this.getCompanyData();
+		},
+
+		// _setDefaultDateRange: function() {
+		// 	var oDateRangeSelector = this.byId("dateRangeSelectors");
+			
+		// 	if (oDateRangeSelector) {
+		// 		var currentDate = new Date();
+		// 		var currentYear = currentDate.getFullYear();
+		// 		var currentMonth = currentDate.getMonth(); 
+				
+		// 		var financialYearStartDate;
+				
+		// 		if (currentMonth >= 3) { 
+		// 			financialYearStartDate = new Date(currentYear, 3, 1); 
+		// 		} else { 
+		// 			financialYearStartDate = new Date(currentYear - 1, 3, 1);
+		// 		}
+				
+		// 		oDateRangeSelector.setDateValue(financialYearStartDate);
+		// 		oDateRangeSelector.setSecondDateValue(currentDate);
+				
+		// 		var oModel = this.getView().getModel("appView");
+		// 		oModel.setProperty("/getMaxDateForFilterJobs", currentDate);
+		// 		oModel.setProperty("/getMinDateForFilterJobs", financialYearStartDate);
+		// 	}
+		// },
 
    //* Delete Call for jobs with there crossponding job status
         onDeleteJobs:function(){
@@ -179,35 +297,7 @@ sap.ui.define([
 				});
 		},
 
-		_printingMatchedHandler: async  function(oEvent){
-			
-			var path = this.getRouter().oHashChanger.hash.split("/")[0];
-			this.getView().getModel('appView').setProperty('/path', path);
-
-			var oList = this.getView().byId("idListAllPrinters");
-			oList.removeSelections();
-			
-			var that = this;
-			await this.getUserRoleData().then(
-				function (data) {
-					var role = data.role.Role
-					that.getView().getModel('appView').setProperty('/UserRole', role);
-					that.getView().getModel('appView').setProperty('/appUserId', data.role.id);
-					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
-					that.userRole();
-					that._setDefaultDateRange();
-					that.getJobsDataByStatusFilter();
-					// that.getCompanyName();
-				},
-				function (oErr) {
-					that.middleWare.errorHandler(jqXhr, that);
-				}
-			);
-			this.getCompanyName();
-			this.getModel("appView").setProperty("/layout", "OneColumn");
-			this.getCompanyData();
-
-		},
+		
 		// _coatingMatchedHandler: async  function(oEvent){
 		// 	
 		// 	var path = oEvent.getParameter('config').pattern;
@@ -618,99 +708,97 @@ sap.ui.define([
 		// },
 
        // this function filter the job by company id and also send job as to spacific user
-       	getJobsDataByCompanyFilter: function(oState){
-			if(!oState){
-				var oState = this.getModel('appView').getProperty('/oState');
-			}
-			var path = this.getView().getModel('appView').getProperty('/path');
-			var status = null
-			if(path && path !== "allPrinters"){
-				status = path;
-			}
+       	// getJobsDataByCompanyFilter: function(){
+		// 	var oState = this.getModel('appView').getProperty('/oState');
+		// 	var path = this.getView().getModel('appView').getProperty('/path');
+		// 	var status = null
+		// 	if(path && path !== "allPrinters"){
+		// 		status = path;
+		// 	}
 
-			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
-			var id = this.getModel('appView').getProperty('/UserId');
-			// var payLoad = {
-			// 	id,
-			// }
-			var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
-			var url = 'api/Jobs?filter='+oFilter
-			// var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
-			var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
-			var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
-			// sPath = `/Jobs('${id}')/Company`;
+		// 	var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+		// 	var id = this.getModel('appView').getProperty('/UserId');
+		// 	// var payLoad = {
+		// 	// 	id,
+		// 	// }
+		// 	var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
+		// 	var url = 'api/Jobs?filter='+oFilter
+		// 	// var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
+		// 	var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
+		// 	var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
+		// 	// sPath = `/Jobs('${id}')/Company`;
 			
-			var that = this;
-			if(sUserRole === "Customer"){
-				let companyId = this.getModel('appView').getProperty('/CompanyId');
-				this.getCompanyName(companyId)
-				var payload = {
-					id: id,
-					// "selectedYear": selectedYear,
-					"maxDate": maxDate,
-					"minDate": minDate,
-					"State":oState?oState:false,
-					"status": status
-				}
-				this.middleWare.callMiddleWare("JobsCustomer", "POST" , payload)
-				.then(function (data, status, xhr) {
+		// 	var that = this;
+		// 	if(sUserRole === "Customer"){
+		// 		let companyId = this.getModel('appView').getProperty('/CompanyId');
+		// 		this.getCompanyName(companyId)
+		// 		var payload = {
+		// 			id: id,
+		// 			// "selectedYear": selectedYear,
+		// 			"maxDate": maxDate,
+		// 			"minDate": minDate,
+		// 			"State":oState?oState:false,
+		// 			"status": status
+		// 		}
+		// 		this.middleWare.callMiddleWare("JobsCustomer", "POST" , payload)
+		// 		.then(function (data, status, xhr) {
 				
-				that.getView().getModel("appView").setProperty("/jobsData", data);
-				that.getView().getModel("appView").setProperty("/countJobs", data.length);		
-				that.onSortDescending();				
-			})
-				.catch(function (jqXhr, textStatus, errorMessage) {
-				that.middleWare.errorHandler(jqXhr, that);
-				});
-			}else if(sUserRole === "SalesPerson"){
-				let companyId = this.getModel('appView').getProperty('/CompanyId');
-				this.getCompanyName(companyId)
-				let payload = {
-					id: id,
-					// "selectedYear": selectedYear,
-					"maxDate": maxDate,
-					"minDate": minDate,
-					"State":oState?oState:false,
-					"companyId": companyId,
-					"status": status
-				}
-				this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
-					.then(function (data, status, xhr) {
-						that.getView().getModel("appView").setProperty("/jobsData", data);
-						that.getView().getModel("appView").setProperty("/countJobs", data.length);	
-						that.onSortDescending();
-					})
-					.catch(function (jqXhr, textStatus, errorMessage) {
-						that.middleWare.errorHandler(jqXhr, that);
-					});
-			}else{
-				var payload = {
-					// "selectedYear": selectedYear,
-					"maxDate": maxDate,
-					"minDate": minDate,
-					"State":oState?oState:false,
-					"status": status
-				}
-				this.getCompanyName()
-				this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
-				.then(function (data, status, xhr) {
-					that.getView().getModel("appView").setProperty("/jobsData", data);
-					that.getView().getModel("appView").setProperty("/countJobs", data.length);
+		// 		that.getView().getModel("appView").setProperty("/jobsData", data);
+		// 		that.getView().getModel("appView").setProperty("/countJobs", data.length);		
+		// 		that.onSortDescending();				
+		// 	})
+		// 		.catch(function (jqXhr, textStatus, errorMessage) {
+		// 		that.middleWare.errorHandler(jqXhr, that);
+		// 		});
+		// 	}else if(sUserRole === "SalesPerson"){
+		// 		let companyId = this.getModel('appView').getProperty('/CompanyId');
+		// 		this.getCompanyName(companyId)
+		// 		let payload = {
+		// 			id: id,
+		// 			// "selectedYear": selectedYear,
+		// 			"maxDate": maxDate,
+		// 			"minDate": minDate,
+		// 			"State":oState?oState:false,
+		// 			"companyId": companyId,
+		// 			"status": status
+		// 		}
+		// 		this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
+		// 			.then(function (data, status, xhr) {
+		// 				that.getView().getModel("appView").setProperty("/jobsData", data);
+		// 				that.getView().getModel("appView").setProperty("/countJobs", data.length);	
+		// 				that.onSortDescending();
+		// 			})
+		// 			.catch(function (jqXhr, textStatus, errorMessage) {
+		// 				that.middleWare.errorHandler(jqXhr, that);
+		// 			});
+		// 	}else{
+		// 		var payload = {
+		// 			// "selectedYear": selectedYear,
+		// 			"maxDate": maxDate,
+		// 			"minDate": minDate,
+		// 			"State":oState?oState:false,
+		// 			"status": status
+		// 		}
+		// 		this.getCompanyName()
+		// 		this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
+		// 		.then(function (data, status, xhr) {
+		// 			that.getView().getModel("appView").setProperty("/jobsData", data);
+		// 			that.getView().getModel("appView").setProperty("/countJobs", data.length);
 					
-					that.onSortDescending();
-					// that.getJobStatus();
-					// var jobData = 
-					// for (let i = 0; i < data.length; i++) {
-					//   const element = data[i].jobCardNo;
-					//   jobData.push(element)
-					// }
-					// that.getView().getModel("appView").setProperty("/jobsId", data);
-				})
-				.catch(function (jqXhr, textStatus, errorMessage) {
-					that.middleWare.errorHandler(jqXhr, that);
-				});
-			}
-		},
+		// 			that.onSortDescending();
+		// 			// that.getJobStatus();
+		// 			// var jobData = 
+		// 			// for (let i = 0; i < data.length; i++) {
+		// 			//   const element = data[i].jobCardNo;
+		// 			//   jobData.push(element)
+		// 			// }
+		// 			// that.getView().getModel("appView").setProperty("/jobsId", data);
+		// 		})
+		// 		.catch(function (jqXhr, textStatus, errorMessage) {
+		// 			that.middleWare.errorHandler(jqXhr, that);
+		// 		});
+		// 	}
+		// },
          //this function hits when year select for filter jobs
 		// openYearPickar: function(oEvent){
 			
@@ -1235,7 +1323,14 @@ sap.ui.define([
 			
 			var oState = oEvent.getSource().getState();
 			this.getView().getModel('appView').setProperty('/oState',oState);
-			this.getJobsDataByCompanyFilter(oState)
+			this.getJobsDataByCompanyFilter()
+		},
+
+		onGetNonValueMismatchedData:function(oEvent){
+			
+			var oState = oEvent.getSource().getState();
+			this.getView().getModel('appView').setProperty('/nonValueMismatched',oState);
+			this.getJobsDataByCompanyFilter()
 		},
 
 		// selectedCompany: function (oEvent) {

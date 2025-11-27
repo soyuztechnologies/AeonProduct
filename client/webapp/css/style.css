@@ -86,25 +86,48 @@
 
 tbody > tr[data-po-status="Pending"] .sapMListTblCell,
 tbody > tr[data-po-status="Pending"] .sapMListTblSubRow {
-    background-color: orange !important;
+    background-color: #A5A5A5 !important;
     color: white !important;
 }
 
 tr[data-po-status="Sent"] .sapMListTblCell,
 tr[data-po-status="Sent"] .sapMListTblSubCell {
-    background-color: gray !important;
-    color: white;
+    background-color: orange !important;
+    color: white !important;
 }
 
-tr[data-po-status="Received"] .sapMListTblCell,
-tr[data-po-status="Received"] .sapMListTblSubRowCell {
+tr[data-po-status="MaterialReceived"] .sapMListTblCell,
+tr[data-po-status="MaterialReceived"] .sapMListTblSubRowCell {
+    background-color: #FFEB9C !important;
+    color: #000000 !important;
+}
+
+tr[data-po-status="InVoiceReceived"] .sapMListTblCell,
+tr[data-po-status="InVoiceReceived"] .sapMListTblSubRowCell {
+    background-color: rgb(12, 203, 12) !important;
+    color: #000000 !important;
+}
+
+/* Target all text elements inside the row */
+tr[data-po-status="InvoiceIssue"] .sapMListTblCell,
+tr[data-po-status="InvoiceIssue"] .sapMListTblSubRowCell {
+    background-color: darkgreen !important;
+}
+
+tr[data-po-status="InvoiceIssue"] .sapMListTblCell *,
+tr[data-po-status="InvoiceIssue"] .sapMListTblSubRowCell * {
+    color: white !important;
+}
+
+tr[data-po-status="PaperIssue"] .sapMListTblCell,
+tr[data-po-status="PaperIssue"] .sapMListTblSubRowCell {
     background-color: yellow !important;
-    color: #000000;
+    color: #000000 !important;
 }
 
-.fonts .sapMInputBaseInner {
+/* .fonts .sapMInputBaseInner {
     text-transform: uppercase !important;
-}
+} */
 
 .notificationBell .sapMBadgeIndicator  {
     
@@ -114,4 +137,13 @@ tr[data-po-status="Received"] .sapMListTblSubRowCell {
     right: 0rem !important;
     padding-right: 0rem !important;
   
+}
+
+/* Make FilterBar sticky */
+.stickyFilterBar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
 }

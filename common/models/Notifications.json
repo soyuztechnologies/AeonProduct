@@ -28,6 +28,10 @@
 		"UsedId": {
 			"type": "string",
 			"default": ""
+		},
+		"ReadBy": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"scope": {

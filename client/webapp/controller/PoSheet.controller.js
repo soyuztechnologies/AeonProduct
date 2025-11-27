@@ -76,7 +76,7 @@ sap.ui.define([
 								var q = Number(item.QuantityOfSheets) || 0;
 								return acc + (q < 0 ? q : 0) + (item.Type === "Transfer" && q > 0 ? q : 0);
 							}, 0);
-							item.ClosingStock = (Number(OpeningStock) + negativeSum);
+							item.ClosingStock = +(Number(OpeningStock) + negativeSum).toFixed(2);
 						}
 						return item;
 					})
@@ -136,6 +136,7 @@ sap.ui.define([
 
 		onAddPO: function() {
 			var that = this;
+			this.getModel('appView').setProperty('/AddPoTitle', "Add New Po")
 			this.oAddPoDialogOpen().then(function (oDialog) {
 				oDialog.open();
 			});
@@ -145,6 +146,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel();
 			var that = this;
 			var userId = this.getModel('appView').getProperty('/UserId');
+			var isEdit = this.getModel('appView').getProperty('/editPoSheet')
 
 			var inpPoNo = this.getView().byId("inpPoNo").getValue();
 			var inpSupplierName = this.getView().byId("inpSupplierName").getValue();
@@ -180,10 +182,10 @@ sap.ui.define([
 
 			var payload = {
 				"PoNo" : inpPoNo,
-				"SupplierName" : inpSupplierName,
-				"Mill": inpMill,
-				"QualityOfMaterial" : inpQualityOfMaterial,
-				"TypeOfBoard" : inpTypeOfBoard,
+				"SupplierName" : inpSupplierName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' '),
+				"Mill": inpMill.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' '),
+				"QualityOfMaterial" : inpQualityOfMaterial.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' '),
+				"TypeOfBoard" : inpTypeOfBoard.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' '),
 				"Rate": inpRate ? parseFloat(inpRate) : 0,
 				"GSM": inpGSM ? parseFloat(inpGSM) : 0,
 				"Height": inpHeightInMm ? parseFloat(inpHeightInMm) : 0,
@@ -193,7 +195,8 @@ sap.ui.define([
 				"CreatedBy": userId
 			};
 
-			this.middleWare.callMiddleWare("savePoSheet", "POST", payload)
+			if(!isEdit){	
+				this.middleWare.callMiddleWare("savePoSheet", "POST", payload)
 				.then(function (data, status, xhr) {
 					that.onGetAllPo();
 					that.onClose();
@@ -216,6 +219,21 @@ sap.ui.define([
 						that.middleWare.errorHandler(jqXhr, that);
 					}
 				});
+			}
+			else if(isEdit){
+				this.middleWare.callMiddleWare("updatePoSheet", "POST", payload)
+				.then(function (data, status, xhr) {
+					that.onGetAllPo();
+					that.onClose();
+					MessageToast.show("PO updated Successfully");
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+			}
+			else{
+
+			}
 		},
 
 		clearFields: function() {
@@ -252,7 +270,9 @@ sap.ui.define([
 			var that = this;
 			this.oAddPoDialogOpen().then(function (oDialog) {
 				oDialog.close();
+				that.getModel("appView").setProperty("/editPoSheet", false)
 				that.clearFields();
+				that.getView().byId("tablePoSheet").removeSelections();
 			})
 		},
 		
@@ -403,7 +423,7 @@ sap.ui.define([
 				Status : sSelectedKey
 			}
 
-			if(sSelectedKey === "Received"){
+			if(sSelectedKey === "MaterialReceived"){
 				this.openReceivedSheets()
 				this._currentPayload = payload
 			} else {
@@ -413,9 +433,11 @@ sap.ui.define([
 		},
 
 		saveStatus: function(payload){
+			var that = this;
 			this.middleWare.callMiddleWare("onUpdatePoStatus", "POST", payload)
 				.then( (data, status, xhr)=> {
-					MessageToast.show("Status Updated Successfully")	
+					MessageToast.show("Status Updated Successfully")
+					that.onGetAllPo()	
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -692,6 +714,27 @@ sap.ui.define([
 			})
 		},
 
+		formatCurrency: function (value, symbol = "") {
+			if (value) {
+				// Check for negative and get absolute value
+				const isNegative = parseFloat(value) < 0;
+				const absValue = Math.abs(parseFloat(value)).toFixed(2);
+				var x = absValue.split(".");
+				var y = x.length > 1 ? "." + x[1] : "";
+				x = x[0];
+				var lastThree = x.substring(x.length - 3);
+				var otherNumbers = x.substring(0, x.length - 3);
+				if (otherNumbers != "") {
+					lastThree = "," + lastThree;
+				}
+				var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+				// Add minus sign back if needed
+				return (isNegative ? "-" : "") + res + y + symbol;
+			} else {
+			return value + symbol;
+			}
+		},
+
 		onGeneratePDF: async function (oEvent) {
 			var that = this;
 			// var oItem = this.getView().byId("tablePoSheet").getSelectedItem();
@@ -812,6 +855,8 @@ sap.ui.define([
 				// const currecySymbol = '\u20B9'; 
 				const currecySymbol = 'Rs.'; 
 
+				const formatedRate = this.formatCurrency(oPoSheet.Rate);
+
 				// --- TABLE ROW (Example) ---
 				doc.moveTo(LEFT_MARGIN, tableTop + 40).lineTo(RIGHT_MARGIN, tableTop + 40).stroke();
 				doc.fontSize(11).text("1", 30, tableTop + 45);
@@ -820,9 +865,10 @@ sap.ui.define([
 				doc.text(`${oPoSheet.GSM} GSM`, 200, tableTop + 45, { width: 60 });
 				doc.text(`${oPoSheet.Height}x${oPoSheet.Width} mm`, 270, tableTop + 45, { width: 90 }).text(`${HeightInInches}x${WidthInInches} '`, 270, tableTop + 60, { width: 90 });
 				doc.text(`${OpeningWeight} KG`, 370, tableTop + 45, { width: 80 }).text(`${oPoSheet.OpeningStock} Sheets`, 370, tableTop + 60, { width: 80});
-				doc.text(`${currecySymbol} ${oPoSheet.Rate}`, 455, tableTop + 45, { width: 60 });
+				doc.text(`${currecySymbol} ${formatedRate}`, 455, tableTop + 45, { width: 60 });
 				const price = +((oPoSheet.Rate * OpeningWeight).toFixed(2));
-				doc.text(`${currecySymbol} ${price}`, 520, tableTop + 45, { width: 70 });
+				const formatedPrice = this.formatCurrency(price);
+				doc.text(`${currecySymbol} ${formatedPrice}`, 520, tableTop + 45, { width: 70 });
 				doc.moveTo(LEFT_MARGIN, tableTop + 120).lineTo(RIGHT_MARGIN, tableTop + 120).stroke();
 
 				doc.moveDown(1);
@@ -832,19 +878,24 @@ sap.ui.define([
 
 				// calculations
 				const discount = +(oPoSheet.Discount) || 0.00;
+				const formatedDiscount = this.formatCurrency(discount);
 				const transportation = +(oPoSheet.Transportation) || 0.00;
+				const formatedTransportation = this.formatCurrency(transportation);
 				const SGST = 6;
 				const CGST = 6;
 				const SGSTAmount = (price + transportation) * SGST / 100;
+				const formatedSGSTAmount = this.formatCurrency(SGSTAmount);
 				const CGSTAmount = price * CGST / 100;
+				const formatedCGSTAmount = this.formatCurrency(CGSTAmount);
 				const grandTotal = (price + discount + transportation + SGSTAmount + CGSTAmount) * 1;
+				const formatedGrandTotal = this.formatCurrency(grandTotal);
 
-				doc.text('Total: ', 400, tableTop + 130).text(`${currecySymbol} ${price}`, 500, tableTop + 130);
-				doc.text('Discount: ', 400, tableTop + 145).text(`${currecySymbol} ${discount.toFixed(2)}`, 500, tableTop + 145);
-				doc.text('Transportation: ', 400, tableTop + 160).text(`${currecySymbol} ${transportation.toFixed(2)}`, 500, tableTop + 160);
-				doc.text(`SGST ${SGST}%: `, 400, tableTop + 175).text(`${currecySymbol} ${SGSTAmount.toFixed(2)}`, 500, tableTop + 175);
-				doc.text(`CGST ${CGST}%: `, 400, tableTop + 190).text(`${currecySymbol} ${CGSTAmount.toFixed(2)}`, 500, tableTop + 190);
-				doc.text('Grand Total: ', 400, tableTop + 205).text(`${currecySymbol} ${grandTotal.toFixed(2)}`, 500, tableTop + 205);
+				doc.text('Total: ', 370, tableTop + 130).text(`${currecySymbol} ${formatedPrice}`, 470, tableTop + 130);
+				doc.text('Discount: ', 370, tableTop + 145).text(`${currecySymbol} ${formatedDiscount}`, 470, tableTop + 145);
+				doc.text('Transportation: ', 370, tableTop + 160).text(`${currecySymbol} ${formatedTransportation}`, 470, tableTop + 160);
+				doc.text(`SGST ${SGST}%: `, 370, tableTop + 175).text(`${currecySymbol} ${formatedSGSTAmount}`, 470, tableTop + 175);
+				doc.text(`CGST ${CGST}%: `, 370, tableTop + 190).text(`${currecySymbol} ${formatedCGSTAmount}`, 470, tableTop + 190);
+				doc.text('Grand Total: ', 370, tableTop + 205).text(`${currecySymbol} ${formatedGrandTotal}`, 470, tableTop + 205);
 
 				doc.moveTo(LEFT_MARGIN, tableTop + 220).lineTo(RIGHT_MARGIN, tableTop + 220).stroke();
 
@@ -1211,7 +1262,9 @@ sap.ui.define([
 		selectSupplierName: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim().toUpperCase();;          
+			var sValue = oSource.getValue().trim().split(' ')
+				.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+				.join(' ');       
 
 			if (sKey) {
 				return;
@@ -1225,7 +1278,9 @@ sap.ui.define([
 		selectMill: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim().toUpperCase();;          
+			var sValue = oSource.getValue().trim().split(' ')
+				.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+				.join(' ');          
 
 			if (sKey) {
 				return;
@@ -1238,7 +1293,9 @@ sap.ui.define([
 		selectQualityOfMaterial: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim().toUpperCase();;          
+			var sValue = oSource.getValue().trim().split(' ')
+				.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+				.join(' ');           
 
 			if (sKey) {
 				return;
@@ -1251,7 +1308,9 @@ sap.ui.define([
 		selectTypeOfBoard: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var sKey = oSource.getSelectedKey();           
-			var sValue = oSource.getValue().trim().toUpperCase();        
+			var sValue = oSource.getValue().trim().split(' ')
+				.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+				.join(' ');         
 
 			if (sKey) {
 				return;
@@ -1665,6 +1724,74 @@ sap.ui.define([
 
 			this.getModel("appView").setProperty("/TransferSheetsAmount/transferFromAmount", inputValue);
 			this._lastTransferSheetValue = inputValue; // cache new value
+		},
+
+		onDeletePoSheet: function(){
+			var oView = this.getView();
+			var oItem = oView.byId("tablePoSheet").getSelectedItem();
+			if (!oItem) {
+				MessageToast.show("Please select a Purchase Order first.");
+				return;
+			}
+
+			var selectedPo = oItem.getBindingContext("appView").getObject();
+			var that = this;
+			var PoNo = selectedPo.PoNo;
+			var payload = {
+				PoNo: PoNo
+			};
+
+			MessageBox.confirm(`Are you sure you want to delete Po - ${PoNo}?`, {
+				actions: ["OK", "Close"],
+				emphasizedAction: 'OK',
+				onClose: function (sAction) {
+					if (sAction === "OK") {
+						that.middleWare.callMiddleWare("deletePoSheet", "POST", payload)
+							.then(function (data, status, xhr) {
+								MessageToast.show("PoSheet Deleted Successfully");
+								oView.byId("tablePoSheet").removeSelections();
+								that.onGetAllPo();
+							})
+							.catch(function (jqXhr, textStatus, errorMessage) {
+								that.middleWare.errorHandler(jqXhr, that);
+							});
+					}
+					else if(sAction === "Close"){
+						oView.byId("tablePoSheet").removeSelections();
+						oModel.refresh();
+					}
+				}
+			});
+		},
+
+		onEditPoSheet: function() {
+			var oView = this.getView();
+			var oItem = oView.byId("tablePoSheet").getSelectedItem();
+			if (!oItem) {
+				MessageToast.show("Please select a Purchase Order first.");
+				return;
+			}
+
+			var selectedPo = oItem.getBindingContext("appView").getObject();
+			var that = this;
+
+			
+			this.getModel("appView").setProperty("/AddPoTitle", "Edit Po")
+			this.getModel("appView").setProperty("/editPoSheet", true)
+			
+			this.oAddPoDialogOpen().then(function (oDialog) {
+				oDialog.open();
+				that.getView().byId("inpPoNo").setValue(selectedPo.PoNo);
+				that.getView().byId("inpSupplierName").setValue(selectedPo.SupplierName);
+				that.getView().byId("inpMill").setValue(selectedPo.Mill);
+				that.getView().byId("inpQualityOfMaterial").setValue(selectedPo.QualityOfMaterial);
+				that.getView().byId("inpTypeOfBoard").setValue(selectedPo.TypeOfBoard);
+				that.getView().byId("inpRate").setValue(selectedPo.Rate);
+				that.getView().byId("inpGSM").setValue(selectedPo.GSM);
+				that.getView().byId("inpHeightInMm").setValue(selectedPo.Height);
+				that.getView().byId("inpWidthInMm").setValue(selectedPo.Width);
+				that.getView().byId("inpOpeningStock").setValue(selectedPo.OpeningStock);
+			});
 		}
 
 	});

@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:t="sap.ui.table" xmlns:i="sap.ui.core"	 xmlns:f = "sap.ui.layout.form">
 
-<Dialog contentWidth="auto" contentHeight="auto" title="Add New PO" resizable="false" >
+<Dialog contentWidth="auto" contentHeight="auto" title="{appView>/AddPoTitle}" resizable="false" >
 	<content>
 		<f:SimpleForm id="AddPoDialog"
 				editable="true"
@@ -11,7 +11,7 @@
 				singleContainerFullSize="false" >
 				<f:content>
 					<Label text="PoNo"/>
-					<Input id="inpPoNo" liveChange="onLiveChangePoNo" type="Text" value="" editable="true"/>
+					<Input id="inpPoNo" liveChange="onLiveChangePoNo" type="Text" value="" editable='{= ${appView>/editPoSheet} === true ? false : true}'/>
 
 					<Label text="Supplier Name"/>
 					<!-- <Input id="inpSupplierName" liveChange="onLiveChangeSupplierName" type="Text" value="" editable="true"/> -->
@@ -84,7 +84,7 @@
 			</f:SimpleForm>
 	</content>
 	<beginButton>
-		<Button text="Save" type="Accept" press="onSubmitData" enabled="true"/>
+		<Button text='{= ${appView>/editPoSheet} === true ? "Update" : "Save"}' type="Accept" press="onSubmitData" enabled="true"/>
 	</beginButton>
 	<endButton>
 		<Button text="Cancel" type="Reject" press="onClose" enabled="true"/>

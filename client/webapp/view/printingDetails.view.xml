@@ -2,25 +2,25 @@
 	<Page showHeader="false"> 
 	<!-- <Button text="Start Production" press="whenProductionStart"/> -->
         <Toolbar>
-          <Title text="Job Details" />
-          <ToolbarSpacer/>
-          <!-- <Button
-		  	id=""
-		    visible="{=${appView>/Jobs/status} === 'New' ? true : false }"
-            text="Start Production"
-			type="Emphasized"
-            press="whenProductionStart"
-          >   
-          </Button> -->
+			<Button icon="sap-icon://nav-back" press="onGoBackNavigation"></Button>
+			<Title text="Job Details" />
+			<ToolbarSpacer/>
+			<!-- <Button
+				id=""
+				visible="{=${appView>/Jobs/status} === 'New' ? true : false }"
+				text="Start Production"
+				type="Emphasized"
+				press="whenProductionStart"
+			>   
+			</Button> -->
 
-			<!-- <Button icon="sap-icon://pdf-attachment" press="onPDFGenerate" visible="false"></Button> -->
+				<!-- <Button icon="sap-icon://pdf-attachment" press="onPDFGenerate" visible="false"></Button> -->
 
-		  <Button
-		  tooltip="Job Details"
-		  icon="sap-icon://form"
-		  press="allJobDialog"
-	  >   
-	  </Button>
+		  	<Button
+		  		tooltip="Job Details"
+		  		icon="sap-icon://form"
+		  		press="allJobDialog">   
+			</Button>
 
         </Toolbar>
 		<f:SimpleForm title="{appView>nameOFTheProduct}" id="jobDetails" editable="true" layout="ColumnLayout"  columnsM="2"  columnsL="2">

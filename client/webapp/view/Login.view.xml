@@ -49,13 +49,13 @@
 												<form:fields>
 													<FlexBox renderType="Bare" width="100%" justifyContent="SpaceBetween" fitContainer="true">
 
-														<Button id="idSignupButtn" text="Sign Up" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="48%" class="newButtonStyle">
+														<Button id="idSignupButtn" text="Sign Up" press="SignUp" icon="sap-icon://citizen-connect" iconFirst="false" width="100%" class="newButtonStyle">
 															<layoutData>
 																<FlexItemData growFactor="1.5" />
 															</layoutData>
 														</Button>
 														<ToolbarSpacer ></ToolbarSpacer>
-														<Button id="userDeleteButtn" text="Delete Account" press="DeleteAccount" icon="sap-icon://delete" iconFirst="false" type="Reject" width="48%">
+														<Button visible="false" id="userDeleteButtn" text="Delete Account" press="DeleteAccount" icon="sap-icon://delete" iconFirst="false" type="Reject" width="48%">
 															<layoutData>
 																<FlexItemData growFactor="1" />
 															</layoutData>

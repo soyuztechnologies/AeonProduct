@@ -1739,44 +1739,29 @@ sap.ui.define([
 
 		getNotification: function () {
 			var that = this;
-			var oModel = this.getView().getModel(); 
 			var companyId = this.getModel('appView').getProperty('/CompanyId');
+			var userId = this.getModel('appView').getProperty('/UserId');
 			var role = this.getModel('appView').getProperty('/UserRole');
-			this.getModel('appView').setProperty('/NotificationVis', true)
-
-			var url;
-
-			// Admin → get total count
-			if (role === "Admin") {
-				url = 'api/Notifications/count';
-			} 
-			else {
-				// Build filter for count API
-				var whereFilter = encodeURIComponent(JSON.stringify({
-					where: { Company: { like: companyId } }
-				}));
-
-				url = 'api/Notifications/count?filter=' + whereFilter;
-			}
-
-			this.middleWare.callMiddleWare(url, "GET")
+			this.getModel('appView').setProperty('/NotificationVis', true);
+			
+			// Build count URL with query params
+			var countUrl = 'api/Notifications/unread/count?userId=' + userId + 
+						'&companyId=' + companyId + 
+						'&role=' + role;
+			
+			this.middleWare.callMiddleWare(countUrl, "GET")
 				.then(function (data, status, xhr) {
-					// Loopback returns: { count: X }
 					var count = data && data.count ? data.count : 0;
 					var oldCount = that.getModel("appView").getProperty("/NotificationCount");
-
-					if(count !== oldCount){
-						if(role === "Admin"){
-							url = 'api/Notifications';
-						}
-						else{
-							var oFilter = encodeURIComponent('{"where":{"Company":{"like":"' + companyId + '"}}}');
-							url = 'api/Notifications?filter=' + oFilter;
-						}
+					
+					if (count !== oldCount) {
+						// Fetch actual notification data
+						var dataUrl = 'api/Notifications/unread?userId=' + userId + 
+									'&companyId=' + companyId + 
+									'&role=' + role;
 						
-			
-						that.middleWare.callMiddleWare(url, "GET")
-							.then(function(data, status, xhr){
+						that.middleWare.callMiddleWare(dataUrl, "GET")
+							.then(function(data, status, xhr) {
 								if (data && data.length > 0) {
 									that.getModel("appView").setProperty("/Notification", data);
 									that.getModel("appView").setProperty("/NotificationCount", data.length);
@@ -1787,18 +1772,13 @@ sap.ui.define([
 								that.getModel("appView").refresh(true);
 							})
 							.catch(function (jqXhr, textStatus, errorMessage) {
-			
 								that.middleWare.errorHandler(jqXhr, that);
-								});
-
+							});
 					}
 				})
 				.catch(function (jqXhr, textStatus, errorMessage) {
 					that.middleWare.errorHandler(jqXhr, that);
 				});
-
-
-				
 		},
 
 		newNotification: function(data){
@@ -1838,7 +1818,128 @@ sap.ui.define([
 			// 	}
             // });
 
-		}
+		},
+
+		getJobsDataByCompanyFilter: function(){
+			var oState = this.getModel('appView').getProperty('/oState');
+			var nonValueMismatched = this.getModel('appView').getProperty('/nonValueMismatched');
+			var path = this.getView().getModel('appView').getProperty('/path');
+			var status = null
+			if(path && path !== "allPrinters"){
+				status = path;
+			}
+
+			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+			var id = this.getModel('appView').getProperty('/UserId');
+			// var payLoad = {
+			// 	id,
+			// }
+			var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
+			var url = 'api/Jobs?filter='+oFilter
+			// var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
+			var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
+			var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
+			// sPath = `/Jobs('${id}')/Company`;
+			
+			var that = this;
+			if(sUserRole === "Customer"){
+				let companyId = this.getModel('appView').getProperty('/CompanyId');
+				this.getCompanyName(companyId)
+				var payload = {
+					id: id,
+					// "selectedYear": selectedYear,
+					"maxDate": maxDate,
+					"minDate": minDate,
+					"State": oState ? oState : false,
+					"nonValueMismatched": nonValueMismatched ? nonValueMismatched : false,
+					"status": status
+				}
+				this.middleWare.callMiddleWare("JobsCustomer", "POST" , payload)
+				.then(function (data, status, xhr) {
+				
+				that.getView().getModel("appView").setProperty("/jobsData", data);
+				that.getView().getModel("appView").setProperty("/countJobs", data.length);		
+				that.onSortDescending();				
+			})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+				that.middleWare.errorHandler(jqXhr, that);
+				});
+			}else if(sUserRole === "SalesPerson"){
+				let companyId = this.getModel('appView').getProperty('/CompanyId');
+				this.getCompanyName(companyId)
+				let payload = {
+					id: id,
+					// "selectedYear": selectedYear,
+					"maxDate": maxDate,
+					"minDate": minDate,
+					"State":oState?oState:false,
+					"nonValueMismatched": nonValueMismatched ? nonValueMismatched : false,
+					"companyId": companyId,
+					"status": status
+				}
+				this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
+					.then(function (data, status, xhr) {
+						that.getView().getModel("appView").setProperty("/jobsData", data);
+						that.getView().getModel("appView").setProperty("/countJobs", data.length);	
+						that.onSortDescending();
+					})
+					.catch(function (jqXhr, textStatus, errorMessage) {
+						that.middleWare.errorHandler(jqXhr, that);
+					});
+			}else{
+				var payload = {
+					// "selectedYear": selectedYear,
+					"maxDate": maxDate,
+					"minDate": minDate,
+					"State":oState?oState:false,
+					"nonValueMismatched": nonValueMismatched ? nonValueMismatched : false,
+					"status": status
+				}
+				this.getCompanyName()
+				this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
+				.then(function (data, status, xhr) {
+					that.getView().getModel("appView").setProperty("/jobsData", data);
+					that.getView().getModel("appView").setProperty("/countJobs", data.length);
+					
+					that.onSortDescending();
+					// that.getJobStatus();
+					// var jobData = 
+					// for (let i = 0; i < data.length; i++) {
+					//   const element = data[i].jobCardNo;
+					//   jobData.push(element)
+					// }
+					// that.getView().getModel("appView").setProperty("/jobsId", data);
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					that.middleWare.errorHandler(jqXhr, that);
+				});
+			}
+		},
+
+		_setDefaultDateRange: function() {
+			var oDateRangeSelector = this.byId("dateRangeSelectors");
+			
+			if (oDateRangeSelector) {
+				var currentDate = new Date();
+				var currentYear = currentDate.getFullYear();
+				var currentMonth = currentDate.getMonth(); 
+				
+				var financialYearStartDate;
+				
+				if (currentMonth >= 3) { 
+					financialYearStartDate = new Date(currentYear, 3, 1); 
+				} else { 
+					financialYearStartDate = new Date(currentYear - 1, 3, 1);
+				}
+				
+				oDateRangeSelector.setDateValue(financialYearStartDate);
+				oDateRangeSelector.setSecondDateValue(currentDate);
+				
+				var oModel = this.getView().getModel("appView");
+				oModel.setProperty("/getMaxDateForFilterJobs", currentDate);
+				oModel.setProperty("/getMinDateForFilterJobs", financialYearStartDate);
+			}
+		},
 
 	});
 });

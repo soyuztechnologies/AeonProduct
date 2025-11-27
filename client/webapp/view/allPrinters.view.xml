@@ -1,5 +1,5 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:custom="ent.ui.ecommerce.controller.controls" xmlns:fb="sap.ui.comp.filterbar" xmlns="sap.m" xmlns:layout="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:suite="sap.suite.ui.commons" controllerName="ent.ui.ecommerce.controller.allPrinters" >
-  <Page id='idWelcomeP' showHeader="false">
+  <Page id='idWelcomeP' showHeader="false" >
 	
 		<!-- <customHeader>
 			<OverflowToolbar >
@@ -20,6 +20,8 @@
 				<content>
 					<Title text="Printers  ( {appView>/countJobs} )"/>
 					<ToolbarSpacer ></ToolbarSpacer>
+					<Label text="Show Value Mismatched Jobs:"></Label>
+					<Switch tooltip="This will show all the data whose Value is Mismatched" id="ValueMismatchedSwitch" customTextOn="Hide" customTextOff="Show" change="onGetNonValueMismatchedData"></Switch>
 					<Label text="Non Dispatched Jobs:"></Label>
 					<Switch tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData"></Switch>
 					<!-- <Button tooltip="Please Select Year" icon="sap-icon://appointment-2" press="openYearPickar" /> -->
@@ -58,7 +60,7 @@
 						</custom:customListItem>
 					</items>	
 			  </List> -->
-			  <fb:FilterBar useToolbar="false" persistencyKey="myPersKey" >
+			  <fb:FilterBar useToolbar="false" persistencyKey="myPersKey" class="stickyFilterBar">
 					<fb:filterGroupItems>
 							<fb:FilterGroupItem name="Date" label="Date (Range)" groupName="Group1" visibleInFilterBar="true" >
 								<fb:control> 
@@ -66,7 +68,8 @@
 										placeholder="Enter Date Range"
 										id="dateRangeSelectors"
 										displayFormat="dd-MM-yyyy"
-										change="onDateRangeChangeForJob"/>
+										change="onDateRangeChangeForJob"
+										value=""/>
 								</fb:control>
 							</fb:FilterGroupItem>
 						<fb:FilterGroupItem name="search" label="Search"  groupName="Group3" visibleInFilterBar="true">
@@ -87,16 +90,11 @@
 
 							</fb:control>
 						</fb:FilterGroupItem>
-						<!-- <fb:FilterGroupItem name="text" label="Show the Jobs that are not dispatched" groupName="Group1" visibleInFilterBar="true">
-							<fb:control>
-								<Switch class="sapUiSmallMarginBegin sapUiMediumMarginBottom" tooltip="This will show all the data which is not yet dispatched" id="idSwitch" customTextOn="Show" customTextOff="Hide" change="onGetNonDispatchedData" ></Switch>
-							</fb:control>
-						</fb:FilterGroupItem> -->
 					</fb:filterGroupItems>
 				</fb:FilterBar>
-			<List growing="true" growingScrollToLoad="true" growingThreshold="50" id="idListAllPrinters" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'MultiSelect' :'None'}" selectionChange="onSelectionChange">
+			<List growing="true" growingScrollToLoad="true" growingThreshold="50" id="idListAllPrinters" sticky="InfoToolbar" itemPress="onListItemPress" items="{appView>/jobsData}" mode="{=${appView>/UserRole} === 'Admin' ? 'MultiSelect' :'None'}" selectionChange="onSelectionChange">			
 				<infoToolbar>
-					<OverflowToolbar visible="{=${appView>/UserRole} === 'Admin' ? true : false}">
+					<OverflowToolbar visible="{=${appView>/UserRole} === 'Admin' ? true : false}" class="stickyFilterBar">
 						<CheckBox 
 							id="selectAllCheckbox"
 							text="Select All" 

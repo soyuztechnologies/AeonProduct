@@ -19,26 +19,24 @@ sap.ui.define([
 		onInit: function () {
 			this._oRouter = this.getRouter();
 			this.getRouter().getRoute("sideNavallPrinters").attachPatternMatched(this._matchedHandler, this);
-			this.getRouter().getRoute("sideNavPaperCutting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavPrinting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavCoating").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavFoiling").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavSpotUV").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavEmbossing").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavPunching").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavPasting").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavReadyForDispatch").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
-			this.getRouter().getRoute("sideNavOthers").attachPatternMatched(this._sideNavPrintingmatchedHandler, this);
+			this.getRouter().getRoute("sideNavPaperCutting").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavPrinting").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavCoating").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavFoiling").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavSpotUV").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavEmbossing").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavPunching").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavPasting").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavReadyForDispatch").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavOthers").attachPatternMatched(this._matchedHandler, this);
 
 		},
 
 
 		_sideNavPrintingmatchedHandler: async function (oEvent) {
-
-
 			var path = this.getRouter().oHashChanger.hash.split("/")[0];
 			this.getView().getModel('appView').setProperty('/path', path);
 			// var that = this;
@@ -67,7 +65,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
 					// that.getJobsData();
-					// that.getJobsDataByStatusFilter();
+					that.getJobsDataByStatusFilter();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -98,6 +96,8 @@ sap.ui.define([
 		},
 
 		_matchedHandler: async function (oEvent) {
+			var path = this.getRouter().oHashChanger.hash.split("/")[0];
+			this.getView().getModel('appView').setProperty('/path', path);
 
 			this.oArgs = oEvent.getParameter("arguments").jobId;
 			var that = this;
@@ -110,7 +110,7 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
 					// that.x();
-					// that.getJobsDataByCompanyFilter();
+					that.getJobsDataByCompanyFilter();
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);
@@ -137,22 +137,12 @@ sap.ui.define([
 			// oModel.setProperty("/btnVisibility", true);
 			var sUserRole = oModel.getProperty('/UserRole');
 			if (sUserRole === 'Customer') {
-
 				oModel.setProperty('/visibleModify', false);
-
 				oModel.setProperty("/addBtnVisible", false);
-
 				oModel.setProperty("/cancleBtnVis", false);
-
 				oModel.setProperty("/updBtnVisibility", false);
-
 				oModel.setProperty("/editColumnVisible", false);
-
-
-
-
 			} else if (sUserRole === "Artwork Head") {
-
 				oModel.setProperty("/addBtnVisible", false);
 				oModel.setProperty("/editColumnVisible", false);
 				oModel.setProperty("/updBtnVisibility", false);
@@ -168,119 +158,70 @@ sap.ui.define([
 			// this.getUserRoleData();
 			this.oGetAgru();
 			this.onReadJobStatus();
-
-
-
 		},
 
 		//this fragment open when click on remark
 
 		openRemarkJobStatus: function () {
-
 			var oView = this.getView();
-
 			var that = this;
-
 			if (!this.remarkJobStatus) {
-
 				this.remarkJobStatus = Fragment.load({
-
 					id: oView.getId(),
-
 					name: "ent.ui.ecommerce.fragments.printingDetailFragment.RemarkJobStatus",
-
 					controller: this
-
 				}).then(function (oDialog) {
-
 					// Add dialog to view hierarch
-
 					oView.addDependent(oDialog);
-
 					return oDialog;
-
 				}.bind(this));
-
 			}
-
 			return this.remarkJobStatus;
-
 		},
 
 		onRemarkClick: function () {
-
-			
-
 			var that = this;
-
 			that.openRemarkJobStatus().then(function (remarkDialog) {
-
 				remarkDialog.open();
-
 				that.getView().byId("idRemarkDialog").bindElement("appView>/newJobStatus/0");
-
 			});
-
 		},
 
 		//this function hits when we click on update
 
 		onRemarkFragupdate: function () {
-
-			
-
 			var that = this;
-
 			var dModel = this.getView().getModel();
-
 			var oModel = this.getView().getModel("appView");
 
 			var allJobsData = this.getView().getModel("appView").getProperty("/jobsData");
-
 			var remark1Img = oModel.getProperty("/logoRemark1");
-
 			var remark2Img = oModel.getProperty("/logoRemark2");
-
 			var remark3Img = oModel.getProperty("/logoRemark3");
 
 			var jobStatusDatass = oModel.getProperty("/newJobStatus/0");
 			this.getView().getModel("appView").setProperty("/jobDataOnWhichRemarkReceived",jobStatusDatass.JobStatusId);
 			var filterWithRemark = allJobsData.filter((job) => {
-
 				return job.remark1 !== null;
-
 			});
 
 			var id = jobStatusDatass.id;
-
 			const sEntityPath = `/JobStatus('${id}')`;
-
 			const payload = {
-
 				"remark1": jobStatusDatass.remark1,
-
 				"remark2": jobStatusDatass.remark2,
-
 				"remark3": jobStatusDatass.remark3,
-
 				"remark1Img": remark1Img,
-
 				"remark2Img": remark2Img,
-
 				"remark3Img": remark3Img
-
 			};
 
 			if (!payload.remark1 && !payload.remark1Img && !payload.remark2 && !payload.remark2Img && !payload.remark3 && !payload.remark3Img) {
-
 				MessageToast.show("Please Add Any Remark");
-
 				return;
-
 			}
 
 			dModel.update(sEntityPath, payload, {
-
 				success: function (data) {
 
 					MessageToast.show("successfully Remark uploaded");
@@ -290,39 +231,32 @@ sap.ui.define([
 					that.emailSendForRemark();
 					that.whenProductionStart();
 					that.onReadJobStatus();
-
-
-
 				},
 
 				error: function (error) {
-
 					that.middleWare.errorHandler(error, that);
-
 					// console.error("PATCH request failed");
-
 				}
-
 			});
-
 		},
-				// this function hits when we click on update and a email will go to tarun 	
-				emailSendForRemark: function() {
-					var oModel = this.getView().getModel('appView')
-					var JobData = oModel.getProperty("/jobDataOnWhichRemarkReceived");
-					var that = this;
-					var payload = {JobData}
-					this.middleWare.callMiddleWare("remarkEmailSend", "POST", payload)
-						.then(function (data, status, xhr) {
-							MessageToast.show("Success")
-							// that.onReject();
-						})
-						.catch(function (jqXhr, textStatus, errorMessage) {
-							MessageToast.show("error")
-							// that.middleWare.errorHandler(jqXhr, that);
-						});
-				
-				},
+
+		// this function hits when we click on update and a email will go to tarun 	
+		emailSendForRemark: function() {
+			var oModel = this.getView().getModel('appView')
+			var JobData = oModel.getProperty("/jobDataOnWhichRemarkReceived");
+			var that = this;
+			var payload = {JobData}
+			this.middleWare.callMiddleWare("remarkEmailSend", "POST", payload)
+				.then(function (data, status, xhr) {
+					MessageToast.show("Success")
+					// that.onReject();
+				})
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					MessageToast.show("error")
+					// that.middleWare.errorHandler(jqXhr, that);
+				});
+		
+		},
 
 		//this function hits when we click on close
 
@@ -1956,6 +1890,7 @@ sap.ui.define([
 				.then(function (data) {
 					MessageToast.show("Saved successfully");
 					// console.log("ExpectedDeliveryDate updated successfully:", data);
+					that.getJobsDataByCompanyFilter();
 				})
 				.catch(function (jqXhr, textStatus, error) {
 					that.middleWare.errorHandler(error, that);
@@ -2855,78 +2790,78 @@ sap.ui.define([
 		// 	// });
 
 		// },
-		getJobsDataByCompanyFilter: function () {
-			var readDates = this.openYearPickar();
-			var id = this.getModel('appView').getProperty('/UserId');
-			var oState = this.getModel('appView').getProperty('/oState');
-			var payLoad = {
-				id,
-			}
-			var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
-			var url = 'api/Jobs?filter=' + oFilter
-			var that = this;
-			var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
-			var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
-			var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
-			var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
-			var payload = {
-				"selectedYear": selectedYear,
-				"maxDate": maxDate,
-				"minDate": minDate,
-				"State": oState ? oState : false
-			}
-			if (sUserRole === "Customer") {
-				this.middleWare.callMiddleWare("JobsCustomer", "POST", payLoad)
-					.then(function (data, status, xhr) {
+		// getJobsDataByCompanyFilter: function () {
+		// 	var readDates = this.openYearPickar();
+		// 	var id = this.getModel('appView').getProperty('/UserId');
+		// 	var oState = this.getModel('appView').getProperty('/oState');
+		// 	var payLoad = {
+		// 		id,
+		// 	}
+		// 	var oFilter = encodeURIComponent('{"where":{"CompanyId":{"neq": null}}}');
+		// 	var url = 'api/Jobs?filter=' + oFilter
+		// 	var that = this;
+		// 	var sUserRole = this.getView().getModel("appView").getProperty('/UserRole');
+		// 	var selectedYear = this.getView().getModel("appView").getProperty('/getYearForFilterJobs');
+		// 	var maxDate = this.getView().getModel("appView").getProperty('/getMaxDateForFilterJobs');
+		// 	var minDate = this.getView().getModel("appView").getProperty('/getMinDateForFilterJobs');
+		// 	var payload = {
+		// 		"selectedYear": selectedYear,
+		// 		"maxDate": maxDate,
+		// 		"minDate": minDate,
+		// 		"State": oState ? oState : false
+		// 	}
+		// 	if (sUserRole === "Customer") {
+		// 		this.middleWare.callMiddleWare("JobsCustomer", "POST", payLoad)
+		// 			.then(function (data, status, xhr) {
 
-						that.getView().getModel("appView").setProperty("/jobsData", data);
-						that.getView().getModel("appView").setProperty("/countJobs", data.length);
-						var isDescenting = that.getView().getModel("appView").getProperty('/isDescending');
-						if (isDescenting === true) {
-							that.onSortDescending();
-						}
-						else {
-							that.onSortAscending();
-						}
-					})
-					.catch(function (jqXhr, textStatus, errorMessage) {
-						that.middleWare.errorHandler(jqXhr, that);
-					});
-			}else if(sUserRole === "SalesPerson"){
-				let companyId = this.getModel('appView').getProperty('/CompanyId');
-				let salesPayload = {
-					id: id,
-					companyId: companyId
-				}
-				this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , salesPayload)
-					.then(function (data, status, xhr) {
-						that.getView().getModel("appView").setProperty("/jobsData", data);
-						that.getView().getModel("appView").setProperty("/countJobs", data.length);
-						that.onSortDescending();
-					})
-					.catch(function (jqXhr, textStatus, errorMessage) {
-						that.middleWare.errorHandler(jqXhr, that);
-					});
-			}
-			else {
+		// 				that.getView().getModel("appView").setProperty("/jobsData", data);
+		// 				that.getView().getModel("appView").setProperty("/countJobs", data.length);
+		// 				var isDescenting = that.getView().getModel("appView").getProperty('/isDescending');
+		// 				if (isDescenting === true) {
+		// 					that.onSortDescending();
+		// 				}
+		// 				else {
+		// 					that.onSortAscending();
+		// 				}
+		// 			})
+		// 			.catch(function (jqXhr, textStatus, errorMessage) {
+		// 				that.middleWare.errorHandler(jqXhr, that);
+		// 			});
+		// 	}else if(sUserRole === "SalesPerson"){
+		// 		let companyId = this.getModel('appView').getProperty('/CompanyId');
+		// 		let salesPayload = {
+		// 			id: id,
+		// 			companyId: companyId
+		// 		}
+		// 		this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , salesPayload)
+		// 			.then(function (data, status, xhr) {
+		// 				that.getView().getModel("appView").setProperty("/jobsData", data);
+		// 				that.getView().getModel("appView").setProperty("/countJobs", data.length);
+		// 				that.onSortDescending();
+		// 			})
+		// 			.catch(function (jqXhr, textStatus, errorMessage) {
+		// 				that.middleWare.errorHandler(jqXhr, that);
+		// 			});
+		// 	}
+		// 	else {
 
-				this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
-					.then(function (data, status, xhr) {
-						that.getView().getModel("appView").setProperty("/jobsData", data);
-						that.getView().getModel("appView").setProperty("/countJobs", data.length);
-						var isDescenting = that.getView().getModel("appView").getProperty('/isDescending');
-						if (isDescenting === true) {
-							that.onSortDescending();
-						}
-						else {
-							that.onSortAscending();
-						}
-					})
-					.catch(function (jqXhr, textStatus, errorMessage) {
-						that.middleWare.errorHandler(jqXhr, that);
-					});
-			}
-		},
+		// 		this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
+		// 			.then(function (data, status, xhr) {
+		// 				that.getView().getModel("appView").setProperty("/jobsData", data);
+		// 				that.getView().getModel("appView").setProperty("/countJobs", data.length);
+		// 				var isDescenting = that.getView().getModel("appView").getProperty('/isDescending');
+		// 				if (isDescenting === true) {
+		// 					that.onSortDescending();
+		// 				}
+		// 				else {
+		// 					that.onSortAscending();
+		// 				}
+		// 			})
+		// 			.catch(function (jqXhr, textStatus, errorMessage) {
+		// 				that.middleWare.errorHandler(jqXhr, that);
+		// 			});
+		// 	}
+		// },
 
 		// Ascending Sort Jobs List
 
@@ -4322,6 +4257,13 @@ sap.ui.define([
 			link.href = base64PDF;
 			link.download = `${PoNo}`;
 			link.click();
+		},
+
+		onGoBackNavigation: function () {
+			this.getModel("appView").setProperty("/PauseJobFilter", true);
+			
+			var route = this.getRouter().oHashChanger.hash.split("/")[0];
+			this.getRouter().navTo(route);
 		},
 
 	});

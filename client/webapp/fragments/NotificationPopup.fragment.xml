@@ -1,12 +1,19 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:custom="ent.ui.ecommerce.controller.controls">
     <ResponsivePopover
         id="NotificationPopup"
-        title="Notifications"
         placement="Bottom"
-        contentWidth="400px"
-        titleAlignment="Center">
+        contentWidth="400px">
+        <customHeader>
+            <OverflowToolbar >
+                <content>
+                    <Title text="Notifications"></Title>
+                    <ToolbarSpacer ></ToolbarSpacer>
+                    <Button visible="{= ${appView>/Notification}.length !== 0 ? true : false}" type="Emphasized" text="Mark All As Read" icon="sap-icon://multiselect-all" press="markAllAsReadNotification"></Button>
+                </content>
+            </OverflowToolbar>
+        </customHeader>
         <content>
-            <List noDataText="No Notifications" id="notificationList" growing="true" sticky="HeaderToolbar" growingScrollToLoad="true" growingThreshold="10" items="{appView>/Notification}" mode="None"  itemPress="">
+            <List noDataText="No Notifications" id="notificationList" growing="true" sticky="HeaderToolbar" growingScrollToLoad="true" growingThreshold="10" items="{appView>/Notification}" mode="None"  itemPress="onNavigationByNotification">
                 <headerToolbar>
                     <OverflowToolbar >
                         <SearchField liveChange="liveSearchNotification" placeholder="Notification Search" id="searchNotification"></SearchField>
@@ -28,6 +35,13 @@
                                 <Text text="{appView>Description}"></Text>
                                 <Label text="{path: 'appView>CreatedOn', formatter: '.formatter.formatNotificationTime'}" class="sapUiTinyMarginTop"></Label>
                             </VBox>
+                            <Button 
+                                icon="sap-icon://email-read"
+                                text="Mark as read" 
+                                type="Neutral" 
+                                press="onSingleMarkAsRead"
+                                class="sapUiTinyMargin"
+                                tooltip="Mark As Read"/>
                             <!-- <Button 
                                 icon="sap-icon://decline" 
                                 type="Transparent" 

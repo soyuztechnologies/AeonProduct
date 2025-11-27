@@ -227,6 +227,33 @@ sap.ui.define(
         }.bind(this));
       },
 
+      onSingleMarkAsRead: function (oEvent) {
+          var oButton = oEvent.getSource();
+
+          var oItem = oButton.getParent();       
+          oItem = oItem.getParent();          
+
+          var oCtx = oItem.getBindingContext("appView");
+          var oData = oCtx.getObject();         
+
+          // Mark as Read
+          var paylaod = {
+            ReadBy: this.getModel('appView').getProperty('/UserId'),
+            NotificationId: [
+              {
+                id: oData.id
+              }
+            ]
+          }
+          this.middleWare.callMiddleWare("markAsReadNotification", "POST", paylaod)
+            .then(function (data, status, xhr) {
+              this.getNotification();
+            }.bind(this))
+            .catch(function (jqXhr, textStatus, errorMessage) {
+              this.middleWare.errorHandler(jqXhr, this);
+            }.bind(this));
+      },
+
       // onDeleteNotification: function (oEvent) {
       //   var oButton = oEvent.getSource();
 
@@ -353,7 +380,72 @@ sap.ui.define(
         // Close the menu after performing the action
         var oMenu = this.getView().byId("logOutMenu");
         oMenu.close();
+      },
+
+      onNavigationByNotification: function(oEvent){
+        var sPath = oEvent.getParameter("listItem").getBindingContextPath(); 
+        var selectedNotification = this.getView().getModel("appView").getProperty(sPath);
+
+        var jobCardNo = selectedNotification.Description.match(/\d+_\d+/);
+
+        // Close + Destroy the Notification Popover if open
+        if (this._onNotificationPopover) {
+            this._onNotificationPopover.close();
+
+            this._onNotificationPopover.attachAfterClose(() => {
+                this._onNotificationPopover.destroy();
+                this._onNotificationPopover = null;
+            });
+        }
+
+        if (jobCardNo) {
+            var jobNo = jobCardNo[0];       
+            // Navigate
+            this.getRouter().navTo("sideNavallPrinters", {
+                jobId: jobNo
+            });
+        } else {
+            console.log("Job Number not found.");
+        }
+
+        // Mark as Read
+        var paylaod = {
+          ReadBy: this.getModel('appView').getProperty('/UserId'),
+          NotificationId: [
+            {
+              id: selectedNotification.id
+            }
+          ]
+        }
+        this.middleWare.callMiddleWare("markAsReadNotification", "POST", paylaod)
+          .then(function (data, status, xhr) {
+            this.getNotification();
+          }.bind(this))
+          .catch(function (jqXhr, textStatus, errorMessage) {
+            this.middleWare.errorHandler(jqXhr, this);
+          }.bind(this));
+      },
+
+      markAllAsReadNotification: function () {
+        var that = this;
+        var oData = this.getModel("appView").getProperty("/Notification");
+        var Payload = {
+          ReadBy: this.getModel('appView').getProperty('/UserId'),
+          NotificationId: []
+        };
+        oData.forEach(function (oNotification) {
+          Payload.NotificationId.push({ id: oNotification.id });
+        });
+        this.middleWare.callMiddleWare("markAsReadNotification", "POST", Payload)
+          .then(function (data, status, xhr) {
+            this.getNotification();
+          }.bind(this))
+          .catch(function (jqXhr, textStatus, errorMessage) {
+            this.middleWare.errorHandler(jqXhr, this);
+          }.bind(this));
       }
+
+
     });
   }
 );
