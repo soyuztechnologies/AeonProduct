@@ -3777,13 +3777,71 @@ app.start = function () {
 			});
 		});
 
+		// app.post('/markAsReadNotification', async (req, res) => {
+		// 	try {
+		// 		const payload = req.body;
+		// 		const Notification = app.models.Notifications;
+				
+		// 		// Extract IDs from NotificationId array
+		// 		const notificationIds = payload.NotificationId.map(item => item.id);
+				
+		// 		if (!notificationIds || notificationIds.length === 0) {
+		// 			return res.status(400).json({
+		// 				success: false,
+		// 				message: "No notification IDs provided"
+		// 			});
+		// 		}
+				
+		// 		// First, fetch the notifications to get existing ReadBy values
+		// 		const notifications = await Notification.find({
+		// 			where: { id: { inq: notificationIds } }
+		// 		});
+				
+		// 		// Update each notification by appending ReadBy
+		// 		const updatePromises = notifications.map(notification => {
+		// 			let existingReadBy = notification.ReadBy || "";
+		// 			let newReadBy = payload.ReadBy;
+					
+		// 			// Check if user already in ReadBy list
+		// 			if (!existingReadBy.includes(newReadBy)) {
+		// 				// Append new ReadBy with comma separator
+		// 				let updatedReadBy = existingReadBy 
+		// 					? existingReadBy + "," + newReadBy 
+		// 					: newReadBy;
+						
+		// 				return Notification.updateAll(
+		// 					{ id: notification.id },
+		// 					{ ReadBy: updatedReadBy }
+		// 				);
+		// 			}
+		// 			return Promise.resolve(); // Already read by this user
+		// 		});
+				
+		// 		await Promise.all(updatePromises);
+				
+		// 		return res.status(200).json({
+		// 			success: true,
+		// 			message: `${notificationIds.length} notification(s) marked as read successfully`,
+		// 			count: notificationIds.length
+		// 		});
+				
+		// 	} catch (err) {
+		// 		console.error("Error marking notification as read:", err);
+		// 		return res.status(500).json({
+		// 			success: false,
+		// 			message: 'Error marking notification as read',
+		// 			error: err.message
+		// 		});
+		// 	}
+		// });
+
 		app.post('/markAsReadNotification', async (req, res) => {
 			try {
 				const payload = req.body;
 				const Notification = app.models.Notifications;
 				
-				// Extract IDs from NotificationId array
 				const notificationIds = payload.NotificationId.map(item => item.id);
+				const newReadBy = String(payload.ReadBy);
 				
 				if (!notificationIds || notificationIds.length === 0) {
 					return res.status(400).json({
@@ -3792,37 +3850,51 @@ app.start = function () {
 					});
 				}
 				
-				// First, fetch the notifications to get existing ReadBy values
+				// Ek hi baar fetch karo saari notifications
 				const notifications = await Notification.find({
-					where: { id: { inq: notificationIds } }
+					where: { id: { inq: notificationIds } },
+					fields: { id: true, ReadBy: true } // sirf zaruri fields
 				});
 				
-				// Update each notification by appending ReadBy
-				const updatePromises = notifications.map(notification => {
-					let existingReadBy = notification.ReadBy || "";
-					let newReadBy = payload.ReadBy;
+				// Sirf unhe filter karo jisme user already nahi hai
+				const toUpdate = notifications.filter(notification => {
+					const existingIds = (notification.ReadBy || "")
+						.split(',')
+						.map(s => s.trim())
+						.filter(Boolean);
+					return !existingIds.includes(newReadBy); // already read? skip
+				});
+				
+				if (toUpdate.length === 0) {
+					return res.status(200).json({
+						success: true,
+						message: "Already marked as read",
+						count: 0
+					});
+				}
+				
+				// BATCH of 200 - connection pool safe rahega
+				const BATCH_SIZE = 200;
+				for (let i = 0; i < toUpdate.length; i += BATCH_SIZE) {
+					const batch = toUpdate.slice(i, i + BATCH_SIZE);
 					
-					// Check if user already in ReadBy list
-					if (!existingReadBy.includes(newReadBy)) {
-						// Append new ReadBy with comma separator
-						let updatedReadBy = existingReadBy 
+					await Promise.all(batch.map(notification => {
+						const existingReadBy = notification.ReadBy || "";
+						const updatedReadBy = existingReadBy 
 							? existingReadBy + "," + newReadBy 
 							: newReadBy;
 						
 						return Notification.updateAll(
 							{ id: notification.id },
-							{ ReadBy: updatedReadBy }
+							{ ReadBy: updatedReadBy, UpdatedOn: new Date() }
 						);
-					}
-					return Promise.resolve(); // Already read by this user
-				});
-				
-				await Promise.all(updatePromises);
+					}));
+				}
 				
 				return res.status(200).json({
 					success: true,
-					message: `${notificationIds.length} notification(s) marked as read successfully`,
-					count: notificationIds.length
+					message: `${toUpdate.length} notification(s) marked as read successfully`,
+					count: toUpdate.length
 				});
 				
 			} catch (err) {
