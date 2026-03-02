@@ -3850,19 +3850,17 @@ app.start = function () {
 					});
 				}
 				
-				// Ek hi baar fetch karo saari notifications
 				const notifications = await Notification.find({
 					where: { id: { inq: notificationIds } },
-					fields: { id: true, ReadBy: true } // sirf zaruri fields
+					fields: { id: true, ReadBy: true } 
 				});
 				
-				// Sirf unhe filter karo jisme user already nahi hai
 				const toUpdate = notifications.filter(notification => {
 					const existingIds = (notification.ReadBy || "")
 						.split(',')
 						.map(s => s.trim())
 						.filter(Boolean);
-					return !existingIds.includes(newReadBy); // already read? skip
+					return !existingIds.includes(newReadBy);
 				});
 				
 				if (toUpdate.length === 0) {
@@ -3873,7 +3871,6 @@ app.start = function () {
 					});
 				}
 				
-				// BATCH of 200 - connection pool safe rahega
 				const BATCH_SIZE = 200;
 				for (let i = 0; i < toUpdate.length; i += BATCH_SIZE) {
 					const batch = toUpdate.slice(i, i + BATCH_SIZE);
@@ -3959,7 +3956,7 @@ app.start = function () {
 				// Combine: all unread + last 5 read
 				const finalNotifications = [...unreadNotifications, ...last5ReadNotifications];
 				
-				return res.status(200).json(finalNotifications);
+				return res.status(200).json({ notifications: finalNotifications, count: unreadNotifications.length });
 				
 			} catch (err) {
 				console.error("Error fetching notifications:", err);
@@ -3986,18 +3983,39 @@ app.start = function () {
 					whereCondition = { Company: { like: companyId } };
 				}
 				
-				const notifications = await Notification.find({ where: whereCondition });
-				
-				// Count only unread notifications
-				const unreadNotifications = notifications.filter(notification => {
-					if (!notification.ReadBy || notification.ReadBy === "") {
-						return true;
-					}
-					const readByArray = notification.ReadBy.split(',').map(id => id.trim());
-					return !readByArray.includes(userId);
+				// Fetch all notifications sorted by CreatedOn descending
+				const notifications = await Notification.find({ 
+					where: whereCondition,
+					order: 'CreatedOn DESC'
 				});
 				
-				return res.status(200).json({ count: unreadNotifications.length });
+				const unreadNotifications = [];
+				const readNotifications = [];
+				
+				// Separate read and unread notifications
+				notifications.forEach(notification => {
+					const isRead = notification.ReadBy && 
+								notification.ReadBy !== "" && 
+								notification.ReadBy.split(',').map(id => id.trim()).includes(userId);
+					
+					if (isRead) {
+						// Add status field
+						notification.Status = "Read";
+						readNotifications.push(notification);
+					} else {
+						// Add status field
+						notification.Status = "Unread";
+						unreadNotifications.push(notification);
+					}
+				});
+				
+				// Get last 5 read notifications
+				const last5ReadNotifications = readNotifications.slice(0, 5);
+				
+				// Combine: all unread + last 5 read
+				const finalNotificationsCount = unreadNotifications.length;
+				
+				return res.status(200).json({ count: finalNotificationsCount });
 				
 			} catch (err) {
 				console.error("Error counting notifications:", err);

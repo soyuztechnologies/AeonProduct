@@ -1763,10 +1763,11 @@ sap.ui.define([
 						that.middleWare.callMiddleWare(dataUrl, "GET")
 							.then(function(data, status, xhr) {
 								let unreadData = [];
-								if (data && data.length > 0) {
-									that.getModel("appView").setProperty("/Notification", data);
-									that.getModel("appView").setProperty("/NotificationCount", data.length);
-									unreadData = data.filter(item => item.Status === "Unread");
+								let allNotifications = data.notifications
+								if (data && data.notifications.length > 0) {
+									that.getModel("appView").setProperty("/Notification", allNotifications);
+									that.getModel("appView").setProperty("/NotificationCount", data.count);
+									unreadData = allNotifications.filter(item => item.Status === "Unread");
 								} else {
 									that.getModel("appView").setProperty("/Notification", []);
 									that.getModel("appView").setProperty("/NotificationCount", 0);
