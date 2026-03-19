@@ -566,6 +566,7 @@ sap.ui.define([
 			var dataModel = this.getView().getModel("appView").getProperty("/userData");
 			var logoProperty = this.getView().getModel("appView").getProperty("/LogoAvonUserProfile");
 			delete dataModel.Company;
+			dataModel.CompanyId = null;
 			delete dataModel.__metadata;
 			if (!logoProperty) {
 				var Companylogo = dataModel.Companylogo;

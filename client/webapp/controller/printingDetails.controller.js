@@ -2680,31 +2680,31 @@ sap.ui.define([
 
 			var description = ``
 			if(oUpdatedData.status === "Paper Cutting"){
-				description = `Paper Cutting has started  for Job: ${oJobs.jobCardNo} `
+				description = `Paper Cutting is Completed  for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "Printing"){
-				description = `Printing has started for Job: ${oJobs.jobCardNo} `
+				description = `Printing is Completed for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "Coating"){
-				description = `Coating has started for Job: ${oJobs.jobCardNo} `
+				description = `Coating is Completed for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "Foiling"){
-				description = `Foiling has started for Job: ${oJobs.jobCardNo} `
+				description = `Foiling is Completed for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "SpotUV"){
-				description = `SpotUV has started for Job: ${oJobs.jobCardNo} `
+				description = `SpotUV is Completed for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "Embossing"){
-				description = `Embossing has started for Job: ${oJobs.jobCardNo} `
+				description = `Embossing is Completed for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "Punching"){
-				description = `Punching has started for Job: ${oJobs.jobCardNo} `
+				description = `Punching is Completed for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "Pasting"){
-				description = `Pasting has started for Job: ${oJobs.jobCardNo} `
+				description = `Pasting is Completed for Job: ${oJobs.jobCardNo}`
 			}
 			else if(oUpdatedData.status === "Ready For Dispatch"){
-				description = `Job: ${oJobs.jobCardNo} is Ready For Dispatch'`
+				description = `Job: ${oJobs.jobCardNo} is Ready For Dispatch`
 			}
 			else if(oUpdatedData.status === "Dispatched"){
 				description = `Job: ${oJobs.jobCardNo} has been Dispatched`

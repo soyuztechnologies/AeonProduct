@@ -1754,7 +1754,13 @@ sap.ui.define([
 					var count = data && data.count ? data.count : 0;
 					var oldCount = that.getModel("appView").getProperty("/NotificationCount");
 					
-					if (count !== oldCount) {
+					var latestJobStatusTime = data.latestJobStatusTime || null;
+            		var oldLatestJobStatusTime = that.getModel("appView").getProperty("/LatestJobStatusTime");
+
+					if (count !== oldCount  || latestJobStatusTime !== oldLatestJobStatusTime) {
+
+						that.getModel("appView").setProperty("/LatestJobStatusTime", latestJobStatusTime);
+						
 						// Fetch actual notification data
 						var dataUrl = 'api/Notifications?userId=' + userId + 
 									'&companyId=' + companyId + 

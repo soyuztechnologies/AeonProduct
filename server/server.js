@@ -1288,9 +1288,9 @@ app.start = function () {
 			};
 
 			if (companyIds) {
-				companyIds = companyIds.split(',').map(id => id.trim());
+				const ids = Array.isArray(companyIds) ? companyIds : String(companyIds).split(',');
 				filter.where = {
-					id: { inq: companyIds }
+					id: { inq: ids.map(id => String(id).trim()) }
 				};
 			}
 
@@ -3904,6 +3904,35 @@ app.start = function () {
 			}
 		});
 
+		function extractJobId(description) {
+			if (!description) return null;
+			const match = description.match(/\b(\d+_\d{4})\b/);
+			return match ? match[1] : null;
+		}
+
+		function deduplicateJobStatusNotifications(notifications) {
+			const jobStatusMap = {};
+			const result = [];
+
+			notifications.forEach(notification => {
+				if (notification.Title === "Job Status Updated") {
+					const jobId = extractJobId(notification.Description);
+					if (jobId) {
+						if (!jobStatusMap[jobId]) {
+							jobStatusMap[jobId] = true;
+							result.push(notification);
+						}
+					} else {
+						result.push(notification);
+					}
+				} else {
+					result.push(notification);
+				}
+			});
+
+			return result;
+		}
+
 		app.get('/api/Notifications', async (req, res) => {
 			try {
 				const Notification = app.models.Notifications;
@@ -3917,43 +3946,37 @@ app.start = function () {
 				
 				let whereCondition = {};
 				
-				// Build base filter
 				if (role === "Admin") {
 					whereCondition = {};
 				} else {
 					whereCondition = { Company: { like: companyId } };
 				}
 				
-				// Fetch all notifications sorted by CreatedOn descending
 				const notifications = await Notification.find({ 
 					where: whereCondition,
 					order: 'CreatedOn DESC'
 				});
+
+				const filteredNotifications = deduplicateJobStatusNotifications(notifications);
 				
 				const unreadNotifications = [];
 				const readNotifications = [];
 				
-				// Separate read and unread notifications
-				notifications.forEach(notification => {
+				filteredNotifications.forEach(notification => {
 					const isRead = notification.ReadBy && 
 								notification.ReadBy !== "" && 
 								notification.ReadBy.split(',').map(id => id.trim()).includes(userId);
 					
 					if (isRead) {
-						// Add status field
 						notification.Status = "Read";
 						readNotifications.push(notification);
 					} else {
-						// Add status field
 						notification.Status = "Unread";
 						unreadNotifications.push(notification);
 					}
 				});
 				
-				// Get last 5 read notifications
 				const last5ReadNotifications = readNotifications.slice(0, 5);
-				
-				// Combine: all unread + last 5 read
 				const finalNotifications = [...unreadNotifications, ...last5ReadNotifications];
 				
 				return res.status(200).json({ notifications: finalNotifications, count: unreadNotifications.length });
@@ -3983,39 +4006,37 @@ app.start = function () {
 					whereCondition = { Company: { like: companyId } };
 				}
 				
-				// Fetch all notifications sorted by CreatedOn descending
 				const notifications = await Notification.find({ 
 					where: whereCondition,
 					order: 'CreatedOn DESC'
 				});
+
+				const filteredNotifications = deduplicateJobStatusNotifications(notifications);
 				
 				const unreadNotifications = [];
 				const readNotifications = [];
 				
-				// Separate read and unread notifications
-				notifications.forEach(notification => {
+				filteredNotifications.forEach(notification => {
 					const isRead = notification.ReadBy && 
 								notification.ReadBy !== "" && 
 								notification.ReadBy.split(',').map(id => id.trim()).includes(userId);
 					
 					if (isRead) {
-						// Add status field
 						notification.Status = "Read";
 						readNotifications.push(notification);
 					} else {
-						// Add status field
 						notification.Status = "Unread";
 						unreadNotifications.push(notification);
 					}
 				});
 				
-				// Get last 5 read notifications
 				const last5ReadNotifications = readNotifications.slice(0, 5);
-				
-				// Combine: all unread + last 5 read
 				const finalNotificationsCount = unreadNotifications.length;
 				
-				return res.status(200).json({ count: finalNotificationsCount });
+				const latestJobStatusTime = filteredNotifications
+					.map(n => n.CreatedOn) || null;
+
+				return res.status(200).json({ count: finalNotificationsCount, latestJobStatusTime: latestJobStatusTime });
 				
 			} catch (err) {
 				console.error("Error counting notifications:", err);
