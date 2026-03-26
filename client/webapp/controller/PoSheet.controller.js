@@ -697,6 +697,11 @@ sap.ui.define([
 					oDialog.open();  
 					that.byId('inpTransport').setValue("DOOR DELIVERY")
 					that.byId('inpPaymentTerms').setValue("60 DAYS")
+					that.byId('inpDiscount').setValue("")
+					that.byId('inpTransportaion').setValue("")
+					that.byId('inpRemarks').setValue("")
+					that.byId('inpPreparedBy').setValue("")
+					that.byId('inpCheckedBy').setValue("")
 					return oDialog;
 				}.bind(this));
 			} else {
@@ -704,6 +709,11 @@ sap.ui.define([
 					oDialog.open();
 					that.byId('inpTransport').setValue("DOOR DELIVERY")
 					that.byId('inpPaymentTerms').setValue("60 DAYS")
+					that.byId('inpDiscount').setValue("")
+					that.byId('inpTransportaion').setValue("")
+					that.byId('inpRemarks').setValue("")
+					that.byId('inpPreparedBy').setValue("")
+					that.byId('inpCheckedBy').setValue("")
 				});
 			}
 			

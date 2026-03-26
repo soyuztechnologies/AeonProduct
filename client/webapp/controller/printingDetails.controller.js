@@ -28,6 +28,7 @@ sap.ui.define([
 			this.getRouter().getRoute("sideNavPunching").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("sideNavPasting").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("sideNavReadyForDispatch").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("sideNavValueMismatched").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._matchedHandler, this);
@@ -994,12 +995,14 @@ sap.ui.define([
 				var parsedPastingValueQty = parseInt(pastingValue.qtyPcs)
 				if (parseInt(sumOfJobStatus.Pasting) < parsedPastingValueQty) {
 					if (parseInt(jobStatus.Pasting) < parseInt(pastingValue.qtyPcs) && parsedPastingValue > 0) {
-						this.updateStatusValue();
+						this.updateValueMismatchedValue(true);
 					}
 					else {
+						this.updateValueMismatchedValue(false);
 						this.whenProductionStart();
 					}
 				} else {
+					this.updateValueMismatchedValue(false);
 					this.whenProductionStart();
 				}
 
@@ -1252,6 +1255,7 @@ sap.ui.define([
 
 		clickedLink: null,
 		jobStatusPath: null,
+
 		onClickPopup: function (oEvent) {
 			this.isAttachment = false;
 			var that = this;
@@ -2439,6 +2443,11 @@ sap.ui.define([
 			var isSpotUV = this.getView().getModel('appView').getProperty('/spotUvData');
 			var isEmbossing = this.getView().getModel('appView').getProperty('/embossingData');
 			var oJobs = this.getView().getModel("appView").getProperty("/Jobs");
+			var selectedData = this.getModel("appView").getProperty('/datas');
+			var oldStatus;
+			if(selectedData){
+				oldStatus = selectedData.status;
+			}
 			var oUpdatedData = {
 				status: ""
 			};
@@ -2717,7 +2726,9 @@ sap.ui.define([
 				Description: description,
 				Company: oJobs.CompanyId
 			}]
-			this.newNotification(notification)
+			if(oldStatus !== oUpdatedData.status){
+				this.newNotification(notification)
+			}
 			if(oUpdatedData.status === "Dispatched" && oJobs.ArtworkAttach) {
 				var ArtWork = oJobs.ArtworkAttach.replace(/\s+/g, "") + 'ArtworkNo';
 				// this.middleWare.callMiddleWare("deleteArtworkAfterDispatch", "POST", ArtWork)
@@ -2735,15 +2746,18 @@ sap.ui.define([
 					}
               });
 			}
+			this.getNotification();
 		},
 
-		updateStatusValue: function () {
+		updateValueMismatchedValue: function (status) {
 			var oModel = this.getView().getModel();
 			var that = this;
 			var ids = this.oArgs;
 			var sEntityPath = `api/Jobs`;
 			const oUpdatedData = {
-				status: "Value Mismatched"
+				// status: "Value Mismatched"
+				valueMismatched: status ? true : false,
+				// status: "Ready For Dispatch"
 
 			};
 			oUpdatedData.jobCardNo = ids;

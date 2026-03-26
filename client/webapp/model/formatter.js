@@ -1018,8 +1018,8 @@ downloadAttachmentVis:function(value){
     }    
 
 },
-   ValueMisAndOtherStatusColor: function(status) {
-    if (status === 'Value Mismatched' ) {
+   ValueMisAndOtherStatusColor: function(status, valueMismatched) {
+    if (status === 'Value Mismatched' || valueMismatched) {
       return 'ffff5c'
     }else if (status === 'Others') {
       return 'ff6666'

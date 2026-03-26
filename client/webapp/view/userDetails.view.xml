@@ -6,6 +6,7 @@
 	<Page showHeader="false">
 		<subHeader>
 			<OverflowToolbar>
+				<core:Icon src="sap-icon://family-care" class="sapUiTinyMarginBegin"/>
 			   <Title text="User Details" level="H2"/>
 			   <ToolbarSpacer />
 			   <!-- <Button  type="Emphasized" icon="sap-icon://refresh" press="getUserData"></Button> -->

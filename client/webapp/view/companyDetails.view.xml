@@ -6,6 +6,7 @@
 	<Page showHeader="false">
         <subHeader>
             <OverflowToolbar>
+				<core:Icon src="sap-icon://manager" class="sapUiTinyMarginBegin"/>
                 <Title text="Company Details" level="H2"/>
                 <ToolbarSpacer />
                 <SearchField liveChange="onSearchCompanyByName" width="auto" placeholder="Company Name"></SearchField>

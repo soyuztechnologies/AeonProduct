@@ -256,153 +256,153 @@ sap.ui.define([
 //   });
   
 // },
-onUploadChange: function (oEvent) {
-  
-  return new Promise((resolve, reject) => {
-    
-   var type=  this.getView().getModel("appView").getProperty("/valueType")
-    var files = oEvent.getParameter("files");
-    var that = this;
-    var route = that.getRouter().oHashChanger.hash;
-    that.files = [];
-    // that.file = [];
-    that.count = 0;
-    function processFile(index) {
-      if (index < files.length) {
-        var reader = new FileReader();
-        var key;
-        if (type == "ArtworkNo") {
-          key = files[index].name.replace(/\s+/g, "").split('.')[0] + type;
-        } else {
-          key = files[index].name.split('_')[0] + type;
-        }
-        that.files.push({ "Label": files[index].name, "Key": key, "Type": route });
-        reader.onload = function (e) {
-          var vContent = e.currentTarget.result;
-          that.oFileContentJson = {};
-          that.content = that.convertFileToUrl(vContent);
-          that.oFileContentJson.Key = that.files[index].Key;
-          that.oFileContentJson.Label = that.files[index].Label;
-          that.oFileContentJson.Attachment = vContent;
-          that.oFileContentJson.Type = that.files[index].Type;
-          that.files[index] = that.oFileContentJson;
-          that.count++;
-          processFile(index + 1);
+    onUploadChange: function (oEvent) {
+      
+      return new Promise((resolve, reject) => {
+        
+      var type=  this.getView().getModel("appView").getProperty("/valueType")
+        var files = oEvent.getParameter("files");
+        var that = this;
+        var route = that.getRouter().oHashChanger.hash;
+        that.files = [];
+        // that.file = [];
+        that.count = 0;
+        function processFile(index) {
+          if (index < files.length) {
+            var reader = new FileReader();
+            var key;
+            if (type == "ArtworkNo") {
+              key = files[index].name.replace(/\s+/g, "").split('.')[0] + type;
+            } else {
+              key = files[index].name.split('_')[0] + type;
+            }
+            that.files.push({ "Label": files[index].name, "Key": key, "Type": route });
+            reader.onload = function (e) {
+              var vContent = e.currentTarget.result;
+              that.oFileContentJson = {};
+              that.content = that.convertFileToUrl(vContent);
+              that.oFileContentJson.Key = that.files[index].Key;
+              that.oFileContentJson.Label = that.files[index].Label;
+              that.oFileContentJson.Attachment = vContent;
+              that.oFileContentJson.Type = that.files[index].Type;
+              that.files[index] = that.oFileContentJson;
+              that.count++;
+              processFile(index + 1);
 
-          if (that.count === files.length){
-            that.allAttachmentsKeyToString()
-            that.checkInAttachments()
+              if (that.count === files.length){
+                that.allAttachmentsKeyToString()
+                that.checkInAttachments()
+              }
+            };
+
+            reader.onerror = function (error) {
+              reject(error);
+            };
+
+            reader.readAsDataURL(files[index]);
+          } else {
+            resolve();
           }
-        };
+        }
 
-        reader.onerror = function (error) {
-          reject(error);
-        };
+        processFile(0);
 
-        reader.readAsDataURL(files[index]);
-      } else {
-        resolve();
-      }
-    }
-
-    processFile(0);
-
-  });
-  
-},
-allAttachmentsKeyToString: function() {
-  var data = this.files
-  var array = []
-  for (var i = 0; i < data.length; i++) {
-    array.push(data[i].Label)
-  }
-  this.getView().getModel("appView").setProperty("/allAttachmentsKey", array)
-},
-checkInAttachments:function(){
-  this.Flag = false;
-  var that = this;
-  var allAttachmentsKey = this.getView().getModel("appView").getProperty("/allAttachmentsKey")
-  var oUploadedAttachments = this.files
-  var newAttachments = []
-  var filters = allAttachmentsKey.map(function(key) {
-    return '{"Label": "' + key + '"}';
-  });
-  var filter = encodeURIComponent('{"where": {"or": [' + filters.join(",") + ']}}');
-  var url = 'api/Attachments?filter=' + filter
-  this.middleWare.callMiddleWare(url, "GET")
-  .then(function(data, status, xhr){
-    for(let index = 0; index < data.length; index++){
-      const element = data[index];
-      var oIndex = oUploadedAttachments.findIndex((ele) => {
-        return ele.Label === element.Label
       });
-      that.Flag = true;
-      that.validateAttachments()   
-    }
-    for(let j = 0; j < oUploadedAttachments.length; j++){
-      const ele = oUploadedAttachments[j];
-      var oIndex = data.findIndex((element) => {
-        return ele.Label === element.Label
-      });
-      if(oIndex == -1){
-        newAttachments.push(ele)
-      }else{
-        data[oIndex] = ele
+      
+    },
+    allAttachmentsKeyToString: function() {
+      var data = this.files
+      var array = []
+      for (var i = 0; i < data.length; i++) {
+        array.push(data[i].Label)
       }
-    }
-    that.getView().getModel("appView").setProperty("/oldAttachmentFiles", data);
-    that.getView().getModel("appView").setProperty("/newlyAddedAttachments", newAttachments);
-    that.getView().getModel('appView').updateBindings();
-  })
-  .catch(function (jqXhr, textStatus, errorMessage) {
+      this.getView().getModel("appView").setProperty("/allAttachmentsKey", array)
+    },
+    checkInAttachments:function(){
+      this.Flag = false;
+      var that = this;
+      var allAttachmentsKey = this.getView().getModel("appView").getProperty("/allAttachmentsKey")
+      var oUploadedAttachments = this.files
+      var newAttachments = []
+      var filters = allAttachmentsKey.map(function(key) {
+        return '{"Label": "' + key + '"}';
+      });
+      var filter = encodeURIComponent('{"where": {"or": [' + filters.join(",") + ']}}');
+      var url = 'api/Attachments?filter=' + filter
+      this.middleWare.callMiddleWare(url, "GET")
+      .then(function(data, status, xhr){
+        for(let index = 0; index < data.length; index++){
+          const element = data[index];
+          var oIndex = oUploadedAttachments.findIndex((ele) => {
+            return ele.Label === element.Label
+          });
+          that.Flag = true;
+          that.validateAttachments()   
+        }
+        for(let j = 0; j < oUploadedAttachments.length; j++){
+          const ele = oUploadedAttachments[j];
+          var oIndex = data.findIndex((element) => {
+            return ele.Label === element.Label
+          });
+          if(oIndex == -1){
+            newAttachments.push(ele)
+          }else{
+            data[oIndex] = ele
+          }
+        }
+        that.getView().getModel("appView").setProperty("/oldAttachmentFiles", data);
+        that.getView().getModel("appView").setProperty("/newlyAddedAttachments", newAttachments);
+        that.getView().getModel('appView').updateBindings();
+      })
+      .catch(function (jqXhr, textStatus, errorMessage) {
 
-      that.middleWare.errorHandler(jqXhr, that);
-    });
-},
+          that.middleWare.errorHandler(jqXhr, that);
+        });
+    },
 
-validateAttachments: function(){
-  var that = this;
-  that.oAttachmentValidation().then(function(oDialog){
-    oDialog.open();
-  })
-},
+    validateAttachments: function(){
+      var that = this;
+      that.oAttachmentValidation().then(function(oDialog){
+        oDialog.open();
+      })
+    },
 
-oAttachmentValidation: function(){
-  var oView = this.getView();
-  var that = this;
-  if (!this.oAttachmentValidationDialog) {
-    this.oAttachmentValidationDialog = Fragment.load({
-      id: oView.getId(),
-      name: "ent.ui.ecommerce.fragments.AttachmentValidation",
-      controller: this
-    }).then(function (oDialog) {
-      // Add dialog to view hierarchy
-      oView.addDependent(oDialog);
-      return oDialog;
-    }.bind(this));
-  }
-  return this.oAttachmentValidationDialog
-},
+    oAttachmentValidation: function(){
+      var oView = this.getView();
+      var that = this;
+      if (!this.oAttachmentValidationDialog) {
+        this.oAttachmentValidationDialog = Fragment.load({
+          id: oView.getId(),
+          name: "ent.ui.ecommerce.fragments.AttachmentValidation",
+          controller: this
+        }).then(function (oDialog) {
+          // Add dialog to view hierarchy
+          oView.addDependent(oDialog);
+          return oDialog;
+        }.bind(this));
+      }
+      return this.oAttachmentValidationDialog
+    },
 
-onCloseAttachmentValDialog: function(){
-  var that = this;
-  this.oAttachmentValidationDialog.then(function(oDialog){
-    oDialog.close();
-  })
-},
+    onCloseAttachmentValDialog: function(){
+      var that = this;
+      this.oAttachmentValidationDialog.then(function(oDialog){
+        oDialog.close();
+      })
+    },
 
-removeAttachment: function(oEvent){
-  var selectedAttachment = oEvent.getSource().getBindingContext("appView").getObject();
-  var AllAttachementFiles = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
-  
-  var index =  AllAttachementFiles.findIndex((ele) => {
-    return ele.Label === selectedAttachment.Label
-  });
-  if(index != -1){
-    AllAttachementFiles.splice(index, 1);
-  }
-  this.getView().getModel('appView').updateBindings();
-},
+    removeAttachment: function(oEvent){
+      var selectedAttachment = oEvent.getSource().getBindingContext("appView").getObject();
+      var AllAttachementFiles = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
+      
+      var index =  AllAttachementFiles.findIndex((ele) => {
+        return ele.Label === selectedAttachment.Label
+      });
+      if(index != -1){
+        AllAttachementFiles.splice(index, 1);
+      }
+      this.getView().getModel('appView').updateBindings();
+    },
 
       onSaveDocuments:function(){
         
@@ -483,80 +483,80 @@ removeAttachment: function(oEvent){
 					});
       },
 
-      onReject: function () {
-        var that = this;
-        this.oUploadDialog.then(function (oDialog) {
-          oDialog.close();
-          that.getView().getModel("appView").setProperty("/attachmentFiles","");
-          oDialog.updateBindings();
-        });
-      },
-      onPressDelete: function (oEvent) {
-        
-        var that = this;
-        var oModel = this.getView().getModel();
-        var oItem = oEvent.getParameter("listItem").getBindingContext().getObject()
-        MessageBox.confirm("Are you sure you want to delete?", {
-          actions: ["OK", "Close"],
-          emphasizedAction: 'OK',
-          onClose: function (sAction) {
-            if (sAction === "OK") {
-              oModel.remove(`/Attachments('${oItem.Key}')`, {
-                success: function () {
-                  // Do something after successful deletion
-                  MessageToast.show("Deleted Successfully");
-                  // that.getAttachmentDatas();
-                },
-                error: function (error) {
-                  BusyIndicator.hide();
-                }
-              });
-            }
-          }
-        });
-      },
+    onReject: function () {
+      var that = this;
+      this.oUploadDialog.then(function (oDialog) {
+        oDialog.close();
+        that.getView().getModel("appView").setProperty("/attachmentFiles","");
+        oDialog.updateBindings();
+      });
+    },
+    onPressDelete: function (oEvent) {
       
-      onSearchAttachment: function (oEvent) {
-        
-        var sValue = oEvent.getParameter("newValue")
-        var oFilter1 = new Filter("Label", FilterOperator.Contains, sValue);
-        var oFilter2 = new Filter("Type", FilterOperator.Contains, this.attachmentType);
-        var aFilters = [oFilter1,oFilter2];
-        var oFilter = new Filter({
-          filters: aFilters,
-          and: true
-        });
-        var oList = this.getView().byId("idAttachmentPage");
-        var oBinding = oList.getBinding("items");
-        oBinding.filter(oFilter);
-      },
+      var that = this;
+      var oModel = this.getView().getModel();
+      var oItem = oEvent.getParameter("listItem").getBindingContext().getObject()
+      MessageBox.confirm("Are you sure you want to delete?", {
+        actions: ["OK", "Close"],
+        emphasizedAction: 'OK',
+        onClose: function (sAction) {
+          if (sAction === "OK") {
+            oModel.remove(`/Attachments('${oItem.Key}')`, {
+              success: function () {
+                // Do something after successful deletion
+                MessageToast.show("Deleted Successfully");
+                // that.getAttachmentDatas();
+              },
+              error: function (error) {
+                BusyIndicator.hide();
+              }
+            });
+          }
+        }
+      });
+    },
+    
+    onSearchAttachment: function (oEvent) {
+      
+      var sValue = oEvent.getParameter("newValue")
+      var oFilter1 = new Filter("Label", FilterOperator.Contains, sValue);
+      var oFilter2 = new Filter("Type", FilterOperator.Contains, this.attachmentType);
+      var aFilters = [oFilter1,oFilter2];
+      var oFilter = new Filter({
+        filters: aFilters,
+        and: true
+      });
+      var oList = this.getView().byId("idAttachmentPage");
+      var oBinding = oList.getBinding("items");
+      oBinding.filter(oFilter);
+    },
 
-      // getAttachmentDatas:function(){
-      //   var oModel = this.getView().getModel();
-      //   var that = this;
-      //   var value = this.getView().getModel("appView").getProperty("/valueType")
-      //   var filteredAttachmentDatas=[];
-      //   oModel.read('/Attachments', {
-      //     filters:[new Filter("Type","EQ",value)],
-      //     urlParameters: {
-      //         	"$select": "Key,Type,Label"
-      //         },
-      //     success: function (data) {
-      //       that.getView().getModel("appView").setProperty("/Attachmentsssss",data.results);
-      //       // data.results.forEach(element => {
-      //       //   if (element.Type === value) {
-      //       //     filteredAttachmentDatas.push(element);
-      //       //   }
-      //       // });
-      //       that.getView().getModel("appView").setProperty("/filteredAttachments",data.results);
-      //     },
-      //     error: function (error) {
-      //       // Error callback
-      //       that.middleWare.errorHandler(error, that);
-      //       // MessageToast.show("Error reading data");
-      //     }
-      //   });
-      // }
+    // getAttachmentDatas:function(){
+    //   var oModel = this.getView().getModel();
+    //   var that = this;
+    //   var value = this.getView().getModel("appView").getProperty("/valueType")
+    //   var filteredAttachmentDatas=[];
+    //   oModel.read('/Attachments', {
+    //     filters:[new Filter("Type","EQ",value)],
+    //     urlParameters: {
+    //         	"$select": "Key,Type,Label"
+    //         },
+    //     success: function (data) {
+    //       that.getView().getModel("appView").setProperty("/Attachmentsssss",data.results);
+    //       // data.results.forEach(element => {
+    //       //   if (element.Type === value) {
+    //       //     filteredAttachmentDatas.push(element);
+    //       //   }
+    //       // });
+    //       that.getView().getModel("appView").setProperty("/filteredAttachments",data.results);
+    //     },
+    //     error: function (error) {
+    //       // Error callback
+    //       that.middleWare.errorHandler(error, that);
+    //       // MessageToast.show("Error reading data");
+    //     }
+    //   });
+    // }
 
 
   });

@@ -6,6 +6,8 @@
         <customHeader>
             <OverflowToolbar >
                 <content>
+                    <Button icon="sap-icon://nav-back" press="onCloseNavigation"></Button>
+                    <core:Icon src="sap-icon://bell" class="sapUiTinyMarginBegin"/>
                     <Title text="Notifications"></Title>
                     <ToolbarSpacer ></ToolbarSpacer>
                     <Button visible="{= ${appView>/MarkAllAsReadBtnVis} === true ? true : false}" type="Emphasized" text="Mark All As Read" icon="sap-icon://multiselect-all" press="markAllAsReadNotification"></Button>

@@ -157,6 +157,9 @@ sap.ui.define(
         if (nav === "ReadyForDispatch"){
           this.getRouter().navTo("Ready For Dispatch")
         }
+        if (nav === "ValueMismatched"){
+          this.getRouter().navTo("Value Mismatched")
+        }
         // if (nav=== "Packing"){
         //   this.getRouter().navTo("Packing")
         // }

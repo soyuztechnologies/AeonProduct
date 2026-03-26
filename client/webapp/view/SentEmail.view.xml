@@ -25,6 +25,7 @@
 		<Table id="sentEmailTable" growing="true" growingScrollToLoad="true" growingThreshold="20" autoPopinMode="true" popinLayout="GridSmall" items="{path: 'appView>/sentEmails', sorter: { path: 'CreatedOn', descending: true }}"  sticky="HeaderToolbar,ColumnHeaders" itemPress="onEmailRowPress" mode="None" >  
 			<headerToolbar>
 				<Toolbar >
+					<core:Icon src="sap-icon://paper-plane" class="sapUiTinyMarginBegin"/>
 					<Title text="Sent Email ({appView>/sentEmailCount})"></Title>
 					<ToolbarSpacer ></ToolbarSpacer>
 					<!-- <ToolbarSeparator/> -->

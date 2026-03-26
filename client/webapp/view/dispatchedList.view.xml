@@ -6,6 +6,7 @@
 	<Page showHeader="false">
 		<subHeader>
 			<OverflowToolbar>
+				<core:Icon src="sap-icon://attachment" class="sapUiTinyMarginBegin"/>
 			   <Title text="Attachments  ({appView>/countJobsAttachment})" level="H2"/>
 		   </OverflowToolbar>
 		</subHeader>

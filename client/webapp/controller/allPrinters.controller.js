@@ -29,6 +29,7 @@ sap.ui.define([
 			this.getRouter().getRoute("sideNavPunching").attachPatternMatched(this._sideNavMatchedHandler, this);
 			this.getRouter().getRoute("sideNavPasting").attachPatternMatched(this._sideNavMatchedHandler, this);
 			this.getRouter().getRoute("sideNavReadyForDispatch").attachPatternMatched(this._sideNavMatchedHandler, this);
+			this.getRouter().getRoute("sideNavValueMismatched").attachPatternMatched(this._sideNavMatchedHandler, this);
 			this.getRouter().getRoute("sideNavPacking").attachPatternMatched(this._sideNavMatchedHandler, this);
 			this.getRouter().getRoute("sideNavDispatched").attachPatternMatched(this._sideNavMatchedHandler, this);
 			this.getRouter().getRoute("sideNavDelivering").attachPatternMatched(this._sideNavMatchedHandler, this);
@@ -42,6 +43,7 @@ sap.ui.define([
 			this.getRouter().getRoute("Punching").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("Pasting").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("Ready For Dispatch").attachPatternMatched(this._matchedHandler, this);
+			this.getRouter().getRoute("Value Mismatched").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("Packing").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("Dispatched").attachPatternMatched(this._matchedHandler, this);
 			this.getRouter().getRoute("Delivering").attachPatternMatched(this._matchedHandler, this);
@@ -68,6 +70,9 @@ sap.ui.define([
 					this.onClearFilters()
 				}
 			oList.removeSelections();
+
+			this.getModel('appView').setProperty('/oState', false);
+			this.getModel('appView').setProperty('/nonValueMismatched', false);
 			
 			await this.getUserRoleData().then(
 				function (data) {
@@ -485,12 +490,12 @@ sap.ui.define([
 			// var route = 'Printing';
 			// 	route = 'sideNav' + route;
 			var route = this.getRouter().oHashChanger.hash.split("/")[0];
-			route = 'sideNav'+route;
+			route = 'sideNav' + route.replaceAll(" ", "");
 
 			
 			var sPath = oEvent.getParameter("listItem").getBindingContextPath();
 			var datassss = this.getView().getModel("appView").getProperty(sPath);
-			this.getView().getModel("appView").setProperty('/datas', datassss);
+			this.getModel("appView").setProperty('/datas', datassss);
 			this.getView().getModel("appView").setProperty('/jobId', datassss.jobCardNo);
 			
 			this.getModel("appView").updateBindings();

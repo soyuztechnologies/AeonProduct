@@ -13,6 +13,7 @@ sap.ui.define([
 ], function (Controller, History, dbapi, Fragment, JSONModel, MessageToast, formatter, Filter, FilterOperator, MessageBox, Device) {
 	"use strict";
 
+	var setDateRange = true;
 	return Controller.extend("ent.ui.ecommerce.controller.BaseController", {
 		middleWare: dbapi,
 		/**
@@ -217,6 +218,8 @@ sap.ui.define([
 					that.getModel("appView").setProperty("/logOut", true);
 					that.getModel("appView").setProperty("/NotificationVis", false);
 					that.getModel('appView').setProperty('/WhatsappVis', false)
+					that.getModel('appView').setProperty('/UserRole', "");
+					that.getModel('appView').setProperty('/UserId', "");
 					that.getRouter().navTo("login");
 					that.getView().getModel("appView").setProperty("/sideNavExpended", true);
 					// window.refresh();
@@ -1866,7 +1869,8 @@ sap.ui.define([
 					"minDate": minDate,
 					"State": oState ? oState : false,
 					"nonValueMismatched": nonValueMismatched ? nonValueMismatched : false,
-					"status": status
+					"status": status,
+					"valueMismatched": path === "Ready For Dispatch" ? true : false
 				}
 				this.middleWare.callMiddleWare("JobsCustomer", "POST" , payload)
 				.then(function (data, status, xhr) {
@@ -1889,7 +1893,8 @@ sap.ui.define([
 					"State":oState?oState:false,
 					"nonValueMismatched": nonValueMismatched ? nonValueMismatched : false,
 					"companyId": companyId,
-					"status": status
+					"status": status,
+					"valueMismatched": path === "Ready For Dispatch" ? true : false
 				}
 				this.middleWare.callMiddleWare("JobsSalesPerson", "POST" , payload)
 					.then(function (data, status, xhr) {
@@ -1907,7 +1912,8 @@ sap.ui.define([
 					"minDate": minDate,
 					"State":oState?oState:false,
 					"nonValueMismatched": nonValueMismatched ? nonValueMismatched : false,
-					"status": status
+					"status": status,
+					"valueMismatched": path === "Ready For Dispatch" ? true : false
 				}
 				this.getCompanyName()
 				this.middleWare.callMiddleWare("getJobsWithCompany", "POST", payload)
@@ -1931,28 +1937,31 @@ sap.ui.define([
 		},
 
 		_setDefaultDateRange: function() {
-			var oDateRangeSelector = this.byId("dateRangeSelectors");
-			
-			if (oDateRangeSelector) {
-				var currentDate = new Date();
-				var currentYear = currentDate.getFullYear();
-				var currentMonth = currentDate.getMonth(); 
+ 			if(setDateRange === true){	
+				var oDateRangeSelector = this.byId("dateRangeSelectors");
 				
-				var financialYearStartDate;
-				
-				if (currentMonth >= 3) { 
-					financialYearStartDate = new Date(currentYear, 3, 1); 
-				} else { 
-					financialYearStartDate = new Date(currentYear - 1, 3, 1);
+				if (oDateRangeSelector) {
+					var currentDate = new Date();
+					var currentYear = currentDate.getFullYear();
+					var currentMonth = currentDate.getMonth(); 
+					
+					var financialYearStartDate;
+					
+					if (currentMonth >= 3) { 
+						financialYearStartDate = new Date(currentYear, 3, 1); 
+					} else { 
+						financialYearStartDate = new Date(currentYear - 1, 3, 1);
+					}
+					
+					oDateRangeSelector.setDateValue(financialYearStartDate);
+					oDateRangeSelector.setSecondDateValue(currentDate);
+					
+					var oModel = this.getView().getModel("appView");
+					oModel.setProperty("/getMaxDateForFilterJobs", currentDate);
+					oModel.setProperty("/getMinDateForFilterJobs", financialYearStartDate);
 				}
-				
-				oDateRangeSelector.setDateValue(financialYearStartDate);
-				oDateRangeSelector.setSecondDateValue(currentDate);
-				
-				var oModel = this.getView().getModel("appView");
-				oModel.setProperty("/getMaxDateForFilterJobs", currentDate);
-				oModel.setProperty("/getMinDateForFilterJobs", financialYearStartDate);
-			}
+				setDateRange = false
+			} 	
 		},
 
 	});

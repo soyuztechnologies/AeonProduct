@@ -174,7 +174,7 @@
 					"target":"Attachments"
 				},
 				{
-                    "pattern":"PaperCutting/{jobId}",
+                    "pattern":"Paper Cutting/{jobId}",
                     "name":"sideNavPaperCutting",
                     "target":["allPrinters","printingDetails"]
                 },
@@ -274,7 +274,7 @@
 					]
 				},
 				{
-					"pattern": "ReadyForDispatch/{jobId}",
+					"pattern": "Ready For Dispatch/{jobId}",
 					"name": "sideNavReadyForDispatch",
 					"target": [
 						"allPrinters",
@@ -284,6 +284,21 @@
 				{
 					"pattern": "Ready For Dispatch",
 					"name": "Ready For Dispatch",
+					"target": [
+						"allPrinters"
+					]
+				},
+				{
+					"pattern": "Value Mismatched/{jobId}",
+					"name": "sideNavValueMismatched",
+					"target": [
+						"allPrinters",
+						"printingDetails"
+					]
+				},
+				{
+					"pattern": "Value Mismatched",
+					"name": "Value Mismatched",
 					"target": [
 						"allPrinters"
 					]

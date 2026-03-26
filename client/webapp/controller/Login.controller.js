@@ -127,6 +127,7 @@ sap.ui.define([
 					else if (data.Role === "Admin" ||data.Role == "Factory Manager") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/UserRole", that.UserRole);
+						that.getModel('appView').setProperty('/UserId', data.userId);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();
@@ -135,6 +136,7 @@ sap.ui.define([
 					else if (data.Role === "Customer") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/UserRole", that.UserRole);
+						that.getModel('appView').setProperty('/UserId', data.userId);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();
@@ -143,6 +145,7 @@ sap.ui.define([
 					else if (data.Role === "Factory Manager") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/UserRole", that.UserRole);
+						that.getModel('appView').setProperty('/UserId', data.userId);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();
@@ -151,6 +154,7 @@ sap.ui.define([
 					else if (data.Role === "Raw Material Head" || "Printing Head" || "Post Press Head" || "Dispatch Head" || "Accounts Head" || "Artwork Head") {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/UserRole", that.UserRole);
+						that.getModel('appView').setProperty('/UserId', data.userId);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();
@@ -159,6 +163,7 @@ sap.ui.define([
 					else {
 						that.getModel("appView").setProperty("/visibleHeader", true);
 						that.getModel("appView").setProperty("/UserRole", that.UserRole);
+						that.getModel('appView').setProperty('/UserId', data.userId);
 						that.getView().byId("userid").setValueState('None');
 						that.getView().byId("pwd").setValueState('None');
 						that.getModel("appView").updateBindings();

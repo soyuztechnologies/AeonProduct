@@ -7,6 +7,7 @@
 	<Page showHeader="false">
 		<subHeader>
 			<OverflowToolbar>
+				<core:Icon src="sap-icon://customer-order-entry" class="sapUiTinyMarginBegin"/>
 				<Title text="PO Sheet" level="H2"/>
 				<ToolbarSpacer ></ToolbarSpacer>
 		   </OverflowToolbar>

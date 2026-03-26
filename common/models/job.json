@@ -449,6 +449,10 @@
 		"attachmentDeleteInfoJob" : {
 			"type" : "string",
 			"default": null
+		},
+		"valueMismatched": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"scope": {

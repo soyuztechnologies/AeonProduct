@@ -12,7 +12,7 @@
             class="sapUiNoMargin sapUiNoPadding"
             singleContainerFullSize="false" 
             title="Ancillary Part"
-            visible="{=${appView>/UserRole} === 'Customer' || ${appView>/UserRole} === 'SalesPerson' ? false : true }">
+            visible="{=${appView>/UserRole} === 'Admin' || ${appView>/UserRole} === 'Factory Manager' || ${appView>/UserRole} === 'Raw Material Head' || ${appView>/UserRole} === 'Printing Head' || ${appView>/UserRole} === 'Post Press Head' || ${appView>/UserRole} === 'Dispatch Head' || ${appView>/UserRole} === 'Accounts Head' || ${appView>/UserRole} === 'Artwork Head' ? true : false }">
             <f:content>
                 
                 <Label	design="Bold" text="Plate" />

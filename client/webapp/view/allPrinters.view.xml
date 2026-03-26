@@ -18,6 +18,7 @@
 		<subHeader>
 			<OverflowToolbar >
 				<content>
+					<core:Icon src="sap-icon://business-card" class="sapUiTinyMarginBegin"/>
 					<Title text="Printers  ( {appView>/countJobs} )"/>
 					<ToolbarSpacer ></ToolbarSpacer>
 					<Label text="Show Value Mismatched Jobs:"></Label>
@@ -74,7 +75,7 @@
 							</fb:FilterGroupItem>
 						<fb:FilterGroupItem name="search" label="Search"  groupName="Group3" visibleInFilterBar="true">
 							<fb:control>
-								<SearchField liveChange="onSearchJob" width="250px" />
+								<SearchField id="idSearchJob" liveChange="onSearchJob" width="250px" />
 							</fb:control>
 						</fb:FilterGroupItem>
 						<fb:FilterGroupItem name="company" label="Company" groupName="Group4" visibleInFilterBar="true">
@@ -104,7 +105,7 @@
 					</OverflowToolbar>
 				</infoToolbar>
 				<items>
-					<custom:customListItem type="Navigation" backgroundColor="{path : 'appView>status', formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
+					<custom:customListItem type="Navigation" backgroundColor="{parts: [{path: 'appView>status'}, {path: 'appView>valueMismatched'}], formatter: '.formatter.ValueMisAndOtherStatusColor'}" >
 						<HBox alignItems="Center" justifyContent="SpaceBetween">
 							<items>
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom" >
