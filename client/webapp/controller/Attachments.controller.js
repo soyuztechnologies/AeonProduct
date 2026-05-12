@@ -493,24 +493,56 @@ sap.ui.define([
     },
     onPressDelete: function (oEvent) {
       
-      var that = this;
-      var oModel = this.getView().getModel();
-      var oItem = oEvent.getParameter("listItem").getBindingContext().getObject()
+      let that = this;
+      let oModel = this.getView().getModel();
+      let oListItem = oEvent.getParameter("listItem");
+      let oContext = oListItem.getBindingContext();
+      let oItem = oContext.getObject();
+
       MessageBox.confirm("Are you sure you want to delete?", {
         actions: ["OK", "Close"],
         emphasizedAction: 'OK',
         onClose: function (sAction) {
           if (sAction === "OK") {
-            oModel.remove(`/Attachments('${oItem.Key}')`, {
-              success: function () {
-                // Do something after successful deletion
-                MessageToast.show("Deleted Successfully");
-                // that.getAttachmentDatas();
-              },
-              error: function (error) {
-                BusyIndicator.hide();
-              }
-            });
+            BusyIndicator.show(0);
+
+                let key = oItem.Key;
+
+                that.middleWare.callMiddleWare(
+                    "deleteAttachment?attachmentId=" + key,
+                    "DELETE"
+                )
+                .then(function (data) {
+
+                  let sPath = oContext.getPath();
+
+                  oModel.setProperty(sPath, null);
+
+                  oModel.refresh(true);
+
+                  BusyIndicator.hide();
+
+                  MessageToast.show("Deleted Successfully");
+
+                })
+                .catch(function (jqXhr) {
+
+                    BusyIndicator.hide();
+
+                    that.middleWare.errorHandler(jqXhr, that);
+                });
+
+
+            // oModel.remove(`/Attachments('${oItem.Key}')`, {
+            //   success: function () {
+            //     // Do something after successful deletion
+            //     MessageToast.show("Deleted Successfully");
+            //     // that.getAttachmentDatas();
+            //   },
+            //   error: function (error) {
+            //     BusyIndicator.hide();
+            //   }
+            // });
           }
         }
       });

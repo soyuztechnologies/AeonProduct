@@ -3791,6 +3791,34 @@ app.start = function () {
 			});
 		});
 
+		app.delete('/deleteAttachment', (req, res) => {
+
+			const Attachments = app.models.Attachments;
+
+			const { attachmentId } = req.query;
+
+			Attachments.destroyAll({
+				Key: attachmentId
+			}, (error, info) => {
+
+				if (error) {
+
+					console.error(error);
+
+					return res.status(500).json({
+						success: false,
+						message: 'Error deleting attachment'
+					});
+				}
+
+				res.status(200).json({
+					success: true,
+					message: 'Attachment deleted successfully',
+					deleted: info.count
+				});
+			});
+		});
+
 		app.post('/onTransferPoSheets', (req, res) => {
 			const payload = req.body;
 			const UsedSheets = app.models.UsedSheets;

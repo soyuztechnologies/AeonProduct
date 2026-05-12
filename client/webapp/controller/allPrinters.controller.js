@@ -864,18 +864,19 @@ sap.ui.define([
 
 		// },
 
-		onDateRangeChangeForJob: function(oEvent) {
-			var oDateRangeSelector = oEvent.getSource();
-			var fromDate = oDateRangeSelector.getDateValue();
-			var toDate = oDateRangeSelector.getSecondDateValue();
+		// Date filter
+		// onDateRangeChangeForJob: function(oEvent) {
+		// 	var oDateRangeSelector = oEvent.getSource();
+		// 	var fromDate = oDateRangeSelector.getDateValue();
+		// 	var toDate = oDateRangeSelector.getSecondDateValue();
 			
-			var oModel = this.getView().getModel("appView");
-			oModel.setProperty("/getMinDateForFilterJobs", fromDate);
-			oModel.setProperty("/getMaxDateForFilterJobs", toDate);
+		// 	var oModel = this.getView().getModel("appView");
+		// 	oModel.setProperty("/getMinDateForFilterJobs", fromDate);
+		// 	oModel.setProperty("/getMaxDateForFilterJobs", toDate);
 			
-			// Filter jobs
-			this.getJobsDataByCompanyFilter();
-		},
+		// 	// Filter jobs
+		// 	this.getJobsDataByCompanyFilter();
+		// },
         // Ascending Sort Jobs List
 
         onSortAscending: function() {

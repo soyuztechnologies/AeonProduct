@@ -63,7 +63,7 @@
 			  </List> -->
 			  <fb:FilterBar useToolbar="false" persistencyKey="myPersKey" class="stickyFilterBar">
 					<fb:filterGroupItems>
-							<fb:FilterGroupItem name="Date" label="Date (Range)" groupName="Group1" visibleInFilterBar="true" >
+							<!-- <fb:FilterGroupItem name="Date" label="Date (Range)" groupName="Group1" visibleInFilterBar="true" >
 								<fb:control> 
 									<DateRangeSelection
 										placeholder="Enter Date Range"
@@ -72,7 +72,7 @@
 										change="onDateRangeChangeForJob"
 										value=""/>
 								</fb:control>
-							</fb:FilterGroupItem>
+							</fb:FilterGroupItem> -->
 						<fb:FilterGroupItem name="search" label="Search"  groupName="Group3" visibleInFilterBar="true">
 							<fb:control>
 								<SearchField id="idSearchJob" liveChange="onSearchJob" width="250px" />

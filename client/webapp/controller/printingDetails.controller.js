@@ -999,12 +999,11 @@ sap.ui.define([
 					}
 					else {
 						this.updateValueMismatchedValue(false);
-						this.whenProductionStart();
 					}
 				} else {
 					this.updateValueMismatchedValue(false);
-					this.whenProductionStart();
 				}
+				this.whenProductionStart();
 
 			}
 
