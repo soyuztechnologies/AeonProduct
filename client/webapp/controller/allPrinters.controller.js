@@ -1178,30 +1178,56 @@ sap.ui.define([
 		oTable = this.byId('exportTable');
 		data = this.getView().getModel("appView").getProperty("/jobStatusDate");
 		
-		for(var i =0 ; i<data.length;i++){
-			oBinding = data[i].JobStatus;
-			var myJobStatusData = oBinding[0]
-			aAllJobStatus.push(myJobStatusData)
-		}
+		// for(var i =0 ; i<data.length;i++){
+		// 	oBinding = data[i].JobStatus;
+		// 	var myJobStatusData = oBinding[0]
+		// 	aAllJobStatus.push(myJobStatusData)
+		// }
 		
-		for (let i = 0; i < aAllJobStatus.length; i++) {
-			const element = aAllJobStatus[i];
-			if(element != undefined){
-				var filterWithJobs = data.filter((job) => {
-					return job.jobCardNo === element.JobStatusId
+		// for (let i = 0; i < aAllJobStatus.length; i++) {
+		// 	const element = aAllJobStatus[i];
+		// 	if(element != undefined){
+		// 		var filterWithJobs = data.filter((job) => {
+		// 			return job.jobCardNo === element.JobStatusId
 					
-				});
-				element.qtyPcs = filterWithJobs[0].qtyPcs;
-				element.jobCode = filterWithJobs[0].jobCode;
-				element.poNo = filterWithJobs[0].poNo;
-				element.paperPoNo = filterWithJobs[0].paperPoNo;
-				element.nameOFTheProduct = filterWithJobs[0].nameOFTheProduct;
-				element.CompanyName = filterWithJobs[0].Company.CompanyName;
-				jobStatusArray.push(element)
-				
-			}
+		// 		});
+		// 		element.qtyPcs = filterWithJobs[0].qtyPcs;
+		// 		element.jobCode = filterWithJobs[0].jobCode;
+		// 		element.poNo = filterWithJobs[0].poNo;
+		// 		element.paperPoNo = filterWithJobs[0].paperPoNo;
+		// 		element.nameOFTheProduct = filterWithJobs[0].nameOFTheProduct;
+		// 		element.CompanyName = filterWithJobs[0].Company.CompanyName;
+		// 		jobStatusArray.push(element)
+		// 	}
+		// }
 			
-		}
+		for (let i = 0; i < data.length; i++) {
+
+           let job = data[i];
+
+           // Agar JobStatus hai to first record lo,
+           // warna blank object banao
+           let exportRow;
+        
+		   if (job.JobStatus && job.JobStatus.length > 0) {
+              exportRow = Object.assign({}, job.JobStatus[0]);
+           } else {
+              exportRow = {};
+           }
+
+           // Job details
+           exportRow.JobStatusId = job.jobCardNo;
+           exportRow.qtyPcs = job.qtyPcs;
+           exportRow.jobCode = job.jobCode;
+           exportRow.poNo = job.poNo;
+           exportRow.paperPoNo = job.paperPoNo;
+           exportRow.nameOFTheProduct = job.nameOFTheProduct;
+           exportRow.CompanyName = job.Company ? job.Company.CompanyName : "";
+
+           jobStatusArray.push(exportRow);
+        }
+
+
 		aCols = this.createColumnConfig();
 		
 		 oSettings = {
