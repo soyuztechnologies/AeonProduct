@@ -395,8 +395,13 @@ sap.ui.define([
       var selectedAttachment = oEvent.getSource().getBindingContext("appView").getObject();
       var AllAttachementFiles = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
       
-      var index =  AllAttachementFiles.findIndex((ele) => {
-        return ele.Label === selectedAttachment.Label
+      // var index =  AllAttachementFiles.findIndex((ele) => {
+      //   return ele.Label === selectedAttachment.Label
+      // });
+
+      // Compare Keys 
+      var index = AllAttachementFiles.findIndex(function(ele){
+       return ele.Key === selectedAttachment.Key;
       });
       if(index != -1){
         AllAttachementFiles.splice(index, 1);
@@ -404,47 +409,140 @@ sap.ui.define([
       this.getView().getModel('appView').updateBindings();
     },
 
-      onSaveDocuments:function(){
-        
-        var oModel = this.getView().getModel();
-        // var file = this.file;
+    onSaveDocuments: async function () {
+      var that = this;
         var newAttachments = this.getView().getModel("appView").getProperty("/newlyAddedAttachments");
         var replaceAttachments = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
-        var that = this;
-        if(!newAttachments && (newAttachments.length == 0 && !replaceAttachments) && replaceAttachments.length == 0){
-          MessageToast.show("Please upload at least one document");
+
+      // Validation
+      if ((!newAttachments || newAttachments.length === 0) && (!replaceAttachments || replaceAttachments.length === 0)) {
+          sap.m.MessageToast.show("Please upload at least one document");
           return;
         }
-        // This call is used to upload new attachments in DB
-        if(newAttachments.length > 0){
-          for (let i = 0; i < newAttachments.length; i++) {
-            const element = newAttachments[i];
-            oModel.create('/Attachments', element, {
-              success: function (data) {
-                // that.getAttachmentDatas();
-              },
-              error: function (error) {
-                // Error callback
-                that.middleWare.errorHandler(error, that);
-                // MessageToast.show("Error reading data");
-              }
-            });
+
+      sap.ui.core.BusyIndicator.show(); 
+
+      var allPromises = [];
+
+      var fnUploadToBackend = function (oDocData) {
+          return that.middleWare.callMiddleWare("saveDocumentToDrive", "POST", oDocData);
+      };
+
+      // 1. Process New Attachments
+      if (newAttachments && newAttachments.length > 0) {
+          newAttachments.forEach(function (element) {
+              var payload = {
+                  Key: element.Key,
+                  Label: element.Label,
+                  Attachment: element.Attachment,
+                  Type: element.Type
+              };
+              allPromises.push(fnUploadToBackend(payload));
+          });
+      }
+
+      // 2. Process Replace Attachments
+      if (replaceAttachments && replaceAttachments.length > 0) {
+          replaceAttachments.forEach(function (element) {
+              var payload = {
+                  Key: element.Key,
+                  Label: element.Label,
+                  Attachment: element.Attachment, 
+                  Type: element.Type
+              };
+              allPromises.push(fnUploadToBackend(payload));
+          });
+      }
+
+      // 3. Wait for ALL Uploads to Finish
+      try {
+          await Promise.all(allPromises);
+          
+          sap.ui.core.BusyIndicator.hide();
+          sap.m.MessageToast.show("All Documents Uploaded Successfully to Drive!");
+          
+          if (that.getAttachmentDatas) {
+              that.getAttachmentDatas();
           }
-        }
-        // This call is used to replace existing attachments in DB
-        if(replaceAttachments.length > 0){
-          for(let j = 0; j < replaceAttachments.length; j++){
-            const element = replaceAttachments[j];
-            this.middleWare.callMiddleWare("api/Attachments", "PUT", element)
-            .then(function (data, status, xhr){
-              MessageToast.show("Successfully Uploaded")
-            })
-            .catch(function (jqXhr, textStatus, errorMessage) {
-                that.middleWare.errorHandler(jqXhr, that);
-              });
+          
+          that.getView().getModel("appView").setProperty("/newlyAddedAttachments", []);
+          that.getView().getModel("appView").setProperty("/oldAttachmentFiles", []);
+          that._clearUploadAttachment();
+
+      } catch (error) {
+          sap.ui.core.BusyIndicator.hide();
+          console.error("Upload Error:", error);
+          if(that.middleWare && that.middleWare.errorHandler){
+              that.middleWare.errorHandler(error, that);
+          } else {
+              sap.m.MessageBox.error("Failed to upload some documents.");
           }
-        }
-      },
+      }
+    },
+
+    _clearUploadAttachment: function () {
+			var oFileUploader = this.byId("fileUploader");
+
+			var oView = this.getView();
+    
+			if (!oFileUploader) {
+				var aControls = this.getView().getControlsByFieldGroupId() || [];
+				oFileUploader = this.getView().findAggregatedObjects(true).find(function(ctrl) {
+					return ctrl.getId && ctrl.getId().includes("fileUploader");
+				});
+			}
+			
+			if (oFileUploader) {
+				console.log("Found FileUploader:", oFileUploader.getId());
+				oFileUploader.clear();
+				oFileUploader.setValue("");
+			} else {
+				console.error("FileUploader still not found!");
+			}
+		},
+
+    // onSaveDocuments:function(){
+      
+    //   var oModel = this.getView().getModel();
+    //   // var file = this.file;
+    //   var newAttachments = this.getView().getModel("appView").getProperty("/newlyAddedAttachments");
+    //   var replaceAttachments = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
+    //   var that = this;
+    //   if(!newAttachments && (newAttachments.length == 0 && !replaceAttachments) && replaceAttachments.length == 0){
+    //     MessageToast.show("Please upload at least one document");
+    //     return;
+    //   }
+    //   // This call is used to upload new attachments in DB
+    //   if(newAttachments.length > 0){
+    //     for (let i = 0; i < newAttachments.length; i++) {
+    //       const element = newAttachments[i];
+    //       oModel.create('/Attachments', element, {
+    //         success: function (data) {
+    //           // that.getAttachmentDatas();
+    //         },
+    //         error: function (error) {
+    //           // Error callback
+    //           that.middleWare.errorHandler(error, that);
+    //           // MessageToast.show("Error reading data");
+    //         }
+    //       });
+    //     }
+    //   }
+    //   // This call is used to replace existing attachments in DB
+    //   if(replaceAttachments.length > 0){
+    //     for(let j = 0; j < replaceAttachments.length; j++){
+    //       const element = replaceAttachments[j];
+    //       this.middleWare.callMiddleWare("api/Attachments", "PUT", element)
+    //       .then(function (data, status, xhr){
+    //         MessageToast.show("Successfully Uploaded")
+    //       })
+    //       .catch(function (jqXhr, textStatus, errorMessage) {
+    //           that.middleWare.errorHandler(jqXhr, that);
+    //         });
+    //     }
+    //   }
+    // },
+
       oDialogOpen: function () {
         var oView = this.getView();
         if (!this.oUploadDialog) {
@@ -466,21 +564,40 @@ sap.ui.define([
         var that = this;
         this.isAttachment = true;
           var key =  oEvent.getSource().getBindingContext().getObject().Key;
-          var dModel = this.getView().getModel();
-          dModel.read(`/Attachments('${key}')`, {
-            urlParameters: {
-              "$select": "Attachment"
-            },
-          success: function (data) {
-            that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
-          },
-          error: function (error) {
-            MessageBox.show("Attachment is not Attached")
-          }
-        });
-					this.oDialogOpen().then(function (oDialog) {
-						oDialog.open();
-					});
+      var type =  oEvent.getSource().getBindingContext().getObject().Type;
+      // var dModel = this.getView().getModel();
+
+      this.middleWare.callMiddleWare("getAttachment?attachmentId=" + key + "&type=" + type, "GET")
+				.then(function (data, status, xhr) {
+					that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+					that.oDialogOpen().then(function (oDialog) {
+            oDialog.open();
+          });
+				}
+				)
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					if(jqXhr){
+						that.middleWare.errorHandler(jqXhr, that);
+					}else{
+						MessageBox.show("Attachment Is Not Attached")
+					}
+				});
+
+
+        //   dModel.read(`/Attachments('${key}')`, {
+        //     urlParameters: {
+        //       "$select": "Attachment"
+        //     },
+        //   success: function (data) {
+        //     that.getModel("appView").setProperty("/attachmentFiles", data.Attachment)
+        //   },
+        //   error: function (error) {
+        //     MessageBox.show("Attachment is not Attached")
+        //   }
+        // });
+        // this.oDialogOpen().then(function (oDialog) {
+        //   oDialog.open();
+        // });
       },
 
     onReject: function () {

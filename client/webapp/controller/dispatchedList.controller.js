@@ -275,42 +275,65 @@ sap.ui.define([
 
 		// Set attachment data and endpoint in form of url for attachment call
 		showAttachment: function (oEvent) {
-			var dModel = this.getView().getModel();
+			// var dModel = this.getView().getModel();
 			var that = this;
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 			var oModel = this.getView().getModel("appView");
-			var url = "";
+			// var url = "";
+			var type;
 
 			if (oData.attachmentName == "Client_PO Code") {
-				var url = `/Attachments('${oData.attachmentCode}')`
+				// var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Po Attachment");
+				type = "PoNo"
 			}
 			if (oData.attachmentName == "Artwork Attchment") {
-				var url = `/Attachments('${oData.attachmentCode}')`;
+				// var url = `/Attachments('${oData.attachmentCode}')`;
 				oModel.setProperty("/uploadDocumnetTitle", "Artwork Attachment");
+				type = "ArtworkNo"
 			}
 			if (oData.attachmentName == "Delivery_No") {
-				var url = `/Attachments('${oData.attachmentCode}')`
+				// var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Delivery Attachment");
+				type = "DelNo"
 			}
 			if (oData.attachmentName == "Invoice_No") {
-				var url = `/Attachments('${oData.attachmentCode}')`
+				// var url = `/Attachments('${oData.attachmentCode}')`
 				oModel.setProperty("/uploadDocumnetTitle", "Invoice Attachment");
+				type = "InvNo"
 			}
 
-			//getting api attachment data
-			dModel.read(url, {
-				success: function (data) {
+			this.middleWare.callMiddleWare("getAttachment?attachmentId=" + oData.attachmentCode + "&type=" + type, "GET")
+				.then(function (data, status, xhr) {
 					that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
 					that.getModel("appView").setProperty("/attachmentName", data.Label);
 					that.oDialogOpen().then(function (oDialog) {
 						oDialog.open();
 					});
-				},
-				error: function (error) {
+				}
+				)
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					if(jqXhr){
+						that.middleWare.errorHandler(jqXhr, that);
+					}else{
 					MessageBox.show("Attachment Is Not Attached")
 				}
 			});
+
+
+			//getting api attachment data
+			// dModel.read(url, {
+			// 	success: function (data) {
+			// 		that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+			// 		that.getModel("appView").setProperty("/attachmentName", data.Label);
+			// 		that.oDialogOpen().then(function (oDialog) {
+			// 			oDialog.open();
+			// 		});
+			// 	},
+			// 	error: function (error) {
+			// 		MessageBox.show("Attachment Is Not Attached")
+			// 	}
+			// });
 
 
 		},
