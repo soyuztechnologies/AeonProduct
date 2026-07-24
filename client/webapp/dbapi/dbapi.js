@@ -72,6 +72,8 @@ sap.ui.define([
 					case "GET":
 						$.ajax(endpoint + sUrl, {
 							async:asyncBol,
+						    global: !sUrl.includes("api/Notifications"), // To avoid busy indicator for Notification popup
+
 							type: 'GET', // http method
 							contentType: "application/json",
 							// data: JSON.stringify(oPayload), // data to submit

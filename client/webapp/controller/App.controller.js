@@ -11,7 +11,20 @@ sap.ui.define(
     var userRole;
 
     return BaseController.extend("ent.ui.ecommerce.controller.App", {
-      onInit: function () {
+      onInit: function (oEvent) {
+
+        this._notificationTimer = null; ///-------------------------added---------------------///
+        
+        // pause of 5 seconds to call notification api
+        if (localStorage.getItem("email") && localStorage.getItem("pass")) {
+           setTimeout(function () {
+           this.startNotificationPolling();
+        }.bind(this), 5000);
+       }
+
+      
+
+
         this._oRouter = this.getRouter();
         var oViewModel,
           fnSetAppNotBusy,

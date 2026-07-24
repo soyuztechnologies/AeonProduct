@@ -27,10 +27,54 @@ sap.ui.define([
 		formatter: formatter,
 		onInit: function () {
 
+			this._pollingStarted = false;
+
 			// this.getShopCartData(true);
 			// Controller.prototype.onInit.apply(this, arguments);
 
 		},
+
+
+		//------------------------To call Notification and count call in every 5 minutes-------------------------///
+		startNotificationPolling: function () {
+			
+            if (this._notificationTimeout) {
+               clearTimeout(this._notificationTimeout);
+            }
+
+            if (this._notificationTimer) {
+               clearInterval(this._notificationTimer);
+            }
+
+            this._notificationTimeout = setTimeout(function () {
+
+		       // First call
+               this.getNotification();
+
+		       // Then every 5 minutes
+               this._notificationTimer = setInterval(function () {
+               this.getNotification();
+               }.bind(this), 5 * 60 * 1000);
+		    //    }.bind(this), 10 * 1000);
+
+            }.bind(this), 5000);
+        },
+		
+
+
+	  stopNotificationPolling: function () {
+
+         if (this._notificationTimeout) {
+           clearTimeout(this._notificationTimeout);
+           this._notificationTimeout = null;
+         }
+
+         if (this._notificationTimer) {
+           clearInterval(this._notificationTimer);
+           this._notificationTimer = null;
+         }
+      },
+
 		getUserRoleData: function () {
 			
 			var that = this;
@@ -46,6 +90,16 @@ sap.ui.define([
 						that.getModel('appView').setProperty('/CompanyId', data.role.CompanyId);
 						that.getView().getModel('appView').updateBindings();
 						that.userRole();
+
+						
+
+                        if (!that._pollingStarted) {
+                           that._pollingStarted = true;
+
+                        //   setTimeout(function () {
+                        //      that.startNotificationPolling();
+                        //   }, 5000);
+                        }
 						// };
 					})
 					.catch(function (jqXhr, textStatus, errorMessage) {
@@ -117,7 +171,7 @@ sap.ui.define([
 			}
 			this.getModel('appView').setProperty('/WhatsappVis', true)
 			this.getModel("appView").updateBindings();
-			this.getNotification();
+			// this.getNotification();
 		},
 
 		setAppModel: function () {
@@ -213,6 +267,9 @@ sap.ui.define([
 			var that = this;
 			this.middleWare.callMiddleWare("logout", "POST", {})
 				.then(function (data, status, xhr) {
+
+			        that.stopNotificationPolling();	
+                    
 					sessionStorage.session_id = null;
 					that.getModel("appView").setProperty("/layout", "OneColumn");
 					that.getModel("appView").setProperty("/logOut", true);
@@ -1741,6 +1798,11 @@ sap.ui.define([
 		// },
 
 		getNotification: function () {
+
+		var sUserId = this.getModel("appView").getProperty("/UserId");
+           if (!sUserId) {
+              return;
+        }
 			var that = this;
 			var companyId = this.getModel('appView').getProperty('/CompanyId');
 			var userId = this.getModel('appView').getProperty('/UserId');
@@ -1760,7 +1822,8 @@ sap.ui.define([
 					var latestJobStatusTime = data.latestJobStatusTime || null;
             		var oldLatestJobStatusTime = that.getModel("appView").getProperty("/LatestJobStatusTime");
 
-					if (count !== oldCount  || latestJobStatusTime !== oldLatestJobStatusTime) {
+					if (count !== oldCount  || latestJobStatusTime !== oldLatestJobStatusTime){
+							
 
 						that.getModel("appView").setProperty("/LatestJobStatusTime", latestJobStatusTime);
 						
@@ -1781,6 +1844,7 @@ sap.ui.define([
 									that.getModel("appView").setProperty("/Notification", []);
 									that.getModel("appView").setProperty("/NotificationCount", 0);
 								}
+
 								if(unreadData.length > 0){
 									that.getModel("appView").setProperty("/MarkAllAsReadBtnVis", true);
 								}else{

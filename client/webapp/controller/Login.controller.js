@@ -184,6 +184,9 @@ sap.ui.define([
 						localStorage.setItem("pass",pass);
 					}
 					
+					
+				   that.startNotificationPolling();
+					
 					// if(window.cordova){
 					// 	Cookies.set("soyuz_session", data.id, { expires: 7 });
 					// }
