@@ -80,23 +80,40 @@ sap.ui.define([
 			var dModel = this.getView().getModel();
 			var oData = oEvent.getSource().getBindingContext("appView").getObject();
 			var oModel = this.getView().getModel("appView");
+
+			// var type = oData.Attachment
+			var type = oData.Attachment.includes("PO") ? "PoReceipt" : (oData.Attachment.includes("Ancillary_plate") ? "AncillaryPart" : null);
 			
-			var url = `/Attachments('${oData.Attachment}')`
+			// var url = `/Attachments('${oData.Attachment}')`
 			oModel.setProperty("/uploadDocumnetTitle", "PoReciept Attachment");
 			oModel.setProperty("/PDFPoNo", oData.Attachment);
 
-			//getting api attachment data
-			dModel.read(url, {
-				success: function (data) {
+
+			this.middleWare.callMiddleWare("getAttachment?attachmentId=" + oData.Attachment + "&type=" + type, "GET")
+				.then(function (data, status, xhr) {
 					that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
 					that.oDialogOpen().then(function (oDialog) {
 						oDialog.open();
 					});
-				},
-				error: function (error) {
-					MessageBox.show("Attachment Is Not Attached")
 				}
-			});
+				)
+				.catch(function (jqXhr, textStatus, errorMessage) {
+					MessageBox.show("Attachment Is Not Attached")
+				});
+
+
+			//getting api attachment data
+			// dModel.read(url, {
+			// 	success: function (data) {
+			// 		that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
+			// 		that.oDialogOpen().then(function (oDialog) {
+			// 			oDialog.open();
+			// 		});
+			// 	},
+			// 	error: function (error) {
+			// 		MessageBox.show("Attachment Is Not Attached")
+			// 	}
+			// });
 		},
 
 		oDialogOpen: function () {

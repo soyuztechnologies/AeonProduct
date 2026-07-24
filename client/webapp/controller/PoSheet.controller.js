@@ -1021,7 +1021,8 @@ sap.ui.define([
 			this.getView().getModel("appView").setProperty("/Email", {
 				PDF_NAME: `PO_${PoNo}.pdf`,
 				GENERATED_PDF: GENERATED_PDF,
-				EMAIL_BODY: defaultBody
+				EMAIL_BODY: defaultBody,
+				ReadOnly: false
 			 })
 			this.getView().getModel("appView").setProperty("/EmailTitle", 'Send Po via Email')
 

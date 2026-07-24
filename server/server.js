@@ -18,6 +18,8 @@ const moment = require('moment');
 var fs = require('fs');
 const { log, debug, error, time } = require('console');
 const { default: index } = require('async');
+// importing driveService
+const { initialize, uploadToDrive, getFileBuffer } = require('../google/drive/driveService');
 var app = express();
 app = module.exports = loopback();
 // parse application/json
@@ -147,6 +149,53 @@ app.start = function () {
 
 				);
 		});
+
+
+        // this function Retrieves the Client ID, Client Secret, Refresh Token and Root Folder ID from the Param table 
+		async function getGoogleDriveConfig() {
+
+            const Param = app.models.Param;
+
+            const params = await Param.find({
+                 where: {
+                      Code: {
+                          inq: [
+                                "driveClientId",
+                                "driveClientSecret",
+                                "driveRefreshToken",
+                                "driveFolder"
+                                ]
+                            }
+                        }
+            });
+
+            let config = {};
+
+            params.forEach(item => {
+
+                switch (item.Code) {
+
+                    case "driveClientId":
+                        config.clientId = item.Value;
+                        break;
+
+                    case "driveClientSecret":
+                        config.clientSecret = item.Value;
+                        break;
+
+                    case "driveRefreshToken":
+                       config.refreshToken = item.Value;
+                       break;
+
+                    case "driveFolder":
+                        config.rootFolderId = item.Value;
+                        break;
+                }
+            });
+
+            return config;
+        }
+
 
 		// * this function is send the email to the user in secenerio like signup,forgot password,admin add user etc.
 		async function sendEmail(email, token, replacements, templateFileName, emailSubject) {
@@ -393,7 +442,6 @@ app.start = function () {
 							console.error("Email send failed:", error);
 							reject(error);
 						} else {
-							console.log("Email sent successfully to:", info.accepted);
 							resolve(info);
 						}
 					});
@@ -404,7 +452,6 @@ app.start = function () {
 			}
 		}
 
-
 		app.post('/onSendPoEmail', async (req, res) => {
 			const Email = req.body;
 			const attachmentTable = app.models.Attachments;
@@ -412,67 +459,159 @@ app.start = function () {
 			const Job = app.models.Job;
 
 			try {
-				const info = await sendEmailTemp(Email);
+				let driveLink = null;
+			
+				const emailTask = sendEmailTemp(Email);
 
+				let uploadTask = Promise.resolve(null); 
+
+				if (Email.GENERATED_PDF) {
+					const pdfName = Email.PDF_NAME ? Email.PDF_NAME : `PO_${Date.now()}.pdf`;
+					
+					const base64Data = Email.GENERATED_PDF.split(",")[1] || Email.GENERATED_PDF;
+					const pdfBuffer = Buffer.from(base64Data, 'base64');
+					
+			
+					const folderCategory = Email.TYPE; 
+
+                    const driveConfig = await getGoogleDriveConfig();
+					// console.log(driveConfig);
+
+					initialize(driveConfig);
+					uploadTask = uploadToDrive(pdfName, pdfBuffer, 'application/pdf', folderCategory)
+						.catch(err => {
+							console.error("Upload Background Error:", err.message);
+							return null;
+						});
+				}
+
+				// --- STEP 2: WAIT FOR BOTH ---
+				const [emailInfo, driveData] = await Promise.all([emailTask, uploadTask]);
+
+				if (driveData) {
+					driveLink = driveData.webViewLink;
+				}
+
+				// --- STEP 3: DATABASE SAVING ---
 				const oEmailData = {
 					EMAIL_TO: Email.EMAIL_TO,
 					EMAIL_CC: Email.EMAIL_CC ? Email.EMAIL_CC.toString() : "",
 					EMAIL_BCC: Email.EMAIL_BCC ? Email.EMAIL_BCC.toString() : "",
 					EMAIL_SUBJECT: Email.EMAIL_SUBJECT,
 					EMAIL_BODY: Email.EMAIL_BODY,
-					CreatedBy: Email.userId
+					CreatedBy: Email.userId,
+					Attachment: Email.PDF_NAME ? Email.PDF_NAME.replace(/\.pdf$/i, '') : null
 				};
-				var PDF_NAME = Email.PDF_NAME ? Email.PDF_NAME.trim().replace(/\.pdf$/i, '') : '';
-				var PDF_PoNo = Email.PDF_PONo;
-
-				if(PDF_NAME)
-				oEmailData.Attachment = PDF_NAME ? PDF_NAME : null;
 
 				await sentEmailTable.create(oEmailData);
 				
-				const attachmentKey = PDF_NAME ? PDF_NAME : null;
+				const attachmentKey = Email.PDF_NAME ? Email.PDF_NAME.replace(/\.pdf$/i, '') : null;
 				
 				if (attachmentKey !== null) {
 					const existingAttachment = await attachmentTable.findOne({ where: { Key: attachmentKey } });
 					
+					// if found driveLink then that will be used and if not then old logic will be used
+					const contentToSave = driveLink ? driveLink : Email.GENERATED_PDF;
+
+					
 					if (existingAttachment) {
-						await existingAttachment.updateAttribute('Attachment', Email.GENERATED_PDF);
+						await existingAttachment.updateAttribute('Attachment', contentToSave);
 					} else {
-						const oEmailAttachmentData = {
+						await attachmentTable.create({
 							Key: attachmentKey,
 							Label: `${attachmentKey}.pdf`,
-							Attachment: Email.GENERATED_PDF,
+							Attachment: contentToSave, 
 							Type: Email.TYPE
-						};
-						await attachmentTable.create(oEmailAttachmentData);
+						});
 					}
 				}
-				
 
-				var JobCardNo = Email.jobCardNo;
-				var partStatus = Email.PartStatus; 
-
-				if(JobCardNo && partStatus){
-					const jobRecord = await Job.findOne({ where: { jobCardNo: JobCardNo } });
-					if(jobRecord) {
-						await jobRecord.updateAttribute(partStatus, 'EmailSent');
-					}
+				// Job Status Update (Existing Logic)
+				if (Email.jobCardNo && Email.PartStatus) {
+					const jobRecord = await Job.findOne({ where: { jobCardNo: Email.jobCardNo } });
+					if (jobRecord) await jobRecord.updateAttribute(Email.PartStatus, 'EmailSent');
 				}
 
 				res.status(200).json({
-					message: 'Email sent successfully',
-					accepted: info.accepted,
-					response: info.response
+					message: 'Email sent & Drive Link created',
+					accepted: emailInfo.accepted,
+					driveLink: driveLink
 				});
 
 			} catch (error) {
-					console.error(" Error in onSendPoEmail:", error);
-					res.status(500).json({
-					error: 'Failed to send email or process attachment',
-					details: error.message
-				});
+				console.error("Error:", error);
+				res.status(500).json({ error: error.message });
 			}
 		});
+
+		// app.post('/onSendPoEmail', async (req, res) => {
+		// 	const Email = req.body;
+		// 	const attachmentTable = app.models.Attachments;
+		// 	const sentEmailTable = app.models.SentEmail;
+		// 	const Job = app.models.Job;
+
+		// 	try {
+		// 		const info = await sendEmailTemp(Email);
+
+		// 		const oEmailData = {
+		// 			EMAIL_TO: Email.EMAIL_TO,
+		// 			EMAIL_CC: Email.EMAIL_CC ? Email.EMAIL_CC.toString() : "",
+		// 			EMAIL_BCC: Email.EMAIL_BCC ? Email.EMAIL_BCC.toString() : "",
+		// 			EMAIL_SUBJECT: Email.EMAIL_SUBJECT,
+		// 			EMAIL_BODY: Email.EMAIL_BODY,
+		// 			CreatedBy: Email.userId
+		// 		};
+		// 		var PDF_NAME = Email.PDF_NAME ? Email.PDF_NAME.trim().replace(/\.pdf$/i, '') : '';
+		// 		var PDF_PoNo = Email.PDF_PONo;
+
+		// 		if(PDF_NAME)
+		// 		oEmailData.Attachment = PDF_NAME ? PDF_NAME : null;
+
+		// 		await sentEmailTable.create(oEmailData);
+				
+		// 		const attachmentKey = PDF_NAME ? PDF_NAME : null;
+				
+		// 		if (attachmentKey !== null) {
+		// 			const existingAttachment = await attachmentTable.findOne({ where: { Key: attachmentKey } });
+					
+		// 			if (existingAttachment) {
+		// 				await existingAttachment.updateAttribute('Attachment', Email.GENERATED_PDF);
+		// 			} else {
+		// 				const oEmailAttachmentData = {
+		// 					Key: attachmentKey,
+		// 					Label: `${attachmentKey}.pdf`,
+		// 					Attachment: Email.GENERATED_PDF,
+		// 					Type: Email.TYPE
+		// 				};
+		// 				await attachmentTable.create(oEmailAttachmentData);
+		// 			}
+		// 		}
+				
+
+		// 		var JobCardNo = Email.jobCardNo;
+		// 		var partStatus = Email.PartStatus; 
+
+		// 		if(JobCardNo && partStatus){
+		// 			const jobRecord = await Job.findOne({ where: { jobCardNo: JobCardNo } });
+		// 			if(jobRecord) {
+		// 				await jobRecord.updateAttribute(partStatus, 'EmailSent');
+		// 			}
+		// 		}
+
+		// 		res.status(200).json({
+		// 			message: 'Email sent successfully',
+		// 			accepted: info.accepted,
+		// 			response: info.response
+		// 		});
+
+		// 	} catch (error) {
+		// 			console.error(" Error in onSendPoEmail:", error);
+		// 			res.status(500).json({
+		// 			error: 'Failed to send email or process attachment',
+		// 			details: error.message
+		// 		});
+		// 	}
+		// });
 
 		
 		async function replaceTemplatePlaceholders(content, replacements) {
@@ -4298,7 +4437,290 @@ app.start = function () {
 			}
 		});
 
+		// Helper Function to get User Info from Session/Cookie
+		async function getAuthenticatedUser(req) {
+			const AccessToken = app.models.AccessToken;
+			const User = app.models.User;
+			const AppUser = app.models.AppUser;
+			const cookie = require('cookie'); // Ensure this is required
 
+			// 1. Token Extraction
+			const cookieHeader = req.headers.cookie;
+			let cookies = {};
+			if (cookieHeader) {
+				cookies = cookie.parse(cookieHeader);
+			}
+			const sessionCookie = cookies.soyuz_session || req.query.access_token;
+
+			if (!sessionCookie) {
+				throw { status: 401, message: 'Session cookie not found' };
+			}
+
+			// 2. Find Access Token
+			const accessToken = await AccessToken.findOne({ where: { id: sessionCookie } });
+
+			if (!accessToken) {
+				throw { status: 401, message: 'Invalid or Expired Session' };
+			}
+
+			// 3. Find User (using userId from token)
+			const user = await User.findOne({ where: { id: accessToken.userId } });
+
+			if (!user) {
+				throw { status: 404, message: 'User not found' };
+			}
+
+			// 4. Find AppUser (using email)
+			const appUser = await AppUser.findOne({ where: { EmailId: user.email } });
+
+			if (!appUser) {
+				throw { status: 404, message: 'App User profile not found' };
+			}
+
+			// 5. Return only necessary info
+			return {
+				id: appUser.id,
+				Status: appUser.Status,
+				TechnicalId: appUser.TechnicalId,
+				Role: appUser.Role,
+				EmailId: appUser.EmailId,
+				CompanyId: appUser.CompanyId
+			};
+		}
+
+		async function processAttachmentFetch(attachmentId) {
+			const attachmentTable = app.models.Attachments;
+
+			if (!attachmentId) {
+				throw { status: 400, message: 'attachmentId is required' };
+			}
+
+			// 1. DB Lookup
+			const attachment = await attachmentTable.findOne({ where: { Key: attachmentId } });
+
+			if (!attachment) {
+				throw { status: 404, message: 'Attachment not found' };
+			}
+
+			// 2. Check if it's a Drive Link
+			if (attachment.Attachment && typeof attachment.Attachment === 'string' && attachment.Attachment.includes("drive.google.com")) {
+				try {
+					const fileIdMatch = attachment.Attachment.match(/\/d\/(.+?)\//);
+					const fileId = fileIdMatch ? fileIdMatch[1] : null;
+
+					if (fileId) {
+						const fileBuffer = await getFileBuffer(fileId);
+						
+						// Buffer -> Base64
+						const base64String = fileBuffer.toString('base64');
+						const finalBase64 = `data:application/pdf;base64,${base64String}`;
+
+						const responseObj = JSON.parse(JSON.stringify(attachment));
+						responseObj.Attachment = finalBase64;
+						return responseObj;
+					}
+				} catch (driveError) {
+					console.error("Drive Fetch Error (Returning Link as fallback):", driveError);
+					return attachment; 
+				}
+			}
+
+			return attachment;
+		}
+
+		app.get('/getAttachment', async (req, res) => {
+
+			try{
+				let type = req.query.type;
+				let attachmentId = req.query.attachmentId;
+
+				if(!type || type === undefined || type === null){
+					return res.status(400).json({ error: 'Attachment Type is required' });
+				}
+				// if(type === undefined || type === null){
+				// 	return res.status(400).json({ error: 'Attachment Type is required' });
+				// }
+				if(!attachmentId){
+					return res.status(400).json({ error: 'AttachmentId is required' });
+				}
+
+				const userInfo = await getAuthenticatedUser(req);
+				const userRole = userInfo.Role;
+				const companyId = userInfo.CompanyId;
+
+				let resultData = null;
+				
+				if(userRole === "Admin" && type === "PoReceipt"){
+
+					resultData = await processAttachmentFetch(attachmentId);
+					return res.status(200).json(resultData);
+					
+				} else if((userRole === "Admin" || userRole === "Factory Manager" || userRole === "Raw Material Head" || userRole === "Printing Head" || userRole === "Post Press Head" || userRole === "Dispatch Head" || userRole === "Accounts Head" || userRole === "Artwork Head") && type === "AncillaryPart"){
+
+					resultData = await processAttachmentFetch(attachmentId);
+					return res.status(200).json(resultData);
+
+				} else if (userRole === "Admin" && (type === "PoNo" || type === "ArtworkNo" || type === "InvNo" || type === "DelNo")) {
+
+					resultData = await processAttachmentFetch(attachmentId);
+					return res.status(200).json(resultData);
+
+				} else if ((userRole === "Factory Manager" || userRole === "Raw Material Head" || userRole === "Printing Head" || userRole === "Post Press Head" || userRole === "Dispatch Head" || userRole === "Accounts Head" || userRole === "Artwork Head" || userRole === "SalesPerson" || userRole === "Customer")) {
+
+					const Job = app.models.Job;
+					
+					const allCompanyIds = 
+						typeof companyId === "string"
+							? companyId.includes(",")
+								? companyId.split(",").map(id => id.trim())
+								: [companyId]
+							: [companyId.toString()];
+
+					const jobData = await Job.find({
+						fields: {
+							PoAttach: true,
+							ArtworkAttach: true, 
+							jobCardNo: true
+						},
+						where: {
+							CompanyId: { inq: allCompanyIds }
+						}
+					});
+
+					var JobDataArray = jobData.map(job => ( job.jobCardNo ));					
+					
+					var foundAttachment = null;
+
+					jobData.some(job => {
+						if (job.PoAttach + "PoNo" === attachmentId) {
+							foundAttachment = "PoNoFound";
+							return true; 
+						}
+
+						if (job.ArtworkAttach.replace(/\s+/g, "") + "ArtworkNo" === attachmentId) {
+							foundAttachment = "ArtworkNoFound";
+							return true; 
+						}
+
+						return false;
+					});
+
+					// Get attachment if user have access to that attachment
+					if(foundAttachment === "PoNoFound"){
+
+						resultData = await processAttachmentFetch(attachmentId);
+						return res.status(200).json(resultData);
+
+					}else if(foundAttachment === "ArtworkNoFound"){
+
+						resultData = await processAttachmentFetch(attachmentId);
+						return res.status(200).json(resultData);
+
+					}else {
+						const JobStatus = app.models.JobStatus;
+
+						var filter = {
+							JobStatusId: { inq: JobDataArray }
+						}
+
+						var fieldData;
+						if(attachmentId.includes("InvNo")){
+							fieldData = attachmentId.replace("InvNo", "");
+							filter.InvNo = { like: fieldData }
+						}
+						if(attachmentId.includes("DelNo")){
+							fieldData = attachmentId.replace("DelNo", "");
+							filter.DeliveryNo = { like: fieldData }
+						}
+						const jobStatusData = await JobStatus.find({
+							where: filter
+						})
+
+						if(jobStatusData.length > 0){
+
+							resultData = await processAttachmentFetch(attachmentId);
+							return res.status(200).json(resultData);
+
+						}else{
+							return res.status(403).json('You are not authorized to access this resource');
+						}
+					}
+
+				} else {
+					return res.status(403).json('You are not authorized to access this resource');
+				}
+
+			
+			} catch (error) {
+				console.error("Auth Error:", error);
+				// Error handling jo helper function se throw hua
+				const status = error.status || 500;
+				const message = error.message || 'Internal Server Error';
+				return res.status(status).json(message);
+			}
+		});
+
+		app.post('/saveDocumentToDrive', async (req, res) => {
+			const attachmentTable = app.models.Attachments;
+			const docData = req.body; 
+
+			// Validations
+			if (!docData.Attachment || !docData.Key) {
+				return res.status(400).json({ error: "Attachment data or Key is missing" });
+			}
+
+			try {
+				console.log(`Processing Document: ${docData.Label}`);
+
+				// 1. Prepare Buffer from Base64
+				const base64Data = docData.Attachment.includes(",") 
+					? docData.Attachment.split(",")[1] 
+					: docData.Attachment;
+					
+				const fileBuffer = Buffer.from(base64Data, 'base64');
+
+				// 2. Upload to Google Drive
+				const folderCategory = docData.Type;
+				
+				const mimeType = docData.Label.endsWith('.xlsx') ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
+
+				const driveConfig = await getGoogleDriveConfig();
+                initialize(driveConfig);
+
+				const driveResponse = await uploadToDrive(docData.Label, fileBuffer, mimeType, folderCategory);
+				
+				const driveLink = driveResponse.webViewLink;
+				console.log("Drive Link Created:", driveLink);
+
+				// 3. Save to Database (MongoDB)
+				const existingDoc = await attachmentTable.findOne({ where: { Key: docData.Key } });
+
+				const dataToSave = {
+					Key: docData.Key,
+					Label: docData.Label,
+					Attachment: driveLink, 
+					Type: docData.Type
+				};
+
+				if (existingDoc) {
+					// Update Case (Replace Attachment)
+					await existingDoc.updateAttributes(dataToSave);
+					console.log("DB Updated");
+				} else {
+					// Create Case (New Attachment)
+					await attachmentTable.create(dataToSave);
+					console.log("DB Created");
+				}
+
+				res.status(200).json({ message: "Success", link: driveLink });
+
+			} catch (error) {
+				console.error("Save Document Error:", error);
+				res.status(500).json({ error: error.message });
+			}
+		});
+
+		
 
 	});
 };
