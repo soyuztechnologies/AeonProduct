@@ -35,6 +35,14 @@
 	"scope": {
 		"order": "CreatedOn DESC"
 	},
+
+	"indexes": {
+    "LabelIndex": {
+        "keys": {
+            "Label": 1
+        }
+    }
+},
 	"validations": [],
   	"relations": {},
 	"acls": [{

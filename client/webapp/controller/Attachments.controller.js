@@ -258,7 +258,7 @@ sap.ui.define([
 // },
     onUploadChange: function (oEvent) {
       
-      return new Promise((resolve, reject) => {
+      this.attachmentProcessingPromise = new Promise((resolve, reject) => {
         
       var type=  this.getView().getModel("appView").getProperty("/valueType")
         var files = oEvent.getParameter("files");
@@ -287,11 +287,23 @@ sap.ui.define([
               that.oFileContentJson.Type = that.files[index].Type;
               that.files[index] = that.oFileContentJson;
               that.count++;
-              processFile(index + 1);
 
-              if (that.count === files.length){
-                that.allAttachmentsKeyToString()
-                that.checkInAttachments()
+              if (that.count === files.length) {
+
+                  that.allAttachmentsKeyToString();
+
+                  that.checkInAttachments()
+                      .then(function () {
+                        resolve();
+                      })
+                      .catch(function (error) {
+                        reject(error);
+                      });
+
+              } else {
+
+                   processFile(index + 1);
+
               }
             };
 
@@ -308,6 +320,8 @@ sap.ui.define([
         processFile(0);
 
       });
+
+      return this.attachmentProcessingPromise;
       
     },
     allAttachmentsKeyToString: function() {
@@ -329,7 +343,7 @@ sap.ui.define([
       });
       var filter = encodeURIComponent('{"where": {"or": [' + filters.join(",") + ']}}');
       var url = 'api/Attachments?filter=' + filter
-      this.middleWare.callMiddleWare(url, "GET")
+      return this.middleWare.callMiddleWare(url, "GET")
       .then(function(data, status, xhr){
         for(let index = 0; index < data.length; index++){
           const element = data[index];
@@ -409,76 +423,104 @@ sap.ui.define([
       this.getView().getModel('appView').updateBindings();
     },
 
-    onSaveDocuments: async function () {
-      var that = this;
-        var newAttachments = this.getView().getModel("appView").getProperty("/newlyAddedAttachments");
-        var replaceAttachments = this.getView().getModel("appView").getProperty("/oldAttachmentFiles");
+   onSaveDocuments: async function () {
 
-      // Validation
-      if ((!newAttachments || newAttachments.length === 0) && (!replaceAttachments || replaceAttachments.length === 0)) {
-          sap.m.MessageToast.show("Please upload at least one document");
-          return;
+    var that = this;
+
+    if (this.attachmentProcessingPromise) {
+    await this.attachmentProcessingPromise;
+    }
+
+    var newAttachments = this.getView()
+        .getModel("appView")
+        .getProperty("/newlyAddedAttachments");
+
+    var replaceAttachments = this.getView()
+        .getModel("appView")
+        .getProperty("/oldAttachmentFiles");
+
+    // Validation
+    if ((!newAttachments || newAttachments.length === 0) &&
+        (!replaceAttachments || replaceAttachments.length === 0)) {
+
+        sap.m.MessageToast.show("Please upload at least one document");
+        return;
+    }
+
+    sap.ui.core.BusyIndicator.show();
+
+    var allAttachments = [];
+
+    // Add New Attachments
+    if (newAttachments && newAttachments.length > 0) {
+
+        newAttachments.forEach(function (element) {
+
+            allAttachments.push({
+                Key: element.Key,
+                Label: element.Label,
+                Attachment: element.Attachment,
+                Type: element.Type
+            });
+
+        });
+    }
+
+    // Add Replace Attachments
+    if (replaceAttachments && replaceAttachments.length > 0) {
+
+        replaceAttachments.forEach(function (element) {
+
+            allAttachments.push({
+                Key: element.Key,
+                Label: element.Label,
+                Attachment: element.Attachment,
+                Type: element.Type
+            });
+
+        });
+    }
+
+    try {
+
+        // ONE API CALL
+        await that.middleWare.callMiddleWare(
+            "saveDocumentToDrive",
+            "POST",
+            allAttachments
+        );
+
+        sap.ui.core.BusyIndicator.hide();
+
+        sap.m.MessageToast.show(
+            "All Documents Uploaded Successfully to Drive!"
+        );
+
+        that.getView()
+            .getModel("appView")
+            .setProperty("/newlyAddedAttachments", []);
+
+        that.getView()
+            .getModel("appView")
+            .setProperty("/oldAttachmentFiles", []);
+
+        that._clearUploadAttachment();
+
+    } catch (error) {
+
+        sap.ui.core.BusyIndicator.hide();
+
+        console.error("Upload Error:", error);
+
+        if (that.middleWare && that.middleWare.errorHandler) {
+            that.middleWare.errorHandler(error, that);
+        } else {
+            sap.m.MessageBox.error(
+                "Failed to upload some documents."
+            );
         }
-
-      sap.ui.core.BusyIndicator.show(); 
-
-      var allPromises = [];
-
-      var fnUploadToBackend = function (oDocData) {
-          return that.middleWare.callMiddleWare("saveDocumentToDrive", "POST", oDocData);
-      };
-
-      // 1. Process New Attachments
-      if (newAttachments && newAttachments.length > 0) {
-          newAttachments.forEach(function (element) {
-              var payload = {
-                  Key: element.Key,
-                  Label: element.Label,
-                  Attachment: element.Attachment,
-                  Type: element.Type
-              };
-              allPromises.push(fnUploadToBackend(payload));
-          });
-      }
-
-      // 2. Process Replace Attachments
-      if (replaceAttachments && replaceAttachments.length > 0) {
-          replaceAttachments.forEach(function (element) {
-              var payload = {
-                  Key: element.Key,
-                  Label: element.Label,
-                  Attachment: element.Attachment, 
-                  Type: element.Type
-              };
-              allPromises.push(fnUploadToBackend(payload));
-          });
-      }
-
-      // 3. Wait for ALL Uploads to Finish
-      try {
-          await Promise.all(allPromises);
-          
-          sap.ui.core.BusyIndicator.hide();
-          sap.m.MessageToast.show("All Documents Uploaded Successfully to Drive!");
-          
-          if (that.getAttachmentDatas) {
-              that.getAttachmentDatas();
-          }
-          
-          that.getView().getModel("appView").setProperty("/newlyAddedAttachments", []);
-          that.getView().getModel("appView").setProperty("/oldAttachmentFiles", []);
-          that._clearUploadAttachment();
-
-      } catch (error) {
-          sap.ui.core.BusyIndicator.hide();
-          console.error("Upload Error:", error);
-          if(that.middleWare && that.middleWare.errorHandler){
-              that.middleWare.errorHandler(error, that);
-          } else {
-              sap.m.MessageBox.error("Failed to upload some documents.");
-          }
-      }
-    },
+    }
+},
 
     _clearUploadAttachment: function () {
 			var oFileUploader = this.byId("fileUploader");

@@ -8,6 +8,7 @@ let drive = null;
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
 
 const folderCache = {}; 
+const folderCreationPromises = {};
 
 
 // Function to get Financial year
@@ -56,45 +57,98 @@ function initialize(config) {
 async function findOrCreateFolder(folderName, parentFolderId = driveConfig.rootFolderId) {
 
     const cacheKey = `${parentFolderId}_${folderName}`;
-    if (folderCache[cacheKey]){
-         return folderCache[cacheKey];
+
+    // If another request is already checking/creating this folder,
+    // wait for that request instead of creating another folder.
+    if (folderCreationPromises[cacheKey]) {
+        return await folderCreationPromises[cacheKey];
     }
 
-    try {
+    // Start one single operation for this folder.
+    folderCreationPromises[cacheKey] = (async function () {
 
-        // console.log(`Checking folder: ${folderName}...`);
-        const query = `mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false and '${parentFolderId}' in parents`;
-        
+        // 1. Check cached folder
+        if (folderCache[cacheKey]) {
+            try {
+                const cachedFolder = await drive.files.get({
+                    fileId: folderCache[cacheKey],
+                    fields: 'id, name, mimeType, trashed, parents'
+                });
+
+                if (
+                    cachedFolder.data.name === folderName &&
+                    cachedFolder.data.mimeType === 'application/vnd.google-apps.folder' &&
+                    cachedFolder.data.trashed === false &&
+                    cachedFolder.data.parents &&
+                    cachedFolder.data.parents.includes(parentFolderId)
+                ) {
+                    return cachedFolder.data.id;
+                }
+
+                // Cached ID is no longer valid
+                delete folderCache[cacheKey];
+
+            } catch (error) {
+                // Folder was deleted or is no longer accessible
+                console.log(`Cached folder not found: ${folderName}`);
+                delete folderCache[cacheKey];
+            }
+        }
+
+        // 2. Search folder in Google Drive
+        const query =
+            `mimeType='application/vnd.google-apps.folder' ` +
+            `and name='${folderName}' ` +
+            `and trashed=false ` +
+            `and '${parentFolderId}' in parents`;
+
         const res = await drive.files.list({
             q: query,
-            fields: 'files(id, name)',
-            spaces: 'drive',
+            fields: 'files(id, name, mimeType, parents)',
+            spaces: 'drive'
         });
 
-        if (res.data.files.length > 0) {
-            const existingId = res.data.files[0].id; 
+        // 3. Folder already exists
+        if (res.data.files && res.data.files.length > 0) {
+
+            const existingId = res.data.files[0].id;
+
             folderCache[cacheKey] = existingId;
+
             return existingId;
         }
 
-        // console.log(`Creating folder: ${folderName}...`);
+        // 4. Folder doesn't exist → create ONE
+        console.log(`Creating folder: ${folderName}`);
+
         const newFolder = await drive.files.create({
             requestBody: {
                 name: folderName,
                 mimeType: 'application/vnd.google-apps.folder',
                 parents: [parentFolderId]
             },
-            fields: 'id'
+            fields: 'id, name'
         });
 
-
         const newId = newFolder.data.id;
+
+        // 5. Store newly created folder
         folderCache[cacheKey] = newId;
+
         return newId;
 
-    } catch (error) {
-        // console.error("Folder Error:", error.message);
-        throw error;
+    })();
+
+    try {
+
+        return await folderCreationPromises[cacheKey];
+
+    } finally {
+
+        // Remove lock after operation is complete.
+        // The actual folder ID remains in folderCache.
+        delete folderCreationPromises[cacheKey];
+
     }
 }
 

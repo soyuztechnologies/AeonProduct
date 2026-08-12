@@ -4660,67 +4660,186 @@ app.start = function () {
 			}
 		});
 
-		app.post('/saveDocumentToDrive', async (req, res) => {
-			const attachmentTable = app.models.Attachments;
-			const docData = req.body; 
+		// app.post('/saveDocumentToDrive', async (req, res) => {
+		// 	const attachmentTable = app.models.Attachments;
+		// 	const docData = req.body; 
 
-			// Validations
-			if (!docData.Attachment || !docData.Key) {
-				return res.status(400).json({ error: "Attachment data or Key is missing" });
-			}
+		// 	// Validations
+		// 	if (!docData.Attachment || !docData.Key) {
+		// 		return res.status(400).json({ error: "Attachment data or Key is missing" });
+		// 	}
 
-			try {
-				console.log(`Processing Document: ${docData.Label}`);
+		// 	try {
+		// 		console.log(`Processing Document: ${docData.Label}`);
 
-				// 1. Prepare Buffer from Base64
-				const base64Data = docData.Attachment.includes(",") 
-					? docData.Attachment.split(",")[1] 
-					: docData.Attachment;
+		// 		// 1. Prepare Buffer from Base64
+		// 		const base64Data = docData.Attachment.includes(",") 
+		// 			? docData.Attachment.split(",")[1] 
+		// 			: docData.Attachment;
 					
-				const fileBuffer = Buffer.from(base64Data, 'base64');
+		// 		const fileBuffer = Buffer.from(base64Data, 'base64');
 
-				// 2. Upload to Google Drive
-				const folderCategory = docData.Type;
+		// 		// 2. Upload to Google Drive
+		// 		const folderCategory = docData.Type;
 				
-				const mimeType = docData.Label.endsWith('.xlsx') ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
+		// 		const mimeType = docData.Label.endsWith('.xlsx') ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
 
-				const driveConfig = await getGoogleDriveConfig();
-                initialize(driveConfig);
+		// 		const driveConfig = await getGoogleDriveConfig();
+        //         initialize(driveConfig);
 
-				const driveResponse = await uploadToDrive(docData.Label, fileBuffer, mimeType, folderCategory);
+		// 		const driveResponse = await uploadToDrive(docData.Label, fileBuffer, mimeType, folderCategory);
 				
-				const driveLink = driveResponse.webViewLink;
-				console.log("Drive Link Created:", driveLink);
+		// 		const driveLink = driveResponse.webViewLink;
+		// 		console.log("Drive Link Created:", driveLink);
 
-				// 3. Save to Database (MongoDB)
-				const existingDoc = await attachmentTable.findOne({ where: { Key: docData.Key } });
+		// 		// 3. Save to Database (MongoDB)
+		// 		const existingDoc = await attachmentTable.findOne({ where: { Key: docData.Key } });
 
-				const dataToSave = {
-					Key: docData.Key,
-					Label: docData.Label,
-					Attachment: driveLink, 
-					Type: docData.Type
-				};
+		// 		const dataToSave = {
+		// 			Key: docData.Key,
+		// 			Label: docData.Label,
+		// 			Attachment: driveLink, 
+		// 			Type: docData.Type
+		// 		};
 
-				if (existingDoc) {
-					// Update Case (Replace Attachment)
-					await existingDoc.updateAttributes(dataToSave);
-					console.log("DB Updated");
-				} else {
-					// Create Case (New Attachment)
-					await attachmentTable.create(dataToSave);
-					console.log("DB Created");
-				}
+		// 		if (existingDoc) {
+		// 			// Update Case (Replace Attachment)
+		// 			await existingDoc.updateAttributes(dataToSave);
+		// 			console.log("DB Updated");
+		// 		} else {
+		// 			// Create Case (New Attachment)
+		// 			await attachmentTable.create(dataToSave);
+		// 			console.log("DB Created");
+		// 		}
 
-				res.status(200).json({ message: "Success", link: driveLink });
+		// 		res.status(200).json({ message: "Success", link: driveLink });
 
-			} catch (error) {
-				console.error("Save Document Error:", error);
-				res.status(500).json({ error: error.message });
-			}
-		});
+		// 	} catch (error) {
+		// 		console.error("Save Document Error:", error);
+		// 		res.status(500).json({ error: error.message });
+		// 	}
+		// });
 
-		
+	
+		app.post('/saveDocumentToDrive', async (req, res) => {
+
+    const attachmentTable = app.models.Attachments;
+    const documents = req.body;
+
+    // Validate array
+    if (!Array.isArray(documents) || documents.length === 0) {
+        return res.status(400).json({
+            error: "Documents array is missing or empty"
+        });
+    }
+
+    try {
+
+        console.log(`Processing ${documents.length} documents`);
+
+        // Initialize Google Drive only ONCE
+        const driveConfig = await getGoogleDriveConfig();
+        initialize(driveConfig);
+
+        // Process all documents
+        const results = await Promise.all(
+
+            documents.map(async function (docData) {
+
+                if (!docData.Attachment || !docData.Key) {
+                    throw new Error(
+                        `Attachment data or Key is missing for ${docData.Label}`
+                    );
+                }
+
+                console.log(`Processing Document: ${docData.Label}`);
+
+                // Convert Base64 to Buffer
+                const base64Data = docData.Attachment.includes(",")
+                    ? docData.Attachment.split(",")[1]
+                    : docData.Attachment;
+
+                const fileBuffer = Buffer.from(
+                    base64Data,
+                    'base64'
+                );
+
+                // Upload to Google Drive
+                const folderCategory = docData.Type;
+
+                const mimeType = docData.Label.endsWith('.xlsx')
+                    ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    : 'application/pdf';
+
+                const driveResponse = await uploadToDrive(
+                    docData.Label,
+                    fileBuffer,
+                    mimeType,
+                    folderCategory
+                );
+
+                const driveLink = driveResponse.webViewLink;
+
+                // Check existing DB record
+                const existingDoc = await attachmentTable.findOne({
+                    where: {
+                        Key: docData.Key
+                    }
+                });
+
+                const dataToSave = {
+                    Key: docData.Key,
+                    Label: docData.Label,
+                    Attachment: driveLink,
+                    Type: docData.Type
+                };
+
+                if (existingDoc) {
+
+                    await existingDoc.updateAttributes(
+                        dataToSave
+                    );
+
+                    console.log(`DB Updated: ${docData.Label}`);
+
+                } else {
+
+                    await attachmentTable.create(
+                        dataToSave
+                    );
+
+                    console.log(`DB Created: ${docData.Label}`);
+                }
+
+                return {
+                    Key: docData.Key,
+                    Label: docData.Label,
+                    Type: docData.Type,
+                    link: driveLink,
+                    status: "Success"
+                };
+
+            })
+        );
+
+        // Send all results back
+        res.status(200).json({
+            message: "All documents processed successfully",
+            results: results
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Save Documents Error:",
+            error
+        );
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
 
 	});
 };
