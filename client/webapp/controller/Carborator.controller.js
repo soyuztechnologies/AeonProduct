@@ -392,7 +392,7 @@ sap.ui.define([
       if (aNewFetchedExcel.length > 0) {
         for (let i = 0; i < aNewFetchedExcel.length; i++) {
               const element = aNewFetchedExcel[i];
-              element.ArtworkAttach = element.artworkCode.split("_")[0];
+              element.ArtworkAttach = Number.isInteger(element.artworkCode) ? element.artworkCode : element.artworkCode.split("_")[0];
               if(typeof(element.clientPONo) === 'number'){
                 element.clientPONo = element.clientPONo.toString();
               }
@@ -431,7 +431,7 @@ sap.ui.define([
         for (let i = 0; i < aExcelToBeUploaded.length; i++) {
           const element = aExcelToBeUploaded[i];
           // element.UpdatedOn = formattedDate;
-          element.ArtworkAttach = element.artworkCode.split("_")[0]
+          element.ArtworkAttach = Number.isInteger(element.artworkCode) ? element.artworkCode : element.artworkCode.split("_")[0];
           if(typeof(element.clientPONo) ==='number'){
             element.clientPONo =  element.clientPONo.toString();
           }
