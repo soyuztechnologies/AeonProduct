@@ -4544,6 +4544,10 @@ app.start = function () {
 					return res.status(400).json({ error: 'AttachmentId is required' });
 				}
 
+				// Initialize Google Drive before fetching attachment
+                const driveConfig = await getGoogleDriveConfig();
+                initialize(driveConfig);
+
 				const userInfo = await getAuthenticatedUser(req);
 				const userRole = userInfo.Role;
 				const companyId = userInfo.CompanyId;
