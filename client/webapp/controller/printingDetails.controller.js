@@ -111,7 +111,10 @@ sap.ui.define([
 					that.getView().getModel('appView').setProperty('/UserEmail', data.role.EmailId);
 					that.userRole();
 					// that.x();
-					that.getJobsDataByCompanyFilter();
+					var aJobs = that.getView().getModel('appView').getProperty('/jobsData');
+					if (!aJobs || aJobs.length === 0) {
+						that.getJobsDataByCompanyFilter();
+					}
 				},
 				function (oErr) {
 					that.middleWare.errorHandler(jqXhr, that);

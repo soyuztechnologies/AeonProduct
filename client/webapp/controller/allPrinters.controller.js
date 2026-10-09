@@ -88,7 +88,23 @@ sap.ui.define([
 					var pauseJobFilter = that.getModel("appView").getProperty("/PauseJobFilter");
 					if(pauseJobFilter !== true){
 						that.getJobsDataByCompanyFilter();
+
+// 						var sJobId = this.oArgs;
+//                         var oList = this.byId("idListAllPrinters");
+// 						setTimeout(function () {
+// 							oList.getItems().forEach(function (oItem) {
+//                                 var oObj = oItem.getBindingContext("appView").getObject();
+
+//         if (oObj.jobCardNo === sJobId) {
+//             oList.setSelectedItem(oItem);
+//         }
+
+//     });
+
+// }, 500);
 						that.getModel("appView").setProperty("/PauseJobFilter", false)
+					} else {
+						that._restoreCompanyFilter();
 					}
 				},
 				function (oErr) {
@@ -1408,6 +1424,7 @@ sap.ui.define([
 
 		selectedCompany: function (oEvent) {
 			let selectedKey = oEvent.getSource().getSelectedKey();
+			this.getModel("appView").setProperty("/selectedCompanyKey", selectedKey || "");
 			
 			// Store the company filter in a property
 			if (selectedKey) {
@@ -1417,6 +1434,32 @@ sap.ui.define([
 			}
 			
 			// Apply combined filters
+			this._applyFilters();
+		},
+
+		_restoreCompanyFilter: function () {
+			var sKey = this.getModel("appView").getProperty("/selectedCompanyKey");
+			if (sKey) {
+				this._companyFilter = new Filter("CompanyId", FilterOperator.EQ, sKey);
+			} else {
+				this._companyFilter = null;
+				if (!sKey && this._searchFilter === undefined) {
+					return;
+				}
+			}
+			var aBoxes = this.getView().findAggregatedObjects(true, function (o) {
+				return o.isA("sap.m.ComboBox");
+			});
+			if (aBoxes && aBoxes.length) {
+				aBoxes.forEach(function (oBox) {
+					if (oBox.getId().indexOf("selectedCompanyId") !== -1) {
+						return;
+					}
+					if (oBox.getSelectedKey() !== sKey) {
+						oBox.setSelectedKey(sKey || "");
+					}
+				});
+			}
 			this._applyFilters();
 		},
 
