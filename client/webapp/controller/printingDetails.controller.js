@@ -1182,7 +1182,7 @@ sap.ui.define([
 				if (clickedrow === "artworkCode") {
 					var selectedJobDetails = that.getView().getModel("appView").getProperty("/Jobs");
 					if (selectedJobDetails.ArtworkAttach) {
-						var url = `/Attachments('${selectedJobDetails.ArtworkAttach + "ArtworkNo"}')`;
+						var url = `/Attachments('${selectedJobDetails.artworkCode + "ArtworkNo"}')`;
 						// dModel.read(`/Attachments('${selectedJobDetails.ArtworkAttach+"ArtworkNo"}')`, {
 						// 	try: function (data) {
 						// 		// that.getModel("appView").setProperty("/attachmentFiles", data.Attachment);
@@ -1316,8 +1316,8 @@ sap.ui.define([
 					}
 				}
 				if (this.clickedLink === "artworkCode") {
-					if (oData.ArtworkAttach) {
-						var url = `${oData.ArtworkAttach.replace(/\s+/g, "") + "ArtworkNo"}`
+					if (oData.artworkCode) {
+						var url = `${oData.artworkCode.replace(/\s+/g, "") + "ArtworkNo"}`
 						type = "ArtworkNo"
 					}
 				}
@@ -1375,8 +1375,8 @@ sap.ui.define([
 					}
 				}
 				else if (this.clickedLink == "artworkCode") {
-					if (oData.ArtworkAttach) {
-						var url = `${oData.ArtworkAttach.replace(/\s+/g, "") + "ArtworkNo"}`;
+					if (oData.artworkCode) {
+						var url = `${oData.artworkCode.replace(/\s+/g, "") + "ArtworkNo"}`;
 						type = "ArtworkNo"
 					}
 					// this.getModel("appView").setProperty("/attachmentFiles", oData.ArtworkAttachment.Attachment)
@@ -2801,7 +2801,7 @@ sap.ui.define([
 				this.newNotification(notification)
 			}
 			if(oUpdatedData.status === "Dispatched" && oJobs.ArtworkAttach) {
-				var ArtWork = oJobs.ArtworkAttach.replace(/\s+/g, "") + 'ArtworkNo';
+				var ArtWork = oJobs.artworkCode.replace(/\s+/g, "") + 'ArtworkNo';
 				// this.middleWare.callMiddleWare("deleteArtworkAfterDispatch", "POST", ArtWork)
 				var that = this;
        		    var oModel = this.getView().getModel();
