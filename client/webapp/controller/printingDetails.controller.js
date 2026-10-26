@@ -2800,23 +2800,23 @@ sap.ui.define([
 			if(oldStatus !== oUpdatedData.status){
 				this.newNotification(notification)
 			}
-			if(oUpdatedData.status === "Dispatched" && oJobs.ArtworkAttach) {
-				var ArtWork = oJobs.artworkCode.replace(/\s+/g, "") + 'ArtworkNo';
-				// this.middleWare.callMiddleWare("deleteArtworkAfterDispatch", "POST", ArtWork)
-				var that = this;
-       		    var oModel = this.getView().getModel();
-					oModel.remove(`/Attachments('${ArtWork}')`, {
-					success: function () {
-					// Do something after successful deletion
-					// MessageToast.show("Deleted Successfully");
-					// that.getAttachmentDatas();
-					},
-					error: function (error) {
-						BusyIndicator.hide();
-						that.middleWare.errorHandler(error, that);
-					}
-              });
-			}
+			// if(oUpdatedData.status === "Dispatched" && oJobs.ArtworkAttach) {
+			// 	var ArtWork = oJobs.artworkCode.replace(/\s+/g, "") + 'ArtworkNo';
+			// 	// this.middleWare.callMiddleWare("deleteArtworkAfterDispatch", "POST", ArtWork)
+			// 	var that = this;
+       		//     var oModel = this.getView().getModel();
+			// 		oModel.remove(`/Attachments('${ArtWork}')`, {
+			// 		success: function () {
+			// 		// Do something after successful deletion
+			// 		// MessageToast.show("Deleted Successfully");
+			// 		// that.getAttachmentDatas();
+			// 		},
+			// 		error: function (error) {
+			// 			BusyIndicator.hide();
+			// 			that.middleWare.errorHandler(error, that);
+			// 		}
+            //   });
+			// }
 			this.getNotification();
 		},
 
