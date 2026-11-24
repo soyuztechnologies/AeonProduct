@@ -4578,7 +4578,7 @@ app.start = function () {
 							? companyId.includes(",")
 								? companyId.split(",").map(id => id.trim())
 								: [companyId]
-							: [companyId.toString()];
+							: [companyId?.toString()];
 
 					const jobData = await Job.find({
 						fields: {
