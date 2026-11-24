@@ -4583,7 +4583,7 @@ app.start = function () {
 					const jobData = await Job.find({
 						fields: {
 							PoAttach: true,
-							ArtworkAttach: true, 
+							artworkCode: true, 
 							jobCardNo: true
 						},
 						where: {
@@ -4601,7 +4601,7 @@ app.start = function () {
 							return true; 
 						}
 
-						if (job.ArtworkAttach.replace(/\s+/g, "") + "ArtworkNo" === attachmentId) {
+						if (job.artworkCode?.replace(/\s+/g, "") + "ArtworkNo" === attachmentId) {
 							foundAttachment = "ArtworkNoFound";
 							return true; 
 						}
